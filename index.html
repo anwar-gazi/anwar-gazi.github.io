@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Engineering Portfolio – Case Study Landing Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #020617;
+      --card: #020617;
+      --accent: #6366f1;
+      --accent-soft: rgba(99, 102, 241, 0.15);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --shadow-soft: 0 22px 60px rgba(15, 23, 42, 0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #0b1120 0, transparent 55%),
+        radial-gradient(circle at bottom right, #020617 0, #000000 60%);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: #a5b4fc;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    /* Header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.9),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background:
+        conic-gradient(from 210deg, #6366f1, #22c55e, #f97316, #0ea5e9, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #020617;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 12px 30px rgba(99, 102, 241, 0.9);
+    }
+
+    .brand-text-main {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .header-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background-color: rgba(15, 23, 42, 0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #bbf7d0, #22c55e);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.35);
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 26px 18px 48px;
+    }
+
+    /* Hero */
+
+    .hero {
+      margin-top: 10px;
+      margin-bottom: 26px;
+      padding: 24px 22px 20px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(129, 140, 248, 0.28), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.2), transparent 60%),
+        linear-gradient(140deg, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 1));
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.8fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    @media (max-width: 860px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3.3vw, 32px);
+      line-height: 1.18;
+      margin-bottom: 10px;
+      font-weight: 680;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(120deg, #a5b4fc, #22c55e);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-text {
+      font-size: 14px;
+      color: #e5e7eb;
+      margin-bottom: 10px;
+    }
+
+    .hero-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .hero-meta-pill {
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background-color: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+    }
+
+    .hero-side {
+      border-radius: 18px;
+      padding: 14px 14px 12px;
+      background:
+        radial-gradient(circle at top right, rgba(248, 250, 252, 0.1), transparent 60%),
+        linear-gradient(135deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .hero-side-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .hero-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hero-stat {
+      border-radius: 14px;
+      padding: 10px;
+      background-color: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .hero-stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .hero-stat-value {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .hero-stat-footnote {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .hero-legends {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .legend-chip {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.9);
+    }
+
+    /* Filter row */
+
+    .filter-row {
+      margin-top: 18px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .filter-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .filter-chip {
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.9);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .filter-chip.active {
+      background: linear-gradient(130deg, #6366f1, #22c55e);
+      border-color: transparent;
+      color: #020617;
+      font-weight: 500;
+    }
+
+    /* Cards grid */
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      padding: 14px 14px 12px;
+      background:
+        radial-gradient(circle at top left, rgba(148, 163, 248, 0.18), transparent 60%),
+        linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 1));
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
+      transition: transform 0.14s ease, box-shadow 0.14s ease,
+        border-color 0.14s ease;
+      display: flex;
+      flex-direction: column;
+      min-height: 180px;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 55px rgba(15, 23, 42, 1);
+      border-color: rgba(129, 140, 248, 0.9);
+    }
+
+    .card-industry {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .card-body {
+      font-size: 13px;
+      color: #e5e7eb;
+      margin-bottom: 8px;
+      flex-grow: 1;
+    }
+
+    .card-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .card-meta-pill {
+      font-size: 11px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.9);
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2px;
+    }
+
+    .card-link-text {
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #a5b4fc;
+    }
+
+    .card-link-text span {
+      font-size: 14px;
+    }
+
+    .card-tagline {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-avatar">M</div>
+        <div>
+          <div class="brand-text-main">Software Engineering Portfolio</div>
+          <div class="brand-text-sub">End-to-end case studies across industries</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          Open to Senior / Staff backend roles
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div>
+        <div class="hero-kicker">Case Study Portfolio</div>
+        <h1 class="hero-title">
+          Real-world backend &amp; product work across
+          <span class="hero-highlight">GovTech, fintech, media, logistics, and more</span>.
+        </h1>
+        <p class="hero-text">
+          Each card below opens a detailed, story-style case study: business context, constraints,
+          architecture, execution, and impact. Together they show how I design, ship, and
+          stabilise production systems in very different domains — from government SaaS and payment
+          gateways to media CMS, logistics, IVR, and ecommerce.
+        </p>
+        <div class="hero-meta-row">
+          <div class="hero-meta-pill">9 detailed case studies</div>
+          <div class="hero-meta-pill">2012 → Present</div>
+          <div class="hero-meta-pill">PHP • Go • Node • Python • Django • Laravel • React • Vue</div>
+        </div>
+      </div>
+      <aside class="hero-side">
+        <div class="hero-side-title">At a glance</div>
+        <div class="hero-stat-grid">
+          <div class="hero-stat">
+            <div class="hero-stat-label">Industry Coverage</div>
+            <div class="hero-stat-value">8+</div>
+            <div class="hero-stat-footnote">
+              GovTech, fintech, media, logistics, ads, healthcare, telephony, ecommerce, IIG.
+            </div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-label">Focus</div>
+            <div class="hero-stat-value">Impact</div>
+            <div class="hero-stat-footnote">
+              Each page highlights concrete, business-facing outcomes — not just tech stacks.
+            </div>
+          </div>
+        </div>
+        <div class="hero-legends">
+          <span class="legend-chip">Production systems</span>
+          <span class="legend-chip">Refactors &amp; bug-fixing</span>
+          <span class="legend-chip">Architecture &amp; scaling</span>
+          <span class="legend-chip">Developer experience</span>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Filters -->
+    <section class="filter-row">
+      <div class="filter-label">
+        Browse by industry focus:
+      </div>
+      <div class="filter-chips">
+        <span class="filter-chip active" data-category="all">All</span>
+        <span class="filter-chip" data-category="GovTech">GovTech</span>
+        <span class="filter-chip" data-category="Fintech &amp; Payments">Fintech &amp; Payments</span>
+        <span class="filter-chip" data-category="Media &amp; Content">Media &amp; Content</span>
+        <span class="filter-chip" data-category="Logistics &amp; Ops">Logistics &amp; Ops</span>
+        <span class="filter-chip" data-category="Healthcare">Healthcare</span>
+        <span class="filter-chip" data-category="Telephony &amp; IVR">Telephony &amp; IVR</span>
+        <span class="filter-chip" data-category="Ecommerce">Ecommerce</span>
+        <span class="filter-chip" data-category="Infrastructure / IIG">Infrastructure / IIG</span>
+      </div>
+    </section>
+
+    <!-- Cards grid -->
+    <section class="grid" aria-label="Case study list">
+      <!-- AmiProbashi – GovTech -->
+      <a class="card-link" href="amiprobashi/index.html" data-category="GovTech">
+        <article class="card">
+          <div class="card-industry">GovTech • National SaaS</div>
+          <h2 class="card-title">AmiProbashi – Migrant Services Platform</h2>
+          <div class="card-subtitle">Senior Software Engineer • Feb 2025 – Present</div>
+          <p class="card-body">
+            High-impact bug fixes and feature work on the Ami-Probashi MoEWOE–BMET platform
+            (~7M records), improving reliability for a national migrant database and protecting a
+            multi-year government revenue channel.
+          </p>
+          <div class="card-meta-row">
+            <span class="card-meta-pill">PHP / Laravel / Vue</span>
+            <span class="card-meta-pill">MySQL</span>
+            <span class="card-meta-pill">GovTech</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-link-text">
+              View GovTech case study <span>↗</span>
+            </div>
+            <div class="card-tagline">National-scale, mission-critical SaaS</div>
+          </div>
+        </article>
+      </a>
+
+      <!-- Media – DoptorITMart -->
+      <a class="card-link" href="dailyniropekkho_doptorit/index.html" data-category="Media &amp; Content">
+        <article class="card">
+          <div class="card-industry">Media • Digital Publishing</div>
+          <h2 class="card-title">Multi-tenant News CMS (DoptorITMart)</h2>
+          <div class="card-subtitle">Oct 2023 – Feb 2025 • Dhaka, Bangladesh</div>
+          <p class="card-body">
+            Built and shipped a multi-tenant news portal/CMS using Next.js, TypeScript,
+            Laravel, MongoDB, and MySQL, then commercialised it with paying media clients
+            (e.g., Daily Niropekkho), validating product–market fit.
+          </p>
+          <div class="card-meta-row">
+            <span class="card-meta-pill">Next.js / TypeScript</span>
+            <span class="card-meta-pill">Laravel • MongoDB • MySQL</span>
+            <span class="card-meta-pill">SaaS CMS</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-link-text">
+              View media case study <span>↗</span>
+            </div>
+            <div class="card-tagline">Productised CMS for newsrooms</div>
+          </div>
+        </article>
+      </a>
+
+      <!-- Fintech – ShurjoPay -->
+      <a class="card-link" href="shurjopay/index.html" data-category="Fintech &amp; Payments">
+        <article class="card">
+          <div class="card-industry">Fintech • Payment Gateway</div>
+          <h2 class="card-title">ShurjoPay – Gateway Reliability</h2>
+          <div class="card-subtitle">Software Engineer • Jan 2022 – Aug 2023</div>
+          <p class="card-body">
+            Resolved critical payment gateway failures in a PHP/Laravel/Vue stack, restoring
+            successful transactions and contributing to stronger customer trust and new customer
+            acquisition for a Bangladeshi payment gateway.
+          </p>
+          <div class="card-meta-row">
+            <span class="card-meta-pill">PHP / Laravel / Vue</span>
+            <span class="card-meta-pill">Fintech</span>
+            <span class="card-meta-pill">Production incident work</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-link-text">
+              View fintech case study <span>↗</span>
+            </div>
+            <div class="card-tagline">Stability in money flows</div>
+          </div>
+        </article>
+      </a>
+
+      <!-- Ads / Click processing – SulacoTec (treated as Media & Content) -->
+      <a class="card-link" href="sulacotec/index.html" data-category="Media &amp; Content">
+        <article class="card">
+          <div class="card-industry">AdTech • Click Processing</div>
+          <h2 class="card-title">CPC/CPA/CPM Bid Prediction (SulacoTec)</h2>
+          <div class="card-subtitle">Senior Software Engineer • Oct 2023 – Jul 2024</div>
+          <p class="card-body">
+            Analysed ~100M historical click records to build a Laravel-based system that
+            predicts CPC/CPA/CPM bids for bulk click purchases, helping stabilise revenue and
+            bidding strategy in a high-volume ad environment.
+          </p>
+          <div class="card-meta-row">
+            <span class="card-meta-pill">Laravel</span>
+            <span class="card-meta-pill">AdTech / Bid modelling</span>
+            <span class="card-meta-pill">High-volume data</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-link-text">
+              View adtech case study <span>↗</span>
+            </div>
+            <div class="card-tagline">Turning click history into insight</div>
+          </div>
+        </article>
+      </a>
+
+      <!-- Logistics – OneIXchange -->
+      <a class="card-link" href="freightforwarding_oneixchange/index.html" data-category="Logistics &amp; Ops">
+        <article class="card">
+          <div class="card-industry">Logistics • Freight Forwarding</div>
+          <h2 class="card-title">Freight Operations Portal (OneIXchange)</h2>
+          <div class="card-subtitle">Senior Software Engineer • Oct 2018 – Oct 2019</div>
+          <p class="card-body">
+            Built and shipped a freight forwarding operations portal with Django, React, and
+            PostgreSQL to automate AWB and BL generation, reducing manual paperwork and errors
+            and commercialised it with Navana Logistics as anchor customer.
+          </p>
+          <div class="card-meta-row">
+            <span class="card-meta-pill">Django / React</span>
+            <span class="card-meta-pill">PostgreSQL</span>
+            <span class="card-meta-pill">Logistics SaaS</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-link-text">
+              View logistics case study <span>↗</span>
+            </div>
+            <div class="card-tagline">Document-heavy freight workflows</div>
+          </div>
+        </article>
+      </a>
+
+      <!-- Healthcare – MS Concitus -->
+      <a class="card-link" href="healthcare/index.html" data-category="Healthcare">
+        <article class="card">
+          <div class="card-industry">Healthcare • US Health Plans</div>
+          <h2 class="card-title">Healthcare Plan Operations (MS Concitus)</h2>
+          <div class="card-subtitle">Senior Software Engineer • Jan 2016 – Dec 2021</div>
+          <p class="card-body">
+            Delivered critical production bug fixes for a US healthcare plan operations portal
+            used by agents, stabilising enrolment and policy workflows and protecting recurring
+            revenue tied to US government contracts.
+          </p>
+          <div class="card-meta-row">
+            <span class="card-meta-pill">Production reliability</span>
+            <span class="card-meta-pill">Policy workflows</span>
+            <span class="card-meta-pill">US healthcare domain</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-link-text">
+              View healthcare case study <span>↗</span>
+            </div>
+            <div class="card-tagline">Reliability as a core feature</div>
+          </div>
+        </article>
+      </a>
+
+      <!-- Telephony / IVR -->
+      <a class="card-link" href="telephony/index.html" data-category="Telephony &amp; IVR">
+        <article class="card">
+          <div class="card-industry">Telephony • IVR</div>
+          <h2 class="card-title">Twilio + Asterisk IVR Automation</h2>
+          <div class="card-subtitle">Telephony/IVR Experience • 2016 – 2021</div>
+          <p class="card-body">
+            Designed and implemented an IVR system using Twilio APIs and Asterisk to automate
+            inbound call routing and self-service flows, reducing manual call handling and
+            improving customer support efficiency.
+          </p>
+          <div class="card-meta-row">
+            <span class="card-meta-pill">Twilio Voice</span>
+            <span class="card-meta-pill">Asterisk</span>
+            <span class="card-meta-pill">Call routing &amp; self-service</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-link-text">
+              View IVR case study <span>↗</span>
+            </div>
+            <div class="card-tagline">Smarter front door for support</div>
+          </div>
+        </article>
+      </a>
+
+      <!-- Dropshipping / eBay -->
+      <a class="card-link" href="dropshipping/index.html" data-category="Ecommerce">
+        <article class="card">
+          <div class="card-industry">Ecommerce • Dropshipping</div>
+          <h2 class="card-title">eBay Inventory &amp; Packing Automation</h2>
+          <div class="card-subtitle">Dropshipping Client • May 2014 – Sep 2016</div>
+          <p class="card-body">
+            Built a PHP + eBay API inventory tracker and packing slip automation tool that
+            streamlined fulfilment and operations, enabling a dropshipping business to scale to
+            roughly $60K in monthly revenue without proportional headcount.
+          </p>
+          <div class="card-meta-row">
+            <span class="card-meta-pill">PHP</span>
+            <span class="card-meta-pill">eBay API</span>
+            <span class="card-meta-pill">Fulfilment automation</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-link-text">
+              View dropshipping case study <span>↗</span>
+            </div>
+            <div class="card-tagline">Ops as a growth lever</div>
+          </div>
+        </article>
+      </a>
+
+      <!-- IIG / Internet Gateway -->
+      <a class="card-link" href="IIG/index.html" data-category="Infrastructure / IIG">
+        <article class="card">
+          <div class="card-industry">Infrastructure • IIG</div>
+          <h2 class="card-title">IIG Ticketing &amp; Notifications Prototype</h2>
+          <div class="card-subtitle">IIG Tools • Feb 2012 – Jan 2014</div>
+          <p class="card-body">
+            Built a PHP/osTicket-based prototype ticketing system with email notifications for
+            IIG stakeholders, showing how network incidents could be tracked, routed, and
+            communicated more systematically across NOC and partners.
+          </p>
+          <div class="card-meta-row">
+            <span class="card-meta-pill">osTicket / PHP</span>
+            <span class="card-meta-pill">NOC tooling</span>
+            <span class="card-meta-pill">Email notifications</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-link-text">
+              View IIG case study <span>↗</span>
+            </div>
+            <div class="card-tagline">Incident backbone for IIG ops</div>
+          </div>
+        </article>
+      </a>
+    </section>
+
+    <footer>
+      You can share this page as a single entry point, and link each card as a deep-dive case
+      study in your CV, LinkedIn, or email outreach.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      const chips = document.querySelectorAll('.filter-chip');
+      const cardLinks = document.querySelectorAll('.card-link');
+
+      function applyFilter(category) {
+        cardLinks.forEach(link => {
+          const cardCategory = link.dataset.category;
+          if (!category || category === 'all' || cardCategory === category) {
+            link.style.display = '';
+          } else {
+            link.style.display = 'none';
+          }
+        });
+      }
+
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          // Update active state
+          chips.forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+
+          const category = chip.dataset.category || 'all';
+          applyFilter(category);
+        });
+      });
+
+      // Initial state: "All"
+      applyFilter('all');
+    })();
+  </script>
+</body>
+</html>

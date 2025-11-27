@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Predictive Bidding on Historical Click Data – SulacoTec Case Study</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      /* AdTech / click-processing theme – neon screens & dashboards */
+      --bg: #020314;
+      --bg-alt: #050018;
+      --card: #020617;
+      --accent: #a855f7;              /* violet */
+      --accent-2: #facc15;            /* yellow */
+      --accent-soft: rgba(168, 85, 247, 0.18);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 50px rgba(15, 23, 42, 0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #1f2937 0, transparent 55%),
+        radial-gradient(circle at bottom right, #020617 0, #000000 60%);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: #facc15;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    /* Sticky header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 3, 20, 0.98),
+        rgba(30, 64, 175, 0.88),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.32);
+    }
+
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background:
+        conic-gradient(from 210deg, #a855f7, #f97316, #facc15, #22d3ee, #a855f7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #020617;
+      box-shadow: 0 10px 25px rgba(168, 85, 247, 0.85);
+      font-size: 17px;
+    }
+
+    .brand-text-main {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background-color: rgba(15, 23, 42, 0.8);
+    }
+
+    .btn-primary {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #a855f7, #f97316);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(30, 64, 175, 0.9);
+      transition: transform 0.13s ease, box-shadow 0.13s ease,
+        background 0.13s ease;
+    }
+
+    .btn-primary span { font-size: 16px; }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(30, 64, 175, 1);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 8px 20px rgba(30, 64, 175, 0.85);
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 18px 48px;
+    }
+
+    /* Hero */
+
+    .hero {
+      margin-top: 10px;
+      margin-bottom: 32px;
+      padding: 22px 22px 20px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(129, 140, 248, 0.34), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(248, 250, 252, 0.07), transparent 60%),
+        linear-gradient(145deg, rgba(2, 6, 23, 0.97), rgba(3, 7, 18, 1));
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    @media (max-width: 780px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 20px 18px 18px;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3.2vw, 30px);
+      line-height: 1.2;
+      margin-bottom: 10px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .hero-tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background-color: rgba(88, 28, 135, 0.7);
+      color: #fef9c3;
+      border: 1px solid rgba(250, 204, 21, 0.9);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 12px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hero-meta-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta-item strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hero-summary {
+      font-size: 14px;
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .hero-side {
+      padding: 12px 14px 10px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at top right, rgba(248, 250, 252, 0.18), transparent 60%),
+        linear-gradient(135deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .hero-side-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .metric-card {
+      border-radius: 14px;
+      padding: 10px 11px;
+      background-color: rgba(15, 23, 42, 0.97);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #f9fafb;
+    }
+
+    .metric-footnote {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .stack-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.85);
+    }
+
+    /* Content layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 1.55fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-card {
+      background-color: rgba(15, 23, 42, 0.98);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 18px 18px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 4px 0 6px;
+    }
+
+    li {
+      font-size: 14px;
+      margin-bottom: 3px;
+      color: #e5e7eb;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      background-color: var(--accent-soft);
+      padding: 10px 11px;
+      border-left: 3px solid var(--accent-2);
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .timeline {
+      border-left: 1px dashed rgba(148, 163, 184, 0.5);
+      margin-top: 6px;
+      padding-left: 14px;
+    }
+
+    .timeline-item {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -15px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #fef9c3, #f97316);
+      box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.35);
+    }
+
+    .timeline-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .timeline-body {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .side-section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .side-chip {
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin-bottom: 4px;
+      display: inline-block;
+      color: var(--text-muted);
+    }
+
+    .chart-block {
+      background-color: #020617;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 10px 10px 8px;
+      margin-top: 10px;
+    }
+
+    .chart-block img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .chart-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-backdrop.active { display: flex; }
+
+    .modal {
+      max-width: 720px;
+      width: 100%;
+      margin: 16px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top left, rgba(129, 140, 248, 0.25), transparent 60%),
+        #020617;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 1);
+      padding: 18px 18px 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-icon:hover { background-color: rgba(15, 23, 42, 1); }
+
+    .modal-body {
+      font-size: 13px;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .summary-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .summary-list {
+      padding-left: 16px;
+      margin: 2px 0 4px;
+    }
+
+    .summary-list li {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-badge">ST</div>
+        <div>
+          <div class="brand-text-main">Predictive Click Bidding</div>
+          <div class="brand-text-sub">SulacoTec AdTech Case Study</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="pill">AdTech • Oct 2023 – Jul 2024</div>
+        <button class="btn-primary" id="openSummaryBtn">
+          <span>☰</span> One-Page Summary
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <div class="hero-tagline">
+          <span>●</span> AdTech • Click Processing • Predictive Bidding
+        </div>
+        <h1 id="hero-title" class="hero-title">
+          Using 100M+ Historical Clicks to Predict CPC/CPA/CPM for Volume Buying
+        </h1>
+        <p class="hero-subtitle">
+          Analysed a historical click-processing database (~100M records of bids, outcomes, and
+          revenue) and built a Laravel-based system to predict CPC/CPA/CPM when purchasing large
+          batches of clicks for downstream customers, improving pricing accuracy and stabilising
+          SulacoTec’s revenue stream.
+        </p>
+
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <strong>Role</strong> Senior Software Engineer
+          </div>
+          <div class="hero-meta-item">
+            <strong>Org</strong> SulacoTec, Dhaka, Bangladesh
+          </div>
+          <div class="hero-meta-item">
+            <strong>Industry</strong> AdTech • Click Processing
+          </div>
+        </div>
+
+        <p class="hero-summary">
+          SulacoTec buys and routes large volumes of ad clicks on behalf of customers. Profitability
+          depends on bidding at the right CPC/CPA/CPM levels given uncertain downstream conversion
+          performance. I led the design and implementation of a predictive system that turned
+          100M+ rows of historical click data into practical bid guidance for new campaigns.
+        </p>
+      </div>
+
+      <aside class="hero-side" aria-label="Snapshot">
+        <div class="hero-side-label">Snapshot</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Data Scale</div>
+            <div class="metric-value">≈ 100M</div>
+            <div class="metric-footnote">
+              Historical records of bids, impressions, clicks, and final outcomes.
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Prediction Targets</div>
+            <div class="metric-value">CPC / CPA / CPM</div>
+            <div class="metric-footnote">
+              Used to price bulk click purchases for a key customer.
+            </div>
+          </div>
+        </div>
+        <div class="metric-card" style="margin-top:8px;">
+          <div class="metric-label">Impact Focus</div>
+          <div class="metric-footnote">
+            • More accurate bidding on new traffic sources.<br />
+            • Better margin control on volume deals.<br />
+            • Smoother, more predictable revenue stream.
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="hero-side-label">Core Stack</div>
+          <div class="stack-list">
+            <span class="stack-pill">PHP</span>
+            <span class="stack-pill">Laravel</span>
+            <span class="stack-pill">MySQL</span>
+            <span class="stack-pill">Click Logs</span>
+            <span class="stack-pill">Prediction Models</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout" aria-label="Case study content layout">
+      <!-- Main column -->
+      <div>
+        <article class="section-card" id="introduction">
+          <div class="eyebrow">Overview</div>
+          <h2>Introduction</h2>
+          <p>
+            SulacoTec operates in the click-brokering layer of the ad stack: ingesting bid
+            requests, buying traffic in bulk, and reselling performance to downstream customers.
+            Historically, bid prices were tuned using heuristics and small samples of performance
+            data, which made it hard to price large-volume deals with confidence.
+          </p>
+          <p>
+            As a Senior Software Engineer, I was tasked with turning a large historical
+            click-processing database into a decision engine. The goal was to predict reasonable
+            CPC, CPA, and CPM ranges for given traffic segments so the business could negotiate
+            and execute bulk click purchases with more predictable margins.
+          </p>
+        </article>
+
+        <article class="section-card" id="context">
+          <div class="eyebrow">Background</div>
+          <h2>Context</h2>
+          <p>
+            Over time, SulacoTec accumulated ~100 million rows of historical data across:
+          </p>
+          <ul>
+            <li>Bid requests and clearing prices.</li>
+            <li>Clicks, conversions, and post-click outcomes.</li>
+            <li>Traffic sources, geos, devices, and creative metadata.</li>
+          </ul>
+          <p>
+            However, this data mostly sat in operational tables used for reporting, not as an
+            input to predictive decisions. There was a clear opportunity: use the historical
+            record to estimate expected performance for new campaigns and traffic types.
+          </p>
+        </article>
+
+        <article class="section-card" id="problem">
+          <div class="eyebrow">Challenge</div>
+          <h2>Problem</h2>
+          <p>
+            The business needed to answer a seemingly simple question:
+          </p>
+          <p>
+            <strong>
+              “If we buy N clicks from this traffic source and geo, what CPC/CPA/CPM should we
+              target to stay profitable for a given customer?”
+            </strong>
+          </p>
+          <p>
+            In practice, this meant:
+          </p>
+          <ul>
+            <li>Dealing with noisy, sparse, and sometimes inconsistent historical data.</li>
+            <li>Capturing non-obvious relationships (e.g., device × geo × time-of-day).</li>
+            <li>Delivering answers quickly enough to be useful in negotiations and campaign setup.</li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="constraints">
+          <div class="eyebrow">Operating Environment</div>
+          <h2>Constraints &amp; Requirements</h2>
+          <ul>
+            <li>
+              <strong>Large dataset</strong>: ~100M historical rows had to be processed efficiently
+              without blocking operational systems.
+            </li>
+            <li>
+              <strong>Laravel-first</strong>: the prediction system needed to integrate with an
+              existing Laravel control panel used by account managers.
+            </li>
+            <li>
+              <strong>Explainability</strong>: outputs had to be understandable; account teams
+              needed to see how predictions were derived.
+            </li>
+            <li>
+              <strong>Pragmatic, not academic</strong>: performance and stability were more
+              important than using the “fanciest” machine learning model.
+            </li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="implementation">
+          <div class="eyebrow">Execution</div>
+          <h2>Implementation Highlights</h2>
+
+          <h3>1) Data modelling &amp; feature engineering</h3>
+          <ul>
+            <li>
+              Consolidated historical logs into an analysis-ready schema grouped by key segments:
+              traffic source, geo, device type, and placement category.
+            </li>
+            <li>
+              Computed aggregated metrics such as historical CPC, CPA, CTR, and conversion rate
+              for each segment and time window.
+            </li>
+            <li>
+              Cleaned and normalised inconsistent records (e.g., missing conversions, duplicate
+              clicks) to reduce noise in the predictions.
+            </li>
+          </ul>
+
+          <h3>2) Prediction logic</h3>
+          <ul>
+            <li>
+              Implemented segment-level models that estimated expected value per click and per
+              impression, then derived suggested CPC/CPM ranges.
+            </li>
+            <li>
+              Incorporated configurable safety margins so pricing could be conservative for new or
+              volatile segments.
+            </li>
+            <li>
+              Exposed both point estimates and confidence bands, allowing account managers to see
+              “aggressive”, “balanced”, and “conservative” bids.
+            </li>
+          </ul>
+
+          <h3>3) Laravel integration</h3>
+          <ul>
+            <li>
+              Built a Laravel module where users could select a customer, traffic segment, and
+              volume, then request bid guidance.
+            </li>
+            <li>
+              Implemented background jobs to run heavier aggregations asynchronously so the UI
+              stayed responsive.
+            </li>
+            <li>
+              Added simple visualisations (spark lines, trend chips) to show how current
+              predictions compared to historical performance.
+            </li>
+          </ul>
+
+          <div class="callout">
+            The system turned a “gut-feel” pricing conversation into a data-backed one: account
+            teams could quote CPC/CPA/CPM targets grounded in the behaviour of hundreds of millions
+            of historical events.
+          </div>
+        </article>
+
+        <article class="section-card" id="impact">
+          <div class="eyebrow">Outcomes</div>
+          <h2>Impact &amp; Outcomes</h2>
+          <p>
+            While exact financials are confidential, the new system improved both decision quality
+            and confidence for bulk click purchases:
+          </p>
+          <ul>
+            <li>
+              More accurate bid proposals for a key customer, reducing the risk of underpricing or
+              overpaying for traffic.
+            </li>
+            <li>
+              Clearer understanding of which traffic segments were historically profitable versus
+              fragile.
+            </li>
+            <li>
+              A more stable revenue stream as pricing for volume deals became less ad hoc and more
+              model-driven.
+            </li>
+          </ul>
+
+          <!-- Charts – replace src paths with your actual PNGs -->
+          <div class="chart-block">
+            <img src="chart_bid_prediction_accuracy.png"
+                 alt="Line or bar chart showing actual vs predicted CPC/CPA/CPM over sample campaigns." />
+            <div class="chart-caption">
+              Example: actual vs. predicted CPC/CPA/CPM over a set of campaigns using the new
+              system. Replace with your real accuracy chart.
+            </div>
+          </div>
+
+          <div class="chart-block">
+            <img src="chart_revenue_stability.png"
+                 alt="Chart showing variance in revenue or margin before and after predictive bidding." />
+            <div class="chart-caption">
+              Example: reduction in revenue volatility or margin variance before and after
+              predictive bidding was introduced.
+            </div>
+          </div>
+
+          <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
+            Charts are placeholders illustrating where you can plug in real performance and revenue
+            stability visuals.
+          </p>
+        </article>
+
+        <article class="section-card" id="learnings">
+          <div class="eyebrow">Reflection</div>
+          <h2>Key Learnings</h2>
+          <ul>
+            <li>
+              In adtech, old data is a strategic asset; the hard part is shaping it into something
+              operations teams can actually use.
+            </li>
+            <li>
+              Segment-level, explainable models can be more valuable than opaque models that are
+              hard for account teams to trust.
+            </li>
+            <li>
+              Integrating predictions into existing tools (Laravel control panels, reports) is as
+              important as the models themselves.
+            </li>
+            <li>
+              Even simple predictive guidance can materially stabilise revenue when pricing bulk
+              click deals.
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <!-- Sidebar column -->
+      <aside aria-label="Sidebar information">
+        <section class="section-card">
+          <div class="side-section-title">Role &amp; Responsibilities</div>
+          <p>
+            As Senior Software Engineer at SulacoTec, I:
+          </p>
+          <ul>
+            <li>Led design of the data model and prediction logic for bid guidance.</li>
+            <li>Implemented the Laravel module powering the prediction UI and APIs.</li>
+            <li>
+              Worked with business stakeholders to define acceptable risk and margin thresholds.
+            </li>
+            <li>
+              Helped interpret model outputs for non-technical account managers during rollout.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Architecture Snapshot</div>
+          <ul>
+            <li><strong>Backend:</strong> Laravel services for prediction requests and background jobs.</li>
+            <li><strong>Database:</strong> MySQL tables holding aggregated segment statistics and
+                raw click logs.</li>
+            <li><strong>Prediction logic:</strong> segment-level models &amp; heuristics written in PHP.</li>
+            <li><strong>UI:</strong> Laravel views for bid configuration and result visualisation.</li>
+          </ul>
+          <div class="callout" style="margin-top:10px;">
+            The design emphasised performance and maintainability: heavy calculations ran in
+            background jobs, while the UI surfaced results in milliseconds.
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Timeline</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-title">Oct 2023 – Dec 2023: Discovery</div>
+              <div class="timeline-body">
+                Explored existing click-processing database, identified key fields, and mapped data
+                quality issues.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">Jan 2024 – Apr 2024: Modelling &amp; System Build</div>
+              <div class="timeline-body">
+                Built aggregation pipelines, segment metrics, and the first version of the
+                prediction engine integrated into Laravel.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">May 2024 – Jul 2024: Rollout &amp; Tuning</div>
+              <div class="timeline-body">
+                Used the system on real deals, tuned safety margins, and iterated based on
+                feedback from account managers and finance.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Keywords &amp; Themes</div>
+          <p>Useful tags for CVs, portfolios, and search:</p>
+          <div>
+            <span class="side-chip">AdTech</span>
+            <span class="side-chip">Click Processing</span>
+            <span class="side-chip">Predictive Bidding</span>
+            <span class="side-chip">CPC / CPA / CPM</span>
+            <span class="side-chip">Laravel Data Systems</span>
+            <span class="side-chip">Large-Scale Analytics</span>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <footer>
+      Turning historical clicks into smarter bids — Predictive Bidding System at SulacoTec.
+    </footer>
+  </main>
+
+  <!-- One-page summary modal -->
+  <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">SulacoTec – One-Page Summary</div>
+          <div class="modal-subtitle">
+            Quick snapshot of the predictive bidding case study.
+          </div>
+        </div>
+        <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="summary-grid">
+          <div>
+            <div class="summary-section-title">Context</div>
+            <ul class="summary-list">
+              <li>Click-processing and ad routing company handling large volumes of traffic.</li>
+              <li>Historical database of ~100M clicks, bids, and outcomes.</li>
+              <li>Needed better guidance when pricing bulk click deals for a key customer.</li>
+            </ul>
+
+            <div class="summary-section-title">Challenge</div>
+            <ul class="summary-list">
+              <li>Estimate sustainable CPC/CPA/CPM targets from noisy historical data.</li>
+              <li>Support large-volume negotiations without relying on gut feeling.</li>
+              <li>Integrate predictions into an existing Laravel-based control panel.</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="summary-section-title">My Role</div>
+            <ul class="summary-list">
+              <li>Senior Software Engineer leading system design and implementation.</li>
+              <li>Modelled historical data and implemented prediction logic.</li>
+              <li>
+                Built Laravel UI and background jobs for running and exposing predictions to
+                account teams.
+              </li>
+            </ul>
+
+            <div class="summary-section-title">Approach</div>
+            <ul class="summary-list">
+              <li>Aggregate historical data by traffic segment and compute CPC/CPA/CPM metrics.</li>
+              <li>Derive predictive ranges with configurable safety margins.</li>
+              <li>Provide “aggressive / balanced / conservative” bid recommendations in the UI.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="summary-section-title">Outcomes</div>
+        <ul class="summary-list">
+          <li>More data-backed CPC/CPA/CPM bids for bulk click purchases.</li>
+          <li>Improved understanding of profitable vs risky traffic segments.</li>
+          <li>More stable revenue streams and fewer surprises on volume deals.</li>
+        </ul>
+
+        <div class="summary-section-title">Key Takeaways</div>
+        <ul class="summary-list">
+          <li>Historical click data becomes powerful when shaped into decision tools.</li>
+          <li>Explainable, segment-level models build more trust than opaque black boxes.</li>
+          <li>
+            Integrating predictions directly into the tools account managers already use is
+            critical for adoption.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modal = document.getElementById("summaryModal");
+      const openBtn = document.getElementById("openSummaryBtn");
+      const closeBtn = document.getElementById("closeSummaryBtn");
+
+      function openModal() {
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

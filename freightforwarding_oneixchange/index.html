@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Freight Operations Portal – OneIXchange Case Study</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      /* Freight / logistics theme – ocean blue + port orange */
+      --bg: #020617;
+      --bg-alt: #02081a;
+      --card: #020617;
+      --accent: #f97316;              /* container orange */
+      --accent-2: #38bdf8;            /* ocean blue */
+      --accent-soft: rgba(56, 189, 248, 0.16);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 50px rgba(15, 23, 42, 0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #0b1120 0, transparent 55%),
+        radial-gradient(circle at bottom right, #020617 0, #000000 60%);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: #7dd3fc;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    /* Sticky header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(8, 47, 73, 0.9),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background:
+        conic-gradient(from 210deg, #f97316, #38bdf8, #22c55e, #f97316);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #020617;
+      box-shadow: 0 10px 25px rgba(248, 113, 22, 0.8);
+      font-size: 17px;
+    }
+
+    .brand-text-main {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background-color: rgba(15, 23, 42, 0.75);
+    }
+
+    .btn-primary {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #f97316, #38bdf8);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(8, 47, 73, 0.9);
+      transition: transform 0.13s ease, box-shadow 0.13s ease,
+        background 0.13s ease;
+    }
+
+    .btn-primary span { font-size: 16px; }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(8, 47, 73, 1);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 8px 20px rgba(8, 47, 73, 0.8);
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 18px 48px;
+    }
+
+    /* Hero */
+
+    .hero {
+      margin-top: 10px;
+      margin-bottom: 32px;
+      padding: 22px 22px 20px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.25), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(248, 113, 22, 0.2), transparent 60%),
+        linear-gradient(145deg, rgba(15, 23, 42, 0.97), rgba(3, 7, 18, 1));
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    @media (max-width: 780px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 20px 18px 18px;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3.2vw, 30px);
+      line-height: 1.2;
+      margin-bottom: 10px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .hero-tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background-color: rgba(8, 47, 73, 0.9);
+      color: #fef3c7;
+      border: 1px solid rgba(248, 113, 22, 0.9);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 12px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hero-meta-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta-item strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hero-summary {
+      font-size: 14px;
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .hero-side {
+      padding: 12px 14px 10px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at top right, rgba(248, 250, 252, 0.1), transparent 60%),
+        linear-gradient(135deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+    }
+
+    .hero-side-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .metric-card {
+      border-radius: 14px;
+      padding: 10px 11px;
+      background-color: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #f9fafb;
+    }
+
+    .metric-footnote {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .stack-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.85);
+    }
+
+    /* Content layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 1.55fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-card {
+      background-color: rgba(15, 23, 42, 0.98);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 18px 18px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 4px 0 6px;
+    }
+
+    li {
+      font-size: 14px;
+      margin-bottom: 3px;
+      color: #e5e7eb;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      background-color: var(--accent-soft);
+      padding: 10px 11px;
+      border-left: 3px solid var(--accent);
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .timeline {
+      border-left: 1px dashed rgba(148, 163, 184, 0.5);
+      margin-top: 6px;
+      padding-left: 14px;
+    }
+
+    .timeline-item {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -15px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #fffbeb, #f97316);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+    }
+
+    .timeline-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .timeline-body {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .side-section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .side-chip {
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin-bottom: 4px;
+      display: inline-block;
+      color: var(--text-muted);
+    }
+
+    .chart-block {
+      background-color: #020617;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 10px 10px 8px;
+      margin-top: 10px;
+    }
+
+    .chart-block img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .chart-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-backdrop.active { display: flex; }
+
+    .modal {
+      max-width: 720px;
+      width: 100%;
+      margin: 16px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.22), transparent 60%),
+        #020617;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 1);
+      padding: 18px 18px 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-icon:hover { background-color: rgba(15, 23, 42, 1); }
+
+    .modal-body {
+      font-size: 13px;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .summary-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .summary-list {
+      padding-left: 16px;
+      margin: 2px 0 4px;
+    }
+
+    .summary-list li {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-badge">1X</div>
+        <div>
+          <div class="brand-text-main">Freight Operations Portal</div>
+          <div class="brand-text-sub">OneIXchange Logistics Case Study</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="pill">Freight-Forwarding • Oct 2018 – Oct 2019</div>
+        <button class="btn-primary" id="openSummaryBtn">
+          <span>☰</span> One-Page Summary
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <div class="hero-tagline">
+          <span>●</span> Freight-Forwarding • Operations • Logistics SaaS
+        </div>
+        <h1 id="hero-title" class="hero-title">
+          Automating AWB &amp; BL Generation for Freight Forwarders with Django &amp; React
+        </h1>
+        <p class="hero-subtitle">
+          Built and shipped a freight forwarding operations portal using Django, React, and
+          PostgreSQL that automates AWB (Air Waybill) and BL (Bill of Lading) generation, reducing
+          manual paperwork and errors. Commercialised the solution with Navana Logistics as an
+          anchor customer, demonstrating strong revenue potential in the logistics SaaS vertical.
+        </p>
+
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <strong>Role</strong> Senior Software Engineer
+          </div>
+          <div class="hero-meta-item">
+            <strong>Org</strong> OneIXchange, Dhaka, Bangladesh
+          </div>
+          <div class="hero-meta-item">
+            <strong>Industry</strong> Freight-Forwarding &amp; Logistics
+          </div>
+        </div>
+
+        <p class="hero-summary">
+          Freight forwarders live in documents: AWBs, BLs, manifests, invoices. At OneIXchange I
+          led the engineering work on an operations portal that turned those documents into
+          structured, automated workflows — cutting down manual data entry, reducing errors, and
+          making it easier for teams like Navana Logistics to run day-to-day shipments.
+        </p>
+      </div>
+
+      <aside class="hero-side" aria-label="Snapshot">
+        <div class="hero-side-label">Snapshot</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Key Workflows</div>
+            <div class="metric-value">AWB &amp; BL</div>
+            <div class="metric-footnote">
+              Automated generation &amp; storage for air and sea shipments.
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Commercial Impact</div>
+            <div class="metric-value">Anchor SaaS</div>
+            <div class="metric-footnote">
+              Navana Logistics onboarded as anchor customer, validating product value.
+            </div>
+          </div>
+        </div>
+        <div class="metric-card" style="margin-top:8px;">
+          <div class="metric-label">Impact Focus</div>
+          <div class="metric-footnote">
+            • Less manual paperwork for operations teams.<br />
+            • Reduced document errors and rework.<br />
+            • Repeatable SaaS product instead of one-off project.
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="hero-side-label">Core Stack</div>
+          <div class="stack-list">
+            <span class="stack-pill">Django</span>
+            <span class="stack-pill">React</span>
+            <span class="stack-pill">PostgreSQL</span>
+            <span class="stack-pill">Logistics APIs</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout" aria-label="Case study content layout">
+      <!-- Main column -->
+      <div>
+        <article class="section-card" id="introduction">
+          <div class="eyebrow">Overview</div>
+          <h2>Introduction</h2>
+          <p>
+            OneIXchange set out to build a modern operations portal for freight forwarders —
+            centralising shipment information, automating key documents, and giving operations
+            teams a single view of their air and ocean freight in motion.
+          </p>
+          <p>
+            As Senior Software Engineer, I drove the technical design and implementation of the
+            core Django/React/PostgreSQL platform: data model, document workflows, and the user
+            experience that made it usable for busy operations staff.
+          </p>
+        </article>
+
+        <article class="section-card" id="context">
+          <div class="eyebrow">Background</div>
+          <h2>Context</h2>
+          <p>
+            Many freight forwarders in Bangladesh still rely on a mix of spreadsheets, email
+            threads, and legacy systems to generate key documents like AWBs and BLs. Typical pain
+            points include:
+          </p>
+          <ul>
+            <li>Repeated data entry across multiple systems and templates.</li>
+            <li>Inconsistent document formats and missing fields.</li>
+            <li>Difficulty tracking which shipment is at which stage.</li>
+          </ul>
+          <p>
+            OneIXchange wanted to deliver a SaaS portal that would streamline this work and serve
+            as a commercial product for logistics companies — with Navana Logistics as the first
+            major customer.
+          </p>
+        </article>
+
+        <article class="section-card" id="problem">
+          <div class="eyebrow">Challenge</div>
+          <h2>Problem</h2>
+          <p>
+            The core problem was to turn complex, compliance-heavy paperwork into guided, digital
+            workflows that:
+          </p>
+          <ul>
+            <li>Capture all the data needed for AWBs and BLs without overwhelming users.</li>
+            <li>Generate standard documents that carriers and customs will accept.</li>
+            <li>Reduce the error rate from manual copying between systems.</li>
+            <li>Scale across multiple branches and shipment volumes.</li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="constraints">
+          <div class="eyebrow">Operating Environment</div>
+          <h2>Constraints &amp; Requirements</h2>
+          <ul>
+            <li>
+              <strong>Domain complexity</strong>: air and sea freight documents have strict
+              structure and terminology; mistakes are costly.
+            </li>
+            <li>
+              <strong>Mixed processes</strong>: the portal had to integrate with existing manual
+              and semi-digital processes at freight forwarders.
+            </li>
+            <li>
+              <strong>Gradual adoption</strong>: operations teams could not stop shipping while a
+              new system was rolled out.
+            </li>
+            <li>
+              <strong>Commercial viability</strong>: design had to support multi-customer SaaS
+              pricing, not just a single custom deployment.
+            </li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="implementation">
+          <div class="eyebrow">Execution</div>
+          <h2>Implementation Highlights</h2>
+
+          <h3>1) Data model &amp; shipment lifecycle</h3>
+          <ul>
+            <li>
+              Designed a PostgreSQL schema to represent shipments, consignments, parties,
+              containers, and legs (air/sea/road).
+            </li>
+            <li>
+              Modelled the lifecycle of a shipment so that status changes (booking, documentation,
+              departure, arrival) could be tracked and audited.
+            </li>
+            <li>
+              Ensured each AWB/BL could be traced back to the underlying shipment data, reducing
+              duplicate entry.
+            </li>
+          </ul>
+
+          <h3>2) AWB &amp; BL automation</h3>
+          <ul>
+            <li>
+              Implemented Django services to populate document templates from shipment data with
+              validation rules for required fields.
+            </li>
+            <li>
+              Built PDF outputs and print-ready views for AWBs and BLs, matching industry formats.
+            </li>
+            <li>
+              Added versioning so staff could regenerate documents when shipment details changed
+              while preserving audit history.
+            </li>
+          </ul>
+
+          <h3>3) React operations portal</h3>
+          <ul>
+            <li>
+              Developed React screens for booking creation, document preparation, and tracking,
+              optimised for data-heavy, keyboard-driven workflows.
+            </li>
+            <li>
+              Used clear step-by-step forms and inline validation to guide users through complex
+              data entry without missing required fields.
+            </li>
+            <li>
+              Implemented search and filtering across shipments so operations teams could find
+              relevant jobs quickly.
+            </li>
+          </ul>
+
+          <h3>4) Commercialisation with Navana Logistics</h3>
+          <ul>
+            <li>
+              Worked closely with Navana Logistics during pilot deployment to adapt flows to real
+              operations patterns.
+            </li>
+            <li>
+              Helped migrate key shipment data and trained users on how to adopt the portal without
+              disrupting daily work.
+            </li>
+            <li>
+              Captured feedback that fed into the product roadmap for additional customers.
+            </li>
+          </ul>
+
+          <div class="callout">
+            The portal turned document preparation from a messy combination of spreadsheets and
+            word-processor templates into a guided workflow with built-in validation and reuse of
+            shipment data.
+          </div>
+        </article>
+
+        <article class="section-card" id="impact">
+          <div class="eyebrow">Outcomes</div>
+          <h2>Impact &amp; Outcomes</h2>
+          <p>
+            The operations portal delivered tangible benefits for the anchor customer and for
+            OneIXchange as a SaaS vendor:
+          </p>
+          <ul>
+            <li>
+              <strong>Reduced manual paperwork</strong>: AWBs and BLs generated directly from
+              shipment data, cutting repeated data entry.
+            </li>
+            <li>
+              <strong>Fewer document errors</strong>: required-field validation and standardised
+              templates reduced costly corrections.
+            </li>
+            <li>
+              <strong>Commercial validation</strong>: successful deployment with Navana Logistics
+              demonstrated the product’s revenue potential with other forwarders.
+            </li>
+          </ul>
+
+          <!-- Charts – replace src paths with your actual PNGs -->
+          <div class="chart-block">
+            <img src="chart_awb_bl_automation.png"
+                 alt="Chart showing increase in automated AWB/BL generation and reduction in manual documents." />
+            <div class="chart-caption">
+              Example: growth in percentage of AWB/BL documents generated automatically versus
+              manually over time.
+            </div>
+          </div>
+
+          <div class="chart-block">
+            <img src="chart_revenue_pipeline.png"
+                 alt="Chart showing revenue or customer pipeline growth after launching the logistics portal." />
+            <div class="chart-caption">
+              Example: revenue pipeline or customer count over time after onboarding Navana
+              Logistics as an anchor SaaS customer.
+            </div>
+          </div>
+
+          <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
+            Charts are placeholders; swap them with real operational and commercial metrics where
+            available.
+          </p>
+        </article>
+
+        <article class="section-card" id="learnings">
+          <div class="eyebrow">Reflection</div>
+          <h2>Key Learnings</h2>
+          <ul>
+            <li>
+              Logistics operations software succeeds when it respects existing workflows; the goal
+              is to guide and automate, not completely replace overnight.
+            </li>
+            <li>
+              Document-heavy domains benefit hugely from strong data models and validation —
+              getting the schema right up front reduces downstream complexity.
+            </li>
+            <li>
+              Anchor customers like Navana Logistics are invaluable for shaping a product that can
+              serve a broader market.
+            </li>
+            <li>
+              Pairing a stable backend (Django/PostgreSQL) with a responsive React front end makes
+              it possible to handle complex freight data without overwhelming users.
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <!-- Sidebar column -->
+      <aside aria-label="Sidebar information">
+        <section class="section-card">
+          <div class="side-section-title">Role &amp; Responsibilities</div>
+          <p>
+            As Senior Software Engineer at OneIXchange, I:
+          </p>
+          <ul>
+            <li>Led backend and front-end development for the operations portal.</li>
+            <li>Designed core data models for shipments and documents.</li>
+            <li>
+              Worked with domain experts and operations staff to refine AWB/BL workflows and
+              validation rules.
+            </li>
+            <li>
+              Supported deployment and onboarding for Navana Logistics and prepared the product for
+              additional customers.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Architecture Snapshot</div>
+          <ul>
+            <li><strong>Backend:</strong> Django REST APIs for shipments, documents, and tracking.</li>
+            <li><strong>Frontend:</strong> React operations portal with data-heavy forms and grids.</li>
+            <li><strong>Database:</strong> PostgreSQL storing shipments, parties, and document data.</li>
+            <li><strong>Documents:</strong> Template-driven AWB/BL generation with PDF outputs.</li>
+          </ul>
+          <div class="callout" style="margin-top:10px;">
+            The architecture emphasised reliability and auditability — essential for
+            compliance-sensitive freight documentation.
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Timeline</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-title">Oct 2018 – Jan 2019: Discovery &amp; Design</div>
+              <div class="timeline-body">
+                Worked with freight experts to map AWB/BL processes and design the initial data
+                model and UX.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">Feb 2019 – Jun 2019: Core Build</div>
+              <div class="timeline-body">
+                Implemented shipment workflows, document generation, and the React portal screens.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">Jul 2019 – Oct 2019: Pilot &amp; Commercialisation</div>
+              <div class="timeline-body">
+                Rolled out to Navana Logistics, iterated based on feedback, and positioned the
+                portal as a broader logistics SaaS offering.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Keywords &amp; Themes</div>
+          <p>Useful tags for CVs, portfolios, and search:</p>
+          <div>
+            <span class="side-chip">Freight-Forwarding</span>
+            <span class="side-chip">Logistics SaaS</span>
+            <span class="side-chip">Operations Portal</span>
+            <span class="side-chip">Django &amp; React</span>
+            <span class="side-chip">AWB / BL Automation</span>
+            <span class="side-chip">Navana Logistics</span>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <footer>
+      Turning freight paperwork into guided workflows — Operations Portal at OneIXchange.
+    </footer>
+  </main>
+
+  <!-- One-page summary modal -->
+  <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">OneIXchange – One-Page Summary</div>
+          <div class="modal-subtitle">
+            Quick snapshot of the freight-forwarding operations portal case study.
+          </div>
+        </div>
+        <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="summary-grid">
+          <div>
+            <div class="summary-section-title">Context</div>
+            <ul class="summary-list">
+              <li>Freight-forwarding operations in Bangladesh with heavy document workloads.</li>
+              <li>
+                OneIXchange wanted a SaaS portal to streamline AWB/BL generation and shipment
+                tracking.
+              </li>
+              <li>Navana Logistics was chosen as the anchor customer and pilot site.</li>
+            </ul>
+
+            <div class="summary-section-title">Challenge</div>
+            <ul class="summary-list">
+              <li>Replace manual templates and spreadsheets with guided digital workflows.</li>
+              <li>Reduce document errors without slowing down operations.</li>
+              <li>Design a product that could be sold to multiple freight forwarders.</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="summary-section-title">My Role</div>
+            <ul class="summary-list">
+              <li>Senior Software Engineer leading backend and front-end implementation.</li>
+              <li>Designed shipment data models and document automation logic.</li>
+              <li>Worked directly with operations teams during pilot and rollout.</li>
+            </ul>
+
+            <div class="summary-section-title">Approach</div>
+            <ul class="summary-list">
+              <li>Django REST backend + React portal, backed by PostgreSQL.</li>
+              <li>
+                Template-driven AWB/BL generation with validation and audit trails.
+              </li>
+              <li>
+                UX optimised for high-volume data entry with inline validation, search, and
+                filtering.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="summary-section-title">Outcomes</div>
+        <ul class="summary-list">
+          <li>Automated AWB &amp; BL generation reduced manual paperwork and duplicate entry.</li>
+          <li>Fewer documentation errors and smoother shipment processing.</li>
+          <li>
+            Successful commercial deployment with Navana Logistics, validating the product as a
+            logistics SaaS offering.
+          </li>
+        </ul>
+
+        <div class="summary-section-title">Key Takeaways</div>
+        <ul class="summary-list">
+          <li>Good data models and validation are critical in document-heavy logistics domains.</li>
+          <li>Anchor customers provide real-world feedback that sharpens a SaaS product.</li>
+          <li>
+            A thoughtful UX can help operations teams adopt new tools without disrupting freight
+            flows.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modal = document.getElementById("summaryModal");
+      const openBtn = document.getElementById("openSummaryBtn");
+      const closeBtn = document.getElementById("closeSummaryBtn");
+
+      function openModal() {
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

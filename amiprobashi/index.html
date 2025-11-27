@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AmiProbashi MoEWOE–BMET – Reliability Case Study</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-alt: #111827;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.16);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 50px rgba(15, 23, 42, 0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #020617 45%, #020617 60%, #020617 100%),
+                  radial-gradient(circle at top left, #1d283a 0, #020617 55%);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Sticky header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.95),
+        rgba(15, 23, 42, 0.85),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #e5e7eb, #38bdf8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #020617;
+      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.45);
+      font-size: 17px;
+    }
+
+    .brand-text-main {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background-color: rgba(15, 23, 42, 0.75);
+    }
+
+    .btn-primary {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(8, 47, 73, 0.8);
+      transition: transform 0.13s ease, box-shadow 0.13s ease,
+        background 0.13s ease;
+    }
+
+    .btn-primary span {
+      font-size: 16px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(8, 47, 73, 0.9);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 8px 20px rgba(8, 47, 73, 0.7);
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 18px 48px;
+    }
+
+    /* Hero */
+
+    .hero {
+      margin-top: 10px;
+      margin-bottom: 32px;
+      padding: 22px 22px 20px;
+      border-radius: 24px;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), transparent 55%),
+                  linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.94));
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    @media (max-width: 780px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 20px 18px 18px;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3.2vw, 30px);
+      line-height: 1.2;
+      margin-bottom: 10px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .hero-tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 118, 110, 0.12);
+      color: #6ee7b7;
+      border: 1px solid rgba(45, 212, 191, 0.4);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 12px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hero-meta-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta-item strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hero-summary {
+      font-size: 14px;
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .hero-side {
+      padding: 12px 14px 10px;
+      border-radius: 18px;
+      background: radial-gradient(circle at top right, rgba(248, 250, 252, 0.08), transparent 50%),
+                  linear-gradient(135deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+    }
+
+    .hero-side-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .metric-card {
+      border-radius: 14px;
+      padding: 10px 11px;
+      background-color: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #f9fafb;
+    }
+
+    .metric-footnote {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .stack-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.85);
+    }
+
+    /* Content layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 1.55fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-card {
+      background-color: rgba(15, 23, 42, 0.95);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 18px 18px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.75);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #d1d5db;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 4px 0 6px;
+    }
+
+    li {
+      font-size: 14px;
+      margin-bottom: 3px;
+      color: #d1d5db;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      background-color: var(--accent-soft);
+      padding: 10px 11px;
+      border-left: 3px solid var(--accent);
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .timeline {
+      border-left: 1px dashed rgba(148, 163, 184, 0.5);
+      margin-top: 6px;
+      padding-left: 14px;
+    }
+
+    .timeline-item {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -15px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+    }
+
+    .timeline-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .timeline-body {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .side-section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .side-chip {
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin-bottom: 4px;
+      display: inline-block;
+      color: var(--text-muted);
+    }
+
+    .chart-block {
+      background-color: #020617;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 10px 10px 8px;
+      margin-top: 10px;
+    }
+
+    .chart-block img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .chart-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      max-width: 720px;
+      width: 100%;
+      margin: 16px;
+      border-radius: 20px;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.15), transparent 60%),
+                  #020617;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.95);
+      padding: 18px 18px 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-icon:hover {
+      background-color: rgba(15, 23, 42, 1);
+    }
+
+    .modal-body {
+      font-size: 13px;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .summary-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .summary-list {
+      padding-left: 16px;
+      margin: 2px 0 4px;
+    }
+
+    .summary-list li {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-badge">AP</div>
+        <div>
+          <div class="brand-text-main">AmiProbashi MoEWOE–BMET</div>
+          <div class="brand-text-sub">Reliability & Stabilization Case Study</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="pill">Senior Software Engineer • Feb 2025 – Present</div>
+        <button class="btn-primary" id="openSummaryBtn">
+          <span>☰</span> One-Page Summary
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <div class="hero-tagline">
+          <span>●</span> GovTech • National-Scale SaaS • ~7M Records
+        </div>
+        <h1 id="hero-title" class="hero-title">
+          Stabilizing and Scaling the AmiProbashi MoEWOE–BMET GovTech Platform
+        </h1>
+        <p class="hero-subtitle">
+          Delivered high-impact bug fixes and feature releases on the AmiProbashi national migrant
+          database platform (PHP/Laravel/Vue/MySQL), improving reliability and protecting a
+          strategic, multi-year government revenue channel.
+        </p>
+
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <strong>Role</strong> Senior Software Engineer
+          </div>
+          <div class="hero-meta-item">
+            <strong>Org</strong> AmiProbashi (BanglaTrac Group), Dhaka, Bangladesh
+          </div>
+          <div class="hero-meta-item">
+            <strong>Domain</strong> GovTech • National Migrant Systems
+          </div>
+        </div>
+
+        <p class="hero-summary">
+          The AmiProbashi platform is used by the Ministry of Expatriates' Welfare and Overseas
+          Employment (MoEWOE) and the Bureau of Manpower, Employment and Training (BMET) to manage
+          migrant registration, clearance, and fee collection for millions of workers. My focus:
+          make the platform calm, predictable, and safe to evolve.
+        </p>
+      </div>
+
+      <aside class="hero-side" aria-label="Snapshot">
+        <div class="hero-side-label">Snapshot</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Dataset Scale</div>
+            <div class="metric-value">≈ 7M</div>
+            <div class="metric-footnote">Migrant worker records across core tables.</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">System Type</div>
+            <div class="metric-value">GovTech SaaS</div>
+            <div class="metric-footnote">Critical to multi-year government revenue.</div>
+          </div>
+        </div>
+        <div class="metric-card" style="margin-top:8px;">
+          <div class="metric-label">Impact Focus</div>
+          <div class="metric-footnote">
+            • Fewer user-facing errors at peak.<br />
+            • Faster searches & reports.<br />
+            • Safer, smoother deployments.
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="hero-side-label">Core Stack</div>
+          <div class="stack-list">
+            <span class="stack-pill">PHP</span>
+            <span class="stack-pill">Laravel</span>
+            <span class="stack-pill">Vue.js</span>
+            <span class="stack-pill">MySQL</span>
+            <span class="stack-pill">REST APIs</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout" aria-label="Case study content layout">
+      <!-- Main column -->
+      <div>
+        <article class="section-card" id="introduction">
+          <div class="eyebrow">Overview</div>
+          <h2>Introduction</h2>
+          <p>
+            AmiProbashi is a GovTech SaaS platform used by the Ministry of Expatriates' Welfare
+            and Overseas Employment (MoEWOE) and the Bureau of Manpower, Employment and Training
+            (BMET) to manage a national migrant worker database of approximately seven million
+            records. The platform underpins critical workflows such as migrant worker
+            registration, clearance, and fee collection, forming a strategic multi-year government
+            revenue channel.
+          </p>
+          <p>
+            As a Senior Software Engineer on the AmiProbashi team, I focused on improving the
+            reliability and maintainability of the core PHP/Laravel/Vue/MySQL platform. My work
+            centered on production-grade bug fixes, high-impact feature releases, and incremental
+            architectural improvements that reduced incidents and helped safeguard uninterrupted
+            revenue collection for government stakeholders.
+          </p>
+        </article>
+
+        <article class="section-card" id="context">
+          <div class="eyebrow">Background</div>
+          <h2>Context</h2>
+          <p>
+            The platform serves a diverse group of stakeholders: migrant workers, recruiting
+            agencies, government officials, and internal support teams. Peak traffic aligns with
+            policy deadlines or international hiring cycles, which generate sharp load spikes on
+            the core APIs and database.
+          </p>
+          <p>
+            When I joined, the platform was already in production but exhibited several
+            reliability issues:
+          </p>
+          <ul>
+            <li>Intermittent application errors during peak load.</li>
+            <li>Slow or timing-out operations on high-volume database tables (~7M records).</li>
+            <li>Fragile release processes that occasionally caused short service disruptions.</li>
+          </ul>
+          <p>
+            The mandate was clear: stabilize day-to-day operations, reduce production issues, and
+            enable the team to deliver new features with confidence.
+          </p>
+        </article>
+
+        <article class="section-card" id="problem">
+          <div class="eyebrow">Challenge</div>
+          <h2>Problem</h2>
+          <p>
+            The core problem was maintaining uninterrupted, reliable service for a mission-critical
+            government system while continuing to evolve the product. Any prolonged outage or data
+            integrity issue could directly affect migrant workers and disrupt government revenue
+            collection.
+          </p>
+          <p>Engineering challenges included:</p>
+          <ul>
+            <li>
+              Legacy code paths in PHP/Laravel that were difficult to change safely.
+            </li>
+            <li>
+              Complex SQL queries running against large MySQL tables without optimal indexing.
+            </li>
+            <li>
+              Limited observability, making it hard to quickly pinpoint the root cause of
+              production incidents.
+            </li>
+            <li>
+              A deployment pipeline that relied heavily on manual steps, increasing the risk of
+              regression.
+            </li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="constraints">
+          <div class="eyebrow">Operating Environment</div>
+          <h2>Constraints &amp; Requirements</h2>
+          <p>Key constraints and requirements:</p>
+          <ul>
+            <li>
+              <strong>High availability</strong>: core workflows must remain online during office
+              hours and deadline periods.
+            </li>
+            <li>
+              <strong>Data integrity</strong>: migrant and financial records must remain consistent
+              and auditable.
+            </li>
+            <li>
+              <strong>Regulatory sensitivity</strong>: changes must respect government policies and
+              approval processes.
+            </li>
+            <li>
+              <strong>Incremental change</strong>: large rewrites are not feasible; improvements
+              must be incremental and low risk.
+            </li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="implementation">
+          <div class="eyebrow">Execution</div>
+          <h2>Implementation Highlights</h2>
+
+          <h3>1) Production bug fixes on core workflows</h3>
+          <ul>
+            <li>
+              Investigated and resolved intermittent errors affecting migrant registration and
+              clearance flows.
+            </li>
+            <li>
+              Improved validation logic to reduce data entry errors that previously caused
+              downstream failures.
+            </li>
+            <li>
+              Added clearer error messages and logging around failure points, enabling faster
+              diagnosis.
+            </li>
+          </ul>
+
+          <h3>2) Performance optimisation on high-volume queries</h3>
+          <ul>
+            <li>Profiled slow endpoints using Laravel debug tools and database logs.</li>
+            <li>
+              Simplified and restructured complex Eloquent queries hitting large tables (~7M rows).
+            </li>
+            <li>
+              Worked with the database team to introduce targeted indexes and remove unused ones.
+            </li>
+          </ul>
+
+          <h3>3) Safer feature releases</h3>
+          <ul>
+            <li>Scoped larger feature requests into smaller, deployable increments.</li>
+            <li>
+              Collaborated with QA to create realistic test data sets that matched production
+              patterns.
+            </li>
+          </ul>
+
+          <div class="callout">
+            The emphasis was on calm, predictable change: resolving the most painful incidents
+            first, then gradually tightening performance and release practices without disruptive
+            rewrites.
+          </div>
+        </article>
+
+        <article class="section-card" id="impact">
+          <div class="eyebrow">Outcomes</div>
+          <h2>Impact &amp; Outcomes</h2>
+          <p>
+            Over time, these improvements contributed to a more stable and predictable platform.
+            While precise figures are confidential, the overall impact can be summarised as:
+          </p>
+          <ul>
+            <li>Reduction in user-facing errors during peak periods.</li>
+            <li>Faster response times on frequently used search and reporting screens.</li>
+            <li>Fewer emergency fixes required during or immediately after deployments.</li>
+            <li>
+              Increased confidence from stakeholders in the platform's ability to support ongoing
+              revenue collection.
+            </li>
+          </ul>
+          <p>
+            The engineering team also benefited from clearer code paths, improved logging, and a
+            more structured approach to releasing changes in a sensitive production environment.
+          </p>
+
+          <!-- Charts -->
+          <div class="chart-block">
+            <img src="chart_error_rate_relative.png"
+                 alt="Bar chart showing illustrative relative reduction in user-facing error rate before and after improvements." />
+            <div class="chart-caption">
+              Illustrative reduction in user-facing errors after stabilisation work.
+              Values use partial/representative data only.
+            </div>
+          </div>
+
+          <div class="chart-block">
+            <img src="chart_deployments_per_month.png"
+                 alt="Line chart showing illustrative increase in confident deployments per month." />
+            <div class="chart-caption">
+              Illustrative increase in confident, low-stress deployments over time as reliability
+              and release processes improved.
+            </div>
+          </div>
+
+          <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
+            Charts intentionally avoid exposing full confidential production data; they highlight
+            directional impact using partial datasets.
+          </p>
+        </article>
+
+        <article class="section-card" id="learnings">
+          <div class="eyebrow">Reflection</div>
+          <h2>Key Learnings</h2>
+          <ul>
+            <li>
+              In government and other high-stakes domains, reliability improvements and well-executed
+              bug fixes can be more valuable than flashy new features.
+            </li>
+            <li>
+              Incremental refactoring, combined with better observability, can materially improve
+              stability without requiring a full rewrite.
+            </li>
+            <li>
+              Close collaboration with non-technical stakeholders (operations staff, government
+              officials) helps ensure that engineering work aligns with real-world pain points and
+              policy constraints.
+            </li>
+            <li>
+              Investing in safer deployment practices (smaller changes, validation, better rollback
+              paths) pays for itself by reducing incidents and preserving trust.
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <!-- Sidebar column -->
+      <aside aria-label="Sidebar information">
+        <section class="section-card">
+          <div class="side-section-title">Role &amp; Responsibilities</div>
+          <p>
+            As Senior Software Engineer, I was responsible for:
+          </p>
+          <ul>
+            <li>Owning critical bug fixes and production support.</li>
+            <li>Implementation for selected feature releases.</li>
+            <li>
+              Improving reliability through refactoring, database optimisation, and better error
+              handling.
+            </li>
+            <li>
+              Collaborating with product and QA to prioritise work tied directly to field
+              operations and revenue.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Architecture Snapshot</div>
+          <ul>
+            <li><strong>Backend:</strong> PHP/Laravel REST APIs.</li>
+            <li><strong>Frontend:</strong> Vue.js SPA for internal &amp; external users.</li>
+            <li><strong>Database:</strong> MySQL with large migrant &amp; transaction tables.</li>
+            <li>
+              <strong>Supporting services:</strong> background jobs, reporting scripts, external
+              integrations.
+            </li>
+          </ul>
+          <div class="callout" style="margin-top:10px;">
+            My contributions focused on hardening this architecture: safer database access
+            patterns, optimised queries, and guardrails around validation and error handling.
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Improvement Timeline</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-title">Month 1–2: Triage &amp; quick wins</div>
+              <div class="timeline-body">
+                Stabilised the noisiest error paths and added targeted logging to unblock
+                day-to-day operations.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">Month 3–4: Query &amp; indexing work</div>
+              <div class="timeline-body">
+                Profiled and optimised heavy MySQL queries; collaborated on indexing strategy for
+                high-traffic tables.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">Month 5+: Release discipline</div>
+              <div class="timeline-body">
+                Shifted towards smaller, safer deployments with better test data and clearer
+                rollback paths.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Keywords &amp; Themes</div>
+          <p>
+            Use these to tag or talk about the project in portfolios, presentations, or interviews.
+          </p>
+          <div>
+            <span class="side-chip">GovTech</span>
+            <span class="side-chip">Reliability Engineering</span>
+            <span class="side-chip">Laravel Performance</span>
+            <span class="side-chip">MySQL Query Tuning</span>
+            <span class="side-chip">Incident Reduction</span>
+            <span class="side-chip">Safe Deployments</span>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <footer>
+      Calm, reliable systems for real-world users — AmiProbashi MoEWOE–BMET GovTech platform.
+    </footer>
+  </main>
+
+  <!-- One-page summary modal -->
+  <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">AmiProbashi – One-Page Summary</div>
+          <div class="modal-subtitle">
+            Quick, interview-friendly snapshot of the case study.
+          </div>
+        </div>
+        <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="summary-grid">
+          <div>
+            <div class="summary-section-title">Context</div>
+            <ul class="summary-list">
+              <li>GovTech SaaS platform for MoEWOE–BMET in Bangladesh.</li>
+              <li>Manages ≈7M migrant worker records.</li>
+              <li>Supports registration, clearance, and fee collection.</li>
+            </ul>
+
+            <div class="summary-section-title">Challenge</div>
+            <ul class="summary-list">
+              <li>Intermittent errors and slow operations at peak load.</li>
+              <li>Complex queries on large MySQL tables.</li>
+              <li>Fragile, manual deployments with limited observability.</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="summary-section-title">My Role</div>
+            <ul class="summary-list">
+              <li>Senior Software Engineer (PHP/Laravel/Vue/MySQL).</li>
+              <li>Owned production bug fixes and key feature work.</li>
+              <li>Led reliability, performance, and release-safety improvements.</li>
+            </ul>
+
+            <div class="summary-section-title">Approach</div>
+            <ul class="summary-list">
+              <li>Prioritised high-impact incidents and slow paths.</li>
+              <li>Refactored critical code, tuned queries &amp; indexes.</li>
+              <li>Shifted to smaller, safer deployments with better test data.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="summary-section-title">Illustrative Outcomes</div>
+        <ul class="summary-list">
+          <li>Fewer user-visible errors in registration and clearance flows.</li>
+          <li>Snappier search and reporting screens during busy periods.</li>
+          <li>Reduced emergency hotfixes after deployments.</li>
+          <li>Higher stakeholder confidence in a national-scale revenue system.</li>
+        </ul>
+
+        <div class="summary-section-title">Key Takeaways</div>
+        <ul class="summary-list">
+          <li>
+            Reliability and calm operations matter more than flashy features in
+            critical government systems.
+          </li>
+          <li>
+            Incremental refactoring + observability can meaningfully improve stability without a
+            risky rewrite.
+          </li>
+          <li>
+            Aligning with on-the-ground workflows (offices, agencies, workers) keeps engineering work
+            grounded in real impact.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modal = document.getElementById("summaryModal");
+      const openBtn = document.getElementById("openSummaryBtn");
+      const closeBtn = document.getElementById("closeSummaryBtn");
+
+      function openModal() {
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

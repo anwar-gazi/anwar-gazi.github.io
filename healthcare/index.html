@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Healthcare Plan Operations – MS Concitus Case Study</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      /* Healthcare theme – calm teal + clean blue */
+      --bg: #020617;
+      --bg-alt: #011019;
+      --card: #020617;
+      --accent: #22c55e;              /* health/“ok” green */
+      --accent-2: #0ea5e9;            /* clinical blue */
+      --accent-soft: rgba(34, 197, 94, 0.15);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 50px rgba(15, 23, 42, 0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #022c22 0, transparent 55%),
+        radial-gradient(circle at bottom right, #020617 0, #000000 60%);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: #7dd3fc;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    /* Sticky header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 6, 23, 0.98),
+        rgba(15, 118, 110, 0.85),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background:
+        conic-gradient(from 210deg, #22c55e, #0ea5e9, #a5b4fc, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #020617;
+      box-shadow: 0 10px 25px rgba(34, 197, 94, 0.8);
+      font-size: 17px;
+    }
+
+    .brand-text-main {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background-color: rgba(15, 23, 42, 0.75);
+    }
+
+    .btn-primary {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #22c55e, #0ea5e9);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(8, 47, 73, 0.9);
+      transition: transform 0.13s ease, box-shadow 0.13s ease,
+        background 0.13s ease;
+    }
+
+    .btn-primary span { font-size: 16px; }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(8, 47, 73, 1);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 8px 20px rgba(8, 47, 73, 0.8);
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 18px 48px;
+    }
+
+    /* Hero */
+
+    .hero {
+      margin-top: 10px;
+      margin-bottom: 32px;
+      padding: 22px 22px 20px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(45, 212, 191, 0.26), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.2), transparent 60%),
+        linear-gradient(145deg, rgba(15, 23, 42, 0.97), rgba(3, 7, 18, 1));
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    @media (max-width: 780px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 20px 18px 18px;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3.2vw, 30px);
+      line-height: 1.2;
+      margin-bottom: 10px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .hero-tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 118, 110, 0.9);
+      color: #ecfdf5;
+      border: 1px solid rgba(45, 212, 191, 0.9);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 12px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hero-meta-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta-item strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hero-summary {
+      font-size: 14px;
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .hero-side {
+      padding: 12px 14px 10px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at top right, rgba(248, 250, 252, 0.1), transparent 60%),
+        linear-gradient(135deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+    }
+
+    .hero-side-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .metric-card {
+      border-radius: 14px;
+      padding: 10px 11px;
+      background-color: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #f9fafb;
+    }
+
+    .metric-footnote {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .stack-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.85);
+    }
+
+    /* Content layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 1.55fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-card {
+      background-color: rgba(15, 23, 42, 0.98);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 18px 18px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 4px 0 6px;
+    }
+
+    li {
+      font-size: 14px;
+      margin-bottom: 3px;
+      color: #e5e7eb;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      background-color: var(--accent-soft);
+      padding: 10px 11px;
+      border-left: 3px solid var(--accent-2);
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .timeline {
+      border-left: 1px dashed rgba(148, 163, 184, 0.5);
+      margin-top: 6px;
+      padding-left: 14px;
+    }
+
+    .timeline-item {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -15px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #dcfce7, #22c55e);
+      box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.35);
+    }
+
+    .timeline-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .timeline-body {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .side-section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .side-chip {
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin-bottom: 4px;
+      display: inline-block;
+      color: var(--text-muted);
+    }
+
+    .chart-block {
+      background-color: #020617;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 10px 10px 8px;
+      margin-top: 10px;
+    }
+
+    .chart-block img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .chart-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-backdrop.active { display: flex; }
+
+    .modal {
+      max-width: 720px;
+      width: 100%;
+      margin: 16px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top left, rgba(45, 212, 191, 0.22), transparent 60%),
+        #020617;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 1);
+      padding: 18px 18px 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-icon:hover { background-color: rgba(15, 23, 42, 1); }
+
+    .modal-body {
+      font-size: 13px;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .summary-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .summary-list {
+      padding-left: 16px;
+      margin: 2px 0 4px;
+    }
+
+    .summary-list li {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-badge">HC</div>
+        <div>
+          <div class="brand-text-main">Healthcare Plan Operations</div>
+          <div class="brand-text-sub">MS Concitus Case Study</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="pill">Healthcare • Jan 2016 – Dec 2021</div>
+        <button class="btn-primary" id="openSummaryBtn">
+          <span>☰</span> One-Page Summary
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <div class="hero-tagline">
+          <span>●</span> Healthcare • Plan Operations • Gov Contracts
+        </div>
+        <h1 id="hero-title" class="hero-title">
+          Stabilising a US Healthcare Plan Operations Portal for Agents &amp; Policy Workflows
+        </h1>
+        <p class="hero-subtitle">
+          Delivered critical production bug fixes for a US healthcare plan operations management
+          portal used by healthcare agents, stabilising core policy workflows and protecting a key
+          recurring revenue stream tied to US government contracts.
+        </p>
+
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <strong>Role</strong> Senior Software Engineer
+          </div>
+          <div class="hero-meta-item">
+            <strong>Org</strong> MS Concitus, Dhaka, Bangladesh
+          </div>
+          <div class="hero-meta-item">
+            <strong>Industry</strong> Healthcare • US Health Plans
+          </div>
+        </div>
+
+        <p class="hero-summary">
+          The portal was used by healthcare agents to manage enrolments, policy changes, and
+          day-to-day plan operations under US government programs. Instability in these workflows
+          risks compliance issues, member dissatisfaction, and loss of contract revenue. My work
+          focused on diagnosing and fixing production issues so the system behaved predictably for
+          agents and stakeholders.
+        </p>
+      </div>
+
+      <aside class="hero-side" aria-label="Snapshot">
+        <div class="hero-side-label">Snapshot</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Domain</div>
+            <div class="metric-value">US Health Plans</div>
+            <div class="metric-footnote">
+              Operations &amp; policy management portal for healthcare agents.
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Business Impact</div>
+            <div class="metric-value">Recurring</div>
+            <div class="metric-footnote">
+              Stability helped protect recurring revenue tied to government contracts.
+            </div>
+          </div>
+        </div>
+        <div class="metric-card" style="margin-top:8px;">
+          <div class="metric-label">Impact Focus</div>
+          <div class="metric-footnote">
+            • Fewer incidents in core policy flows.<br />
+            • Reduced agent frustration and rework.<br />
+            • Stronger reliability story in contract renewals.
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="hero-side-label">Core Themes</div>
+          <div class="stack-list">
+            <span class="stack-pill">Production Bug Fixes</span>
+            <span class="stack-pill">Policy Workflows</span>
+            <span class="stack-pill">US Healthcare</span>
+            <span class="stack-pill">Reliability</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout" aria-label="Case study content layout">
+      <!-- Main column -->
+      <div>
+        <article class="section-card" id="introduction">
+          <div class="eyebrow">Overview</div>
+          <h2>Introduction</h2>
+          <p>
+            MS Concitus provided engineering support for a US healthcare plan operations
+            management portal. The application supported a network of healthcare agents handling
+            policy enrolments, changes, terminations, and exceptions across multiple plans and
+            member populations.
+          </p>
+          <p>
+            As a Senior Software Engineer, I focused on production reliability: understanding how
+            agents actually used the system, finding the most painful bugs in live workflows, and
+            delivering fixes that kept the platform stable while respecting tight regulatory and
+            contractual constraints.
+          </p>
+        </article>
+
+        <article class="section-card" id="context">
+          <div class="eyebrow">Background</div>
+          <h2>Context</h2>
+          <p>
+            US healthcare plan operations must comply with strict rules around eligibility,
+            timelines, and documentation. The portal was at the centre of this:
+          </p>
+          <ul>
+            <li>Agents used it daily to process member applications and policy changes.</li>
+            <li>
+              Data flowed downstream to billing, claims, and regulatory reporting systems.
+            </li>
+            <li>
+              The platform’s reliability influenced satisfaction of both members and government
+              partners.
+            </li>
+          </ul>
+          <p>
+            When agents encounter portal errors in the middle of a policy workflow, they often
+            have to redo work, rely on manual workarounds, or escalate to support — all of which
+            increase cost and risk for the health plan.
+          </p>
+        </article>
+
+        <article class="section-card" id="problem">
+          <div class="eyebrow">Challenge</div>
+          <h2>Problem</h2>
+          <p>
+            The portal exhibited recurring production issues in critical flows such as:
+          </p>
+          <ul>
+            <li>New member enrolments and plan selection.</li>
+            <li>Policy changes (address, PCP, coverage level) mid-plan year.</li>
+            <li>Terminations and reinstatements triggered by life events.</li>
+          </ul>
+          <p>
+            These bugs showed up as:
+          </p>
+          <ul>
+            <li>Intermittent errors after long agent sessions.</li>
+            <li>Incorrect handling of edge cases in policy rules.</li>
+            <li>Data inconsistencies between UI and back-office records.</li>
+          </ul>
+          <p>
+            The challenge was to fix these issues without destabilising other parts of a
+            large, mature codebase and without interrupting daily operations.
+          </p>
+        </article>
+
+        <article class="section-card" id="constraints">
+          <div class="eyebrow">Operating Environment</div>
+          <h2>Constraints &amp; Requirements</h2>
+          <ul>
+            <li>
+              <strong>Regulatory sensitivity</strong>: any change had to preserve compliance with
+              US healthcare regulations and government contract requirements.
+            </li>
+            <li>
+              <strong>Limited maintenance windows</strong>: downtime directly affected agents and
+              member service levels.
+            </li>
+            <li>
+              <strong>Legacy complexity</strong>: core workflows were implemented across multiple
+              layers and had evolved over years.
+            </li>
+            <li>
+              <strong>Contractual stakes</strong>: reliability issues could impact satisfaction
+              scores used in contract renewals and bonuses.
+            </li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="implementation">
+          <div class="eyebrow">Execution</div>
+          <h2>Implementation Highlights</h2>
+
+          <h3>1) Production incident triage</h3>
+          <ul>
+            <li>
+              Reviewed production logs, error reports, and support tickets to identify patterns in
+              failing workflows.
+            </li>
+            <li>
+              Worked with business analysts and QA to reconstruct real agent scenarios that
+              triggered bugs.
+            </li>
+            <li>
+              Prioritised fixes for issues that impacted core policy operations and contract KPIs.
+            </li>
+          </ul>
+
+          <h3>2) Targeted bug fixes in policy workflows</h3>
+          <ul>
+            <li>
+              Corrected edge-case logic in policy rule evaluations (e.g., special enrolment
+              periods, age cutoffs, and dependent relationships).
+            </li>
+            <li>
+              Addressed state management issues that caused stale data or duplicate submissions
+              during long agent sessions.
+            </li>
+            <li>
+              Fixed data mapping problems between UI forms and back-end records to keep member
+              data consistent.
+            </li>
+          </ul>
+
+          <h3>3) Defensive coding &amp; validation</h3>
+          <ul>
+            <li>
+              Added input validation and clearer error handling around high-risk operations to
+              prevent invalid policy states from being saved.
+            </li>
+            <li>
+              Introduced guardrails for common agent mistakes (e.g., incomplete required fields,
+              conflicting changes) with actionable error messages instead of generic failures.
+            </li>
+            <li>
+              Helped refine automated tests for critical flows so regressions could be caught
+              earlier.
+            </li>
+          </ul>
+
+          <h3>4) Safer releases in a regulated environment</h3>
+          <ul>
+            <li>
+              Collaborated with QA and release teams to bundle fixes into controlled releases with
+              clear rollback plans.
+            </li>
+            <li>
+              Ensured that each change was traceable and well-documented for audits and
+              compliance reviews.
+            </li>
+            <li>
+              Assisted in monitoring post-release behaviour to confirm incident reduction.
+            </li>
+          </ul>
+
+          <div class="callout">
+            The focus was not on rewriting the system, but on making the existing portal feel
+            “boringly reliable” to agents: fewer unexpected errors, clearer messages, and more
+            predictable behaviour in day-to-day policy work.
+          </div>
+        </article>
+
+        <article class="section-card" id="impact">
+          <div class="eyebrow">Outcomes</div>
+          <h2>Impact &amp; Outcomes</h2>
+          <p>
+            While exact metrics are confidential, the reliability work translated into clear
+            operational and business benefits:
+          </p>
+          <ul>
+            <li>
+              Reduction in production incidents related to core policy workflows handled by
+              healthcare agents.
+            </li>
+            <li>
+              Fewer support escalations and manual workarounds during enrolment and change
+              periods.
+            </li>
+            <li>
+              More stable operations during critical windows tied to government program deadlines.
+            </li>
+            <li>
+              Protection of a key recurring revenue stream linked to US government contracts by
+              strengthening the platform’s reliability story.
+            </li>
+          </ul>
+
+          <!-- Charts – replace src paths with your actual PNGs -->
+          <div class="chart-block">
+            <img src="chart_incident_rate.png"
+                 alt="Chart showing a drop in incident rate for policy workflows over time." />
+            <div class="chart-caption">
+              Example: reduction in incident rate for core policy workflows after targeted bug
+              fixes and validation improvements.
+            </div>
+          </div>
+
+          <div class="chart-block">
+            <img src="chart_policy_throughput.png"
+                 alt="Chart showing smoother policy throughput or fewer blocked cases over time." />
+            <div class="chart-caption">
+              Example: increase in smoothly processed policies and reduction in blocked or
+              manually reworked cases.
+            </div>
+          </div>
+
+          <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
+            Charts are placeholders; replace with real operational metrics (incidents, support
+            tickets, policy throughput) where appropriate.
+          </p>
+        </article>
+
+        <article class="section-card" id="learnings">
+          <div class="eyebrow">Reflection</div>
+          <h2>Key Learnings</h2>
+          <ul>
+            <li>
+              In healthcare, reliability and compliance are core product features — not “nice to
+              have” technical qualities.
+            </li>
+            <li>
+              Small, well-targeted fixes to critical workflows can deliver outsized value when
+              those workflows sit under government contracts.
+            </li>
+            <li>
+              Partnering closely with support and business teams is essential to understand how
+              bugs affect real agents and members.
+            </li>
+            <li>
+              Investing in defensive coding, validation, and safer releases pays off in fewer
+              incidents and smoother contract renewals.
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <!-- Sidebar column -->
+      <aside aria-label="Sidebar information">
+        <section class="section-card">
+          <div class="side-section-title">Role &amp; Responsibilities</div>
+          <p>
+            As Senior Software Engineer at MS Concitus, I:
+          </p>
+          <ul>
+            <li>Owned investigation and resolution of high-impact production issues.</li>
+            <li>
+              Worked across application layers to stabilise enrolment and policy change flows.
+            </li>
+            <li>
+              Collaborated with QA, business analysts, and onshore teams to validate fixes against
+              regulatory and contract needs.
+            </li>
+            <li>
+              Helped strengthen testing and release practices in a sensitive healthcare context.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Portal Snapshot</div>
+          <ul>
+            <li><strong>Users:</strong> Healthcare agents and operations staff.</li>
+            <li><strong>Workflows:</strong> Enrolments, policy changes, terminations, exceptions.</li>
+            <li><strong>Downstream:</strong> Billing, claims, reporting, and compliance systems.</li>
+            <li><strong>Contracts:</strong> US government-backed healthcare plan agreements.</li>
+          </ul>
+          <div class="callout" style="margin-top:10px;">
+            Bugs in the portal were not just UX issues — they could ripple into claims, billing,
+            and compliance metrics used in government evaluations.
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Timeline</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-title">2016 – 2017: Onboarding &amp; Domain Learning</div>
+              <div class="timeline-body">
+                Learned US healthcare plan operations domain and began contributing to smaller
+                fixes and enhancements.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">2018 – 2019: Core Workflow Stabilisation</div>
+              <div class="timeline-body">
+                Focused on resolving recurring bugs in enrolment and policy change flows, improved
+                validation and error handling.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">2020 – 2021: Reliability &amp; Release Discipline</div>
+              <div class="timeline-body">
+                Continued reliability work, supported safer releases, and helped preserve key
+                government-linked revenue streams as the system evolved.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Keywords &amp; Themes</div>
+          <p>Useful tags for CVs, portfolios, and search:</p>
+          <div>
+            <span class="side-chip">Healthcare</span>
+            <span class="side-chip">US Health Plans</span>
+            <span class="side-chip">Production Reliability</span>
+            <span class="side-chip">Policy Workflows</span>
+            <span class="side-chip">Government Contracts</span>
+            <span class="side-chip">Incident Reduction</span>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <footer>
+      Making healthcare plan operations calm and predictable — Reliability Work at MS Concitus.
+    </footer>
+  </main>
+
+  <!-- One-page summary modal -->
+  <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">MS Concitus – One-Page Summary</div>
+          <div class="modal-subtitle">
+            Quick snapshot of the healthcare plan operations reliability case study.
+          </div>
+        </div>
+        <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="summary-grid">
+          <div>
+            <div class="summary-section-title">Context</div>
+            <ul class="summary-list">
+              <li>
+                US healthcare plan operations portal used daily by healthcare agents.
+              </li>
+              <li>
+                Core workflows: enrolments, policy changes, terminations, and exceptions.
+              </li>
+              <li>
+                Platform connected to revenue from US government healthcare contracts.
+              </li>
+            </ul>
+
+            <div class="summary-section-title">Challenge</div>
+            <ul class="summary-list">
+              <li>Recurring production bugs in critical policy workflows.</li>
+              <li>Agent frustration, rework, and support overhead.</li>
+              <li>
+                Reliability issues that could impact contract satisfaction metrics and renewals.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="summary-section-title">My Role</div>
+            <ul class="summary-list">
+              <li>Senior Software Engineer focused on production reliability.</li>
+              <li>
+                Investigated, prioritised, and fixed high-impact issues in policy workflows.
+              </li>
+              <li>
+                Worked with QA and business teams to ensure changes met regulatory expectations.
+              </li>
+            </ul>
+
+            <div class="summary-section-title">Approach</div>
+            <ul class="summary-list">
+              <li>
+                Analysed logs, tickets, and real agent scenarios to identify root causes.
+              </li>
+              <li>
+                Implemented targeted bug fixes, validation, and improved error handling.
+              </li>
+              <li>
+                Supported safer releases with clear rollback plans and post-release monitoring.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="summary-section-title">Outcomes</div>
+        <ul class="summary-list">
+          <li>Fewer incidents in core policy workflows and smoother agent experience.</li>
+          <li>Reduced reliance on manual workarounds and support escalation.</li>
+          <li>
+            Protected and strengthened a key recurring revenue stream tied to US government
+            contracts.
+          </li>
+        </ul>
+
+        <div class="summary-section-title">Key Takeaways</div>
+        <ul class="summary-list">
+          <li>
+            Reliability and compliance are central to healthcare software, especially when
+            government contracts are involved.
+          </li>
+          <li>
+            Incremental, well-targeted fixes can deliver major value without risky rewrites.
+          </li>
+          <li>
+            Working closely with agents, support, and business stakeholders is essential to
+            prioritise the right reliability work.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modal = document.getElementById("summaryModal");
+      const openBtn = document.getElementById("openSummaryBtn");
+      const closeBtn = document.getElementById("closeSummaryBtn");
+
+      function openModal() {
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

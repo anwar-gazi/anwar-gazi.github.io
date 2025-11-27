@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IVR & Call Routing – Telephony Case Study</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      /* Telephony / IVR theme – dark network night + neon signal lines */
+      --bg: #020617;
+      --bg-alt: #020314;
+      --card: #020617;
+      --accent: #22d3ee;              /* signal cyan */
+      --accent-2: #a3e635;            /* neon lime */
+      --accent-soft: rgba(34, 211, 238, 0.18);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 50px rgba(15, 23, 42, 0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #0f172a 0, transparent 55%),
+        radial-gradient(circle at bottom right, #020617 0, #000000 60%);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: #7dd3fc;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    /* Sticky header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 6, 23, 0.98),
+        rgba(15, 23, 42, 0.9),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background:
+        conic-gradient(from 210deg, #22d3ee, #a3e635, #22c55e, #0ea5e9, #22d3ee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #020617;
+      box-shadow: 0 10px 25px rgba(34, 211, 238, 0.85);
+      font-size: 17px;
+    }
+
+    .brand-text-main {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background-color: rgba(15, 23, 42, 0.8);
+    }
+
+    .btn-primary {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #22d3ee, #a3e635);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+      transition: transform 0.13s ease, box-shadow 0.13s ease,
+        background 0.13s ease;
+    }
+
+    .btn-primary span { font-size: 16px; }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 1);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.8);
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 18px 48px;
+    }
+
+    /* Hero */
+
+    .hero {
+      margin-top: 10px;
+      margin-bottom: 32px;
+      padding: 22px 22px 20px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.3), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(163, 230, 53, 0.25), transparent 60%),
+        linear-gradient(145deg, rgba(15, 23, 42, 0.97), rgba(3, 7, 18, 1));
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    @media (max-width: 780px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 20px 18px 18px;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3.2vw, 30px);
+      line-height: 1.2;
+      margin-bottom: 10px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .hero-tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.95);
+      color: #e0f2fe;
+      border: 1px solid rgba(34, 211, 238, 0.85);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 12px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hero-meta-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta-item strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hero-summary {
+      font-size: 14px;
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .hero-side {
+      padding: 12px 14px 10px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at top right, rgba(248, 250, 252, 0.1), transparent 60%),
+        linear-gradient(135deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .hero-side-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .metric-card {
+      border-radius: 14px;
+      padding: 10px 11px;
+      background-color: rgba(15, 23, 42, 0.97);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #f9fafb;
+    }
+
+    .metric-footnote {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .stack-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.85);
+    }
+
+    /* Content layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 1.55fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-card {
+      background-color: rgba(15, 23, 42, 0.98);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 18px 18px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 4px 0 6px;
+    }
+
+    li {
+      font-size: 14px;
+      margin-bottom: 3px;
+      color: #e5e7eb;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      background-color: var(--accent-soft);
+      padding: 10px 11px;
+      border-left: 3px solid var(--accent-2);
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .timeline {
+      border-left: 1px dashed rgba(148, 163, 184, 0.5);
+      margin-top: 6px;
+      padding-left: 14px;
+    }
+
+    .timeline-item {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -15px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #fef9c3, #a3e635);
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.35);
+    }
+
+    .timeline-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .timeline-body {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .side-section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .side-chip {
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin-bottom: 4px;
+      display: inline-block;
+      color: var(--text-muted);
+    }
+
+    .chart-block {
+      background-color: #020617;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 10px 10px 8px;
+      margin-top: 10px;
+    }
+
+    .chart-block img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .chart-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-backdrop.active { display: flex; }
+
+    .modal {
+      max-width: 720px;
+      width: 100%;
+      margin: 16px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.24), transparent 60%),
+        #020617;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 1);
+      padding: 18px 18px 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-icon:hover { background-color: rgba(15, 23, 42, 1); }
+
+    .modal-body {
+      font-size: 13px;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .summary-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .summary-list {
+      padding-left: 16px;
+      margin: 2px 0 4px;
+    }
+
+    .summary-list li {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-badge">IV</div>
+        <div>
+          <div class="brand-text-main">Telephony &amp; IVR Automation</div>
+          <div class="brand-text-sub">2016–2021 IVR Case Study</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="pill">Telephony / IVR • Jan 2016 – Dec 2021</div>
+        <button class="btn-primary" id="openSummaryBtn">
+          <span>☰</span> One-Page Summary
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <div class="hero-tagline">
+          <span>●</span> Telephony • IVR • Customer Support
+        </div>
+        <h1 id="hero-title" class="hero-title">
+          Designing a Twilio + Asterisk IVR to Automate Inbound Call Routing &amp; Self-Service
+        </h1>
+        <p class="hero-subtitle">
+          Designed and implemented an IVR system using Twilio APIs and Asterisk, automating inbound
+          call routing and self-service flows, reducing manual call handling and improving customer
+          support efficiency.
+        </p>
+
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <strong>Experience</strong> Senior Software Engineer (Telephony/IVR)
+          </div>
+          <div class="hero-meta-item">
+            <strong>Stack</strong> Twilio APIs • Asterisk • Web Backends
+          </div>
+          <div class="hero-meta-item">
+            <strong>Industry</strong> Telephony &amp; Contact Center
+          </div>
+        </div>
+
+        <p class="hero-summary">
+          The goal was to move inbound support from “every call goes to a human” to a scalable
+          model where an IVR handles routing, authentication, and common self-service requests
+          before an agent is ever involved. My focus: design the call flows, implement them using
+          Twilio and Asterisk, and make the system robust enough to run in production for years.
+        </p>
+      </div>
+
+      <aside class="hero-side" aria-label="Snapshot">
+        <div class="hero-side-label">Snapshot</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Core Outcome</div>
+            <div class="metric-value">IVR Live</div>
+            <div class="metric-footnote">
+              Automated menu, routing, and self-service deployed to production.
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Support Impact</div>
+            <div class="metric-value">Deflection</div>
+            <div class="metric-footnote">
+              Reduced manual call handling by moving common tasks into IVR flows.
+            </div>
+          </div>
+        </div>
+        <div class="metric-card" style="margin-top:8px;">
+          <div class="metric-label">Impact Focus</div>
+          <div class="metric-footnote">
+            • Fewer trivial calls to agents.<br />
+            • More consistent call routing and prioritisation.<br />
+            • Better experience for customers and support teams.
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="hero-side-label">Core Technologies</div>
+          <div class="stack-list">
+            <span class="stack-pill">Twilio Voice APIs</span>
+            <span class="stack-pill">Asterisk</span>
+            <span class="stack-pill">IVR Call Flows</span>
+            <span class="stack-pill">Webhooks</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout" aria-label="Case study content layout">
+      <!-- Main column -->
+      <div>
+        <article class="section-card" id="introduction">
+          <div class="eyebrow">Overview</div>
+          <h2>Introduction</h2>
+          <p>
+            Over the span of several years working in telephony/IVR, I designed and implemented an
+            inbound IVR platform backed by <strong>Twilio Voice APIs</strong> and
+            <strong>Asterisk</strong>. The system replaced ad-hoc call handling with structured
+            menus, call queues, and self-service options.
+          </p>
+          <p>
+            My responsibility covered end-to-end design: call flow diagrams, Twilio integration,
+            Asterisk configuration, back-end webhooks, and the small UX details that make phone
+            menus feel “fast and clear” rather than frustrating.
+          </p>
+        </article>
+
+        <article class="section-card" id="context">
+          <div class="eyebrow">Background</div>
+          <h2>Context</h2>
+          <p>
+            Before the IVR, inbound calls typically landed in a small support team’s queue:
+          </p>
+          <ul>
+            <li>No automated routing based on customer type or intent.</li>
+            <li>Agents handled many simple, repetitive tasks (status checks, basic FAQs).</li>
+            <li>Spikes in call volume quickly overwhelmed the team.</li>
+          </ul>
+          <p>
+            Modern telephony platforms like Twilio and Asterisk made it possible to introduce
+            smarter routing, self-service, and basic prioritisation — if we could design the right
+            flows and implement them reliably.
+          </p>
+        </article>
+
+        <article class="section-card" id="problem">
+          <div class="eyebrow">Challenge</div>
+          <h2>Problem</h2>
+          <p>
+            The core questions we needed the IVR to answer were:
+          </p>
+          <ul>
+            <li>
+              How do we route callers to the right place (or self-service) as quickly as possible?
+            </li>
+            <li>
+              Which calls truly need an agent, and which can be resolved via automated menus or
+              callbacks?
+            </li>
+            <li>
+              How do we integrate the phone system cleanly with existing back-end systems?
+            </li>
+          </ul>
+          <p>
+            The IVR had to reduce agent workload without making the call experience worse for
+            customers — a balance between efficiency and clarity.
+          </p>
+        </article>
+
+        <article class="section-card" id="constraints">
+          <div class="eyebrow">Operating Environment</div>
+          <h2>Constraints &amp; Requirements</h2>
+          <ul>
+            <li>
+              <strong>Always-on</strong>: the IVR needed high uptime; outages directly impacted
+              support accessibility.
+            </li>
+            <li>
+              <strong>Legacy connections</strong>: integration with Asterisk and existing PBX
+              setups, not a greenfield environment.
+            </li>
+            <li>
+              <strong>Simple for callers</strong>: limited menu depth, clear prompts, option to
+              reach a human when needed.
+            </li>
+            <li>
+              <strong>Measurable</strong>: design had to support tracking call volumes, paths, and
+              deflection rates.
+            </li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="implementation">
+          <div class="eyebrow">Execution</div>
+          <h2>Implementation Highlights</h2>
+
+          <h3>1) Call flow design</h3>
+          <ul>
+            <li>
+              Created diagrams for entry menus, language selection, authentication steps, and
+              routing by intent (support, billing, other).
+            </li>
+            <li>
+              Defined self-service options for common tasks (e.g., checking status, simple
+              account information) to reduce agent load.
+            </li>
+            <li>
+              Included safety paths (reaching an agent, callback options) to avoid trapping
+              callers in menus.
+            </li>
+          </ul>
+
+          <h3>2) Twilio &amp; Asterisk integration</h3>
+          <ul>
+            <li>
+              Implemented Twilio webhooks to handle inbound calls, DTMF input, and branching
+              logic, returning TwiML responses from a web backend.
+            </li>
+            <li>
+              Configured Asterisk dialplans and SIP connections so calls could flow between
+              external numbers, IVR menus, and on-premise endpoints.
+            </li>
+            <li>
+              Set up call queues and ring strategies (round-robin, skills-based groups) for calls
+              that did require agents.
+            </li>
+          </ul>
+
+          <h3>3) Self-service &amp; backend integration</h3>
+          <ul>
+            <li>
+              Connected IVR options to back-end systems via APIs to fetch account information and
+              status data in real time.
+            </li>
+            <li>
+              Implemented simple “speak out” flows using text-to-speech for dynamic responses.
+            </li>
+            <li>
+              Designed error-handling and retry logic for backend timeouts to keep calls from
+              failing hard.
+            </li>
+          </ul>
+
+          <h3>4) Monitoring &amp; tuning</h3>
+          <ul>
+            <li>
+              Logged call paths, menu selections, and drop-off points to identify confusing
+              prompts or unused options.
+            </li>
+            <li>
+              Tuned prompt wording, order of options, and timeouts based on real usage patterns.
+            </li>
+            <li>
+              Worked with support teams to adjust queues and priorities as call patterns evolved.
+            </li>
+          </ul>
+
+          <div class="callout">
+            The result was an IVR that felt like a “front door” to support: fast greeting,
+            routing based on intent, and useful self-service — rather than a barrier between
+            callers and humans.
+          </div>
+        </article>
+
+        <article class="section-card" id="impact">
+          <div class="eyebrow">Outcomes</div>
+          <h2>Impact &amp; Outcomes</h2>
+          <p>
+            The IVR system changed how inbound calls were handled and measured:
+          </p>
+          <ul>
+            <li>
+              A meaningful share of calls were resolved in self-service without agent involvement
+              (status checks, basic account info).
+            </li>
+            <li>
+              Agents saw fewer “wrong-queue” calls thanks to clearer menu branching and routing.
+            </li>
+            <li>
+              Peak-time load on support teams smoothed out as the IVR absorbed repetitive tasks.
+            </li>
+            <li>
+              Call data became easier to analyse (volumes, intents, abandonment), informing
+              staffing and process improvements.
+            </li>
+          </ul>
+
+          <!-- Charts – replace src paths with your actual PNGs -->
+          <div class="chart-block">
+            <img src="chart_call_deflection.png"
+                 alt="Chart showing increase in IVR self-service and reduced agent-handled calls." />
+            <div class="chart-caption">
+              Example: call deflection and self-service rate before vs. after IVR rollout.
+              Replace with your actual call metrics.
+            </div>
+          </div>
+
+          <div class="chart-block">
+            <img src="chart_avg_handle_time.png"
+                 alt="Chart showing change in average handle time or queue length after IVR introduction." />
+            <div class="chart-caption">
+              Example: change in average handle time and queue length once routing and self-service
+              were in place.
+            </div>
+          </div>
+
+          <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
+            Charts are placeholders; swap them with your real telephony metrics (AHT, deflection,
+            abandonment, queue length) where available.
+          </p>
+        </article>
+
+        <article class="section-card" id="learnings">
+          <div class="eyebrow">Reflection</div>
+          <h2>Key Learnings</h2>
+          <ul>
+            <li>
+              IVR design is part UX, part systems engineering: menu structure matters as much as
+              infrastructure reliability.
+            </li>
+            <li>
+              Twilio + Asterisk is a powerful combo, but observability (logs, call traces) is
+              essential to debug real-world issues.
+            </li>
+            <li>
+              Giving callers easy escape routes to humans makes them more tolerant of automation.
+            </li>
+            <li>
+              A well-designed IVR can materially improve support efficiency without feeling like a
+              “robot wall” to customers.
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <!-- Sidebar column -->
+      <aside aria-label="Sidebar information">
+        <section class="section-card">
+          <div class="side-section-title">Role &amp; Responsibilities</div>
+          <p>
+            Across 2016–2021, my telephony/IVR responsibilities included:
+          </p>
+          <ul>
+            <li>Designing IVR call flows and mapping them to business needs.</li>
+            <li>Implementing Twilio webhooks and Asterisk dialplans.</li>
+            <li>
+              Integrating the IVR with back-end systems for self-service functionality.
+            </li>
+            <li>
+              Monitoring performance and iterating based on call analytics and support feedback.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Architecture Snapshot</div>
+          <ul>
+            <li><strong>Entry:</strong> Inbound calls via Twilio numbers.</li>
+            <li><strong>Logic:</strong> Twilio webhooks + backend services produce TwiML.</li>
+            <li><strong>PBX:</strong> Asterisk handling queues and on-premise endpoints.</li>
+            <li><strong>Backend:</strong> Web services for account/status data.</li>
+          </ul>
+          <div class="callout" style="margin-top:10px;">
+            The architecture lets the IVR sit in front of existing systems without forcing a
+            complete replacement of on-premise telephony.
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Timeline Highlights</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-title">2016 – 2017: Foundations</div>
+              <div class="timeline-body">
+                Learned Twilio and Asterisk basics; built initial IVR prototypes and simple call
+                menus.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">2018 – 2019: Production Rollout</div>
+              <div class="timeline-body">
+                Designed full inbound IVR flows, integrated with back-end systems, and deployed to
+                production.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">2020 – 2021: Optimisation</div>
+              <div class="timeline-body">
+                Tuning prompts, routing rules, and queues based on analytics; adding more
+                self-service and monitoring.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Keywords &amp; Themes</div>
+          <p>Useful tags for CVs, portfolios, and search:</p>
+          <div>
+            <span class="side-chip">Telephony</span>
+            <span class="side-chip">IVR</span>
+            <span class="side-chip">Twilio</span>
+            <span class="side-chip">Asterisk</span>
+            <span class="side-chip">Call Routing</span>
+            <span class="side-chip">Self-Service</span>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <footer>
+      Routing calls intelligently so humans handle what matters — Twilio + Asterisk IVR work.
+    </footer>
+  </main>
+
+  <!-- One-page summary modal -->
+  <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Telephony &amp; IVR – One-Page Summary</div>
+          <div class="modal-subtitle">
+            Quick snapshot of the Twilio + Asterisk IVR automation case study.
+          </div>
+        </div>
+        <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="summary-grid">
+          <div>
+            <div class="summary-section-title">Context</div>
+            <ul class="summary-list">
+              <li>Inbound support calls handled manually by a small team.</li>
+              <li>No structured routing or self-service; agents answered every call.</li>
+              <li>Spikes in volume created long queues and inconsistent experiences.</li>
+            </ul>
+
+            <div class="summary-section-title">Challenge</div>
+            <ul class="summary-list">
+              <li>Automate routing and simple tasks without frustrating callers.</li>
+              <li>Integrate cloud telephony (Twilio) with Asterisk/PBX.</li>
+              <li>Make results measurable (deflection, queue length, AHT).</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="summary-section-title">My Role</div>
+            <ul class="summary-list">
+              <li>Senior Software Engineer focused on telephony/IVR design &amp; build.</li>
+              <li>Owned call flow design, Twilio integration, Asterisk dialplans.</li>
+              <li>Connected IVR flows to back-end services for self-service options.</li>
+            </ul>
+
+            <div class="summary-section-title">Approach</div>
+            <ul class="summary-list">
+              <li>Design clear IVR menus and routes based on caller intent.</li>
+              <li>Use Twilio webhooks + Asterisk to implement logic and queues.</li>
+              <li>Monitor call paths and tune prompts and flows iteratively.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="summary-section-title">Outcomes</div>
+        <ul class="summary-list">
+          <li>Reduced manual call handling by moving routine tasks into IVR.</li>
+          <li>More consistent routing to the right queues and teams.</li>
+          <li>Improved support efficiency and better visibility into call behaviour.</li>
+        </ul>
+
+        <div class="summary-section-title">Key Takeaways</div>
+        <ul class="summary-list">
+          <li>Good IVR design balances automation with easy access to humans.</li>
+          <li>Twilio + Asterisk can modernise support flows without replacing everything.</li>
+          <li>Data from call paths is invaluable for continuous improvement in support ops.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modal = document.getElementById("summaryModal");
+      const openBtn = document.getElementById("openSummaryBtn");
+      const closeBtn = document.getElementById("closeSummaryBtn");
+
+      function openModal() {
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

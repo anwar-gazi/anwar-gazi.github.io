@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>eBay Dropshipping Automation – Case Study</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      /* Dropshipping / ecommerce theme – warm marketplace vibe */
+      --bg: #020617;
+      --bg-alt: #02010f;
+      --card: #020617;
+      --accent: #fb923c;              /* orange for orders */
+      --accent-2: #22c55e;            /* green for revenue */
+      --accent-soft: rgba(251, 146, 60, 0.16);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 50px rgba(15, 23, 42, 0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #0b1120 0, transparent 55%),
+        radial-gradient(circle at bottom right, #020617 0, #000000 60%);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: #fb923c;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    /* Sticky header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(120, 53, 15, 0.9),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background:
+        conic-gradient(from 210deg, #fb923c, #22c55e, #38bdf8, #facc15, #fb923c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #020617;
+      box-shadow: 0 10px 25px rgba(251, 146, 60, 0.85);
+      font-size: 17px;
+    }
+
+    .brand-text-main {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background-color: rgba(15, 23, 42, 0.75);
+    }
+
+    .btn-primary {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #fb923c, #22c55e);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(8, 47, 73, 0.9);
+      transition: transform 0.13s ease, box-shadow 0.13s ease,
+        background 0.13s ease;
+    }
+
+    .btn-primary span { font-size: 16px; }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(8, 47, 73, 1);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 8px 20px rgba(8, 47, 73, 0.8);
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 18px 48px;
+    }
+
+    /* Hero */
+
+    .hero {
+      margin-top: 10px;
+      margin-bottom: 32px;
+      padding: 22px 22px 20px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(251, 146, 60, 0.25), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.22), transparent 60%),
+        linear-gradient(145deg, rgba(15, 23, 42, 0.97), rgba(3, 7, 18, 1));
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    @media (max-width: 780px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 20px 18px 18px;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3.2vw, 30px);
+      line-height: 1.2;
+      margin-bottom: 10px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .hero-tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background-color: rgba(30, 64, 175, 0.9);
+      color: #fffbeb;
+      border: 1px solid rgba(251, 146, 60, 0.9);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 12px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hero-meta-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta-item strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hero-summary {
+      font-size: 14px;
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .hero-side {
+      padding: 12px 14px 10px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at top right, rgba(248, 250, 252, 0.1), transparent 60%),
+        linear-gradient(135deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+    }
+
+    .hero-side-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .metric-card {
+      border-radius: 14px;
+      padding: 10px 11px;
+      background-color: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #f9fafb;
+    }
+
+    .metric-footnote {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .stack-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.85);
+    }
+
+    /* Content layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 1.55fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-card {
+      background-color: rgba(15, 23, 42, 0.98);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 18px 18px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 4px 0 6px;
+    }
+
+    li {
+      font-size: 14px;
+      margin-bottom: 3px;
+      color: #e5e7eb;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      background-color: var(--accent-soft);
+      padding: 10px 11px;
+      border-left: 3px solid var(--accent-2);
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .timeline {
+      border-left: 1px dashed rgba(148, 163, 184, 0.5);
+      margin-top: 6px;
+      padding-left: 14px;
+    }
+
+    .timeline-item {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -15px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #fffbeb, #fb923c);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+    }
+
+    .timeline-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .timeline-body {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .side-section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .side-chip {
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin-bottom: 4px;
+      display: inline-block;
+      color: var(--text-muted);
+    }
+
+    .chart-block {
+      background-color: #020617;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 10px 10px 8px;
+      margin-top: 10px;
+    }
+
+    .chart-block img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .chart-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-backdrop.active { display: flex; }
+
+    .modal {
+      max-width: 720px;
+      width: 100%;
+      margin: 16px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top left, rgba(251, 146, 60, 0.22), transparent 60%),
+        #020617;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 1);
+      padding: 18px 18px 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-icon:hover { background-color: rgba(15, 23, 42, 1); }
+
+    .modal-body {
+      font-size: 13px;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .summary-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .summary-list {
+      padding-left: 16px;
+      margin: 2px 0 4px;
+    }
+
+    .summary-list li {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-badge">DS</div>
+        <div>
+          <div class="brand-text-main">eBay Dropshipping Automation</div>
+          <div class="brand-text-sub">Inventory &amp; Packing Slips Case Study</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="pill">DropShipping • May 2014 – Sep 2016</div>
+        <button class="btn-primary" id="openSummaryBtn">
+          <span>☰</span> One-Page Summary
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <div class="hero-tagline">
+          <span>●</span> Dropshipping • eBay • Operations Automation
+        </div>
+        <h1 id="hero-title" class="hero-title">
+          Automating eBay Inventory Tracking &amp; Packing Slips for a $60K/Month Dropshipping Business
+        </h1>
+        <p class="hero-subtitle">
+          Built an eBay inventory tracker and packing slip automation solution using PHP and the
+          eBay API for a dropshipping client, streamlining order fulfilment and operations and
+          enabling the business to scale to roughly $60K in monthly revenue.
+        </p>
+
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <strong>Experience</strong> Dropshipping Automation Engineer
+          </div>
+          <div class="hero-meta-item">
+            <strong>Channel</strong> eBay Marketplace
+          </div>
+          <div class="hero-meta-item">
+            <strong>Stack</strong> PHP • eBay API • MySQL
+          </div>
+        </div>
+
+        <p class="hero-summary">
+          The client’s dropshipping business started with a handful of orders per day that were
+          manageable by hand. As sales grew, manual inventory checks and packing slips became
+          a bottleneck. I designed and built a PHP + eBay API–driven tool that kept inventory in
+          sync and generated packing slips automatically, allowing the business to scale to around
+          $60K/month in revenue without proportional headcount growth.
+        </p>
+      </div>
+
+      <aside class="hero-side" aria-label="Snapshot">
+        <div class="hero-side-label">Snapshot</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Revenue Scale</div>
+            <div class="metric-value">≈ $60K/mo</div>
+            <div class="metric-footnote">
+              Supported monthly revenue after automation and process improvements.
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Core Automation</div>
+            <div class="metric-value">Inventory &amp; Slips</div>
+            <div class="metric-footnote">
+              eBay inventory sync + auto packing slip generation from orders.
+            </div>
+          </div>
+        </div>
+        <div class="metric-card" style="margin-top:8px;">
+          <div class="metric-label">Impact Focus</div>
+          <div class="metric-footnote">
+            • Less time on manual admin.<br />
+            • Fewer stockouts and oversells.<br />
+            • Operations ready for higher order volume.
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="hero-side-label">Core Components</div>
+          <div class="stack-list">
+            <span class="stack-pill">PHP</span>
+            <span class="stack-pill">eBay API</span>
+            <span class="stack-pill">MySQL</span>
+            <span class="stack-pill">Batch Printing</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout" aria-label="Case study content layout">
+      <!-- Main column -->
+      <div>
+        <article class="section-card" id="introduction">
+          <div class="eyebrow">Overview</div>
+          <h2>Introduction</h2>
+          <p>
+            For a rapidly growing eBay dropshipping operation, I built an internal tool that
+            tracked inventory across listings and automated packing slip generation. The system
+            pulled data directly from the eBay API and centralised it in a PHP/MySQL application
+            designed for daily use by the fulfilment team.
+          </p>
+          <p>
+            The goal was simple: make sure that as order volume grew, the business wouldn’t drown
+            in manual inventory checks and label creation. Automation turned repetitive work into
+            a few clicks per batch.
+          </p>
+        </article>
+
+        <article class="section-card" id="context">
+          <div class="eyebrow">Background</div>
+          <h2>Context</h2>
+          <p>
+            Dropshipping on eBay has thin margins and high operational risk. Common pain points
+            for sellers include:
+          </p>
+          <ul>
+            <li>Accidentally selling items that are out of stock at the supplier.</li>
+            <li>Spending hours copying order details into packing slip templates.</li>
+            <li>Losing track of which orders have been printed, packed, or shipped.</li>
+          </ul>
+          <p>
+            The client was scaling up from side-project to full-time business, with revenue
+            approaching tens of thousands of dollars per month. The old “spreadsheet + copy-paste”
+            approach wasn’t going to scale.
+          </p>
+        </article>
+
+        <article class="section-card" id="problem">
+          <div class="eyebrow">Challenge</div>
+          <h2>Problem</h2>
+          <p>
+            The business needed a way to:
+          </p>
+          <ul>
+            <li>Keep eBay listings aligned with actual supplier inventory levels.</li>
+            <li>Generate accurate packing slips quickly for each order batch.</li>
+            <li>Reduce human error in addresses, SKUs, and quantities.</li>
+            <li>Handle increasing daily order volume without adding more staff.</li>
+          </ul>
+          <p>
+            The challenge was to create a lightweight automation layer that sat between eBay and
+            the fulfilment desk — robust enough for daily use, simple enough for non-developers.
+          </p>
+        </article>
+
+        <article class="section-card" id="constraints">
+          <div class="eyebrow">Operating Environment</div>
+          <h2>Constraints &amp; Requirements</h2>
+          <ul>
+            <li>
+              <strong>Small team</strong>: the client didn’t have an in-house engineering team,
+              so the tool had to be maintainable and simple.
+            </li>
+            <li>
+              <strong>eBay API limits</strong>: inventory updates and order pulls needed to play
+              nicely with API rate limits and quotas.
+            </li>
+            <li>
+              <strong>Existing workflows</strong>: warehouse staff were used to printed slips and
+              simple UIs, not complex dashboards.
+            </li>
+            <li>
+              <strong>Cost sensitivity</strong>: solutions had to be server-light and avoid
+              expensive SaaS tools cutting into margin.
+            </li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="implementation">
+          <div class="eyebrow">Execution</div>
+          <h2>Implementation Highlights</h2>
+
+          <h3>1) eBay inventory tracking</h3>
+          <ul>
+            <li>
+              Integrated with the eBay API to periodically pull listing and order data into a
+              MySQL database.
+            </li>
+            <li>
+              Modelled inventory at a SKU level, mapping eBay listings to underlying supplier
+              products.
+            </li>
+            <li>
+              Implemented logic to flag low-stock or out-of-stock items, helping the client
+              adjust listings before oversells happened.
+            </li>
+          </ul>
+
+          <h3>2) Packing slip automation</h3>
+          <ul>
+            <li>
+              Built a PHP interface where the user could select a date range or order batch and
+              generate packing slips in bulk.
+            </li>
+            <li>
+              Designed a print-friendly packing slip layout with key fields: buyer address, order
+              details, SKUs, and any special notes.
+            </li>
+            <li>
+              Tracked which orders had packing slips printed to avoid duplicates and confusion in
+              the packing area.
+            </li>
+          </ul>
+
+          <h3>3) Operations-friendly UI</h3>
+          <ul>
+            <li>
+              Created simple list and filter screens for orders and inventory, optimised for quick
+              scanning rather than “analytics dashboards”.
+            </li>
+            <li>
+              Added indicators for “ready to print”, “printed”, and “shipped” statuses to give a
+              clear view of the daily queue.
+            </li>
+            <li>
+              Kept interactions keyboard-friendly to minimise friction during high-volume days.
+            </li>
+          </ul>
+
+          <h3>4) Stability &amp; maintainability</h3>
+          <ul>
+            <li>
+              Used cron jobs to schedule eBay sync operations, spreading calls to respect API
+              limits.
+            </li>
+            <li>
+              Logged API failures and data discrepancies so issues could be spotted early.
+            </li>
+            <li>
+              Documented configuration and workflows so the client could operate the system
+              without daily developer involvement.
+            </li>
+          </ul>
+
+          <div class="callout">
+            The tool quietly handled the “boring but critical” work: tracking stock and producing
+            paperwork, so the client could focus on listings, pricing, and customer messages.
+          </div>
+        </article>
+
+        <article class="section-card" id="impact">
+          <div class="eyebrow">Outcomes</div>
+          <h2>Impact &amp; Outcomes</h2>
+          <p>
+            The automation layer had a direct effect on how the dropshipping business operated:
+          </p>
+          <ul>
+            <li>
+              Order fulfilment became a predictable, repeatable process instead of a daily scramble.
+            </li>
+            <li>
+              Time spent on manual packing slips dropped significantly, freeing capacity for growth.
+            </li>
+            <li>
+              Inventory mismatches and oversells were reduced, protecting seller ratings and
+              customer satisfaction.
+            </li>
+            <li>
+              The business was able to scale to roughly <strong>$60K/month</strong> in revenue
+              without a matching increase in operational overhead.
+            </li>
+          </ul>
+
+          <!-- Charts – replace src paths with your actual PNGs -->
+          <div class="chart-block">
+            <img src="chart_order_volume.png"
+                 alt="Chart showing increasing order volume while manual handling time stays flat or declines." />
+            <div class="chart-caption">
+              Example: order volume growth vs. manual fulfilment time after automation (replace
+              with your real metrics).
+            </div>
+          </div>
+
+          <div class="chart-block">
+            <img src="chart_revenue_growth.png"
+                 alt="Chart showing revenue ramping up towards $60K/month after operational automation." />
+            <div class="chart-caption">
+              Example: revenue trend towards ≈$60K/month, enabled by streamlined operations.
+            </div>
+          </div>
+
+          <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
+            Charts are placeholders; plug in your actual order, revenue, and time-saved metrics
+            here if you have them.
+          </p>
+        </article>
+
+        <article class="section-card" id="learnings">
+          <div class="eyebrow">Reflection</div>
+          <h2>Key Learnings</h2>
+          <ul>
+            <li>
+              In dropshipping, operational bottlenecks (inventory checks, packing slips) can
+              quietly cap growth long before demand does.
+            </li>
+            <li>
+              A focused internal tool, built around one marketplace (eBay) and one workflow
+              (fulfilment), can be more valuable than a generic all-in-one SaaS.
+            </li>
+            <li>
+              Keeping automation visible and understandable to non-technical users is key for trust
+              and adoption.
+            </li>
+            <li>
+              Small engineering investments in process automation can unlock significant revenue
+              growth for lean ecommerce businesses.
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <!-- Sidebar column -->
+      <aside aria-label="Sidebar information">
+        <section class="section-card">
+          <div class="side-section-title">Role &amp; Responsibilities</div>
+          <p>
+            Between May 2014 and Sep 2016, for this dropshipping client I:
+          </p>
+          <ul>
+            <li>Designed the inventory-tracking and packing-slip workflows.</li>
+            <li>Implemented eBay API integration and data model in PHP/MySQL.</li>
+            <li>Built the operator-facing UI for daily fulfilment work.</li>
+            <li>
+              Monitored and tuned the system as order volumes and product catalogues grew.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Architecture Snapshot</div>
+          <ul>
+            <li><strong>Marketplace:</strong> eBay listings and orders.</li>
+            <li><strong>Backend:</strong> PHP application with eBay API integration.</li>
+            <li><strong>Database:</strong> MySQL storing inventory, orders, and status flags.</li>
+            <li><strong>Ops tools:</strong> Batch packing slip generation and print flows.</li>
+          </ul>
+          <div class="callout" style="margin-top:10px;">
+            The system sat beside eBay: it didn’t replace the marketplace, it leveraged its APIs
+            to give the seller control over operations.
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Timeline Highlights</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-title">2014: Initial Build</div>
+              <div class="timeline-body">
+                Mapped pain points, designed data model, and shipped first version of inventory
+                tracker and packing slip generator.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">2015: Iteration &amp; Scale</div>
+              <div class="timeline-body">
+                Improved sync reliability, refined UI for fulfilment staff, and handled increasing
+                daily order volumes.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">2016: Optimisation</div>
+              <div class="timeline-body">
+                Focused on stability and incremental enhancements as revenue approached $60K/month.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Keywords &amp; Themes</div>
+          <p>Useful tags for CVs, portfolios, and search:</p>
+          <div>
+            <span class="side-chip">Dropshipping</span>
+            <span class="side-chip">eBay</span>
+            <span class="side-chip">Inventory Tracking</span>
+            <span class="side-chip">Packing Slip Automation</span>
+            <span class="side-chip">PHP &amp; eBay API</span>
+            <span class="side-chip">Ecommerce Ops</span>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <footer>
+      Making dropshipping operations scalable — eBay inventory &amp; packing slip automation.
+    </footer>
+  </main>
+
+  <!-- One-page summary modal -->
+  <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">eBay Dropshipping – One-Page Summary</div>
+          <div class="modal-subtitle">
+            Quick snapshot of the inventory &amp; packing slip automation case study.
+          </div>
+        </div>
+        <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="summary-grid">
+          <div>
+            <div class="summary-section-title">Context</div>
+            <ul class="summary-list">
+              <li>eBay-based dropshipping business growing from side hustle to full-time.</li>
+              <li>Manual inventory checks and packing slips limiting daily throughput.</li>
+              <li>Revenue target of tens of thousands per month without big staffing costs.</li>
+            </ul>
+
+            <div class="summary-section-title">Challenge</div>
+            <ul class="summary-list">
+              <li>Keep listings aligned with real stock to avoid overselling.</li>
+              <li>Automate packing slips so fulfilment doesn’t become a bottleneck.</li>
+              <li>Build something simple enough for non-technical operations staff.</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="summary-section-title">My Role</div>
+            <ul class="summary-list">
+              <li>Engineer designing and implementing the automation layer.</li>
+              <li>Integrated eBay API, built PHP/MySQL backend and operator UI.</li>
+              <li>Iterated based on real-world usage and volume growth.</li>
+            </ul>
+
+            <div class="summary-section-title">Approach</div>
+            <ul class="summary-list">
+              <li>Sync listings and orders from eBay into a local database.</li>
+              <li>Track inventory and flag low-stock/out-of-stock SKUs.</li>
+              <li>Generate batch packing slips with clear statuses for fulfilment.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="summary-section-title">Outcomes</div>
+        <ul class="summary-list">
+          <li>Streamlined fulfilment process with less manual admin work.</li>
+          <li>Reduced stockouts and oversells, protecting seller performance.</li>
+          <li>Business scaled to roughly $60K/month in revenue with lean operations.</li>
+        </ul>
+
+        <div class="summary-section-title">Key Takeaways</div>
+        <ul class="summary-list">
+          <li>Automation in the “boring middle” of ecommerce can unlock major growth.</li>
+          <li>Deep integration with a single marketplace (eBay) can beat generic tools.</li>
+          <li>Simple, stable internal tools are powerful leverage for small teams.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modal = document.getElementById("summaryModal");
+      const openBtn = document.getElementById("openSummaryBtn");
+      const closeBtn = document.getElementById("closeSummaryBtn");
+
+      function openModal() {
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

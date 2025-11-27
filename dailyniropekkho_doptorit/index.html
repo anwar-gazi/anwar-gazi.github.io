@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Multi-Tenant News CMS – Media Case Study</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      /* Media / editorial color theme */
+      --bg: #050014;
+      --bg-alt: #090321;
+      --card: #050012;
+      --accent: #f97316;            /* orange */
+      --accent-2: #ec4899;          /* magenta */
+      --accent-soft: rgba(249, 115, 22, 0.14);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 50px rgba(3, 7, 18, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #1e0b3a 0, transparent 55%),
+        radial-gradient(circle at bottom right, #111827 0, #020617 60%);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: #fbbf24;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Sticky header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(5, 0, 20, 0.96),
+        rgba(9, 3, 33, 0.9),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: conic-gradient(from 210deg, #fb923c, #f97316, #ec4899, #a855f7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #020617;
+      box-shadow: 0 10px 25px rgba(248, 113, 113, 0.7);
+      font-size: 17px;
+    }
+
+    .brand-text-main {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background-color: rgba(15, 23, 42, 0.75);
+    }
+
+    .btn-primary {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #f97316, #fb7185);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(76, 29, 149, 0.8);
+      transition: transform 0.13s ease, box-shadow 0.13s ease,
+        background 0.13s ease;
+    }
+
+    .btn-primary span {
+      font-size: 16px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(76, 29, 149, 0.95);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 8px 20px rgba(76, 29, 149, 0.7);
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 18px 48px;
+    }
+
+    /* Hero */
+
+    .hero {
+      margin-top: 10px;
+      margin-bottom: 32px;
+      padding: 22px 22px 20px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(248, 113, 113, 0.28), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.22), transparent 60%),
+        linear-gradient(145deg, rgba(5, 0, 20, 0.96), rgba(3, 7, 18, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    @media (max-width: 780px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 20px 18px 18px;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3.2vw, 30px);
+      line-height: 1.2;
+      margin-bottom: 10px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .hero-tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background-color: rgba(148, 27, 89, 0.4);
+      color: #fee2e2;
+      border: 1px solid rgba(248, 113, 113, 0.8);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 12px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hero-meta-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta-item strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hero-summary {
+      font-size: 14px;
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .hero-side {
+      padding: 12px 14px 10px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at top right, rgba(248, 250, 252, 0.1), transparent 60%),
+        linear-gradient(135deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .hero-side-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .metric-card {
+      border-radius: 14px;
+      padding: 10px 11px;
+      background-color: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #f9fafb;
+    }
+
+    .metric-footnote {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .stack-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.85);
+    }
+
+    /* Content layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 1.55fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-card {
+      background-color: rgba(15, 23, 42, 0.97);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 18px 18px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.8);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 4px 0 6px;
+    }
+
+    li {
+      font-size: 14px;
+      margin-bottom: 3px;
+      color: #e5e7eb;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      background-color: var(--accent-soft);
+      padding: 10px 11px;
+      border-left: 3px solid var(--accent);
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .timeline {
+      border-left: 1px dashed rgba(148, 163, 184, 0.5);
+      margin-top: 6px;
+      padding-left: 14px;
+    }
+
+    .timeline-item {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -15px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #fef3c7, #f97316);
+      box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.3);
+    }
+
+    .timeline-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .timeline-body {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .side-section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .side-chip {
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin-bottom: 4px;
+      display: inline-block;
+      color: var(--text-muted);
+    }
+
+    .chart-block {
+      background-color: #020617;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 10px 10px 8px;
+      margin-top: 10px;
+    }
+
+    .chart-block img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .chart-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(3, 7, 18, 0.86);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      max-width: 720px;
+      width: 100%;
+      margin: 16px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top left, rgba(236, 72, 153, 0.18), transparent 60%),
+        #020617;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      box-shadow: 0 20px 55px rgba(3, 7, 18, 1);
+      padding: 18px 18px 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-icon:hover {
+      background-color: rgba(15, 23, 42, 1);
+    }
+
+    .modal-body {
+      font-size: 13px;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .summary-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .summary-list {
+      padding-left: 16px;
+      margin: 2px 0 4px;
+    }
+
+    .summary-list li {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-badge">MC</div>
+        <div>
+          <div class="brand-text-main">Multi-Tenant News CMS</div>
+          <div class="brand-text-sub">Media Product Case Study</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="pill">Media • Oct 2023 – Feb 2025</div>
+        <button class="btn-primary" id="openSummaryBtn">
+          <span>☰</span> One-Page Summary
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <div class="hero-tagline">
+          <span>●</span> Media SaaS • Multi-Tenant CMS • Commercialised
+        </div>
+        <h1 id="hero-title" class="hero-title">
+          Shipping a Multi-Tenant News Portal CMS for Bangladeshi Media Publishers
+        </h1>
+        <p class="hero-subtitle">
+          Built and launched a multi-tenant news portal/CMS product using Next.js, TypeScript,
+          Laravel, MongoDB, and MySQL, then successfully commercialised it with paying clients
+          such as <strong>Daily Niropekkho</strong>—validating product–market fit in the digital
+          publishing space.
+        </p>
+
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <strong>Role</strong> Senior/Lead Engineer &amp; Product Builder
+          </div>
+          <div class="hero-meta-item">
+            <strong>Org</strong>
+            <a href="https://softexpo.com.bd/exhibitor/details/10100/doptor-ltd" target="_blank" rel="noreferrer">
+              DoptorITMart, Dhaka, Bangladesh
+            </a>
+          </div>
+          <div class="hero-meta-item">
+            <strong>Industry</strong> Digital Media &amp; Publishing
+          </div>
+        </div>
+
+        <p class="hero-summary">
+          The goal was to move regional newsrooms away from fragile, one-off WordPress installs and
+          into a SaaS platform optimised for newsroom workflows, multi-tenant hosting, and modern
+          reader experiences across web and mobile. My focus: design and implement the product from
+          the ground up and prove that media organisations would pay for it.
+        </p>
+      </div>
+
+      <aside class="hero-side" aria-label="Snapshot">
+        <div class="hero-side-label">Snapshot</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Tenants Launched</div>
+            <div class="metric-value">Multi-client</div>
+            <div class="metric-footnote">
+              Including commercial rollout with Daily Niropekkho &amp; other media brands.
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Product Outcome</div>
+            <div class="metric-value">PMF Signal</div>
+            <div class="metric-footnote">
+              Paying customers &amp; repeat interest from local publishers.
+            </div>
+          </div>
+        </div>
+        <div class="metric-card" style="margin-top:8px;">
+          <div class="metric-label">Impact Focus</div>
+          <div class="metric-footnote">
+            • Multi-tenant architecture for media brands.<br />
+            • Editorial-friendly workflows and rich content tools.<br />
+            • Commercialisation &amp; onboarding for real newsrooms.
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="hero-side-label">Core Stack</div>
+          <div class="stack-list">
+            <span class="stack-pill">Next.js</span>
+            <span class="stack-pill">TypeScript</span>
+            <span class="stack-pill">Laravel</span>
+            <span class="stack-pill">MongoDB</span>
+            <span class="stack-pill">MySQL</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout" aria-label="Case study content layout">
+      <!-- Main column -->
+      <div>
+        <article class="section-card" id="introduction">
+          <div class="eyebrow">Overview</div>
+          <h2>Introduction</h2>
+          <p>
+            DoptorITMart set out to build a news-friendly CMS that could serve multiple editorial
+            teams from a shared platform while preserving the identity and control of each media
+            brand. The product needed to support fast-moving newsrooms, modern reader experiences,
+            and reliable performance even under breaking-news traffic spikes.
+          </p>
+          <p>
+            As the primary engineer driving the product build, I was responsible for both
+            architecture and implementation across the Next.js/TypeScript front end and the
+            Laravel-powered API and admin backend, backed by MongoDB and MySQL. I also partnered
+            with business stakeholders to onboard early customers and turn the platform into a
+            revenue-generating product.
+          </p>
+        </article>
+
+        <article class="section-card" id="context">
+          <div class="eyebrow">Background</div>
+          <h2>Context</h2>
+          <p>
+            Many regional publishers in Bangladesh run on aging stacks or heavily customised
+            WordPress sites. Common pain points include:
+          </p>
+          <ul>
+            <li>Slow sites under peak traffic or when archives grow large.</li>
+            <li>Fragile plugins that break after updates.</li>
+            <li>Duplicated work across properties with no shared infrastructure.</li>
+            <li>Limited support for modern content formats and multi-channel publishing.</li>
+          </ul>
+          <p>
+            DoptorITMart wanted to offer a multi-tenant SaaS that solved these problems while
+            remaining affordable and easy to adopt for small and mid-sized newsrooms.
+          </p>
+        </article>
+
+        <article class="section-card" id="problem">
+          <div class="eyebrow">Challenge</div>
+          <h2>Problem</h2>
+          <p>
+            The core challenge was to design and ship a multi-tenant CMS that:
+          </p>
+          <ul>
+            <li>Gives each newsroom its own branded site and editorial workspace.</li>
+            <li>Scales as more tenants and articles are added.</li>
+            <li>Supports fast page loads and SEO-friendly rendering.</li>
+            <li>Is simple enough for non-technical editorial staff to use daily.</li>
+            <li>Can be sold, deployed, and supported as a SaaS product, not a one-off project.</li>
+          </ul>
+          <p>
+            We needed to prove both technical feasibility and commercial viability within a tight,
+            startup-style timeline.
+          </p>
+        </article>
+
+        <article class="section-card" id="constraints">
+          <div class="eyebrow">Operating Environment</div>
+          <h2>Constraints &amp; Requirements</h2>
+          <ul>
+            <li>
+              <strong>Multi-tenant by design</strong>: shared infrastructure with isolated data and
+              configuration per publication.
+            </li>
+            <li>
+              <strong>High performance</strong>: fast initial load, good Core Web Vitals, and
+              stable behaviour during traffic spikes (e.g. breaking news).
+            </li>
+            <li>
+              <strong>Editorial usability</strong>: intuitive story editor, image handling, and
+              scheduling tools for non-technical staff.
+            </li>
+            <li>
+              <strong>Time-to-market</strong>: ship a deployable product and sign paying clients
+              within roughly a year.
+            </li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="implementation">
+          <div class="eyebrow">Execution</div>
+          <h2>Implementation Highlights</h2>
+
+          <h3>1) Multi-tenant architecture</h3>
+          <ul>
+            <li>
+              Designed a Laravel-based API with tenant-aware routing, authentication, and
+              configuration to serve multiple publications from the same codebase.
+            </li>
+            <li>
+              Used MySQL for relational data (tenants, users, roles, billing) and MongoDB for
+              flexible article content and metadata, making it easy to evolve the content model.
+            </li>
+            <li>
+              Implemented per-tenant themes and configuration so each brand could control its front
+              page layout, logo, typography, and colour palette.
+            </li>
+          </ul>
+
+          <h3>2) Reader experience with Next.js &amp; TypeScript</h3>
+          <ul>
+            <li>
+              Built the public-facing sites in Next.js with server-side rendering and static
+              generation where appropriate for fast, SEO-friendly pages.
+            </li>
+            <li>
+              Implemented reusable components for article lists, story pages, category hubs, and
+              breaking-news banners that could be styled differently per tenant.
+            </li>
+            <li>
+              Applied TypeScript to reduce runtime errors and keep the front-end codebase
+              maintainable as features grew.
+            </li>
+          </ul>
+
+          <h3>3) Newsroom workflows</h3>
+          <ul>
+            <li>
+              Created an editorial dashboard for drafting, editing, scheduling, and publishing
+              stories with role-based permissions (reporter, editor, admin).
+            </li>
+            <li>
+              Added support for rich content (images, tags, categories, featured placements,
+              breaking labels).
+            </li>
+            <li>
+              Implemented simple analytics views so editors could see which stories were trending
+              and adjust the homepage accordingly.
+            </li>
+          </ul>
+
+          <h3>4) Commercialisation &amp; onboarding</h3>
+          <ul>
+            <li>
+              Partnered with business stakeholders to onboard early customers, including
+              <strong>Daily Niropekkho</strong>, handling data migration and customisation.
+            </li>
+            <li>
+              Created scripts and tooling to provision new tenants quickly: base configuration,
+              default sections, and initial user accounts.
+            </li>
+            <li>
+              Worked closely with editorial staff to refine UX details (headline fields,
+              categorisation flows, image cropping) based on real newsroom behaviour.
+            </li>
+          </ul>
+
+          <div class="callout">
+            The emphasis was on building a “newsroom-native” CMS: fast sites for readers, intuitive
+            tools for journalists, and a multi-tenant core that the business could sell repeatedly.
+          </div>
+        </article>
+
+        <article class="section-card" id="impact">
+          <div class="eyebrow">Outcomes</div>
+          <h2>Impact &amp; Outcomes</h2>
+          <p>
+            The product evolved from internal prototype to a live SaaS used by multiple newsrooms.
+            Key outcomes:
+          </p>
+          <ul>
+            <li>
+              <strong>Commercialisation</strong>: Converted the platform into a paid product with
+              real media clients, validating product–market fit in a niche but important segment.
+            </li>
+            <li>
+              <strong>Operational efficiency</strong>: New tenants could be provisioned much faster
+              than building a custom site from scratch, reducing onboarding time and cost.
+            </li>
+            <li>
+              <strong>Better reader experience</strong>: Modern, responsive sites with improved
+              performance and structure compared to legacy properties.
+            </li>
+            <li>
+              <strong>Product foundation</strong>: A codebase and architecture that the company can
+              continue to extend with new modules (paywalls, newsletters, more analytics).
+            </li>
+          </ul>
+
+          <!-- Charts – replace src paths with your actual chart images -->
+          <div class="chart-block">
+            <img src="chart_tenant_adoption.png"
+                 alt="Line chart illustrating growth in number of media tenants over time." />
+            <div class="chart-caption">
+              Example: cumulative number of news organisations onboarded to the CMS over time.
+              Replace with your own tenant/adoption chart.
+            </div>
+          </div>
+
+          <div class="chart-block">
+            <img src="chart_traffic_response.png"
+                 alt="Bar chart comparing page load or traffic handling before and after migrating to the CMS." />
+            <div class="chart-caption">
+              Example: comparative reader performance or traffic-handling metrics before/after
+              migration to the platform.
+            </div>
+          </div>
+
+          <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
+            Charts are placeholders to show where adoption and performance visuals can sit. Swap
+            them with real data from your deployments.
+          </p>
+        </article>
+
+        <article class="section-card" id="learnings">
+          <div class="eyebrow">Reflection</div>
+          <h2>Key Learnings</h2>
+          <ul>
+            <li>
+              Editorial users judge tools on speed and simplicity; UX details around drafting and
+              publishing matter as much as pure technical performance.
+            </li>
+            <li>
+              Multi-tenant architecture is a powerful way to serve many small publishers, but it
+              demands careful thinking about isolation, configuration, and theming.
+            </li>
+            <li>
+              Tight feedback loops with early customers are essential to reach product–market fit,
+              especially in a domain with strong existing habits like news publishing.
+            </li>
+            <li>
+              A solid technical foundation (TypeScript, clear API boundaries, consistent patterns)
+              makes it easier to keep shipping features as new business opportunities appear.
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <!-- Sidebar column -->
+      <aside aria-label="Sidebar information">
+        <section class="section-card">
+          <div class="side-section-title">Role &amp; Responsibilities</div>
+          <p>
+            At DoptorITMart, my role spanned architecture, implementation, and product input:
+          </p>
+          <ul>
+            <li>Defined the technical architecture for the multi-tenant CMS.</li>
+            <li>Implemented core features across backend, front end, and data models.</li>
+            <li>
+              Collaborated with sales and customer teams on onboarding, migrations, and custom
+              requirements.
+            </li>
+            <li>
+              Helped translate newsroom needs into product roadmap items, prioritising what would
+              actually move adoption and retention.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Architecture Snapshot</div>
+          <ul>
+            <li><strong>Frontend:</strong> Next.js + TypeScript, SSR/SSG, multi-brand theming.</li>
+            <li><strong>Backend:</strong> Laravel API powering editorial dashboards and services.</li>
+            <li><strong>Datastores:</strong> MySQL for tenants, users, billing; MongoDB for articles.</li>
+            <li><strong>Multi-tenancy:</strong> Tenant-scoped routing, configuration, and assets.</li>
+          </ul>
+          <div class="callout" style="margin-top:10px;">
+            The result is a single platform that can serve many independent publications without
+            sacrificing brand identity or editorial control.
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Timeline</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-title">Oct 2023 – Dec 2023: Foundations</div>
+              <div class="timeline-body">
+                Defined multi-tenant architecture, set up core stack, and built initial editorial
+                flows.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">Jan 2024 – Jun 2024: Feature Build-out</div>
+              <div class="timeline-body">
+                Expanded content model, themes, analytics, and improved newsroom UX based on
+                internal testing.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">Jul 2024 – Feb 2025: Customer Launch</div>
+              <div class="timeline-body">
+                Onboarded early media clients (e.g., Daily Niropekkho), refined onboarding tooling,
+                and collected PMF signals.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Keywords &amp; Themes</div>
+          <p>Useful tags for CVs, portfolios, and search:</p>
+          <div>
+            <span class="side-chip">Media SaaS</span>
+            <span class="side-chip">News CMS</span>
+            <span class="side-chip">Multi-tenant Architecture</span>
+            <span class="side-chip">Next.js &amp; TypeScript</span>
+            <span class="side-chip">Laravel APIs</span>
+            <span class="side-chip">Product–Market Fit</span>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <footer>
+      Building tools that help newsrooms tell better stories — Multi-Tenant News CMS at DoptorITMart.
+    </footer>
+  </main>
+
+  <!-- One-page summary modal -->
+  <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Media CMS – One-Page Summary</div>
+          <div class="modal-subtitle">
+            Quick snapshot of the multi-tenant news portal case study.
+          </div>
+        </div>
+        <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="summary-grid">
+          <div>
+            <div class="summary-section-title">Context</div>
+            <ul class="summary-list">
+              <li>
+                Media SaaS product built at
+                <a href="https://softexpo.com.bd/exhibitor/details/10100/doptor-ltd" target="_blank" rel="noreferrer">
+                  DoptorITMart
+                </a> (Dhaka, Bangladesh).
+              </li>
+              <li>Serves regional newsrooms with modern web experiences.</li>
+              <li>Aims to replace fragile, one-off news sites with a shared platform.</li>
+            </ul>
+
+            <div class="summary-section-title">Challenge</div>
+            <ul class="summary-list">
+              <li>Design a multi-tenant CMS for multiple media brands.</li>
+              <li>Deliver fast, SEO-friendly reader experiences.</li>
+              <li>Make the product intuitive for non-technical editorial teams.</li>
+              <li>Prove customers would pay for it.</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="summary-section-title">My Role</div>
+            <ul class="summary-list">
+              <li>Lead engineer across architecture and implementation.</li>
+              <li>
+                Worked on Next.js/TypeScript front end and Laravel/MongoDB/MySQL backend.
+              </li>
+              <li>
+                Supported customer onboarding, data migration, and workflow tuning for editors.
+              </li>
+            </ul>
+
+            <div class="summary-section-title">Approach</div>
+            <ul class="summary-list">
+              <li>
+                Multi-tenant backend with tenant-scoped routing, theming, and configuration.
+              </li>
+              <li>
+                Next.js SSR/SSG for performance and SEO; reusable components per brand.
+              </li>
+              <li>
+                Editorial dashboards, role-based permissions, scheduling, and basic analytics.
+              </li>
+              <li>
+                Close collaboration with early customers to refine UX and roadmap.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="summary-section-title">Outcomes</div>
+        <ul class="summary-list">
+          <li>
+            Multi-tenant news portal successfully commercialised with paying clients such as
+            <strong>Daily Niropekkho</strong>.
+          </li>
+          <li>
+            Faster onboarding of new publications versus one-off builds; reusable product instead
+            of project work.
+          </li>
+          <li>
+            Modern reader experience and newsroom tooling that editors were happy to adopt.
+          </li>
+        </ul>
+
+        <div class="summary-section-title">Key Takeaways</div>
+        <ul class="summary-list">
+          <li>
+            Multi-tenant architecture is a strong fit for serving many small media brands at scale.
+          </li>
+          <li>
+            Editorial UX and workflow design are as critical as underlying tech choices.
+          </li>
+          <li>
+            Early paying customers provide the strongest evidence of product–market fit in B2B
+            media tools.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modal = document.getElementById("summaryModal");
+      const openBtn = document.getElementById("openSummaryBtn");
+      const closeBtn = document.getElementById("closeSummaryBtn");
+
+      function openModal() {
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

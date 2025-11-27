@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Payment Gateway Stabilisation – ShurjoPay Case Study</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      /* Fintech color theme – clean blues/teals */
+      --bg: #020617;
+      --bg-alt: #02081a;
+      --card: #020617;
+      --accent: #22c55e;              /* green success */
+      --accent-2: #0ea5e9;            /* cyan */
+      --accent-soft: rgba(14, 165, 233, 0.16);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 50px rgba(15, 23, 42, 0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #082f49 0, transparent 55%),
+        radial-gradient(circle at bottom right, #020617 0, #000000 60%);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: #7dd3fc;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    /* Sticky header */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 6, 23, 0.98),
+        rgba(8, 47, 73, 0.9),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background:
+        conic-gradient(from 210deg, #22c55e, #0ea5e9, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #020617;
+      box-shadow: 0 10px 25px rgba(34, 197, 94, 0.75);
+      font-size: 17px;
+    }
+
+    .brand-text-main {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background-color: rgba(15, 23, 42, 0.75);
+    }
+
+    .btn-primary {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #22c55e, #0ea5e9);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(8, 47, 73, 0.9);
+      transition: transform 0.13s ease, box-shadow 0.13s ease,
+        background 0.13s ease;
+    }
+
+    .btn-primary span { font-size: 16px; }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(8, 47, 73, 1);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 8px 20px rgba(8, 47, 73, 0.8);
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 26px 18px 48px;
+    }
+
+    /* Hero */
+
+    .hero {
+      margin-top: 10px;
+      margin-bottom: 32px;
+      padding: 22px 22px 20px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.25), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.25), transparent 60%),
+        linear-gradient(145deg, rgba(2, 6, 23, 0.97), rgba(3, 7, 18, 1));
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    @media (max-width: 780px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 20px 18px 18px;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3.2vw, 30px);
+      line-height: 1.2;
+      margin-bottom: 10px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .hero-tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 118, 110, 0.4);
+      color: #d1fae5;
+      border: 1px solid rgba(45, 212, 191, 0.8);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 12px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hero-meta-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background-color: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta-item strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hero-summary {
+      font-size: 14px;
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .hero-side {
+      padding: 12px 14px 10px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at top right, rgba(248, 250, 252, 0.1), transparent 60%),
+        linear-gradient(135deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+    }
+
+    .hero-side-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .metric-card {
+      border-radius: 14px;
+      padding: 10px 11px;
+      background-color: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #f9fafb;
+    }
+
+    .metric-footnote {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .stack-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      background-color: rgba(15, 23, 42, 0.85);
+    }
+
+    /* Content layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 1.55fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-card {
+      background-color: rgba(15, 23, 42, 0.98);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 18px 18px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 4px 0 6px;
+    }
+
+    li {
+      font-size: 14px;
+      margin-bottom: 3px;
+      color: #e5e7eb;
+    }
+
+    .callout {
+      border-radius: var(--radius-md);
+      background-color: var(--accent-soft);
+      padding: 10px 11px;
+      border-left: 3px solid var(--accent-2);
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .timeline {
+      border-left: 1px dashed rgba(148, 163, 184, 0.5);
+      margin-top: 6px;
+      padding-left: 14px;
+    }
+
+    .timeline-item {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -15px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #bbf7d0, #22c55e);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+    }
+
+    .timeline-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .timeline-body {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .side-section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .side-chip {
+      font-size: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin-bottom: 4px;
+      display: inline-block;
+      color: var(--text-muted);
+    }
+
+    .chart-block {
+      background-color: #020617;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 10px 10px 8px;
+      margin-top: 10px;
+    }
+
+    .chart-block img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .chart-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-backdrop.active { display: flex; }
+
+    .modal {
+      max-width: 720px;
+      width: 100%;
+      margin: 16px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top left, rgba(34, 197, 94, 0.22), transparent 60%),
+        #020617;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 1);
+      padding: 18px 18px 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-icon:hover { background-color: rgba(15, 23, 42, 1); }
+
+    .modal-body {
+      font-size: 13px;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 680px) {
+      .summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .summary-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .summary-list {
+      padding-left: 16px;
+      margin: 2px 0 4px;
+    }
+
+    .summary-list li {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-badge">SP</div>
+        <div>
+          <div class="brand-text-main">Payment Gateway Stabilisation</div>
+          <div class="brand-text-sub">ShurjoPay Fintech Case Study</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="pill">Fintech • Jan 2022 – Aug 2023</div>
+        <button class="btn-primary" id="openSummaryBtn">
+          <span>☰</span> One-Page Summary
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <div class="hero-tagline">
+          <span>●</span> Fintech • Payment Gateway • Incident Recovery
+        </div>
+        <h1 id="hero-title" class="hero-title">
+          Restoring Transaction Reliability for ShurjoPay’s PHP/Laravel Payment Gateway
+        </h1>
+        <p class="hero-subtitle">
+          Resolved a critical payment gateway failure in a PHP/Laravel/Vue/MySQL stack, restoring
+          successful transactions and unlocking 10× prospective customer outreach, 5× improvement
+          in existing customer trust, and 3× growth in new customer acquisition.
+        </p>
+
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <strong>Role</strong> Software Engineer
+          </div>
+          <div class="hero-meta-item">
+            <strong>Org</strong> ShurjoPay Ltd. (Payment Gateway), Dhaka, Bangladesh
+          </div>
+          <div class="hero-meta-item">
+            <strong>Industry</strong> Fintech • Online Payments
+          </div>
+        </div>
+
+        <p class="hero-summary">
+          ShurjoPay processes online payments for merchants across Bangladesh. A failure in the
+          core payment flow can instantly erode merchant trust, cause revenue loss, and damage the
+          gateway’s reputation. My focus was to diagnose and fix a severe production failure, then
+          harden the system so merchants could rely on the platform again.
+        </p>
+      </div>
+
+      <aside class="hero-side" aria-label="Snapshot">
+        <div class="hero-side-label">Snapshot</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Outcome</div>
+            <div class="metric-value">Gateway Restored</div>
+            <div class="metric-footnote">
+              Critical failure resolved; transactions flowing reliably again.
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Business Impact</div>
+            <div class="metric-value">3×</div>
+            <div class="metric-footnote">
+              Growth in new customer acquisition after stabilisation.
+            </div>
+          </div>
+        </div>
+        <div class="metric-card" style="margin-top:8px;">
+          <div class="metric-label">Relationship Impact</div>
+          <div class="metric-footnote">
+            • 10× increase in prospective outreach.<br />
+            • 5× improvement in existing customer trust.<br />
+            • Clear, data-backed reliability story.
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="hero-side-label">Core Stack</div>
+          <div class="stack-list">
+            <span class="stack-pill">PHP</span>
+            <span class="stack-pill">Laravel</span>
+            <span class="stack-pill">Vue.js</span>
+            <span class="stack-pill">MySQL</span>
+            <span class="stack-pill">Payment APIs</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout" aria-label="Case study content layout">
+      <!-- Main column -->
+      <div>
+        <article class="section-card" id="introduction">
+          <div class="eyebrow">Overview</div>
+          <h2>Introduction</h2>
+          <p>
+            ShurjoPay is a payment gateway provider enabling merchants to accept digital payments
+            across Bangladesh. The platform’s core PHP/Laravel/Vue/MySQL application handles
+            transaction initiation, routing to partner banks and card networks, and callback
+            handling to confirm success or failure.
+          </p>
+          <p>
+            During my time as a Software Engineer, a critical failure in this flow caused a spike
+            in unsuccessful payments and broken merchant experiences. I took ownership of
+            diagnosing the issue, implementing fixes, and strengthening the system so the business
+            could confidently scale merchant outreach again.
+          </p>
+        </article>
+
+        <article class="section-card" id="context">
+          <div class="eyebrow">Background</div>
+          <h2>Context</h2>
+          <p>
+            Payment gateways operate under strict expectations from both merchants and regulators:
+            every transaction must be reliable, auditable, and secure. For ShurjoPay, even a brief
+            period of instability can:
+          </p>
+          <ul>
+            <li>Generate direct revenue loss for merchants and the gateway itself.</li>
+            <li>Damage trust with existing customers and sales partners.</li>
+            <li>Slow down or halt outreach to new prospects.</li>
+          </ul>
+          <p>
+            The incident occurred in a mature production system with many integrations, making
+            quick diagnosis and low-risk fixes particularly challenging.
+          </p>
+        </article>
+
+        <article class="section-card" id="problem">
+          <div class="eyebrow">Challenge</div>
+          <h2>Problem</h2>
+          <p>
+            The gateway began experiencing a high rate of failed or “stuck” transactions. Symptoms
+            included:
+          </p>
+          <ul>
+            <li>Merchants seeing payments marked as pending or failed despite funds being held.</li>
+            <li>Inconsistent callback handling from upstream providers.</li>
+            <li>Support tickets and complaints spiking within a short window.</li>
+          </ul>
+          <p>
+            The challenge was to:
+          </p>
+          <ul>
+            <li>Identify the root causes across application code, database state, and integrations.</li>
+            <li>Deploy fixes without introducing new regressions.</li>
+            <li>Restore merchant confidence quickly enough to re-open sales conversations.</li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="constraints">
+          <div class="eyebrow">Operating Environment</div>
+          <h2>Constraints &amp; Requirements</h2>
+          <ul>
+            <li>
+              <strong>Zero data loss tolerance</strong>: transaction and settlement records had to
+              remain consistent and reconcilable.
+            </li>
+            <li>
+              <strong>Limited maintenance windows</strong>: downtime had direct revenue and trust
+              costs.
+            </li>
+            <li>
+              <strong>Multiple partners</strong>: different banks and payment providers with their
+              own SLAs and callback behaviours.
+            </li>
+            <li>
+              <strong>Regulatory sensitivity</strong>: changes had to keep auditability and security
+              intact.
+            </li>
+          </ul>
+        </article>
+
+        <article class="section-card" id="implementation">
+          <div class="eyebrow">Execution</div>
+          <h2>Implementation Highlights</h2>
+
+          <h3>1) Incident triage &amp; root-cause analysis</h3>
+          <ul>
+            <li>
+              Analysed logs, failed transaction records, and callback payloads to spot patterns in
+              the failures.
+            </li>
+            <li>
+              Reproduced critical paths in a staging environment using anonymised production data.
+            </li>
+            <li>
+              Narrowed the issue to a combination of race conditions in callback handling and edge
+              cases in status mapping from upstream providers.
+            </li>
+          </ul>
+
+          <h3>2) Hardening the payment flow</h3>
+          <ul>
+            <li>
+              Refactored key Laravel controllers and service classes responsible for transaction
+              state changes to reduce side effects.
+            </li>
+            <li>
+              Introduced stricter validation and idempotent update patterns for callbacks so the
+              same transaction could not be double-processed.
+            </li>
+            <li>
+              Improved database indexing and queries around transaction lookup to avoid timeouts
+              under higher load.
+            </li>
+          </ul>
+
+          <h3>3) Observability &amp; rollback safety</h3>
+          <ul>
+            <li>
+              Added structured logging around the payment lifecycle, including correlation IDs and
+              clear markers for each step in the flow.
+            </li>
+            <li>
+              Implemented more defensive error handling and fallback states for ambiguous responses
+              from upstream providers.
+            </li>
+            <li>
+              Coordinated a phased deployment with clear rollback steps and close monitoring
+              immediately after release.
+            </li>
+          </ul>
+
+          <div class="callout">
+            The work combined low-level debugging with reliability engineering: fix the immediate
+            failure, then make it harder for similar problems to slip into production again.
+          </div>
+        </article>
+
+        <article class="section-card" id="impact">
+          <div class="eyebrow">Outcomes</div>
+          <h2>Impact &amp; Outcomes</h2>
+          <p>
+            Post-fix, payment success rates stabilised and merchant-facing issues dropped sharply.
+            As reliability improved, ShurjoPay was able to lean back into growth activities:
+          </p>
+          <ul>
+            <li>
+              <strong>10× increase</strong> in prospective customer outreach, now supported by a
+              stronger reliability story.
+            </li>
+            <li>
+              <strong>5× improvement</strong> in existing customer trust, reflected in reduced
+              complaint volume and more positive account reviews.
+            </li>
+            <li>
+              <strong>3× growth</strong> in new customer acquisition as sales teams could point to
+              a stabilised gateway and recent uptime numbers.
+            </li>
+          </ul>
+
+          <!-- Charts – replace src paths with your actual images -->
+          <div class="chart-block">
+            <img src="chart_transaction_success.png"
+                 alt="Line or bar chart comparing transaction success rate before and after the fix." />
+            <div class="chart-caption">
+              Example: transaction success rate before vs. after incident resolution. Replace with
+              real gateway metrics.
+            </div>
+          </div>
+
+          <div class="chart-block">
+            <img src="chart_business_growth.png"
+                 alt="Bar chart showing 10× outreach, 5× trust, 3× acquisition as relative growth indices." />
+            <div class="chart-caption">
+              Example: relative growth in outreach, trust, and acquisition (10×, 5×, 3×) as the
+              gateway became reliable again.
+            </div>
+          </div>
+
+          <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
+            Charts are placeholders to illustrate where you can add real payment and business
+            metrics.
+          </p>
+        </article>
+
+        <article class="section-card" id="learnings">
+          <div class="eyebrow">Reflection</div>
+          <h2>Key Learnings</h2>
+          <ul>
+            <li>
+              In fintech, reliability is a core product feature; without it, sales and marketing
+              efforts cannot succeed.
+            </li>
+            <li>
+              Idempotent designs and strong observability are essential for systems that depend on
+              external payment providers.
+            </li>
+            <li>
+              Clear rollback plans and staged releases reduce the stress of fixing high-stakes
+              production incidents.
+            </li>
+            <li>
+              Resolving a major reliability issue can directly translate into measurable business
+              growth when sales teams can tell a credible uptime story.
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <!-- Sidebar column -->
+      <aside aria-label="Sidebar information">
+        <section class="section-card">
+          <div class="side-section-title">Role &amp; Responsibilities</div>
+          <p>
+            As a Software Engineer at ShurjoPay, I:
+          </p>
+          <ul>
+            <li>Led technical investigation for a critical payment gateway incident.</li>
+            <li>Implemented fixes across Laravel services and MySQL queries.</li>
+            <li>
+              Worked with operations and support teams to validate fixes and communicate impact to
+              merchants.
+            </li>
+            <li>
+              Helped refine monitoring and alerting for earlier detection of future anomalies.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Architecture Snapshot</div>
+          <ul>
+            <li><strong>Backend:</strong> PHP/Laravel APIs managing payment lifecycle.</li>
+            <li><strong>Frontend:</strong> Vue.js dashboards for merchants and internal teams.</li>
+            <li><strong>Database:</strong> MySQL for transactions, merchants, and settlement data.</li>
+            <li><strong>Integrations:</strong> Partner banks, card networks, and payment providers.</li>
+          </ul>
+          <div class="callout" style="margin-top:10px;">
+            The incident fix focused on stabilising the transaction state machine and improving how
+            external callbacks mapped into internal statuses.
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Timeline</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-title">Early 2022: Onboarding &amp; familiarity</div>
+              <div class="timeline-body">
+                Joined ShurjoPay, learned the payment flow, and contributed to smaller fixes and
+                features.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">Mid 2022: Incident &amp; diagnosis</div>
+              <div class="timeline-body">
+                Helped investigate and narrow down causes of the gateway failure using logs and
+                transaction data.
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-title">Late 2022 – 2023: Fix, hardening &amp; growth</div>
+              <div class="timeline-body">
+                Rolled out fixes, improved observability, and supported sales in using the
+                reliability improvements as a growth story.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="side-section-title">Keywords &amp; Themes</div>
+          <p>Useful tags for CVs, portfolios, and search:</p>
+          <div>
+            <span class="side-chip">Fintech</span>
+            <span class="side-chip">Payment Gateway</span>
+            <span class="side-chip">Incident Response</span>
+            <span class="side-chip">Laravel Reliability</span>
+            <span class="side-chip">MySQL Performance</span>
+            <span class="side-chip">Customer Trust</span>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <footer>
+      Making payments boringly reliable — Payment Gateway Stabilisation at ShurjoPay Ltd.
+    </footer>
+  </main>
+
+  <!-- One-page summary modal -->
+  <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">ShurjoPay – One-Page Summary</div>
+          <div class="modal-subtitle">
+            Quick snapshot of the payment gateway stabilisation case study.
+          </div>
+        </div>
+        <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="summary-grid">
+          <div>
+            <div class="summary-section-title">Context</div>
+            <ul class="summary-list">
+              <li>Payment gateway provider handling online transactions for Bangladeshi merchants.</li>
+              <li>Core stack: PHP/Laravel, Vue.js, MySQL.</li>
+              <li>Reliability directly tied to merchant trust and revenue.</li>
+            </ul>
+
+            <div class="summary-section-title">Challenge</div>
+            <ul class="summary-list">
+              <li>Critical gateway failure causing high rates of unsuccessful or stuck payments.</li>
+              <li>Merchants losing confidence and raising complaints.</li>
+              <li>Sales pipeline slowing due to reliability concerns.</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="summary-section-title">My Role</div>
+            <ul class="summary-list">
+              <li>Software Engineer owning investigation and fix implementation.</li>
+              <li>
+                Worked across Laravel services, database queries, and callback handling logic.
+              </li>
+              <li>
+                Partnered with operations/support to monitor impact and communicate improvements.
+              </li>
+            </ul>
+
+            <div class="summary-section-title">Approach</div>
+            <ul class="summary-list">
+              <li>Detailed triage using logs, transaction records, and staging reproductions.</li>
+              <li>Refactored payment state handling to be idempotent and more robust.</li>
+              <li>Improved observability, error handling, and rollback safety during deployment.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="summary-section-title">Outcomes</div>
+        <ul class="summary-list">
+          <li>Gateway stabilised with reliable transaction success again.</li>
+          <li>10× increase in prospective customer outreach post-fix.</li>
+          <li>5× improvement in existing customer trust.</li>
+          <li>3× growth in new customer acquisition.</li>
+        </ul>
+
+        <div class="summary-section-title">Key Takeaways</div>
+        <ul class="summary-list">
+          <li>Reliability is core to fintech brand and growth, not just an engineering concern.</li>
+          <li>Idempotency and observability are essential in payment flows with external partners.</li>
+          <li>Well-handled incident recovery can become a compelling sales story.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const modal = document.getElementById("summaryModal");
+      const openBtn = document.getElementById("openSummaryBtn");
+      const closeBtn = document.getElementById("closeSummaryBtn");
+
+      function openModal() {
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

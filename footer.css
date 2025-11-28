@@ -1,0 +1,203 @@
+:root {
+    /* adjust if your header is taller/shorter */
+    --header-height: 72px;
+}
+
+/* === Sticky CTA Footer – full width, two docking modes === */
+.cta-footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* default: docked at bottom */
+    top: auto;
+    z-index: 50;
+    padding: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+}
+
+/* when docked under header */
+.cta-footer.cta-footer--top {
+    bottom: auto;
+    /* top: var(--header-height); */
+    top: 0;
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), transparent);
+}
+
+.cta-footer-inner {
+    position: relative;
+    width: 100%;
+    padding: 16px 18px 14px;
+    /* border-radius: 18px 18px 0 0; */
+    overflow: hidden;
+    border-top: 1px solid rgba(248, 250, 252, 0.3);
+    background: linear-gradient(135deg, #f97316, #ec4899, #6366f1);
+    box-shadow: 0 -10px 40px rgba(15, 23, 42, 0.95);
+    color: #f9fafb;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* sliding light / shimmer */
+.cta-footer-inner::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    background: linear-gradient(115deg,
+            rgba(255, 255, 255, 0.24),
+            rgba(255, 255, 255, 0.02),
+            transparent 60%);
+    mix-blend-mode: screen;
+    transform: translateX(-120%);
+    animation: ctaLightSweep 7s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes ctaLightSweep {
+    0% {
+        transform: translateX(-120%);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    45% {
+        transform: translateX(110%);
+        opacity: 1;
+    }
+
+    60% {
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(110%);
+        opacity: 0;
+    }
+}
+
+/* text + contact layout */
+.cta-eyebrow {
+    margin: 0 0 6px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.95;
+}
+
+.cta-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.cta-contact-name {
+    font-size: 15px;
+    font-weight: 650;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* contact rows */
+.cta-contact-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(248, 250, 252, 0.75);
+    background-color: rgba(15, 23, 42, 0.16);
+    text-decoration: none;
+    font-size: 13px;
+    color: #fefce8;
+    backdrop-filter: blur(6px);
+    transition: transform 0.12s ease, box-shadow 0.12s ease,
+        background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.cta-contact-row--static {
+    cursor: default;
+}
+
+.cta-contact-row:hover:not(.cta-contact-row--static) {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(15, 23, 42, 0.24);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.85);
+}
+
+.cta-contact-row:active:not(.cta-contact-row--static) {
+    transform: translateY(0);
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.7);
+}
+
+/* icons */
+.cta-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 30%, #fef9c3, #fb7185);
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.4);
+}
+
+.cta-icon-glyph {
+    font-size: 14px;
+}
+
+.cta-contact-text {
+    white-space: nowrap;
+}
+
+/* animation modifiers */
+.cta-footer--fly-up {
+    animation: ctaFlyUp 0.55s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+}
+
+.cta-footer--drop-down {
+    animation: ctaDropDown 0.55s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+}
+
+@keyframes ctaFlyUp {
+    from {
+        transform: translateY(90%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes ctaDropDown {
+    from {
+        transform: translateY(-90%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* responsive */
+@media (max-width: 520px) {
+    .cta-footer-inner {
+        padding: 14px 12px 12px;
+    }
+
+    .cta-contact-row {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .cta-contact-text {
+        white-space: normal;
+    }
+}

@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <title>IVR & Call Routing – Telephony Case Study</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../footer.css" />
+  <script src="../footer.js" defer></script>
   <style>
     :root {
       /* Telephony / IVR theme – dark network night + neon signal lines */
@@ -447,12 +449,12 @@
       margin-top: 5px;
     }
 
-    footer {
+    /* footer {
       margin-top: 24px;
       font-size: 12px;
       color: var(--text-muted);
       text-align: center;
-    }
+    } */
 
     /* Modal */
 
@@ -829,7 +831,7 @@
           </ul>
 
           <!-- Charts – replace src paths with your actual PNGs -->
-          <div class="chart-block">
+          <!-- <div class="chart-block">
             <img src="chart_call_deflection.png"
                  alt="Chart showing increase in IVR self-service and reduced agent-handled calls." />
             <div class="chart-caption">
@@ -850,7 +852,7 @@
           <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
             Charts are placeholders; swap them with your real telephony metrics (AHT, deflection,
             abandonment, queue length) where available.
-          </p>
+          </p> -->
         </article>
 
         <article class="section-card" id="learnings">
@@ -1019,6 +1021,8 @@
       </div>
     </div>
   </div>
+
+  <app-footer></app-footer>
 
   <script>
     (function () {

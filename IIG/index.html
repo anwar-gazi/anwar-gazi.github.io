@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <title>IIG Ticketing Prototype – Case Study</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../footer.css" />
+  <script src="../footer.js" defer></script>
   <style>
     :root {
       /* IIG / internet gateway theme – backbone network vibe: deep navy + magenta + cyan */
@@ -447,12 +449,12 @@
       margin-top: 5px;
     }
 
-    footer {
+    /* footer {
       margin-top: 24px;
       font-size: 12px;
       color: var(--text-muted);
       text-align: center;
-    }
+    } */
 
     /* Modal */
 
@@ -832,7 +834,7 @@
           </ul>
 
           <!-- Charts – replace src paths with your actual PNGs -->
-          <div class="chart-block">
+          <!-- <div class="chart-block">
             <img src="chart_ticket_response.png"
                  alt="Chart showing potential reduction in time-to-acknowledge or improved visibility with ticketing." />
             <div class="chart-caption">
@@ -852,7 +854,7 @@
           <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
             Charts are placeholders; replace with any real incident or communication metrics if
             you track them.
-          </p>
+          </p> -->
         </article>
 
         <article class="section-card" id="learnings">
@@ -1018,6 +1020,8 @@
       </div>
     </div>
   </div>
+
+  <app-footer></app-footer>
 
   <script>
     (function () {

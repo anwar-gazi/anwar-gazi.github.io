@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <title>Multi-Tenant News CMS – Media Case Study</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../footer.css" />
+  <script src="../footer.js" defer></script>
   <style>
     :root {
       /* Media / editorial color theme */
@@ -452,12 +454,12 @@
       margin-top: 5px;
     }
 
-    footer {
+    /* footer {
       margin-top: 24px;
       font-size: 12px;
       color: var(--text-muted);
       text-align: center;
-    }
+    } */
 
     /* Modal */
 
@@ -846,7 +848,7 @@
           </ul>
 
           <!-- Charts – replace src paths with your actual chart images -->
-          <div class="chart-block">
+          <!-- <div class="chart-block">
             <img src="chart_tenant_adoption.png"
                  alt="Line chart illustrating growth in number of media tenants over time." />
             <div class="chart-caption">
@@ -867,7 +869,7 @@
           <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
             Charts are placeholders to show where adoption and performance visuals can sit. Swap
             them with real data from your deployments.
-          </p>
+          </p> -->
         </article>
 
         <article class="section-card" id="learnings">
@@ -1073,6 +1075,8 @@
       </div>
     </div>
   </div>
+
+  <app-footer></app-footer>
 
   <script>
     (function () {

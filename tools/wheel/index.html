@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Gauge Wheel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * {
       box-sizing: border-box;
@@ -47,7 +49,8 @@
       align-items: center;
       justify-content: center;
       touch-action: none;
-      position: relative; /* for dial pointer overlay */
+      position: relative;
+      /* for dial pointer overlay */
     }
 
     .wheel {
@@ -64,7 +67,7 @@
 
     .wheel.dragging {
       cursor: grabbing;
-      box-shadow: 0 0 18px rgba(0,0,0,0.25);
+      box-shadow: 0 0 18px rgba(0, 0, 0, 0.25);
     }
 
     .center-dot {
@@ -104,7 +107,7 @@
       font-size: 11px;
       white-space: nowrap;
       transform-origin: 50% 50%;
-      background: rgba(255,255,255,0.8);
+      background: rgba(255, 255, 255, 0.8);
       padding: 2px 4px;
       border-radius: 4px;
     }
@@ -113,9 +116,11 @@
     .dial-pointer {
       position: absolute;
       top: 50%;
-      left: 30px;              /* near the left side of the wheel */
+      left: 30px;
+      /* near the left side of the wheel */
       transform: translateY(-50%);
-      width: 80px;             /* length of the needle pointing right */
+      width: 80px;
+      /* length of the needle pointing right */
       height: 4px;
       background: #d32f2f;
       border-radius: 4px;
@@ -128,7 +133,7 @@
       padding: 10px 16px;
       border-radius: 10px;
       background: #ffffff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
       text-align: center;
       min-width: 140px;
     }
@@ -144,8 +149,52 @@
       font-weight: 600;
       color: #222;
     }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+
+      .wheel-wrapper {
+        width: 100%;
+      }
+
+      /* Stack output box ABOVE the wheel on mobile */
+      .gauge-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      /* Selected box at the top of the stack */
+      .selected-box {
+        order: -1;
+        /* show first in the column */
+        width: 100%;
+        max-width: 260px;
+      }
+
+      /* Wheel container uses almost full width */
+      .wheel-container {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+      }
+
+      /* Wheel nearly full width, stays perfectly round */
+      .wheel {
+        width: 90vw;
+        /* 90% of viewport width */
+        height: 90vw;
+        /* keep it circular */
+        max-width: 360px;
+        /* optional cap */
+        max-height: 360px;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="wheel-wrapper">
     <div class="hint">Drag the wheel with mouse or touch to rotate</div>
@@ -269,4 +318,5 @@
     })();
   </script>
 </body>
+
 </html>

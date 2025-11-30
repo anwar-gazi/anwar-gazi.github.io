@@ -1035,7 +1035,7 @@
       /* ---------------- Build the wheel (ticks + labels) ---------------- */
 
       for (let i = 0; i < SEGMENTS; i++) {
-        const angle = baseAngle + step * i; // clockwise
+        const angle = baseAngle - step * i; // clockwise
 
         const tick = document.createElement("div");
         tick.className = "tick";
@@ -1068,7 +1068,7 @@
       }
 
       function updateSelectedLevelFromRotation() {
-        const indexFloat = -currentRotation / step; // pointer fixed at left, level 1 at left
+        const indexFloat = currentRotation / step; // pointer fixed at left, level 1 at left
         let index = Math.round(indexFloat);
         index = ((index % SEGMENTS) + SEGMENTS) % SEGMENTS; // wrap
         currentLevel = index + 1;

@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Growth Gauge Wheel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: #9ca3af;
+    }
+
+    /* Tabs (categories) */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }
+
+    .tab {
+      border: 1px solid #4b5563;
+      background: #111827;
+      color: #e5e7eb;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+    }
+
+    .tab:hover {
+      transform: translateY(-1px);
+    }
+
+    .tab.active {
+      background: #10b981;
+      border-color: #10b981;
+      color: #022c22;
+      font-weight: 600;
+    }
+
+    /* Row: gauge on left, value box on right (desktop) */
+    .gauge-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .wheel-container {
+      width: 380px;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: none;
+      position: relative;
+    }
+
+    .wheel {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      border: 4px solid #4b5563;
+      background: radial-gradient(circle at center, #111827 0, #020617 55%, #020617 100%);
+      position: relative;
+      cursor: grab;
+      transition: box-shadow 0.15s ease, transform 0.05s ease;
+      z-index: 1;
+    }
+
+    .wheel.dragging {
+      cursor: grabbing;
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.4);
+    }
+
+    .center-dot {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #10b981;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Spokes */
+    .tick {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 50%;
+      background: rgba(148, 163, 184, 0.35);
+      transform-origin: 50% 100%;
+      pointer-events: none;
+    }
+
+    /* Labels */
+    .label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: 50% 50%;
+      pointer-events: none;
+    }
+
+    .label span {
+      display: block;
+      font-size: 11px;
+      white-space: nowrap;
+      transform-origin: 50% 50%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 2px 4px;
+      border-radius: 4px;
+      color: #e5e7eb;
+    }
+
+    /* Dial pointer: radial needle from center, pointing LEFT (9 o'clock) */
+    .dial-pointer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 50%;
+      height: 4px;
+      background: #f97316;
+      border-radius: 999px;
+      transform-origin: 0% 50%; /* start at center */
+      transform: rotate(180deg); /* point left */
+      z-index: 3;
+      pointer-events: none;
+      box-shadow: 0 0 8px rgba(249, 115, 22, 0.7);
+    }
+
+    /* Selected value box – on the right side */
+    .selected-box {
+      padding: 10px 16px;
+      border-radius: 12px;
+      background: #020617;
+      border: 1px solid #334155;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+      text-align: center;
+      min-width: 150px;
+    }
+
+    .selected-box-label {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .selected-box-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: #facc15;
+    }
+
+    /* Monitor at bottom */
+    .monitor {
+      margin-top: 8px;
+      border-radius: 14px;
+      background: radial-gradient(circle at top left, #1f2937 0, #020617 60%);
+      border: 1px solid #111827;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.55);
+      padding: 10px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .monitor-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .monitor-title {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .monitor-status {
+      font-family: monospace;
+      font-size: 11px;
+      color: #22c55e;
+    }
+
+    .monitor-body {
+      margin-top: 4px;
+      border-radius: 8px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      padding: 10px 10px 10px 12px;
+      min-height: 82px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .monitor-content {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #e5e7eb;
+    }
+
+    .monitor-line {
+      opacity: 0;
+      transform: translateY(4px);
+      white-space: pre-wrap;
+    }
+
+    /* Animated appearance for each line */
+    .monitor-content.animate .monitor-line {
+      animation: lineIn 0.38s forwards ease-out;
+    }
+
+    @keyframes lineIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Small glowing cursor indicator in the monitor */
+    .monitor-cursor {
+      position: absolute;
+      width: 8px;
+      height: 14px;
+      background: #22c55e;
+      top: 10px;
+      left: 6px;
+      opacity: 0.8;
+      animation: cursorBlink 1s steps(2, start) infinite;
+    }
+
+    @keyframes cursorBlink {
+      50% { opacity: 0; }
+    }
+
+    /* Mobile-friendly layout */
+    @media (max-width: 600px) {
+      .page {
+        gap: 12px;
+      }
+
+      .gauge-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .selected-box {
+        order: -1;
+        width: 100%;
+        max-width: 260px;
+      }
+
+      .wheel-container {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+      }
+
+      .wheel {
+        width: 90vw;
+        height: 90vw;
+        max-width: 360px;
+        max-height: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hint">Drag the wheel to rotate levels. Choose a deck to see tailored growth advice.</div>
+
+    <!-- Category Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-category="se">Software Engineer</button>
+      <button class="tab" data-category="architect">Software Architect</button>
+      <button class="tab" data-category="entrepreneur">Entrepreneur / Businessman</button>
+      <button class="tab" data-category="islam">Islam / Muslim</button>
+    </div>
+
+    <!-- Gauge Row -->
+    <div class="gauge-row">
+      <div class="wheel-container">
+        <div class="dial-pointer"></div>
+        <div id="wheel" class="wheel">
+          <div class="center-dot"></div>
+          <!-- ticks and labels injected by JS -->
+        </div>
+      </div>
+
+      <div class="selected-box">
+        <div class="selected-box-label">Current Level</div>
+        <div id="selectedValue" class="selected-box-value">1</div>
+      </div>
+    </div>
+
+    <!-- Monitor -->
+    <div class="monitor">
+      <div class="monitor-header">
+        <div class="monitor-title">Human / Skill Development Monitor</div>
+        <div id="monitorStatus" class="monitor-status"></div>
+      </div>
+      <div class="monitor-body">
+        <div class="monitor-cursor"></div>
+        <div id="monitorContent" class="monitor-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const SEGMENTS = 32;
+      const wheel = document.getElementById("wheel");
+      const selectedValueEl = document.getElementById("selectedValue");
+      const monitorContentEl = document.getElementById("monitorContent");
+      const monitorStatusEl = document.getElementById("monitorStatus");
+
+      const step = 360 / SEGMENTS;
+      const baseAngle = -90; // Level 1 starts at left (under the pointer)
+
+      let currentRotation = 0; // in degrees
+      let isDragging = false;
+      let startAngle = 0;
+      let currentLevel = 1;
+      let currentCategory = "se";
+
+      /* ---------------- Advice Decks (32 levels × 3 bullets each per category) ---------------- */
+
+      const adviceDecks = {
+        se: [ // Software Engineer
+          [
+            "Set up a distraction-free coding routine.",
+            "Finish at least one tiny program every day.",
+            "Sleep well; fatigue kills debugging accuracy."
+          ],
+          [
+            "Read code from a mature open-source project.",
+            "Rewrite a small script to be cleaner, not bigger.",
+            "Practice naming things until they feel obvious."
+          ],
+          [
+            "Master your editor shortcuts for basic actions.",
+            "Commit little and often with meaningful messages.",
+            "Keep a simple \"what I learned today\" log."
+          ],
+          [
+            "Solve a problem in two different languages.",
+            "Explain your solution out loud in plain language.",
+            "Ask for code review and listen without ego."
+          ],
+          [
+            "Track time spent reading vs. writing code.",
+            "Refactor one smelly function into smaller ones.",
+            "Prefer clarity over \"cleverness\" every time."
+          ],
+          [
+            "Learn Git branching and basic rebasing safely.",
+            "Automate one boring task with a script.",
+            "Document how to run your code from scratch."
+          ],
+          [
+            "Write tests for a bug before fixing it.",
+            "Keep functions small and single-purpose.",
+            "Delete dead code instead of commenting it out."
+          ],
+          [
+            "Measure simple performance metrics before tuning.",
+            "Log important events, not everything.",
+            "Learn to read stack traces calmly under pressure."
+          ],
+          [
+            "Estimate tasks, then compare to actual time later.",
+            "Ask clarifying questions before writing a line of code.",
+            "Make small pull requests that are easy to review."
+          ],
+          [
+            "Understand Big-O for your common data structures.",
+            "Profile code once this week to see real bottlenecks.",
+            "Replace magic numbers with named constants."
+          ],
+          [
+            "Learn basic concurrency primitives in your main language.",
+            "Handle errors explicitly instead of ignoring them.",
+            "Write one small CLI tool others can use."
+          ],
+          [
+            "Diagram how one feature flows through the system.",
+            "Use feature flags for risky changes.",
+            "Always include a rollback plan in deployments."
+          ],
+          [
+            "Study how your production logs are structured.",
+            "Learn how to reproduce bugs from logs and metrics.",
+            "Write post-incident notes for yourself."
+          ],
+          [
+            "Read a classic book on clean code or refactoring.",
+            "Practice reviewing code with kindness and honesty.",
+            "Learn to say \"I don't know\" quickly and clearly."
+          ],
+          [
+            "Understand your system’s main database query patterns.",
+            "Add basic defensive checks at system boundaries.",
+            "Reduce technical debt in one area each week."
+          ],
+          [
+            "Shadow a senior engineer during debugging sessions.",
+            "Teach a junior engineer something small but useful.",
+            "Write a short internal guide for a tricky part of the codebase."
+          ],
+          [
+            "Design a small feature end-to-end, including risks.",
+            "Cut unnecessary scope while preserving value.",
+            "Track your bug re-open rate and learn from it."
+          ],
+          [
+            "Review architectural decision records in your company.",
+            "Clarify trade-offs instead of chasing perfection.",
+            "Propose one technical improvement with business impact."
+          ],
+          [
+            "Lead a small feature delivery with coordination.",
+            "Practice written updates that are short and complete.",
+            "Block time for deep work and protect it fiercely."
+          ],
+          [
+            "Own a service or module as a \"steward\", not a hero.",
+            "Automate tests around the riskiest behavior paths.",
+            "Make your on-call runbook less noisy and more clear."
+          ],
+          [
+            "Profile and optimize one real production issue.",
+            "Remove one unnecessary dependency from your project.",
+            "Document the \"happy path\" and \"failure path\" of a flow."
+          ],
+          [
+            "Mentor someone consistently for at least a month.",
+            "Let others present work you led; share the spotlight.",
+            "Give credit publicly, give feedback privately."
+          ],
+          [
+            "Shape coding standards through examples, not lectures.",
+            "Simplify over-engineered parts with patient refactoring.",
+            "Resist premature micro-optimizations without data."
+          ],
+          [
+            "Understand budgeting and cost of infrastructure basics.",
+            "Align refactors with upcoming product needs.",
+            "Translate tech risks into simple business language."
+          ],
+          [
+            "Drive one cross-team initiative to completion.",
+            "Design APIs that are boring, predictable, and stable.",
+            "Say no to low-value work without burning bridges."
+          ],
+          [
+            "Review design docs and ask for missing edge cases.",
+            "Model failure modes before they happen in production.",
+            "Build dashboards you actually check regularly."
+          ],
+          [
+            "Coach others to debug instead of debugging for them.",
+            "Delegate implementation while owning outcome.",
+            "Write design docs others enjoy reading."
+          ],
+          [
+            "Continuously prune scope to hit reliable deadlines.",
+            "Champion testability when new architecture is discussed.",
+            "Keep technical decisions reversible where possible."
+          ],
+          [
+            "Help define engineering ladders or growth rubrics.",
+            "Pair with people outside your stack to broaden perspective.",
+            "Promote psychological safety in reviews and incidents."
+          ],
+          [
+            "Advise product on technical bets and timelines.",
+            "Look 6–12 months ahead in platform evolution.",
+            "Intentionally replace yourself in critical paths."
+          ],
+          [
+            "Invest in teaching, writing, and open knowledge.",
+            "Balance legacy stability with thoughtful innovation.",
+            "Continuously rebuild your learning habits from zero."
+          ],
+          [
+            "Regularly reassess your career direction and values.",
+            "Stay humble; past success does not guarantee future relevance.",
+            "Keep building small things for fun, not just for work."
+          ],
+        ],
+
+        architect: [ // Software Architect
+          [
+            "Start by understanding the real business problem.",
+            "Sketch systems with pen and paper before tools.",
+            "Name concepts clearly; vocabulary shapes thinking."
+          ],
+          [
+            "Favor simple architectures you can explain quickly.",
+            "Separate concerns: UI, domain, infrastructure, data.",
+            "Avoid inventing patterns when a standard exists."
+          ],
+          [
+            "Model core domain concepts with plain language.",
+            "Capture assumptions explicitly in diagrams or notes.",
+            "Keep diagrams current enough to be useful, not perfect."
+          ],
+          [
+            "Think in terms of boundaries, not microservices first.",
+            "Minimize shared mutable state across components.",
+            "Design for graceful degradation instead of zero failures."
+          ],
+          [
+            "Start from use cases, not from technology.",
+            "Clarify non-functional requirements early: scale, latency, cost.",
+            "Write a short \"architecture in one page\" overview."
+          ],
+          [
+            "Introduce patterns only when pain is real and recurring.",
+            "Prefer asynchronous communication where coupling is risky.",
+            "Design for observability from day one."
+          ],
+          [
+            "Use contracts and schemas to protect service boundaries.",
+            "Version APIs intentionally; avoid silent breaking changes.",
+            "Prefer idempotent operations where possible."
+          ],
+          [
+            "Design with rollback and kill-switches in mind.",
+            "Make local development easy to set up and debug.",
+            "Keep configuration externalized and manageable."
+          ],
+          [
+            "Run architecture decisions past diverse perspectives.",
+            "Document trade-offs instead of hiding them.",
+            "Pilot risky ideas behind feature flags."
+          ],
+          [
+            "Think in cost: compute, storage, bandwidth, people.",
+            "Design for incremental rollout, not big-bang migration.",
+            "Avoid tight coupling to cloud-vendor specifics unless necessary."
+          ],
+          [
+            "Align data models with domain language, not tables.",
+            "Understand consistency guarantees of your data stores.",
+            "Design read and write paths consciously and separately."
+          ],
+          [
+            "Use caching deliberately, measuring hit rates and staleness.",
+            "Model retry and backoff strategies for remote calls.",
+            "Simulate chaos: latency, failures, timeouts."
+          ],
+          [
+            "Create clear ownership maps for systems and modules.",
+            "Design failure escalation paths that are humane.",
+            "Keep operational runbooks close to the code and updated."
+          ],
+          [
+            "Facilitate design reviews as collaborative conversations.",
+            "Encourage small experiments before large commitments.",
+            "Refine architecture in feedback loops, not one-offs."
+          ],
+          [
+            "Balance short-term delivery with long-term adaptability.",
+            "Design with modularity to swap subsystems later.",
+            "Avoid over-abstracting for hypothetical future needs."
+          ],
+          [
+            "Invest in platform capabilities that unblock teams.",
+            "Define interfaces that evolve slower than implementations.",
+            "Observe where people struggle and architect that pain away."
+          ],
+          [
+            "Create architectural decision records with context.",
+            "Keep a changelog of major system evolutions.",
+            "Review old decisions and adjust when assumptions change."
+          ],
+          [
+            "Teach architecture basics to every engineer, not a few.",
+            "Use diagrams and stories to make complexity digestible.",
+            "Model systems as flows of information, not boxes."
+          ],
+          [
+            "Partner deeply with product and operations teams.",
+            "Quantify trade-offs in latency, cost, and risk.",
+            "Make \"no\" a last resort; suggest smaller yeses."
+          ],
+          [
+            "Guard core domain integrity against random shortcuts.",
+            "Simplify platform choices; remove unused options.",
+            "Design organizational structure to match architecture."
+          ],
+          [
+            "Build shared libraries only when duplication hurts.",
+            "Design extension points, not rigid frameworks.",
+            "Provide reference implementations others can copy."
+          ],
+          [
+            "Make security a primary design axis, not an afterthought.",
+            "Limit blast radius with strong isolation boundaries.",
+            "Review privacy and data retention impacts explicitly."
+          ],
+          [
+            "Regularly map system dependencies and critical paths.",
+            "Design for regional or zonal failure scenarios.",
+            "Simulate disaster recovery at least once in a while."
+          ],
+          [
+            "Encourage others to challenge your designs.",
+            "Admit uncertainty; prototype to learn instead of arguing.",
+            "Write documents that outlive tools and diagrams."
+          ],
+          [
+            "Create clear upgrade paths for dependencies and platforms.",
+            "Design migration scripts and plans alongside schemas.",
+            "Favor forwards-compatible changes in protocols."
+          ],
+          [
+            "Balance centralization vs. autonomy in architecture.",
+            "Empower teams with guidelines instead of hard rules.",
+            "Set guardrails, then trust engineers within them."
+          ],
+          [
+            "Continuously refine quality attributes with stakeholders.",
+            "Map trade-offs visually: performance vs. cost vs. simplicity.",
+            "Let real usage data inform architecture evolution."
+          ],
+          [
+            "Coach new architects through pairing on real designs.",
+            "Share failed architectural experiments openly.",
+            "Create playbooks for recurring design problems."
+          ],
+          [
+            "Keep learning: new paradigms, languages, and styles.",
+            "Refuse architecture driven purely by fashion.",
+            "Anchor decisions to principles, not trends."
+          ],
+          [
+            "Influence strategy by connecting tech and business outcomes.",
+            "Look several years ahead but act in small steps.",
+            "Know when to retire systems with dignity."
+          ],
+          [
+            "Design architectures that remain understandable over time.",
+            "Value clarity, empathy, and humility over being right.",
+            "Keep your own ego smaller than the system you are shaping."
+          ],
+        ],
+
+        entrepreneur: [ // Entrepreneur / Businessman
+          [
+            "Write down one clear problem you want to solve.",
+            "Talk to at least one real person with that problem.",
+            "Track every small expense from day one."
+          ],
+          [
+            "Listen more than you pitch in conversations.",
+            "Ask people how they currently solve the problem.",
+            "Start tiny: test ideas before registering companies."
+          ],
+          [
+            "Clarify who your customer is in one sentence.",
+            "List three measurable outcomes they truly care about.",
+            "Stop assuming; start interviewing systematically."
+          ],
+          [
+            "Charge someone a small amount for a simple solution.",
+            "Deliver more value than you promised at that price.",
+            "Ask honest feedback: \"Would you pay for this again?\""
+          ],
+          [
+            "Keep a daily decision journal for your business.",
+            "Track cash in, cash out, and runway visually.",
+            "Avoid personal lifestyle creep while starting."
+          ],
+          [
+            "Design a simple offer: problem, promise, price.",
+            "Test different offers with conversations, not ads first.",
+            "Learn basic negotiation; be firm and kind."
+          ],
+          [
+            "Schedule weekly customer conversations, no matter what.",
+            "Write down patterns you hear, not just anecdotes.",
+            "Stop building features no one explicitly asked for."
+          ],
+          [
+            "Create a repeatable way to reach new prospects.",
+            "Ask for referrals when a customer is happy.",
+            "Know your basic metrics: CAC, LTV, conversion."
+          ],
+          [
+            "Document your core process step by step.",
+            "Automate repetitive admin tasks as soon as possible.",
+            "Build a simple CRM, even if it's just a spreadsheet."
+          ],
+          [
+            "Learn to say no to bad-fit customers politely.",
+            "Clarify terms in writing before doing the work.",
+            "Collect payments upfront or with clear milestones."
+          ],
+          [
+            "Track why you lose deals, not only why you win.",
+            "Experiment with pricing rather than assuming it.",
+            "Bundle services or features for simpler decisions."
+          ],
+          [
+            "Hire slowly for attitude and integrity first.",
+            "Define clear roles, responsibilities, and expectations.",
+            "Train people with written playbooks, not just talks."
+          ],
+          [
+            "Delegate small tasks before you feel fully ready.",
+            "Keep regular 1:1s with key team members.",
+            "Share numbers with your team where appropriate."
+          ],
+          [
+            "Systematize how you deliver consistent quality.",
+            "Create checklists for critical steps in delivery.",
+            "Ask customers what \"success\" looks like to them."
+          ],
+          [
+            "Study your most profitable customers deeply.",
+            "Double down on channels that already work.",
+            "Stop chasing every new shiny opportunity."
+          ],
+          [
+            "Build an emergency fund for the business.",
+            "Plan for taxes; don’t be surprised later.",
+            "Avoid debt that you cannot sleep well with."
+          ],
+          [
+            "Negotiate from a place of options, not desperation.",
+            "Keep relationships strong even when deals fail.",
+            "Leave people better than you found them."
+          ],
+          [
+            "Decide what you will not do as a company.",
+            "Focus marketing on one main message at a time.",
+            "Measure experiments; kill weak ones quickly."
+          ],
+          [
+            "Create repeatable onboarding for new customers.",
+            "Ask for testimonials and case studies ethically.",
+            "Use social proof honestly, never exaggerating."
+          ],
+          [
+            "Think in systems: leads, sales, delivery, referrals.",
+            "Design dashboards you review weekly, not yearly.",
+            "Use simple KPIs to guide daily behavior."
+          ],
+          [
+            "Build partnerships that share values and customers.",
+            "Protect your time from endless low-yield meetings.",
+            "Practice saying, \"Let me think and get back.\""
+          ],
+          [
+            "Invest in your own health like a core asset.",
+            "Protect sleep, nutrition, and basic exercise.",
+            "Avoid making big decisions in emotional storms."
+          ],
+          [
+            "Prepare succession or exit options early.",
+            "Reduce single points of failure in operations.",
+            "Have written contingency plans for key risks."
+          ],
+          [
+            "Coach emerging leaders inside your company.",
+            "Share your mistakes openly so others learn faster.",
+            "Let others own and improve core processes."
+          ],
+          [
+            "Clarify your personal values and non-negotiables.",
+            "Ensure your business model aligns with them.",
+            "Refuse deals that violate your integrity."
+          ],
+          [
+            "Balance growth with resilience; avoid fragile scaling.",
+            "Protect culture when hiring quickly.",
+            "Simplify organizational structure where possible."
+          ],
+          [
+            "Review your calendar for alignment with priorities.",
+            "Spend more time on leverage, less on noise.",
+            "Block thinking time like any other meeting."
+          ],
+          [
+            "Diversify income streams thoughtfully, not randomly.",
+            "Strengthen your personal brand through value content.",
+            "Build long-term trust instead of quick wins."
+          ],
+          [
+            "Learn from mentors and peers regularly.",
+            "Ask better questions rather than seeking magic tricks.",
+            "Study failures of similar businesses in your space."
+          ],
+          [
+            "Plan for 5–10 years, act in 90-day sprints.",
+            "Align daily work to that long-term direction.",
+            "Define what \"enough\" looks like for you."
+          ],
+          [
+            "Use your business to serve, not just to extract.",
+            "Give back to community in thoughtful, consistent ways.",
+            "Remember: profit is a means, not the meaning."
+          ],
+          [
+            "Prepare to reinvent your business when reality changes.",
+            "Stay curious and humble regardless of success.",
+            "Build something you would still be proud of in old age."
+          ],
+        ],
+
+        islam: [ // Islam / Muslim
+          [
+            "Begin each day with sincere intention (niyyah).",
+            "Pray Fajr on time, protecting that habit fiercely.",
+            "Practice one small act of gratitude after each prayer."
+          ],
+          [
+            "Learn the meaning of Surah Al-Fatiha deeply.",
+            "Recite morning and evening adhkar consistently.",
+            "Avoid major sins even if you feel weak in other areas."
+          ],
+          [
+            "Guard your tongue from gossip and backbiting.",
+            "Make a private dua for someone who annoyed you.",
+            "Say \"Astaghfirullah\" regularly with presence, not autopilot."
+          ],
+          [
+            "Set aside a few minutes daily to read Qur'an.",
+            "Focus on understanding a few ayat, not rushing pages.",
+            "Act on one small thing you learn before moving on."
+          ],
+          [
+            "Be honest even when it is uncomfortable.",
+            "Return what is entrusted to you faithfully.",
+            "Fulfill promises or clearly apologize when you fail."
+          ],
+          [
+            "Treat parents with patient respect, even in disagreement.",
+            "Help them practically, not only with words.",
+            "Make dua for them daily whether alive or passed away."
+          ],
+          [
+            "Give small charity regularly, even a little each week.",
+            "Hide some of your good deeds from people.",
+            "Relieve one person’s burden without expecting return."
+          ],
+          [
+            "Pray all five daily prayers on time.",
+            "Add extra nawafil sometimes, but guard the fard first.",
+            "Do not delay prayer for unimportant worldly tasks."
+          ],
+          [
+            "Lower your gaze from what is harmful to the heart.",
+            "Limit content that fills you with envy or desire.",
+            "Replace sinful habits with beneficial alternatives."
+          ],
+          [
+            "Study basic fiqh of worship from a reliable teacher.",
+            "Ask scholars politely when you are unsure.",
+            "Avoid issuing fatwas based on social media posts."
+          ],
+          [
+            "Respond to anger with calm or silence.",
+            "Apologize quickly when you wrong someone.",
+            "Forgive others hoping Allah forgives you more."
+          ],
+          [
+            "Regularly review your income sources for halal.",
+            "Avoid riba (interest) even when it seems common.",
+            "Trust that barakah beats superficial profits."
+          ],
+          [
+            "Make dua in your own language with sincerity.",
+            "Use times when dua is accepted: sujood, last third of night.",
+            "Thank Allah for answered duas, even the small ones."
+          ],
+          [
+            "Learn the Seerah of the Prophet ﷺ step by step.",
+            "Emulate his character in small daily actions.",
+            "Send salawat upon him consistently."
+          ],
+          [
+            "Choose friends who remind you of Allah.",
+            "Gently distance from gatherings that harm your faith.",
+            "Be that good friend for others when you can."
+          ],
+          [
+            "Attend Jumu’ah with focus, not just presence.",
+            "Arrive a bit early, avoid distractions during khutbah.",
+            "Reflect on one takeaway to act on that week."
+          ],
+          [
+            "Keep a private list of sins to repent from.",
+            "Renew repentance often, not only after big mistakes.",
+            "Believe in Allah’s mercy more than your past failures."
+          ],
+          [
+            "Study basic Arabic to connect more with Qur'an.",
+            "Memorize short surahs with understanding.",
+            "Review what you memorized so it does not fade away."
+          ],
+          [
+            "Serve your family as an ibadah, not a burden.",
+            "Smile and speak gently at home before outside.",
+            "Help with chores without expecting praise."
+          ],
+          [
+            "Participate in community with humility.",
+            "Avoid showing off in religious gatherings.",
+            "Help organize beneficial events quietly."
+          ],
+          [
+            "Fast voluntary days if you are able (e.g., Mondays/Thursdays).",
+            "Guard your tongue and eyes more on days you fast.",
+            "Reflect on hunger as a reminder of the needy."
+          ],
+          [
+            "Learn rulings related to your work and finances.",
+            "Prioritize halal over convenience or quick gain.",
+            "Trust that what is for you will not miss you."
+          ],
+          [
+            "Advise others gently when you see wrong.",
+            "Choose the right time, tone, and words.",
+            "Accept advice from others without ego."
+          ],
+          [
+            "Visit the sick and console those in difficulty.",
+            "Attend janazah when possible; remember the Hereafter.",
+            "Prepare your own soul as if death is near, not far."
+          ],
+          [
+            "Schedule study time for Islamic knowledge weekly.",
+            "Take knowledge from trustworthy scholars and texts.",
+            "Act upon what you learn instead of collecting facts."
+          ],
+          [
+            "Review your heart for arrogance and hidden pride.",
+            "Attribute success to Allah, not your own brilliance.",
+            "Make dua to be hidden yet accepted by Him."
+          ],
+          [
+            "Be fair and just in disagreements and conflicts.",
+            "Listen to all sides before forming judgments.",
+            "Avoid humiliating others even when you are right."
+          ],
+          [
+            "Stand in the night sometimes, even briefly.",
+            "Share your deepest worries with Allah alone.",
+            "Hope for His closeness more than worldly outcomes."
+          ],
+          [
+            "Plan your day around prayers, not the opposite.",
+            "Use prayer times as anchors for good habits.",
+            "Protect the last 10 minutes before each prayer from chaos."
+          ],
+          [
+            "Teach someone a small piece of beneficial knowledge.",
+            "Support Islamic education efforts when you can.",
+            "Leave a legacy of beneficial deeds that outlive you."
+          ],
+          [
+            "Continuously renew your intention in all actions.",
+            "Balance worship, work, and family with wisdom.",
+            "Strive for ihsan: to worship Allah as if you see Him."
+          ],
+          [
+            "End each day with reflection and istighfar.",
+            "Forgive people in your heart before you sleep.",
+            "Sleep trusting Allah’s mercy more than your deeds."
+          ],
+        ],
+      };
+
+      /* ---------------- Build the wheel (ticks + labels) ---------------- */
+
+      for (let i = 0; i < SEGMENTS; i++) {
+        const angle = baseAngle + step * i; // clockwise
+
+        const tick = document.createElement("div");
+        tick.className = "tick";
+        tick.style.transform = `translate(-50%, -100%) rotate(${angle}deg)`;
+        wheel.appendChild(tick);
+
+        const label = document.createElement("div");
+        label.className = "label";
+        label.style.transform =
+          `translate(-50%, -50%) rotate(${angle}deg) translate(0, -140px)`;
+
+        const span = document.createElement("span");
+        span.textContent = i + 1;
+        span.style.transform = `rotate(${-angle}deg)`;
+        label.appendChild(span);
+        wheel.appendChild(label);
+      }
+
+      /* ---------------- Drag rotation logic ---------------- */
+
+      function getAngleFromEvent(evt) {
+        const rect = wheel.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+
+        const dx = evt.clientX - cx;
+        const dy = evt.clientY - cy;
+
+        return Math.atan2(dy, dx) * (180 / Math.PI); // degrees, clockwise-positive due to screen coords
+      }
+
+      function updateSelectedLevelFromRotation() {
+        const indexFloat = -currentRotation / step; // pointer fixed at left, level 1 at left
+        let index = Math.round(indexFloat);
+        index = ((index % SEGMENTS) + SEGMENTS) % SEGMENTS; // wrap
+        currentLevel = index + 1;
+        selectedValueEl.textContent = currentLevel;
+        updateMonitor();
+      }
+
+      function onPointerDown(evt) {
+        evt.preventDefault();
+        wheel.setPointerCapture(evt.pointerId);
+        isDragging = true;
+        wheel.classList.add("dragging");
+        const angle = getAngleFromEvent(evt);
+        startAngle = angle - currentRotation;
+      }
+
+      function onPointerMove(evt) {
+        if (!isDragging) return;
+        evt.preventDefault();
+        const angle = getAngleFromEvent(evt);
+        currentRotation = angle - startAngle;
+        wheel.style.transform = `rotate(${currentRotation}deg)`;
+        updateSelectedLevelFromRotation();
+      }
+
+      function onPointerUp(evt) {
+        if (!isDragging) return;
+        isDragging = false;
+        wheel.classList.remove("dragging");
+        wheel.releasePointerCapture(evt.pointerId);
+      }
+
+      wheel.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
+
+      /* ---------------- Tabs (category switching) ---------------- */
+
+      const tabButtons = document.querySelectorAll(".tab");
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          tabButtons.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentCategory = btn.dataset.category;
+          updateMonitor();
+        });
+      });
+
+      /* ---------------- Monitor rendering ---------------- */
+
+      function updateMonitor() {
+        const deck = adviceDecks[currentCategory];
+        const idx = Math.max(0, Math.min(SEGMENTS - 1, currentLevel - 1));
+        const advices = deck && deck[idx] ? deck[idx] : ["No advice configured."];
+
+        monitorStatusEl.textContent =
+          `Deck: ${displayCategoryName(currentCategory)} | Level ${currentLevel.toString().padStart(2, "0")}`;
+
+        // Build HTML with animated lines
+        monitorContentEl.classList.remove("animate");
+        monitorContentEl.innerHTML = "";
+
+        advices.forEach((text, i) => {
+          const line = document.createElement("div");
+          line.className = "monitor-line";
+          line.style.animationDelay = `${i * 0.18}s`;
+          line.textContent = `• ${text}`;
+          monitorContentEl.appendChild(line);
+        });
+
+        // Force reflow to restart animation
+        void monitorContentEl.offsetWidth;
+        monitorContentEl.classList.add("animate");
+      }
+
+      function displayCategoryName(key) {
+        switch (key) {
+          case "se": return "Software Engineer";
+          case "architect": return "Software Architect";
+          case "entrepreneur": return "Entrepreneur / Businessman";
+          case "islam": return "Islam / Muslim";
+          default: return key;
+        }
+      }
+
+      /* ---------------- Initial render ---------------- */
+
+      updateSelectedLevelFromRotation(); // sets level 1 and monitor initially
+    })();
+  </script>
+</body>
+</html>

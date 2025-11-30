@@ -1,40 +1,79 @@
-# Rotating Level Gauge Wheel
+# Growth Gauge Wheel
 
-A small, dependency-free web widget that renders a **32-segment wheel** you can rotate with **mouse or touch drag**, with a **fixed pointer** on the left acting like a gauge needle.
+An interactive, mobile-friendly “growth gauge” built with plain HTML, CSS, and JavaScript.
 
-Wherever the pointer intersects the wheel, the **corresponding segment number** is shown in a **value box** on the right.
+- A **32-level wheel** you can rotate by drag (mouse/touch).
+- A fixed **pointer on the left** that indicates the current level.
+- A **level display box** showing the active level.
+- Category **tabs** at the top:  
+  - Software Engineer  
+  - Software Architect  
+  - Entrepreneur / Businessman  
+  - Islam / Muslim
+- A **“monitor” panel** at the bottom that shows **3 tailored development tips** for the current level and category, with a simple animation as if instructions appeared on a terminal.
 
----
-
-## Overview
-
-This project consists of a single `index.html` file that:
-
-- Draws a circular wheel segmented into **32 equal parts**.
-- Labels each segment with a **number (1–32)** around the perimeter.
-- Lets the user **rotate the wheel** via mouse/touch (using Pointer Events).
-- Shows a **fixed horizontal needle** on the **left** side (like a gauge pointer).
-- Continuously calculates which segment is currently under the pointer.
-- Displays that selected segment number in a **“Selected Level”** box.
-
-Everything is implemented with **plain HTML, CSS, and JavaScript**, no external libraries.
+Everything lives in a single `index.html` file.
 
 ---
 
 ## Features
 
-- 🎯 **32 numeric segments** (`1` to `32`) around the wheel.
-- 🖱️ **Drag to rotate** – supports mouse and touch via Pointer Events.
-- 📍 **Fixed pointer/needle** on the **left** side of the wheel.
-- 📦 **Selected level display** – numeric value in a box to the right.
-- 🎨 Simple, clean styling that you can easily customize.
+### Wheel & Pointer
+
+- 32 segments labeled `1` to `32` around a circular wheel.
+- Wheel can be **rotated by drag**:
+  - Desktop: mouse drag.
+  - Mobile: touch drag (via Pointer Events).
+- A fixed **needle** goes from the center towards the **left side** of the wheel.
+- The number under this pointer is the **current level** and is shown in the “Current Level” box.
+
+### Category Tabs (Advice Decks)
+
+At the top of the page are tabs:
+
+- **Software Engineer**
+- **Software Architect**
+- **Entrepreneur / Businessman**
+- **Islam / Muslim**
+
+Each tab:
+
+- Activates a different **advice deck**.
+- Each deck has **32 levels × 3 points** (three bullet points per level).
+- As you change the **level** with the wheel, the corresponding **3 tips** appear in the monitor.
+
+### Monitor (Instruction Panel)
+
+At the bottom:
+
+- A “monitor”-styled panel shows:
+  - A header with **active deck name** and **current level**.
+  - A body area where **3 bullet points** are displayed.
+- The lines appear with a **small staggered animation**, giving a “new instructions appeared on screen” feel.
+- There is a small blinking **cursor bar** in the monitor for extra “terminal” vibe.
+
+### Mobile-Friendly Layout
+
+On mobile / narrow screens:
+
+- The **Current Level box** moves **above** the wheel.
+- The wheel expands to use about **90% of the screen width**, keeping small margins.
+- Tabs remain at the top, monitor below the gauge.
+- The whole layout is vertically stacked and thumb-friendly.
+
+On desktop:
+
+- Tabs on top.
+- Wheel + pointer on the left, level box on the right.
+- Monitor panel below.
 
 ---
 
 ## File Structure
 
-The project is a single page:
+Single-page app:
 
 ```text
 .
-└── index.html   # Contains HTML, CSS, and JS for the gauge wheel
+├── index.html   # All HTML, CSS, and JavaScript
+└── LICENSE      # BUET License (similar to MIT)

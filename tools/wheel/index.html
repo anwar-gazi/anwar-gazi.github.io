@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gauge Wheel</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f5f5;
+    }
+
+    .wheel-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    /* Row: gauge on left, value box on right */
+    .gauge-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .wheel-container {
+      width: 380px;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: none;
+      position: relative; /* for dial pointer overlay */
+    }
+
+    .wheel {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      border: 4px solid #444;
+      background: radial-gradient(circle at center, #fafafa 0, #fafafa 55%, #e0e0e0 100%);
+      position: relative;
+      cursor: grab;
+      transition: box-shadow 0.15s ease;
+      z-index: 1;
+    }
+
+    .wheel.dragging {
+      cursor: grabbing;
+      box-shadow: 0 0 18px rgba(0,0,0,0.25);
+    }
+
+    .center-dot {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #444;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Spokes */
+    .tick {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 50%;
+      background: rgba(0, 0, 0, 0.18);
+      transform-origin: 50% 100%;
+      pointer-events: none;
+    }
+
+    /* Labels */
+    .label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: 50% 50%;
+      pointer-events: none;
+    }
+
+    .label span {
+      display: block;
+      font-size: 11px;
+      white-space: nowrap;
+      transform-origin: 50% 50%;
+      background: rgba(255,255,255,0.8);
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    /* Dial pointer: horizontal needle on LEFT side of the wheel */
+    .dial-pointer {
+      position: absolute;
+      top: 50%;
+      left: 30px;              /* near the left side of the wheel */
+      transform: translateY(-50%);
+      width: 80px;             /* length of the needle pointing right */
+      height: 4px;
+      background: #d32f2f;
+      border-radius: 4px;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Selected value box – on the right side */
+    .selected-box {
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .selected-box-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .selected-box-value {
+      font-size: 22px;
+      font-weight: 600;
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <div class="wheel-wrapper">
+    <div class="hint">Drag the wheel with mouse or touch to rotate</div>
+
+    <div class="gauge-row">
+      <div class="wheel-container">
+        <div class="dial-pointer"></div> <!-- fixed gauge needle on the left -->
+        <div id="wheel" class="wheel">
+          <div class="center-dot"></div>
+          <!-- ticks and labels added by JS -->
+        </div>
+      </div>
+
+      <div class="selected-box">
+        <div class="selected-box-label">Selected Level</div>
+        <div id="selectedValue" class="selected-box-value">1</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const SEGMENTS = 32;
+      const wheel = document.getElementById('wheel');
+      const radiusForLabels = 140;
+      const selectedValueEl = document.getElementById('selectedValue');
+
+      const step = 360 / SEGMENTS;
+      const baseAngle = -90;    // labels start at top (12 o'clock)
+      const pointerAngle = -90; // pointer is at left (9 o'clock)
+
+      /* ---------- Build ticks and numeric labels (clockwise) ---------- */
+      for (let i = 0; i < SEGMENTS; i++) {
+        const angle = baseAngle - step * i; // clockwise
+
+        const tick = document.createElement('div');
+        tick.className = 'tick';
+        tick.style.transform = `translate(-50%, -100%) rotate(${angle}deg)`;
+        wheel.appendChild(tick);
+
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.style.transform =
+          `translate(-50%, -50%) rotate(${angle}deg) translate(0, -${radiusForLabels}px)`;
+
+        const span = document.createElement('span');
+        span.textContent = i + 1; // just number
+        span.style.transform = `rotate(${-angle}deg)`; // keep upright
+
+        label.appendChild(span);
+        wheel.appendChild(label);
+      }
+
+      /* ---------- Drag rotation ---------- */
+      let isDragging = false;
+      let startAngle = 0;
+      let currentRotation = 0; // in degrees
+
+      function getAngleFromEvent(evt) {
+        const rect = wheel.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+
+        const dx = evt.clientX - cx;
+        const dy = evt.clientY - cy;
+
+        return Math.atan2(dy, dx) * (180 / Math.PI);
+      }
+
+      function updateSelectedLevel() {
+        // Normalize rotation to [0, 360)
+        let norm = currentRotation % 360;
+        if (norm < 0) norm += 360;
+
+        // Solve: baseAngle - step * i + currentRotation = pointerAngle
+        // => i = (baseAngle + currentRotation - pointerAngle) / step
+        let indexFloat = (baseAngle + norm - pointerAngle) / step;
+        let index = Math.round(indexFloat);
+
+        // wrap into [0, SEGMENTS-1]
+        index = ((index % SEGMENTS) + SEGMENTS) % SEGMENTS;
+
+        const level = index + 1;
+        selectedValueEl.textContent = level;
+      }
+
+      function onPointerDown(evt) {
+        evt.preventDefault();
+        wheel.setPointerCapture(evt.pointerId);
+        isDragging = true;
+        wheel.classList.add('dragging');
+
+        const angle = getAngleFromEvent(evt);
+        startAngle = angle - currentRotation;
+      }
+
+      function onPointerMove(evt) {
+        if (!isDragging) return;
+        evt.preventDefault();
+
+        const angle = getAngleFromEvent(evt);
+        currentRotation = angle - startAngle;
+        wheel.style.transform = `rotate(${currentRotation}deg)`;
+        updateSelectedLevel();
+      }
+
+      function onPointerUp(evt) {
+        if (!isDragging) return;
+        isDragging = false;
+        wheel.classList.remove('dragging');
+        wheel.releasePointerCapture(evt.pointerId);
+      }
+
+      wheel.addEventListener('pointerdown', onPointerDown);
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
+      window.addEventListener('pointercancel', onPointerUp);
+
+      // Initial selected level
+      updateSelectedLevel();
+    })();
+  </script>
+</body>
+</html>

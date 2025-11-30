@@ -21,6 +21,8 @@
       background: #0f172a;
       color: #e5e7eb;
       padding: 16px;
+      overflow-x: hidden;          /* 🔹 stop horizontal scrollbar */
+      overscroll-behavior: contain; /* 🔹 reduce bounce/scroll wiggle on mobile */
     }
 
     .page {
@@ -83,6 +85,7 @@
       justify-content: center;
       touch-action: none;
       position: relative;
+      overflow: hidden;  /* 🔹 clip any visual overflow from rotation */
     }
 
     .wheel {

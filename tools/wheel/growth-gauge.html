@@ -361,11 +361,25 @@
       const step = 360 / SEGMENTS;
       const baseAngle = -90; // Level 1 starts at left (under the pointer)
 
+      const STORAGE_KEYS = {
+        rotation: "growthGauge.rotation",
+        category: "growthGauge.category",
+      };
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEYS.rotation, String(currentRotation));
+          localStorage.setItem(STORAGE_KEYS.category, currentCategory);
+        } catch (e) {
+          // ignore storage errors (private mode, etc.)
+        }
+      }
+
       let currentRotation = 0; // in degrees
       let isDragging = false;
       let startAngle = 0;
       let currentLevel = 1;
-      let currentCategory = "se";
+      let currentCategory = "islam";
 
       /* ---------------- Advice Decks (32 levels × 3 bullets each per category) ---------------- */
 
@@ -1078,6 +1092,7 @@
         currentRotation = angle - startAngle;
         wheel.style.transform = `rotate(${currentRotation}deg)`;
         updateSelectedLevelFromRotation();
+        saveState();
       }
 
       function onPointerUp(evt) {
@@ -1085,6 +1100,9 @@
         isDragging = false;
         wheel.classList.remove("dragging");
         wheel.releasePointerCapture(evt.pointerId);
+
+        // persist latest rotation and category
+        saveState();
       }
 
       wheel.addEventListener("pointerdown", onPointerDown);
@@ -1096,12 +1114,38 @@
 
       const tabButtons = document.querySelectorAll(".tab");
 
+      function loadState() {
+        try {
+          const storedCategory = localStorage.getItem(STORAGE_KEYS.category);
+          if (storedCategory && adviceDecks[storedCategory]) {
+            currentCategory = storedCategory;
+            // update tab active state
+            tabButtons.forEach((btn) => {
+              btn.classList.toggle("active", btn.dataset.category === currentCategory);
+            });
+          }
+
+          const storedRotation = localStorage.getItem(STORAGE_KEYS.rotation);
+          if (storedRotation !== null) {
+            const value = parseFloat(storedRotation);
+            if (!Number.isNaN(value)) {
+              currentRotation = value;
+              wheel.style.transform = `rotate(${currentRotation}deg)`;
+            }
+          }
+        } catch (e) {
+          // ignore storage errors
+        }
+      }
+
+
       tabButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
           tabButtons.forEach((b) => b.classList.remove("active"));
           btn.classList.add("active");
           currentCategory = btn.dataset.category;
           updateMonitor();
+          saveState(); // persist chosen deck
         });
       });
 
@@ -1144,6 +1188,7 @@
 
       /* ---------------- Initial render ---------------- */
 
+      loadState(); 
       updateSelectedLevelFromRotation(); // sets level 1 and monitor initially
     })();
   </script>

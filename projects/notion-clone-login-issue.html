@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RCA — Login / Middleware Issue</title>
+  <style>
+    /* Notion-like minimal theme with a slightly different color palette */
+    :root{
+      --bg: #f7f7f8;
+      --panel: #ffffff;
+      --muted: #6b7280;
+      --text: #0f1724;
+      --accent: #2563eb; /* blue accent */
+      --accent-2: #60a5fa;
+      --border: #e6e7eb;
+      --radius: 10px;
+      --shadow: 0 6px 20px rgba(15,23,42,0.06);
+      --callout-bg: #f0f7ff;
+      --callout-border: #cbe0ff;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background: linear-gradient(180deg, #fbfdff 0%, var(--bg) 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      padding: 36px 20px;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      background: var(--panel);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    header.site-header {
+      padding: 28px 36px;
+      border-bottom: 1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .logo {
+      width:44px;height:44px;border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:white; font-weight:700;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 6px 18px rgba(37,99,235,0.12);
+      font-family: Inter, system-ui;
+      font-size:18px;
+    }
+    .brand h1{
+      margin:0;font-size:18px;font-weight:600;
+      letter-spacing: -0.01em;
+    }
+    .brand p{margin:0;font-size:12px;color:var(--muted);}
+
+    .header-actions { display:flex; gap:10px; align-items:center; }
+    .btn {
+      border: 1px solid var(--border);
+      padding:8px 12px;border-radius:8px;
+      background: #fff; color:var(--accent); font-weight:600;
+      font-size:13px; cursor:pointer;
+    }
+
+    main.content {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 28px;
+      padding: 28px 36px;
+    }
+    @media (max-width: 980px){
+      main.content { grid-template-columns: 1fr; padding:22px; }
+      .sidebar { order: 2; }
+    }
+
+    .hero {
+      background: linear-gradient(180deg,#ffffff 0%, #fbfcff 100%);
+      padding:22px;border-radius:10px;border:1px solid var(--border);
+      margin-bottom:20px;
+    }
+    .hero-title { margin:0; font-size:24px; font-weight:700; color:var(--text); }
+    .hero-sub { margin:8px 0 0; color:var(--muted); font-size:14px; }
+
+    .snapshot {
+      display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;
+    }
+    .snap-card {
+      background: #fff;
+      border:1px solid var(--border);
+      padding:12px 14px;border-radius:8px;
+      min-width:140px; box-shadow: 0 3px 12px rgba(12,16,20,0.04);
+    }
+    .snap-card h3{margin:0;font-size:13px;color:var(--muted);font-weight:600;}
+    .snap-card p{margin:6px 0 0;font-size:16px;font-weight:700;}
+
+    .grid {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:20px;
+      margin-top:8px;
+    }
+
+    article.card {
+      background:var(--panel); border:1px solid var(--border);
+      border-radius:10px;padding:18px;
+    }
+    article.card h2{margin:0 0 10px;font-size:18px;color:var(--text);}
+    article.card .eyebrow {font-size:12px;color:var(--muted); text-transform:uppercase; letter-spacing:0.11em; margin-bottom:6px;}
+
+    section.callout{
+      display:flex; gap:12px; padding:14px;border-radius:8px;
+      background:var(--callout-bg); border-left:4px solid var(--callout-border);
+      color:var(--text);
+    }
+    .muted { color:var(--muted); font-size:14px; }
+
+    .two-col { display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+    pre.code {
+      background:#0f1724; color:#e6eefc; padding:12px;border-radius:6px;overflow:auto;
+      font-family: var(--mono); font-size:13px; line-height:1.65;
+    }
+
+    .evidence-list { padding-left:18px; color:var(--muted); }
+    .timeline { padding-left:12px; border-left:2px solid var(--border); margin-top:10px; }
+    .timeline-item { margin:12px 0; padding-left:12px; }
+    .timeline-item time { display:block; font-size:13px; color:var(--muted); }
+    .sidebar {
+      position: relative;
+      top:0;
+    }
+    .sidebar .card { position:sticky; top:22px; }
+
+    footer.foot {
+      border-top:1px solid var(--border);
+      padding:18px 36px; color:var(--muted); font-size:13px;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .tag {
+      display:inline-block;font-size:12px;color:var(--muted);
+      border:1px solid var(--border); padding:6px 10px;border-radius:999px;
+      background:#fff;
+    }
+    .kbd { background:#f3f4f6;border:1px solid #e6e7eb;padding:4px 7px;border-radius:6px;font-family:var(--mono);font-size:13px;color:var(--muted);}
+    a.inline { color:var(--accent); font-weight:600; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="page" role="main" aria-labelledby="title">
+    <header class="site-header">
+      <div class="brand">
+        <div class="logo">RC</div>
+        <div>
+          <h1 id="title">RCA — Login / Middleware Issue</h1>
+          <p>Root cause analysis and remediation for the Next.js / NextAuth credentials sign-in issue</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="tag">Notion-like • Report</div>
+        <button class="btn" id="summaryBtn">One-page Summary</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div>
+        <section class="hero" aria-labelledby="hero-title">
+          <h2 id="hero-title" class="hero-title">Why login didn't redirect & pages were accessible without auth</h2>
+          <p class="hero-sub">Short: middleware was not executed (no logs), session callback wasn't called, signin POST set a cookie but browser navigation didn't redirect — root cause: middleware placement and edge-compatibility/imports. This doc explains investigation, root cause, fix, and verification.</p>
+
+          <div class="snapshot" role="list">
+            <div class="snap-card" role="listitem">
+              <h3>Impact</h3>
+              <p>Pages accessible without auth</p>
+            </div>
+            <div class="snap-card" role="listitem">
+              <h3>Observed</h3>
+              <p>Signin silent success (blank), errors on wrong creds</p>
+            </div>
+            <div class="snap-card" role="listitem">
+              <h3>Root Cause</h3>
+              <p>Middleware not loaded / edge import issue</p>
+            </div>
+            <div class="snap-card" role="listitem">
+              <h3>Status</h3>
+              <p>Resolved — middleware moved to src and made edge-safe</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="grid">
+          <article class="card" id="overview">
+            <div class="eyebrow">Overview</div>
+            <h2>Problem statement</h2>
+            <p class="muted">
+              After successful credential authentication the app did not redirect the user back to the original page. The sign-in
+              flow produced a session cookie (Auth.js / NextAuth), JWT callback logged, but the session callback did not run and middleware
+              outputs were absent. Pages that should be protected were accessible without authentication.
+            </p>
+
+            <div style="margin-top:12px;" class="callout">
+              <div>
+                <strong>Short diagnosis:</strong>
+                <div class="muted" style="margin-top:6px">Middleware was not executing because Next.js did not load the middleware module from the expected location / or the middleware imported node-only server modules causing it to be ignored by the edge bundler. Moving middleware to the expected path and making it edge-safe resolved the issue.</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" id="symptoms">
+            <div class="eyebrow">Symptoms</div>
+            <h2>What we saw</h2>
+            <ul>
+              <li>No console.log from <code>middleware.ts</code> (no startup output).</li>
+              <li>Pages protected by middleware remained accessible without authorization.</li>
+              <li>Correct credentials: signin POST returned <strong>set-cookie</strong> with an AuthJS session id, but UI showed nothing (no redirect).</li>
+              <li>Wrong credentials: explicit credentials error displayed (expected).</li>
+              <li>JWT callback logged (token created), but <strong>session callback never logged</strong>.</li>
+            </ul>
+          </article>
+
+          <article class="card" id="investigation">
+            <div class="eyebrow">Investigation</div>
+            <h2>What we checked</h2>
+            <ul class="evidence-list">
+              <li>Server logs on dev start — middleware log absent.</li>
+              <li>Network: signin <code>/api/auth/callback/credentials</code> returned <code>set-cookie</code>.</li>
+              <li>Fetched <code>/api/auth/session</code> manually — session callback only executed when session was fetched (expected).</li>
+              <li>Examined file locations: middleware was located in project root while app used <code>src/</code> layout; moving it to <code>src/middleware.ts</code> fixed detection.</li>
+              <li>Inspected imports: middleware file originally re-exported <code>auth</code> from server auth file which imported Prisma — that makes middleware not edge-safe.</li>
+            </ul>
+          </article>
+
+          <article class="card" id="root-cause">
+            <div class="eyebrow">Root cause</div>
+            <h2>Detailed root cause</h2>
+            <p class="muted">
+              Two related issues combined to cause the behavior:
+            </p>
+            <ol>
+              <li><strong>Middleware discovery rule / path mismatch</strong> — Next.js only auto-detects middleware when it exists at one of the expected locations (<code>/middleware.ts</code> at project root or <code>/src/middleware.ts</code>). If your project uses <code>src/</code> sources but middleware sits at the root (or vice-versa) Next won't load it.</li>
+              <li><strong>Edge runtime compatibility / import chain</strong> — middleware runs in an edge-like runtime and must be edge-safe. Re-exporting the server <code>auth</code> module (which imported Prisma / PrismaAdapter) forced Node-only modules into the middleware bundle. The edge bundler either failed or skipped the middleware, resulting in no middleware execution and no logs.</li>
+            </ol>
+          </article>
+
+          <article class="card" id="solution">
+            <div class="eyebrow">Solution</div>
+            <h2>Fixes applied</h2>
+            <ul>
+              <li><strong>Move middleware</strong> to the correct location (<code>src/middleware.ts</code>) to satisfy Next's discovery when the app uses <code>src/</code>.</li>
+              <li><strong>Make middleware edge-safe:</strong> avoid importing server-only modules (Prisma), and use <code>getToken</code> from <code>next-auth/jwt</code> or <code>withAuth</code> from <code>next-auth/middleware</code>. This prevents Node-only code entering the edge bundle.</li>
+              <li><strong>Keep server-side auth separate:</strong> keep <code>auth.ts</code> (NextAuth & PrismaAdapter) as a server-only module used by the API route <code>/api/auth/[...nextauth]</code>.</li>
+              <li><strong>Ensure callback behavior:</strong> implement a <code>redirect</code> callback in NextAuth to return the homepage when <code>callbackUrl</code> is missing (fallback to <code>baseUrl</code>).</li>
+            </ul>
+
+            <h3>Edge-safe middleware (recommended)</h3>
+            <pre class="code" aria-label="middleware example"><code>// src/middleware.ts (edge-safe)
+import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+
+export async function middleware(req) {
+  const pathname = req.nextUrl.pathname;
+  if (pathname.startsWith('/api/auth') || pathname.startsWith('/_next') || pathname.startsWith('/favicon.ico')) return NextResponse.next();
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  if (!token) {
+    const signInUrl = new URL('/api/auth/signin', req.url);
+    signInUrl.searchParams.set('callbackUrl', req.url);
+    return NextResponse.redirect(signInUrl);
+  }
+  return NextResponse.next();
+}
+
+export const config = { matcher: ["/((?!api/auth|_next|public|favicon.ico|.*\\.(?:png|jpg|jpeg|svg|gif|ico|css|js|map)).*)"] };</code></pre>
+
+            <h3>Redirect fallback in NextAuth</h3>
+            <pre class="code" aria-label="redirect callback example"><code>// inside auth.ts NextAuth options
+callbacks: {
+  async redirect({ url, baseUrl }) {
+    if (!url) return baseUrl;
+    if (url.startsWith('/')) return baseUrl + url;
+    try {
+      const u = new URL(url);
+      if (u.origin === baseUrl) return url;
+    } catch(e) {}
+    return baseUrl;
+  }
+}</code></pre>
+          </article>
+
+          <article class="card" id="verification">
+            <div class="eyebrow">Verification</div>
+            <h2>How we verified the fix</h2>
+            <ul>
+              <li>Restart dev server and confirm middleware console.log appears on startup.</li>
+              <li>Visit protected page → middleware redirects to <code>/api/auth/signin?callbackUrl=</code> with the correct callback URL.</li>
+              <li>Sign in with correct credentials — POST returns <code>set-cookie</code> and browser follows 302 back to callback URL.</li>
+              <li>GET to callback URL includes the session cookie; the protected page is accessible and session callback logs when the session endpoint or page requires the session.</li>
+            </ul>
+          </article>
+
+          <article class="card" id="timeline">
+            <div class="eyebrow">Timeline</div>
+            <h2>Sequence of events</h2>
+            <div class="timeline">
+              <div class="timeline-item">
+                <time>Initial</time>
+                <div class="muted">Middleware located at project root, app uses <code>src/</code> layout — Next didn't load middleware.</div>
+              </div>
+              <div class="timeline-item">
+                <time>Investigation</time>
+                <div class="muted">Confirmed JWT logs, set-cookie, absent middleware logs, and missing session callback logs.</div>
+              </div>
+              <div class="timeline-item">
+                <time>Fix</time>
+                <div class="muted">Moved middleware to <code>src/middleware.ts</code> and made it edge-safe (used getToken), restarted server — middleware executed and redirects worked.</div>
+              </div>
+              <div class="timeline-item">
+                <time>Verification</time>
+                <div class="muted">Protected pages enforced, signin redirect returned to original page, session flows logged as expected.</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card" id="actions">
+            <div class="eyebrow">Action items</div>
+            <h2>Immediate & follow-up</h2>
+            <ul>
+              <li>✅ Move middleware to the expected path (<code>src/middleware.ts</code> when using <code>src/</code>).</li>
+              <li>✅ Replace any middleware imports that pull server-only modules; use <code>getToken</code> or <code>withAuth</code>.</li>
+              <li>✅ Ensure <code>NEXTAUTH_URL</code> and <code>NEXTAUTH_SECRET</code> are set in <code>.env.local</code>, and enable <code>NEXTAUTH_DEBUG=true</code> while debugging.</li>
+              <li>🔁 Add an automated test that verifies unauthenticated requests are redirected to the signin page with <code>callbackUrl</code>.</li>
+              <li>🔒 Audit middleware imports across the repo to catch accidental server-only imports in edge code.</li>
+            </ul>
+          </article>
+
+          <article class="card" id="learnings">
+            <div class="eyebrow">Lessons learned</div>
+            <h2>Key takeaways</h2>
+            <ul>
+              <li>Next.js middleware has strict discovery rules — place it exactly where Next expects it (root or <code>src/</code>).</li>
+              <li>Middleware runs in an edge-like runtime — avoid importing Node-only modules (Prisma, filesystem, native libs) into it.</li>
+              <li>When using built-in NextAuth flows, prefer normal form POST / server redirect flows for automatic navigation, or handle <code>redirect:false</code> responses explicitly in client code.</li>
+              <li>Use targeted console logs and <code>NEXTAUTH_DEBUG</code> to quickly identify which callbacks run (jwt vs session vs redirect).</li>
+            </ul>
+          </article>
+
+        </div>
+      </div>
+
+      <aside class="sidebar">
+        <article class="card">
+          <div class="eyebrow">Context</div>
+          <h2>Environment & files</h2>
+          <p class="muted">Next.js (App Router), NextAuth v5 beta, Prisma, App under <code>src/</code>.</p>
+
+          <h3 style="margin-top:12px;">Files involved</h3>
+          <ul>
+            <li><code>src/middleware.ts</code> (moved to this path)</li>
+            <li><code>auth.ts</code> (server NextAuth config with PrismaAdapter)</li>
+            <li><code>src/app/api/auth/[...nextauth]/route.ts</code> (catchall)</li>
+            <li><code>providers.tsx</code> (SessionProvider)</li>
+          </ul>
+
+          <h3 style="margin-top:12px;">Quick commands</h3>
+          <p class="muted">Run these while debugging:</p>
+          <ul>
+            <li><span class="kbd">rm -rf .next && npm run dev</span> — clear cache & restart</li>
+            <li><span class="kbd">curl -i http://localhost:3000/api/auth/callback/credentials</span> — inspect headers (dev)</li>
+            <li><span class="kbd">fetch('/api/auth/session').then(r=>r.json()).then(console.log)</span> — force session callback</li>
+          </ul>
+
+          <h3 style="margin-top:12px;">Evidence</h3>
+          <ol>
+            <li>No middleware logs at startup → Next didn't load middleware.</li>
+            <li>Signin POST returned <code>set-cookie</code> with AuthJS session id.</li>
+            <li>JWT callback logs (token created), session callback logs only when session fetch invoked.</li>
+          </ol>
+        </article>
+
+        <article class="card" style="margin-top:18px;">
+          <div class="eyebrow">Owner</div>
+          <h2>Report</h2>
+          <p class="muted">Author: you (the debugging engineer)</p>
+          <p class="muted">Date: <!-- inline dynamic date omitted --> </p>
+
+          <h3 style="margin-top:12px;">Notes</h3>
+          <p class="muted">For similar issues: check middleware path first, then any import chain that drags Node-only modules into the edge runtime.</p>
+        </article>
+      </aside>
+    </main>
+
+    <footer class="foot">
+      <div>RCA generated for the Login / Middleware issue</div>
+      <div style="text-align:right;color:var(--muted);font-size:13px">
+        Source: :contentReference[oaicite:0]{index=0}
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // small modal/summary behavior: scroll to top summary
+    document.getElementById('summaryBtn').addEventListener('click', function(){
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    // nothing more needed for this static report
+  </script>
+</body>
+</html>

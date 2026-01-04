@@ -416,19 +416,20 @@ class AppFooter extends HTMLElement {
   }
 
   _startIdleTracking() {
-    this._activityHandler = () => {
+    this._activityHandler = (evt) => {
       this._primeAudio();
-      const target = window.event?.target;
-      if (target && target.closest && target.closest('.cta-action')) {
+      const target = evt?.target || window.event?.target;
+      const path = evt?.composedPath ? evt.composedPath() : [];
+      const isAction = (el) => el && el.closest && el.closest('.cta-action');
+      const hitAction = isAction(target) || path.some((n) => isAction(n));
+
+      if (hitAction) {
         setTimeout(() => this._resetIdleTimer(), this._actionDelay);
         return;
       }
-      const type = window.event?.type || '';
+
+      const type = evt?.type || window.event?.type || '';
       if (this._incomingActive && type === 'pointermove') return;
-      if (target && target.closest && target.closest('[data-action="mute"]')) {
-        setTimeout(() => this._resetIdleTimer(), this._actionDelay);
-        return;
-      }
       this._resetIdleTimer();
     };
     const opts = { passive: true };

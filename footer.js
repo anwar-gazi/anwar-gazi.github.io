@@ -4,18 +4,29 @@ class AppFooter extends HTMLElement {
     super();
     this._initialized = false;
     this._shell = null;
-    this._state = 'bar'; // 'bar' | 'open' | 'toast'
+    this._state = 'bar'; // enforced state: 'bar' | 'open' | 'toast'
+    this._preferredState = 'bar'; // user last chosen state
     this._userCollapsed = false;
     this._lastScrollY = 0;
     this._onScroll = null;
     this._onResize = null;
+    this._stateKey = 'ctaState';
+    this._collapsedKey = 'ctaCollapsed';
   }
 
   connectedCallback() {
     if (this._initialized) return;
     this._initialized = true;
 
-    this._userCollapsed = sessionStorage.getItem('ctaCollapsed') === 'true';
+    const storedState = this._readStorage(this._stateKey);
+    if (storedState === 'bar' || storedState === 'open' || storedState === 'toast') {
+      this._preferredState = storedState;
+    }
+    this._userCollapsed =
+      this._readStorage(this._collapsedKey) === 'true' || this._preferredState === 'toast';
+    if (this._userCollapsed) {
+      this._preferredState = 'toast';
+    }
 
     this.innerHTML = `
       <footer class="cta-shell" data-state="bar">
@@ -53,8 +64,8 @@ class AppFooter extends HTMLElement {
     this._shell = this.querySelector('.cta-shell');
     if (!this._shell) return;
 
-    this._setState(this._userCollapsed ? 'toast' : 'bar');
-    this._applyResponsiveState(true);
+    this._setState(this._preferredState, { persistPreferred: false });
+    this._applyResponsiveState();
     this._wireEvents();
   }
 
@@ -90,7 +101,7 @@ class AppFooter extends HTMLElement {
     this._lastScrollY = window.scrollY;
     this._onScroll = () => {
       if (this._isMobile()) {
-        this._setState('toast');
+        this._setState('toast', { persistPreferred: false });
         return;
       }
 
@@ -121,30 +132,34 @@ class AppFooter extends HTMLElement {
 
   _openFromUser() {
     this._userCollapsed = false;
-    sessionStorage.removeItem('ctaCollapsed');
     this._setState('open');
   }
 
   _collapse(userInitiated = false) {
     if (userInitiated) {
       this._userCollapsed = true;
-      sessionStorage.setItem('ctaCollapsed', 'true');
     }
     this._setState('bar');
   }
 
   _toast() {
     this._userCollapsed = true;
-    sessionStorage.setItem('ctaCollapsed', 'true');
     this._setState('toast');
   }
 
-  _setState(next) {
+  _setState(next, opts = {}) {
+    const persistPreferred = opts.persistPreferred !== false;
+    if (persistPreferred) {
+      this._preferredState = next;
+    }
+
     const enforced = this._isMobile() ? 'toast' : next;
     this._state = enforced;
     if (this._shell) {
       this._shell.setAttribute('data-state', enforced);
     }
+
+    this._persistState(persistPreferred ? next : this._preferredState);
   }
 
   _isMobile() {
@@ -153,11 +168,32 @@ class AppFooter extends HTMLElement {
 
   _applyResponsiveState() {
     if (this._isMobile()) {
-      this._setState('toast');
+      this._setState('toast', { persistPreferred: false });
       return;
     }
     if (!this._userCollapsed && this._state === 'toast') {
-      this._setState('bar');
+      this._setState(this._preferredState || 'bar', { persistPreferred: false });
+    }
+  }
+
+  _persistState(preferredState) {
+    this._writeStorage(this._stateKey, preferredState);
+    this._writeStorage(this._collapsedKey, String(this._userCollapsed));
+  }
+
+  _readStorage(key) {
+    try {
+      return window.localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  _writeStorage(key, value) {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch (e) {
+      // ignore write failures
     }
   }
 }

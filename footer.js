@@ -84,10 +84,7 @@ class AppFooter extends HTMLElement {
           </div>
           <div class="cta-incoming-overlay" aria-hidden="true">
             <div class="incoming-wave">
-              <div class="incoming-avatar">
-                <span class="incoming-icon">☎</span>
-                <img class="incoming-photo" src="/minhaj.jpg" alt="Minhaj" loading="lazy" />
-              </div>
+              <img class="incoming-photo" src="/minhaj.jpg" alt="Minhaj" loading="lazy" />
             </div>
             <div class="incoming-kicker">Incoming call</div>
             <div class="incoming-title">Let’s work together</div>

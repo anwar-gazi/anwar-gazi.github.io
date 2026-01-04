@@ -549,6 +549,7 @@ class AppFooter extends HTMLElement {
     this._stopRingtone();
     this._exitIncomingMode();
     this._incomingActive = false;
+    this._forceMute();
   }
 
   _setupAudio() {
@@ -626,6 +627,16 @@ class AppFooter extends HTMLElement {
     if (btn) {
       btn.textContent = muted ? '🔇' : '🔊';
       btn.setAttribute('aria-label', muted ? 'Unmute ringtone' : 'Mute ringtone');
+    }
+  }
+
+  _forceMute() {
+    if (!this._chime) return;
+    this._chime.muted = true;
+    const muteBtn = this.querySelector('[data-action="mute"]');
+    if (muteBtn) {
+      muteBtn.textContent = '🔇';
+      muteBtn.setAttribute('aria-label', 'Unmute ringtone');
     }
   }
 }

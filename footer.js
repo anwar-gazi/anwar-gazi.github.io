@@ -26,6 +26,7 @@ class AppFooter extends HTMLElement {
     this._chime = null;
     this._idleActive = false;
     this._idleLoopTimer = null;
+    this._audioPrimed = false;
   }
 
   connectedCallback() {
@@ -116,6 +117,7 @@ class AppFooter extends HTMLElement {
     if (this._idleLoopTimer) {
       clearInterval(this._idleLoopTimer);
     }
+    this._audioPrimed = false;
   }
 
   _wireEvents() {
@@ -351,7 +353,10 @@ class AppFooter extends HTMLElement {
   }
 
   _startIdleTracking() {
-    this._activityHandler = () => this._resetIdleTimer();
+    this._activityHandler = () => {
+      this._primeAudio();
+      this._resetIdleTimer();
+    };
     const opts = { passive: true };
     window.addEventListener('pointerdown', this._activityHandler, opts);
     window.addEventListener('pointermove', this._activityHandler, opts);
@@ -443,6 +448,24 @@ class AppFooter extends HTMLElement {
       this._chime = audio;
     } catch (e) {
       this._chime = null;
+    }
+  }
+
+  _primeAudio() {
+    if (this._audioPrimed || !this._chime) return;
+    try {
+      const res = this._chime.play();
+      if (res && typeof res.then === 'function') {
+        res.then(() => {
+          this._chime.pause();
+          this._chime.currentTime = 0;
+          this._audioPrimed = true;
+        }).catch(() => {});
+      } else {
+        this._audioPrimed = true;
+      }
+    } catch (e) {
+      // ignore
     }
   }
 

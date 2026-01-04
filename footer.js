@@ -189,7 +189,7 @@ class AppFooter extends HTMLElement {
 
     this.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        this._collapse(true);
+        this._resetIdleTimer();
       }
     });
 

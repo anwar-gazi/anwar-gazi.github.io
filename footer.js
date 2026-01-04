@@ -141,7 +141,20 @@ class AppFooter extends HTMLElement {
     const collapseBtn = this.querySelector('[data-action="collapse"]');
     const dismissBtn = this.querySelector('[data-action="dismiss"]');
 
-    if (openBtn) openBtn.addEventListener('click', () => this._openFromUser());
+    if (openBtn) {
+      openBtn.addEventListener('click', () => {
+        this._primeAudio();
+        if (this._isMobile()) {
+          this._userCollapsed = false;
+          if (!this._idleActive) {
+            this._lastAnimate = Date.now();
+            this._startIdleLoop();
+          }
+          return;
+        }
+        this._openFromUser();
+      });
+    }
     if (collapseBtn) collapseBtn.addEventListener('click', () => this._collapse(true));
     if (dismissBtn) dismissBtn.addEventListener('click', () => this._toast());
 

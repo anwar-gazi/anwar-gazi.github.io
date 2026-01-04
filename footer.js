@@ -604,7 +604,7 @@ class AppFooter extends HTMLElement {
     const muted = !this._chime.muted;
     this._chime.muted = muted;
     if (btn) {
-      btn.textContent = muted ? '🔈' : '🔇';
+      btn.textContent = muted ? '🔇' : '🔈';
       btn.setAttribute('aria-label', muted ? 'Unmute ringtone' : 'Mute ringtone');
     }
   }

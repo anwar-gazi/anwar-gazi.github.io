@@ -401,6 +401,8 @@ class AppFooter extends HTMLElement {
         setTimeout(() => this._resetIdleTimer(), this._actionDelay);
         return;
       }
+      const type = window.event?.type || '';
+      if (this._incomingActive && type === 'pointermove') return;
       this._resetIdleTimer();
     };
     const opts = { passive: true };

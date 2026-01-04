@@ -425,6 +425,10 @@ class AppFooter extends HTMLElement {
       }
       const type = window.event?.type || '';
       if (this._incomingActive && type === 'pointermove') return;
+      if (target && target.closest && target.closest('[data-action="mute"]')) {
+        setTimeout(() => this._resetIdleTimer(), this._actionDelay);
+        return;
+      }
       this._resetIdleTimer();
     };
     const opts = { passive: true };

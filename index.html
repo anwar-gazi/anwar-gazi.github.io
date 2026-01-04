@@ -8,20 +8,21 @@
 
   <link rel="stylesheet" href="footer.css" />
   <script src="footer.js" defer></script>
+  <script type="module" src="case-nav.js" defer></script>
 
   <style>
     :root {
-      --bg: #020617;
-      --bg-alt: #020617;
-      --card: #020617;
-      --accent: #6366f1;
-      --accent-soft: rgba(99, 102, 241, 0.15);
-      --text-main: #f9fafb;
-      --text-muted: #9ca3af;
-      --border-subtle: #1f2937;
+      --bg: #0b1529;
+      --bg-alt: #0f1c33;
+      --card: #111f36;
+      --accent: #5b67ff;
+      --accent-soft: rgba(99, 102, 241, 0.18);
+      --text-main: #e9eef6;
+      --text-muted: #b8c4d8;
+      --border-subtle: #23324b;
       --radius-lg: 20px;
       --radius-md: 12px;
-      --shadow-soft: 0 22px 60px rgba(15, 23, 42, 0.95);
+      --shadow-soft: 0 22px 60px rgba(11, 17, 32, 0.65);
     }
 
     * {
@@ -33,8 +34,9 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top left, #0b1120 0, transparent 55%),
-        radial-gradient(circle at bottom right, #020617 0, #000000 60%);
+        radial-gradient(circle at 20% 18%, rgba(102, 126, 234, 0.16), transparent 46%),
+        radial-gradient(circle at 85% 12%, rgba(14, 165, 233, 0.18), transparent 50%),
+        linear-gradient(145deg, #0a1326, #0f1c33);
       color: var(--text-main);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
@@ -150,11 +152,11 @@
       padding: 24px 22px 20px;
       border-radius: 24px;
       background:
-        radial-gradient(circle at top left, rgba(129, 140, 248, 0.28), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.2), transparent 60%),
-        linear-gradient(140deg, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 1));
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      box-shadow: var(--shadow-soft);
+        radial-gradient(circle at 15% 18%, rgba(91, 103, 255, 0.18), transparent 52%),
+        radial-gradient(circle at 85% 82%, rgba(34, 197, 94, 0.14), transparent 52%),
+        linear-gradient(150deg, #0d1930, #0b1529);
+      border: 1px solid rgba(184, 198, 221, 0.35);
+      box-shadow: 0 18px 50px rgba(6, 12, 26, 0.65);
       display: grid;
       grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.8fr);
       gap: 22px;
@@ -214,9 +216,9 @@
       border-radius: 18px;
       padding: 14px 14px 12px;
       background:
-        radial-gradient(circle at top right, rgba(248, 250, 252, 0.1), transparent 60%),
-        linear-gradient(135deg, #020617, #020617);
-      border: 1px solid rgba(148, 163, 184, 0.4);
+        radial-gradient(circle at 80% 20%, rgba(248, 250, 252, 0.08), transparent 60%),
+        linear-gradient(135deg, #0d1830, #101f39);
+      border: 1px solid rgba(184, 198, 221, 0.35);
     }
 
     .hero-side-title {
@@ -433,6 +435,7 @@
 </head>
 
 <body>
+  <case-nav></case-nav>
   <header>
     <div class="header-inner">
       <div class="brand">
@@ -772,7 +775,7 @@
       </a>
 
       <!-- Independent – Projects -->
-      <a class="card-link" href="projects/notion-clone-login-issue.html" data-category="GovTech"
+      <a class="card-link" href="projects/notion-clone-login-issue.html" data-category="Independent"
         aria-labelledby="notion-clone-title">
         <article class="card" role="article" aria-label="Notion-Clone – Notion Like Kanban Board">
           <div class="card-industry" aria-hidden="false">Independent • Project Management Software</div>
@@ -799,6 +802,104 @@
               View Project case study <span aria-hidden="true">↗</span>
             </div>
             <div class="card-tagline">Independent project, mission-critical SaaS</div>
+          </footer>
+        </article>
+      </a>
+
+      <a class="card-link" href="projects/zustand-migration-rerender-analysis.html" data-category="Independent"
+        aria-labelledby="zustand-analysis-title">
+        <article class="card" role="article" aria-label="Zustand Migration – Re-render Analysis">
+          <div class="card-industry" aria-hidden="false">Independent • Performance RCA</div>
+
+          <header>
+            <h2 id="zustand-analysis-title" class="card-title">Zustand Migration – Re-render Analysis</h2>
+            <div class="card-subtitle">
+              <time datetime="2026">January 2026</time>
+            </div>
+          </header>
+
+          <p class="card-body">
+            Deep dive into the Notion-like Kanban migration from React Context to Zustand, cutting ~70% unnecessary
+            re-renders and eliminating the RunningTasksBar dock flicker through selector-based subscriptions and better
+            hydration.
+          </p>
+
+          <div class="card-meta-row" role="list" aria-label="Technologies and attributes">
+            <span class="card-meta-pill" role="listitem">React / Next.js</span>
+            <span class="card-meta-pill" role="listitem">Zustand</span>
+            <span class="card-meta-pill" role="listitem">Performance debugging</span>
+          </div>
+
+          <footer class="card-footer" role="contentinfo">
+            <div class="card-link-text" aria-hidden="false">
+              View project RCA <span aria-hidden="true">↗</span>
+            </div>
+            <div class="card-tagline">Dock flicker eliminated</div>
+          </footer>
+        </article>
+      </a>
+
+      <a class="card-link" href="projects/zustand-migration-docs.html" data-category="Independent"
+        aria-labelledby="zustand-docs-title">
+        <article class="card" role="article" aria-label="Zustand Migration Documentation">
+          <div class="card-industry" aria-hidden="false">Independent • State Management</div>
+
+          <header>
+            <h2 id="zustand-docs-title" class="card-title">BoardContext → Zustand Migration Docs</h2>
+            <div class="card-subtitle">
+              <time datetime="2026">State Management Refactor • 2026</time>
+            </div>
+          </header>
+
+          <p class="card-body">
+            Step-by-step implementation guide for replacing React Context/useReducer with a Zustand store: migration
+            checklist, file diffs, selector hooks with shallow comparison, and updated tests for a Notion-style board.
+          </p>
+
+          <div class="card-meta-row" role="list" aria-label="Technologies and attributes">
+            <span class="card-meta-pill" role="listitem">Zustand store</span>
+            <span class="card-meta-pill" role="listitem">Refactor playbook</span>
+            <span class="card-meta-pill" role="listitem">Selector hooks</span>
+          </div>
+
+          <footer class="card-footer" role="contentinfo">
+            <div class="card-link-text" aria-hidden="false">
+              View implementation doc <span aria-hidden="true">↗</span>
+            </div>
+            <div class="card-tagline">DX + performance uplift</div>
+          </footer>
+        </article>
+      </a>
+
+      <a class="card-link" href="projects/taskpane-flicker-investigation.html" data-category="Independent"
+        aria-labelledby="taskpane-flicker-title">
+        <article class="card" role="article" aria-label="TaskPane Flicker Investigation">
+          <div class="card-industry" aria-hidden="false">Independent • Next.js App Router</div>
+
+          <header>
+            <h2 id="taskpane-flicker-title" class="card-title">TaskPane Flicker Investigation</h2>
+            <div class="card-subtitle">
+              <time datetime="2026">Rendering RCA • 2026</time>
+            </div>
+          </header>
+
+          <p class="card-body">
+            Root-caused task drawer flicker to Next.js router.replace remounting server components; fixed by switching
+            to window.history.replaceState for URL syncing, keeping SPA behavior while preserving deep links and
+            back/forward navigation.
+          </p>
+
+          <div class="card-meta-row" role="list" aria-label="Technologies and attributes">
+            <span class="card-meta-pill" role="listitem">Next.js App Router</span>
+            <span class="card-meta-pill" role="listitem">SPA navigation</span>
+            <span class="card-meta-pill" role="listitem">Root-cause analysis</span>
+          </div>
+
+          <footer class="card-footer" role="contentinfo">
+            <div class="card-link-text" aria-hidden="false">
+              View investigation <span aria-hidden="true">↗</span>
+            </div>
+            <div class="card-tagline">Smooth task drawer UX</div>
           </footer>
         </article>
       </a>

@@ -6,21 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="../footer.css" />
   <script src="../footer.js" defer></script>
+  <script type="module" src="../case-nav.js" defer></script>
   <style>
     :root {
       /* Fintech color theme – clean blues/teals */
-      --bg: #020617;
-      --bg-alt: #02081a;
-      --card: #020617;
-      --accent: #22c55e;              /* green success */
-      --accent-2: #0ea5e9;            /* cyan */
-      --accent-soft: rgba(14, 165, 233, 0.16);
-      --text-main: #f9fafb;
-      --text-muted: #9ca3af;
-      --border-subtle: #1f2937;
+      --bg: #0c1427;
+      --bg-alt: #0f1c31;
+      --card: #12243c;
+      --accent: #3dd68c;              /* refreshed green */
+      --accent-2: #3ba8f6;            /* brighter cyan */
+      --accent-soft: rgba(59, 168, 246, 0.18);
+      --text-main: #e9eef6;
+      --text-muted: #c0cadc;
+      --border-subtle: #24354f;
       --radius-lg: 18px;
       --radius-md: 12px;
-      --shadow-soft: 0 18px 50px rgba(15, 23, 42, 0.95);
+      --shadow-soft: 0 18px 44px rgba(8, 12, 26, 0.65);
     }
 
     * { box-sizing: border-box; }
@@ -557,6 +558,7 @@
   </style>
 </head>
 <body>
+  <case-nav></case-nav>
   <!-- Sticky header -->
   <header>
     <div class="header-inner">

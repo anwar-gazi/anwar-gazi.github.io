@@ -4,6 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>RCA — Login / Middleware Issue</title>
+  <link rel="stylesheet" href="../footer.css" />
+  <script src="../footer.js" defer></script>
+  <script type="module" src="../case-nav.js" defer></script>
   <style>
     /* Notion-like minimal theme with a slightly different color palette */
     :root{
@@ -162,6 +165,7 @@
   </style>
 </head>
 <body>
+  <case-nav></case-nav>
   <div class="page" role="main" aria-labelledby="title">
     <header class="site-header">
       <div class="brand">
@@ -418,5 +422,7 @@ callbacks: {
     });
     // nothing more needed for this static report
   </script>
+
+  <app-footer></app-footer>
 </body>
 </html>

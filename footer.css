@@ -1,203 +1,296 @@
 :root {
-    /* adjust if your header is taller/shorter */
-    --header-height: 72px;
+    --cta-accent: #6366f1;
+    --cta-accent-2: #22c55e;
+    --cta-surface: rgba(15, 23, 42, 0.9);
+    --cta-border: rgba(148, 163, 184, 0.35);
+    --cta-text: #f8fafc;
+    --cta-muted: #cbd5e1;
 }
 
-/* === Sticky CTA Footer – full width, two docking modes === */
-.cta-footer {
+.cta-shell {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
-    /* default: docked at bottom */
-    top: auto;
-    z-index: 50;
-    padding: 0;
-    background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
-}
-
-/* when docked under header */
-.cta-footer.cta-footer--top {
-    bottom: auto;
-    /* top: var(--header-height); */
-    top: 0;
-    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), transparent);
-}
-
-.cta-footer-inner {
-    position: relative;
-    width: 100%;
-    padding: 16px 18px 14px;
-    /* border-radius: 18px 18px 0 0; */
-    overflow: hidden;
-    border-top: 1px solid rgba(248, 250, 252, 0.3);
-    background: linear-gradient(135deg, #f97316, #ec4899, #6366f1);
-    box-shadow: 0 -10px 40px rgba(15, 23, 42, 0.95);
-    color: #f9fafb;
-
+    z-index: 120;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-/* sliding light / shimmer */
-.cta-footer-inner::before {
-    content: "";
-    position: absolute;
-    inset: -40%;
-    background: linear-gradient(115deg,
-            rgba(255, 255, 255, 0.24),
-            rgba(255, 255, 255, 0.02),
-            transparent 60%);
-    mix-blend-mode: screen;
-    transform: translateX(-120%);
-    animation: ctaLightSweep 7s linear infinite;
+    justify-content: center;
+    padding: 0 12px 12px;
     pointer-events: none;
 }
 
-@keyframes ctaLightSweep {
-    0% {
-        transform: translateX(-120%);
-        opacity: 0;
-    }
-
-    10% {
-        opacity: 1;
-    }
-
-    45% {
-        transform: translateX(110%);
-        opacity: 1;
-    }
-
-    60% {
-        opacity: 0;
-    }
-
-    100% {
-        transform: translateX(110%);
-        opacity: 0;
-    }
+.cta-surface {
+    width: min(1040px, 100%);
+    pointer-events: auto;
+    filter: drop-shadow(0 -10px 36px rgba(15, 23, 42, 0.45));
+    transition: transform 0.18s ease, opacity 0.18s ease;
 }
 
-/* text + contact layout */
-.cta-eyebrow {
-    margin: 0 0 6px;
+.cta-shell[data-state="toast"] {
+    width: 100%;
+    justify-content: flex-end;
+    padding-right: 20px;
+}
+
+.cta-shell[data-state="toast"] .cta-surface {
+    width: 420px;
+    transform: translateY(0);
+}
+
+.cta-shell[data-state="toast"] .cta-surface-inner {
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(150deg, rgba(99, 102, 241, 0.25), rgba(34, 197, 94, 0.22)), rgba(8, 12, 24, 0.95);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+
+.cta-shell[data-state="toast"] .cta-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px 16px 12px;
+}
+
+.cta-shell[data-state="toast"] .cta-bar-text {
+    gap: 2px;
+}
+
+.cta-shell[data-state="toast"] .cta-bar-title {
+    font-size: 15px;
+}
+
+.cta-shell[data-state="toast"] .cta-bar-sub {
+    font-size: 12px;
+}
+
+.cta-shell[data-state="toast"] .cta-bar-actions {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cta-shell[data-state="toast"] .cta-btn.primary {
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.55);
+}
+
+.cta-shell[data-state="toast"] .cta-panel {
+    display: none;
+}
+
+.cta-surface-inner {
+    background: linear-gradient(140deg, rgba(15, 23, 42, 0.95), rgba(3, 7, 18, 0.92));
+    border: 1px solid var(--cta-border);
+    border-radius: 14px 14px 10px 10px;
+    overflow: hidden;
+    color: var(--cta-text);
+}
+
+.cta-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    min-height: 56px;
+    background: rgba(3, 7, 18, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+.cta-bar-text {
+    flex: 1;
+    display: grid;
+    gap: 2px;
+}
+
+.cta-kicker {
     font-size: 11px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    opacity: 0.95;
+    color: var(--cta-muted);
 }
 
-.cta-contact {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
+.cta-bar-title {
+    font-size: 14px;
+    font-weight: 600;
 }
 
-.cta-contact-name {
-    font-size: 15px;
-    font-weight: 650;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+.cta-bar-sub {
+    font-size: 12px;
+    color: var(--cta-muted);
 }
 
-/* contact rows */
-.cta-contact-row {
+.cta-bar-actions {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 7px 12px;
+}
+
+.cta-btn {
+    border: none;
+    cursor: pointer;
     border-radius: 999px;
-    border: 1px solid rgba(248, 250, 252, 0.75);
-    background-color: rgba(15, 23, 42, 0.16);
-    text-decoration: none;
+    font-weight: 600;
+    padding: 9px 14px;
     font-size: 13px;
-    color: #fefce8;
-    backdrop-filter: blur(6px);
-    transition: transform 0.12s ease, box-shadow 0.12s ease,
-        background-color 0.12s ease, border-color 0.12s ease;
+    transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+    text-decoration: none;
 }
 
-.cta-contact-row--static {
-    cursor: default;
+.cta-btn.primary {
+    background: linear-gradient(135deg, var(--cta-accent), var(--cta-accent-2));
+    color: #0b1220;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.45);
 }
 
-.cta-contact-row:hover:not(.cta-contact-row--static) {
+.cta-btn.primary:hover {
     transform: translateY(-1px);
-    border-color: rgba(255, 255, 255, 0.9);
-    background-color: rgba(15, 23, 42, 0.24);
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.85);
+    box-shadow: 0 14px 40px rgba(99, 102, 241, 0.55);
 }
 
-.cta-contact-row:active:not(.cta-contact-row--static) {
-    transform: translateY(0);
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.7);
+.cta-btn.ghost {
+    border: 1px solid var(--cta-border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--cta-text);
 }
 
-/* icons */
-.cta-icon {
-    width: 26px;
-    height: 26px;
+.cta-btn.ghost:hover {
+    border-color: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.cta-icon-btn {
+    width: 34px;
+    height: 34px;
     border-radius: 999px;
-    display: inline-flex;
+    border: 1px solid var(--cta-border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--cta-text);
+    cursor: pointer;
+}
+
+.cta-panel {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    padding: 16px 14px 12px;
     align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle at 30% 30%, #fef9c3, #fb7185);
-    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.4);
+    border-top: 1px solid rgba(99, 102, 241, 0.25);
+    background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.08), transparent 45%), radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.08), transparent 40%), rgba(6, 11, 25, 0.96);
 }
 
-.cta-icon-glyph {
-    font-size: 14px;
+.cta-panel-copy {
+    display: grid;
+    gap: 6px;
 }
 
-.cta-contact-text {
-    white-space: nowrap;
+.cta-title {
+    font-size: 15px;
+    font-weight: 700;
 }
 
-/* animation modifiers */
-.cta-footer--fly-up {
-    animation: ctaFlyUp 0.55s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+.cta-body {
+    font-size: 13px;
+    color: var(--cta-muted);
+    margin: 0;
 }
 
-.cta-footer--drop-down {
-    animation: ctaDropDown 0.55s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+.cta-highlight {
+    color: #c7d2fe;
 }
 
-@keyframes ctaFlyUp {
-    from {
-        transform: translateY(90%);
+.cta-panel-actions {
+    display: inline-flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.cta-minimize {
+    grid-column: 1 / -1;
+    justify-self: flex-end;
+    background: none;
+    border: none;
+    color: var(--cta-muted);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.cta-shell[data-state="bar"] .cta-panel {
+    display: none;
+}
+
+.cta-shell[data-state="open"] .cta-panel {
+    display: grid;
+}
+
+.cta-shell[data-state="open"] .cta-bar {
+    border-bottom: 1px solid var(--cta-border);
+}
+
+@media (max-width: 900px) {
+    .cta-panel {
+        grid-template-columns: 1fr;
+        text-align: left;
     }
 
-    to {
-        transform: translateY(0);
+    .cta-panel-actions {
+        justify-content: flex-start;
     }
 }
 
-@keyframes ctaDropDown {
-    from {
-        transform: translateY(-90%);
+@media (max-width: 640px) {
+    .cta-shell {
+        padding: 0 8px 8px;
     }
 
-    to {
-        transform: translateY(0);
-    }
-}
-
-/* responsive */
-@media (max-width: 520px) {
-    .cta-footer-inner {
-        padding: 14px 12px 12px;
+    .cta-bar {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
-    .cta-contact-row {
+    .cta-bar-actions {
         width: 100%;
-        justify-content: center;
+        justify-content: space-between;
     }
 
-    .cta-contact-text {
-        white-space: normal;
+    .cta-panel {
+        padding-bottom: 16px;
+    }
+}
+
+@media (max-width: 720px) {
+    .cta-shell {
+        width: 100%;
+        justify-content: flex-end;
+        padding: 0 12px 10px;
+    }
+
+    .cta-surface {
+        width: min(88vw, 420px);
+    }
+
+    .cta-shell[data-state="bar"],
+    .cta-shell[data-state="open"] {
+        pointer-events: none;
+    }
+
+    .cta-shell[data-state="bar"] .cta-panel,
+    .cta-shell[data-state="open"] .cta-panel {
+        display: none;
+    }
+
+    .cta-shell[data-state="bar"] .cta-bar,
+    .cta-shell[data-state="open"] .cta-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cta-shell[data-state="bar"] {
+        display: flex;
+    }
+
+    .cta-shell {
+        justify-content: flex-end;
     }
 }

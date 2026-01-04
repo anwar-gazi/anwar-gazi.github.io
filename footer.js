@@ -1,93 +1,165 @@
 // footer.js
 class AppFooter extends HTMLElement {
-    constructor() {
-        super();
-        this._footerEl = null;
-        this._onScroll = null;
-        this._lastScrollY = 0;
-        this._dockedMode = 'bottom'; // 'bottom' or 'top'
-        this._threshold = 40;        // px from bottom
-        this._animDuration = 550;    // ms, keep in sync with CSS
-        this._initialized = false;
-    }
+  constructor() {
+    super();
+    this._initialized = false;
+    this._shell = null;
+    this._state = 'bar'; // 'bar' | 'open' | 'toast'
+    this._userCollapsed = false;
+    this._lastScrollY = 0;
+    this._onScroll = null;
+    this._onResize = null;
+  }
 
-    connectedCallback() {
-        // Avoid re-initializing if the element is re-attached
-        if (this._initialized) return;
-        this._initialized = true;
+  connectedCallback() {
+    if (this._initialized) return;
+    this._initialized = true;
 
-        // Inject the footer markup
-        this.innerHTML = `
-      <footer class="cta-footer">
-        <div class="cta-footer-inner">
-          <p class="cta-eyebrow">Let’s work together</p>
+    this._userCollapsed = sessionStorage.getItem('ctaCollapsed') === 'true';
 
-          <div class="cta-contact">
-            <div class="cta-contact-name">Minhajul Anwar</div>
+    this.innerHTML = `
+      <footer class="cta-shell" data-state="bar">
+        <div class="cta-surface">
+          <div class="cta-surface-inner">
+            <div class="cta-bar">
+              <div class="cta-bar-text">
+                <div class="cta-kicker">Let’s work together</div>
+                <div class="cta-bar-title">Open to Senior/Staff backend roles</div>
+                <div class="cta-bar-sub">14+ yrs • PHP • Go • Node • React • Remote-friendly</div>
+              </div>
+              <div class="cta-bar-actions">
+                <button class="cta-btn primary" data-action="open" type="button">Let’s talk</button>
+                <button class="cta-icon-btn" data-action="dismiss" type="button" aria-label="Hide contact bar">✕</button>
+              </div>
+            </div>
 
-            <a class="cta-contact-row" href="tel:+8801716734974">
-              <span class="cta-contact-text">+88 01716 734974</span>
-            </a>
-
-            <a class="cta-contact-row" href="mailto:minhaj.me.bd@gmail.com">
-              <span class="cta-contact-text">minhaj.me.bd@gmail.com</span>
-            </a>
+            <div class="cta-panel">
+              <div class="cta-panel-copy">
+                <div class="cta-kicker">Available now</div>
+                <div class="cta-title">Ship reliable systems together</div>
+                <p class="cta-body">Fast fixes, calm launches, pragmatic architecture. <span class="cta-highlight">Dhaka (UTC+6)</span> · Replies within 1 business day.</p>
+              </div>
+              <div class="cta-panel-actions">
+                <a class="cta-btn primary" href="mailto:minhaj.me.bd@gmail.com">Email Minhaj</a>
+                <a class="cta-btn ghost" href="tel:+8801716734974">Call / WhatsApp</a>
+              </div>
+              <button class="cta-minimize" data-action="collapse" type="button">Minimize</button>
+            </div>
           </div>
         </div>
       </footer>
     `;
 
-        this._footerEl = this.querySelector('.cta-footer');
-        if (!this._footerEl) return;
+    this._shell = this.querySelector('.cta-shell');
+    if (!this._shell) return;
 
-        this._lastScrollY = window.scrollY;
+    this._setState(this._userCollapsed ? 'toast' : 'bar');
+    this._applyResponsiveState(true);
+    this._wireEvents();
+  }
 
-        const isNearBottom = () => {
-            const scrollBottom = window.innerHeight + window.scrollY;
-            const pageHeight = document.documentElement.scrollHeight;
-            return scrollBottom >= pageHeight - this._threshold;
-        };
-
-        this._onScroll = () => {
-            const currentY = window.scrollY;
-            const direction = currentY > this._lastScrollY ? 'down' : 'up';
-            const nearBottom = isNearBottom();
-
-            // Scroll down & reach bottom → fly footer up under header
-            if (direction === 'down' && nearBottom && this._dockedMode === 'bottom') {
-                this._dockedMode = 'top';
-
-                this._footerEl.classList.remove('cta-footer--drop-down');
-                this._footerEl.classList.add('cta-footer--top', 'cta-footer--fly-up');
-
-                setTimeout(() => {
-                    this._footerEl.classList.remove('cta-footer--fly-up');
-                }, this._animDuration);
-            }
-
-            // Scroll up away from bottom → drop footer back down
-            if (direction === 'up' && !nearBottom && this._dockedMode === 'top') {
-                this._dockedMode = 'bottom';
-
-                this._footerEl.classList.remove('cta-footer--top');
-                this._footerEl.classList.add('cta-footer--drop-down');
-
-                setTimeout(() => {
-                    this._footerEl.classList.remove('cta-footer--drop-down');
-                }, this._animDuration);
-            }
-
-            this._lastScrollY = currentY;
-        };
-
-        window.addEventListener('scroll', this._onScroll, { passive: true });
+  disconnectedCallback() {
+    if (this._onScroll) {
+      window.removeEventListener('scroll', this._onScroll);
     }
-
-    disconnectedCallback() {
-        if (this._onScroll) {
-            window.removeEventListener('scroll', this._onScroll);
-        }
+    if (this._onResize) {
+      window.removeEventListener('resize', this._onResize);
     }
+  }
+
+  _wireEvents() {
+    const openBtn = this.querySelector('[data-action="open"]');
+    const collapseBtn = this.querySelector('[data-action="collapse"]');
+    const dismissBtn = this.querySelector('[data-action="dismiss"]');
+
+    if (openBtn) openBtn.addEventListener('click', () => this._openFromUser());
+    if (collapseBtn) collapseBtn.addEventListener('click', () => this._collapse(true));
+    if (dismissBtn) dismissBtn.addEventListener('click', () => this._toast());
+
+    // Hover intent on desktop
+    this._shell.addEventListener('mouseenter', () => {
+      if (this._isMobile()) return;
+      if (!this._userCollapsed) this._setState('open');
+    });
+    this._shell.addEventListener('mouseleave', () => {
+      if (this._isMobile()) return;
+      if (!this._userCollapsed) this._setState('bar');
+      if (this._userCollapsed) this._setState('toast');
+    });
+
+    this._lastScrollY = window.scrollY;
+    this._onScroll = () => {
+      if (this._isMobile()) {
+        this._setState('toast');
+        return;
+      }
+
+      const doc = document.documentElement;
+      const progress = (window.scrollY + window.innerHeight) / Math.max(doc.scrollHeight, 1);
+      const direction = window.scrollY > this._lastScrollY ? 'down' : 'up';
+      this._lastScrollY = window.scrollY;
+
+      if (!this._userCollapsed && progress > 0.72) {
+        this._setState('open');
+      } else if (direction === 'up' && progress < 0.5) {
+        this._setState('bar');
+      } else if (this._userCollapsed && this._state !== 'toast') {
+        this._setState('toast');
+      }
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+
+    this._onResize = () => this._applyResponsiveState();
+    window.addEventListener('resize', this._onResize, { passive: true });
+
+    this.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this._collapse(true);
+      }
+    });
+  }
+
+  _openFromUser() {
+    this._userCollapsed = false;
+    sessionStorage.removeItem('ctaCollapsed');
+    this._setState('open');
+  }
+
+  _collapse(userInitiated = false) {
+    if (userInitiated) {
+      this._userCollapsed = true;
+      sessionStorage.setItem('ctaCollapsed', 'true');
+    }
+    this._setState('bar');
+  }
+
+  _toast() {
+    this._userCollapsed = true;
+    sessionStorage.setItem('ctaCollapsed', 'true');
+    this._setState('toast');
+  }
+
+  _setState(next) {
+    const enforced = this._isMobile() ? 'toast' : next;
+    this._state = enforced;
+    if (this._shell) {
+      this._shell.setAttribute('data-state', enforced);
+    }
+  }
+
+  _isMobile() {
+    return window.matchMedia('(max-width: 760px)').matches;
+  }
+
+  _applyResponsiveState() {
+    if (this._isMobile()) {
+      this._setState('toast');
+      return;
+    }
+    if (!this._userCollapsed && this._state === 'toast') {
+      this._setState('bar');
+    }
+  }
 }
 
 customElements.define('app-footer', AppFooter);

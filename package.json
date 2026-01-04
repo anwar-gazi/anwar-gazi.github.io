@@ -1,0 +1,11 @@
+{
+  "name": "anwar-gazi.github.io",
+  "version": "1.0.0",
+  "description": "portfolio",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Minhajul Anwar",
+  "license": "ISC"
+}

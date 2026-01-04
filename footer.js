@@ -142,7 +142,14 @@ class AppFooter extends HTMLElement {
     const collapseBtn = this.querySelector('[data-action="collapse"]');
     const dismissBtn = this.querySelector('[data-action="dismiss"]');
 
+    const stopBubble = (el) => {
+      if (!el) return;
+      el.addEventListener('pointerdown', (e) => e.stopPropagation(), { passive: false });
+      el.addEventListener('click', (e) => e.stopPropagation());
+    };
+
     if (openBtn) {
+      stopBubble(openBtn);
       openBtn.addEventListener('click', () => {
         this._primeAudio();
         if (this._isMobile()) {
@@ -156,11 +163,18 @@ class AppFooter extends HTMLElement {
         this._openFromUser();
       });
     }
-    if (collapseBtn) collapseBtn.addEventListener('click', () => this._collapse(true));
-    if (dismissBtn) dismissBtn.addEventListener('click', () => this._toast());
+    if (collapseBtn) {
+      stopBubble(collapseBtn);
+      collapseBtn.addEventListener('click', () => this._collapse(true));
+    }
+    if (dismissBtn) {
+      stopBubble(dismissBtn);
+      dismissBtn.addEventListener('click', () => this._toast());
+    }
 
     const muteBtn = this.querySelector('[data-action="mute"]');
     if (muteBtn) {
+      stopBubble(muteBtn);
       muteBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         this._toggleMute(muteBtn);
@@ -424,6 +438,7 @@ class AppFooter extends HTMLElement {
       const hitAction = isAction(target) || path.some((n) => isAction(n));
 
       if (hitAction) {
+        if (this._incomingActive) return;
         setTimeout(() => this._resetIdleTimer(), this._actionDelay);
         return;
       }

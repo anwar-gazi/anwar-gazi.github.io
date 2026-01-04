@@ -17,6 +17,13 @@ class AppFooter extends HTMLElement {
     this._dragStart = null;
     this._hasCustomPos = false;
     this._pos = null;
+    this._progressFill = null;
+    this._idleTimer = null;
+    this._idleDelay = 45000;
+    this._lastAnimate = 0;
+    this._animateCooldown = 90000;
+    this._activityHandler = null;
+    this._chime = null;
   }
 
   connectedCallback() {
@@ -35,11 +42,11 @@ class AppFooter extends HTMLElement {
 
     this.innerHTML = `
       <footer class="cta-shell" data-state="bar">
-        <div class="cta-surface">
-          <div class="cta-surface-inner">
-            <div class="cta-bar">
-              <div class="cta-bar-text">
-                <div class="cta-kicker">Let’s work together</div>
+          <div class="cta-surface">
+            <div class="cta-surface-inner">
+              <div class="cta-bar">
+                <div class="cta-bar-text">
+                  <div class="cta-kicker">Let’s work together</div>
                 <div class="cta-bar-title">Open to Senior/Staff backend roles</div>
                 <div class="cta-bar-sub">14+ yrs • PHP • Go • Node • React • Remote-friendly</div>
               </div>
@@ -62,17 +69,27 @@ class AppFooter extends HTMLElement {
               <button class="cta-minimize" data-action="collapse" type="button">Minimize</button>
             </div>
           </div>
+          <div class="cta-sparkles" aria-hidden="true">
+            <span class="sp1"></span><span class="sp2"></span><span class="sp3"></span>
+            <span class="sp4"></span><span class="sp5"></span><span class="sp6"></span>
+          </div>
+          <div class="cta-idle-progress" aria-hidden="true">
+            <div class="cta-idle-fill"></div>
+          </div>
         </div>
       </footer>
     `;
 
     this._shell = this.querySelector('.cta-shell');
     if (!this._shell) return;
+    this._progressFill = this.querySelector('.cta-idle-fill');
 
     this._setState(this._preferredState, { persistPreferred: false });
     this._applyResponsiveState();
     this._applySavedPosition();
     this._wireEvents();
+    this._startIdleTracking();
+    this._setupAudio();
   }
 
   disconnectedCallback() {
@@ -82,6 +99,18 @@ class AppFooter extends HTMLElement {
     if (this._onResize) {
       window.removeEventListener('resize', this._onResize);
     }
+    if (this._activityHandler) {
+      window.removeEventListener('pointerdown', this._activityHandler);
+      window.removeEventListener('pointermove', this._activityHandler);
+      window.removeEventListener('touchstart', this._activityHandler);
+      window.removeEventListener('keydown', this._activityHandler);
+      window.removeEventListener('scroll', this._activityHandler);
+    }
+    if (this._idleTimer) {
+      clearTimeout(this._idleTimer);
+    }
+    this._chime = null;
+    this._progressFill = null;
   }
 
   _wireEvents() {
@@ -314,6 +343,88 @@ class AppFooter extends HTMLElement {
       left: Math.min(Math.max(0, left), maxLeft),
       top: Math.min(Math.max(0, top), maxTop),
     };
+  }
+
+  _startIdleTracking() {
+    this._activityHandler = () => this._resetIdleTimer();
+    const opts = { passive: true };
+    window.addEventListener('pointerdown', this._activityHandler, opts);
+    window.addEventListener('pointermove', this._activityHandler, opts);
+    window.addEventListener('touchstart', this._activityHandler, opts);
+    window.addEventListener('keydown', this._activityHandler, false);
+    window.addEventListener('scroll', this._activityHandler, opts);
+    this._resetIdleTimer();
+  }
+
+  _resetIdleTimer() {
+    if (this._idleTimer) clearTimeout(this._idleTimer);
+    this._idleTimer = setTimeout(() => this._maybeAnimate(), this._idleDelay);
+    this._restartIdleProgress();
+  }
+
+  _maybeAnimate() {
+    if (this._prefersReducedMotion()) return;
+    const now = Date.now();
+    if (now - this._lastAnimate < this._animateCooldown) {
+      this._resetIdleTimer();
+      return;
+    }
+    this._playAttentionAnimation();
+    this._lastAnimate = now;
+    this._resetIdleTimer();
+  }
+
+  _playAttentionAnimation() {
+    if (!this._shell) return;
+    this._shell.classList.remove('cta-animate');
+    // force reflow
+    void this._shell.offsetWidth;
+    this._shell.classList.add('cta-animate');
+    setTimeout(() => this._shell && this._shell.classList.remove('cta-animate'), 1700);
+    this._playChime();
+  }
+
+  _prefersReducedMotion() {
+    try {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  _restartIdleProgress() {
+    if (!this._progressFill) return;
+    const el = this._progressFill;
+    el.classList.remove('running');
+    el.style.animationDuration = `${this._idleDelay}ms`;
+    el.style.transform = 'scaleX(1)';
+    // force reflow
+    void el.offsetWidth;
+    el.classList.add('running');
+  }
+
+  _setupAudio() {
+    try {
+      const audio = new Audio('/cta-chime.wav');
+      audio.preload = 'auto';
+      audio.volume = 0.22;
+      this._chime = audio;
+    } catch (e) {
+      this._chime = null;
+    }
+  }
+
+  _playChime() {
+    if (!this._chime) return;
+    try {
+      this._chime.currentTime = 0;
+      const res = this._chime.play();
+      if (res && typeof res.catch === 'function') {
+        res.catch(() => {});
+      }
+    } catch (e) {
+      // ignore playback errors (e.g., autoplay restrictions)
+    }
   }
 }
 

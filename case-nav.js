@@ -28,11 +28,36 @@ class CaseNav extends HTMLElement {
     this._homeHref = new URL('index.html', this._base).href;
     this._navEl = null;
     this._toggleBtn = null;
-    this._open = !window.matchMedia('(max-width: 1100px)').matches;
+    this._floatingToggle = null;
+    this._scrim = null;
+    this._expandedWidth = 260;
+    this._collapsedWidth = 88;
+    this._mediaQuery = window.matchMedia('(max-width: 900px)');
+    this._isMobile = this._mediaQuery.matches;
+    this._open = !this._isMobile;
+    this._handleMediaChange = (event) => {
+      this._isMobile = event.matches;
+      this._open = !this._isMobile;
+      this.updateState();
+    };
   }
 
   connectedCallback() {
     this.render();
+    if (this._mediaQuery?.addEventListener) {
+      this._mediaQuery.addEventListener('change', this._handleMediaChange);
+    } else if (this._mediaQuery?.addListener) {
+      this._mediaQuery.addListener(this._handleMediaChange);
+    }
+  }
+
+  disconnectedCallback() {
+    if (this._mediaQuery?.removeEventListener) {
+      this._mediaQuery.removeEventListener('change', this._handleMediaChange);
+    } else if (this._mediaQuery?.removeListener) {
+      this._mediaQuery.removeListener(this._handleMediaChange);
+    }
+    this.resetBodyOffset();
   }
 
   render() {
@@ -40,78 +65,148 @@ class CaseNav extends HTMLElement {
     style.textContent = `
       :host {
         position: fixed;
-        top: 86px;
-        left: 12px;
+        inset: 0 auto 0 0;
         z-index: 1200;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         display: block;
-        pointer-events: auto;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
       .case-nav {
-        width: 248px;
-        background: linear-gradient(160deg, rgba(15,23,42,0.96), rgba(3,7,18,0.94));
-        border: 1px solid rgba(148, 163, 184, 0.3);
-        border-radius: 14px;
-        box-shadow: 0 18px 60px rgba(3, 7, 18, 0.65);
-        overflow: hidden;
-        backdrop-filter: blur(12px);
-        transform: translateX(0);
-        transition: transform 0.22s ease, box-shadow 0.22s ease;
+        --nav-width: 260px;
+        --nav-collapsed-width: 88px;
+        height: 100vh;
+        width: var(--nav-width);
+        background: linear-gradient(180deg, rgba(7, 11, 24, 0.96), rgba(9, 14, 30, 0.94));
+        border-right: 1px solid rgba(148, 163, 184, 0.32);
+        box-shadow: 10px 0 38px rgba(2, 6, 23, 0.5);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 12px 18px 14px;
+        transition: width 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+        backdrop-filter: blur(10px);
+        position: relative;
+        z-index: 2;
       }
 
       .case-nav.collapsed {
-        transform: translateX(calc(-100% + 48px));
+        width: var(--nav-collapsed-width);
+      }
+
+      .case-nav.is-mobile {
+        width: min(86vw, 320px);
+        box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+      }
+
+      .case-nav.is-mobile.mobile-hidden {
+        transform: translateX(-105%);
         box-shadow: none;
       }
 
-      .header {
+      .brand-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 12px 6px 14px;
         gap: 10px;
       }
 
-      .title {
-        font-size: 12px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #c7d2fe;
-        font-weight: 600;
-      }
-
-      .home-link {
-        font-size: 12px;
-        color: #e5e7eb;
-        padding: 6px 10px;
-        border-radius: 10px;
-        border: 1px solid rgba(148, 163, 184, 0.3);
-        background: rgba(148, 163, 184, 0.14);
-        text-decoration: none;
+      .brand-link {
         display: inline-flex;
-        gap: 6px;
         align-items: center;
+        gap: 10px;
+        padding: 9px 10px;
+        border-radius: 12px;
+        background: rgba(148, 163, 184, 0.12);
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        color: #e5e7eb;
+        text-decoration: none;
+        flex: 1;
+        min-width: 0;
       }
 
-      .home-link:hover {
-        border-color: rgba(99, 102, 241, 0.5);
+      .brand-link:hover {
+        border-color: rgba(99, 102, 241, 0.6);
         background: rgba(99, 102, 241, 0.12);
       }
 
+      .brand-logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #6366f1, #22d3ee);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #020617;
+        box-shadow: 0 12px 30px rgba(99, 102, 241, 0.45);
+        flex-shrink: 0;
+      }
+
+      .brand-copy {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+        gap: 2px;
+        min-width: 0;
+      }
+
+      .brand-title {
+        font-size: 13px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        font-weight: 650;
+      }
+
+      .brand-sub {
+        font-size: 11px;
+        color: #cbd5f5;
+        opacity: 0.8;
+      }
+
+      .toggle {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: linear-gradient(150deg, #0b1220, #0f172a);
+        color: #e5e7eb;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+        flex-shrink: 0;
+      }
+
+      .toggle:hover {
+        border-color: rgba(99, 102, 241, 0.65);
+      }
+
+      .section-title {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #94a3b8;
+        padding: 0 2px;
+      }
+
       .list {
-        padding: 4px 6px 10px;
-        max-height: calc(100vh - 170px);
+        flex: 1;
         overflow-y: auto;
+        padding: 6px 4px 6px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        scrollbar-gutter: stable;
       }
 
       .item {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 8px;
-        margin: 4px 0;
-        border-radius: 10px;
+        gap: 10px;
+        padding: 10px 10px;
+        border-radius: 12px;
         text-decoration: none;
         color: #e5e7eb;
         border: 1px solid transparent;
@@ -120,20 +215,20 @@ class CaseNav extends HTMLElement {
 
       .item:hover {
         background: rgba(99, 102, 241, 0.1);
-        border-color: rgba(99, 102, 241, 0.4);
+        border-color: rgba(99, 102, 241, 0.35);
         transform: translateX(2px);
       }
 
       .item.active {
         background: rgba(99, 102, 241, 0.16);
-        border-color: rgba(99, 102, 241, 0.6);
-        box-shadow: 0 10px 28px rgba(99, 102, 241, 0.12);
+        border-color: rgba(99, 102, 241, 0.55);
+        box-shadow: 0 12px 28px rgba(99, 102, 241, 0.15);
       }
 
       .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
+        width: 9px;
+        height: 9px;
+        border-radius: 10px;
         background: radial-gradient(circle at 30% 30%, #c7d2fe, #6366f1);
         flex-shrink: 0;
       }
@@ -141,12 +236,12 @@ class CaseNav extends HTMLElement {
       .label {
         flex: 1;
         font-size: 13px;
-        line-height: 1.3;
+        line-height: 1.35;
       }
 
       .tag {
-        font-size: 10px;
-        padding: 3px 7px;
+        font-size: 11px;
+        padding: 4px 7px;
         border-radius: 999px;
         background: rgba(99, 102, 241, 0.14);
         color: #cbd5f5;
@@ -154,57 +249,112 @@ class CaseNav extends HTMLElement {
         white-space: nowrap;
       }
 
-      .toggle {
-        position: absolute;
-        right: -16px;
-        top: 16px;
-        width: 32px;
-        height: 32px;
-        border-radius: 999px;
-        border: 1px solid rgba(148, 163, 184, 0.4);
-        background: linear-gradient(150deg, #0b1220, #0f172a);
+      .case-nav.collapsed .brand-copy,
+      .case-nav.collapsed .label,
+      .case-nav.collapsed .tag,
+      .case-nav.collapsed .section-title {
+        opacity: 0;
+        max-width: 0;
+        transform: translateX(-8px);
+        pointer-events: none;
+      }
+
+      .case-nav.collapsed .brand-link {
+        justify-content: center;
+        padding: 9px;
+      }
+
+      .case-nav.collapsed .item {
+        justify-content: center;
+      }
+
+      .case-nav.collapsed .item:hover {
+        transform: none;
+      }
+
+      .scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.55);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.18s ease;
+        z-index: 1;
+      }
+
+      .scrim.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .floating-toggle {
+        position: fixed;
+        top: 14px;
+        left: 14px;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.55);
+        background: linear-gradient(150deg, #0b1220, #111827);
         color: #e5e7eb;
         cursor: pointer;
-        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
-        display: inline-flex;
+        display: none;
         align-items: center;
         justify-content: center;
-        transition: transform 0.18s ease;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+        z-index: 3;
       }
 
-      .toggle:hover {
-        transform: translateX(2px);
-        border-color: rgba(99, 102, 241, 0.6);
+      .floating-toggle:hover {
+        border-color: rgba(99, 102, 241, 0.65);
       }
 
-      @media (max-width: 1100px) {
-        :host {
-          top: 68px;
-          left: 8px;
+      @media (max-width: 900px) {
+        .case-nav {
+          padding-top: 18px;
+          padding-bottom: 18px;
         }
 
-        .case-nav {
-          width: min(86vw, 300px);
+        .toggle {
+          display: none;
+        }
+
+        .floating-toggle {
+          display: inline-flex;
         }
       }
     `;
 
-    const wrapper = document.createElement('div');
+    const wrapper = document.createElement('nav');
     wrapper.className = 'case-nav';
 
-    const header = document.createElement('div');
-    header.className = 'header';
-
-    const title = document.createElement('div');
-    title.className = 'title';
-    title.textContent = 'Case Studies';
+    const brandRow = document.createElement('div');
+    brandRow.className = 'brand-row';
 
     const home = document.createElement('a');
-    home.className = 'home-link';
+    home.className = 'brand-link';
     home.href = this._homeHref;
-    home.innerHTML = '⌂ Home';
+    home.setAttribute('aria-label', 'Back to portfolio home');
+    home.innerHTML = `
+      <span class="brand-logo">⌂</span>
+      <div class="brand-copy">
+        <span class="brand-title">Case studies</span>
+        <span class="brand-sub">Portfolio home</span>
+      </div>
+    `;
 
-    header.append(title, home);
+    const toggle = document.createElement('button');
+    toggle.className = 'toggle';
+    toggle.type = 'button';
+    toggle.setAttribute('aria-label', 'Toggle case study navigation');
+    toggle.addEventListener('click', () => this.toggle());
+    toggle.textContent = '◀';
+
+    brandRow.append(home, toggle);
+
+    const sectionTitle = document.createElement('div');
+    sectionTitle.className = 'section-title';
+    sectionTitle.textContent = 'Case studies';
 
     const list = document.createElement('div');
     list.className = 'list';
@@ -217,6 +367,7 @@ class CaseNav extends HTMLElement {
       const link = document.createElement('a');
       link.className = 'item';
       link.href = item.absHref;
+      link.title = item.label;
 
       const target = new URL(item.absHref);
       const active = current === target.href || current.endsWith(target.pathname);
@@ -237,33 +388,76 @@ class CaseNav extends HTMLElement {
       list.appendChild(link);
     });
 
-    const toggle = document.createElement('button');
-    toggle.className = 'toggle';
-    toggle.type = 'button';
-    toggle.setAttribute('aria-label', 'Toggle case study navigator');
-    toggle.addEventListener('click', () => this.toggle());
-    toggle.textContent = '◀';
+    wrapper.append(brandRow, sectionTitle, list);
 
-    wrapper.append(header, list, toggle);
+    const scrim = document.createElement('div');
+    scrim.className = 'scrim';
+    scrim.addEventListener('click', () => {
+      if (this._isMobile && this._open) this.toggle(false);
+    });
+
+    const floatingToggle = document.createElement('button');
+    floatingToggle.className = 'floating-toggle';
+    floatingToggle.type = 'button';
+    floatingToggle.setAttribute('aria-label', 'Open case study navigation');
+    floatingToggle.addEventListener('click', () => this.toggle());
+    floatingToggle.textContent = '☰';
 
     this._shadow.innerHTML = '';
-    this._shadow.append(style, wrapper);
+    this._shadow.append(style, wrapper, scrim, floatingToggle);
 
     this._navEl = wrapper;
     this._toggleBtn = toggle;
+    this._floatingToggle = floatingToggle;
+    this._scrim = scrim;
     this.updateState();
   }
 
-  toggle() {
-    this._open = !this._open;
+  toggle(force) {
+    this._open = typeof force === 'boolean' ? force : !this._open;
     this.updateState();
   }
 
   updateState() {
-    if (!this._navEl || !this._toggleBtn) return;
-    this._navEl.classList.toggle('collapsed', !this._open);
+    if (!this._navEl || !this._toggleBtn || !this._floatingToggle || !this._scrim) return;
+    this._navEl.classList.toggle('collapsed', !this._open && !this._isMobile);
+    this._navEl.classList.toggle('is-mobile', this._isMobile);
+    this._navEl.classList.toggle('mobile-hidden', this._isMobile && !this._open);
+
     this._toggleBtn.setAttribute('aria-expanded', String(this._open));
+    this._toggleBtn.setAttribute('aria-label', this._open ? 'Collapse navigation' : 'Expand navigation');
     this._toggleBtn.textContent = this._open ? '◀' : '▶';
+
+    this._floatingToggle.setAttribute('aria-label', this._open ? 'Close navigation' : 'Open navigation');
+    this._floatingToggle.textContent = this._open ? '✕' : '☰';
+
+    this._scrim.classList.toggle('visible', this._isMobile && this._open);
+    this.applyBodyOffset();
+  }
+
+  applyBodyOffset() {
+    const body = document.body;
+    if (!body) return;
+
+    if (this._isMobile) {
+      body.style.paddingLeft = '0px';
+      body.style.removeProperty('--case-nav-space');
+      body.style.overflow = this._open ? 'hidden' : '';
+      return;
+    }
+
+    body.style.overflow = '';
+    const offset = this._open ? this._expandedWidth : this._collapsedWidth;
+    body.style.setProperty('--case-nav-space', `${offset}px`);
+    body.style.paddingLeft = `${offset}px`;
+  }
+
+  resetBodyOffset() {
+    const body = document.body;
+    if (!body) return;
+    body.style.removeProperty('padding-left');
+    body.style.removeProperty('--case-nav-space');
+    body.style.removeProperty('overflow');
   }
 }
 

@@ -27,6 +27,7 @@ class AppFooter extends HTMLElement {
     this._idleActive = false;
     this._idleLoopTimer = null;
     this._audioPrimed = false;
+    this._ringtonePlaying = false;
   }
 
   connectedCallback() {
@@ -118,6 +119,8 @@ class AppFooter extends HTMLElement {
       clearInterval(this._idleLoopTimer);
     }
     this._audioPrimed = false;
+    this._ringtonePlaying = false;
+    this._stopRingtone();
   }
 
   _wireEvents() {
@@ -420,7 +423,8 @@ class AppFooter extends HTMLElement {
       this._progressFill.classList.remove('running');
       this._progressFill.style.transform = 'scaleX(0)';
     }
-    this._playAttentionAnimation(true);
+    this._startRingtone();
+    this._playAttentionAnimation(false);
     this._idleLoopTimer = setInterval(() => this._playAttentionAnimation(false), 2200);
     if (this._idleTimer) {
       clearTimeout(this._idleTimer);
@@ -438,6 +442,7 @@ class AppFooter extends HTMLElement {
     if (this._shell) {
       this._shell.classList.remove('cta-animate');
     }
+    this._stopRingtone();
   }
 
   _setupAudio() {
@@ -445,6 +450,7 @@ class AppFooter extends HTMLElement {
       const audio = new Audio('/cta-chime.wav');
       audio.preload = 'auto';
       audio.volume = 0.22;
+      audio.loop = true;
       this._chime = audio;
     } catch (e) {
       this._chime = null;
@@ -479,6 +485,31 @@ class AppFooter extends HTMLElement {
       }
     } catch (e) {
       // ignore playback errors (e.g., autoplay restrictions)
+    }
+  }
+
+  _startRingtone() {
+    if (!this._chime) return;
+    try {
+      this._chime.currentTime = 0;
+      this._ringtonePlaying = true;
+      const res = this._chime.play();
+      if (res && typeof res.catch === 'function') {
+        res.catch(() => {});
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  _stopRingtone() {
+    if (!this._chime) return;
+    try {
+      this._chime.pause();
+      this._chime.currentTime = 0;
+      this._ringtonePlaying = false;
+    } catch (e) {
+      // ignore
     }
   }
 }

@@ -28,6 +28,7 @@ class AppFooter extends HTMLElement {
     this._idleLoopTimer = null;
     this._audioPrimed = false;
     this._ringtonePlaying = false;
+    this._incomingActive = false;
   }
 
   connectedCallback() {
@@ -79,6 +80,18 @@ class AppFooter extends HTMLElement {
           </div>
           <div class="cta-idle-progress" aria-hidden="true">
             <div class="cta-idle-fill"></div>
+          </div>
+          <div class="cta-incoming-overlay" aria-hidden="true">
+            <div class="incoming-wave">
+              <span class="incoming-icon">☎</span>
+            </div>
+            <div class="incoming-kicker">Incoming call</div>
+            <div class="incoming-title">Let’s work together</div>
+            <p class="incoming-sub">Minhaj is available — pick a channel to connect.</p>
+            <div class="incoming-actions">
+              <a class="cta-btn primary" href="mailto:minhaj.me.bd@gmail.com">Answer via email</a>
+              <a class="cta-btn ghost" href="tel:+8801716734974">Call / WhatsApp</a>
+            </div>
           </div>
         </div>
       </footer>
@@ -253,6 +266,14 @@ class AppFooter extends HTMLElement {
     }
   }
 
+  _removeStorage(key) {
+    try {
+      window.localStorage.removeItem(key);
+    } catch (e) {
+      // ignore
+    }
+  }
+
   _startDrag(e) {
     if (e.button !== 0 && e.pointerType === 'mouse') return;
     if (e.target.closest('button,a')) return;
@@ -355,6 +376,23 @@ class AppFooter extends HTMLElement {
     };
   }
 
+  _clearPosition(clearStorage = false) {
+    if (this._shell) {
+      this._shell.classList.remove('custom-pos');
+      this._shell.style.removeProperty('--cta-left');
+      this._shell.style.removeProperty('--cta-top');
+      this._shell.style.removeProperty('left');
+      this._shell.style.removeProperty('top');
+      this._shell.style.removeProperty('right');
+      this._shell.style.removeProperty('bottom');
+    }
+    this._hasCustomPos = false;
+    this._pos = null;
+    if (clearStorage) {
+      this._removeStorage(this._posKey);
+    }
+  }
+
   _startIdleTracking() {
     this._activityHandler = () => {
       this._primeAudio();
@@ -417,8 +455,25 @@ class AppFooter extends HTMLElement {
     el.classList.add('running');
   }
 
+  _enterIncomingMode() {
+    this._incomingActive = true;
+    this._clearPosition(true);
+    if (this._shell) {
+      this._shell.classList.add('incoming');
+    }
+  }
+
+  _exitIncomingMode() {
+    if (!this._incomingActive) return;
+    if (this._shell) {
+      this._shell.classList.remove('incoming');
+    }
+    this._incomingActive = false;
+  }
+
   _startIdleLoop() {
     this._idleActive = true;
+    this._enterIncomingMode();
     if (this._progressFill) {
       this._progressFill.classList.remove('running');
       this._progressFill.style.transform = 'scaleX(0)';
@@ -443,6 +498,8 @@ class AppFooter extends HTMLElement {
       this._shell.classList.remove('cta-animate');
     }
     this._stopRingtone();
+    this._exitIncomingMode();
+    this._incomingActive = false;
   }
 
   _setupAudio() {

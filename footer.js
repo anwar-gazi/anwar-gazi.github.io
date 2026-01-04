@@ -13,6 +13,12 @@ class AppFooter extends HTMLElement {
     this._stateKey = 'ctaState';
     this._collapsedKey = 'ctaCollapsed';
     this._posKey = 'ctaPos';
+    this._cvScriptLoading = false;
+    this._contact = {
+      email: 'minhaj.me.bd@gmail.com',
+      phoneDisplay: '+88 01716-734974',
+      phoneHref: 'tel:+8801716734974',
+    };
     this._dragging = false;
     this._dragStart = null;
     this._hasCustomPos = false;
@@ -46,6 +52,8 @@ class AppFooter extends HTMLElement {
       this._preferredState = 'toast';
     }
 
+    this._contact = this._extractContact();
+
     this.innerHTML = `
       <footer class="cta-shell" data-state="bar">
           <div class="cta-surface">
@@ -68,8 +76,8 @@ class AppFooter extends HTMLElement {
                 <p class="cta-body">Backend-focused, senior leadership available now. <span class="cta-highlight">Dhaka (UTC+6)</span> · Replies within 1 business day.</p>
               </div>
             <div class="cta-panel-actions">
-              <a class="cta-btn primary cta-action" href="mailto:minhaj.me.bd@gmail.com">Email minhaj.me.bd@gmail.com</a>
-              <a class="cta-btn ghost cta-action" href="tel:+8801716734974">Call / WhatsApp +88 01716-734974</a>
+              <a class="cta-btn primary cta-action cta-email" data-prefix="Email " href="${this._contact.email ? `mailto:${this._contact.email}` : '#'}">Email ${this._contact.email}</a>
+              <a class="cta-btn ghost cta-action cta-phone" data-prefix="Call / WhatsApp " href="${this._contact.phoneHref}">Call / WhatsApp ${this._contact.phoneDisplay}</a>
             </div>
             <button class="cta-minimize" data-action="collapse" type="button">Minimize</button>
           </div>
@@ -90,8 +98,8 @@ class AppFooter extends HTMLElement {
             <p class="incoming-sub">Minhaj is available — pick a channel to connect.</p>
             <button class="incoming-mute cta-action" type="button" aria-label="Mute ringtone" data-action="mute">🔊</button>
             <div class="incoming-actions">
-              <a class="cta-btn primary cta-action" href="mailto:minhaj.me.bd@gmail.com">Answer via email: minhaj.me.bd@gmail.com</a>
-              <a class="cta-btn ghost cta-action" href="tel:+8801716734974">Call / WhatsApp: +88 01716-734974</a>
+              <a class="cta-btn primary cta-action cta-email" data-prefix="Answer via email: " href="${this._contact.email ? `mailto:${this._contact.email}` : '#'}">Answer via email: ${this._contact.email}</a>
+              <a class="cta-btn ghost cta-action cta-phone" data-prefix="Call / WhatsApp: " href="${this._contact.phoneHref}">Call / WhatsApp: ${this._contact.phoneDisplay}</a>
             </div>
           </div>
         </div>
@@ -108,6 +116,7 @@ class AppFooter extends HTMLElement {
     this._wireEvents();
     this._startIdleTracking();
     this._setupAudio();
+    this._loadCvDataAndApply();
   }
 
   disconnectedCallback() {
@@ -141,6 +150,8 @@ class AppFooter extends HTMLElement {
     const openBtn = this.querySelector('[data-action="open"]');
     const collapseBtn = this.querySelector('[data-action="collapse"]');
     const dismissBtn = this.querySelector('[data-action="dismiss"]');
+    const emailLinks = this.querySelectorAll('.cta-email');
+    const phoneLinks = this.querySelectorAll('.cta-phone');
 
     const stopBubble = (el) => {
       if (!el) return;
@@ -180,6 +191,8 @@ class AppFooter extends HTMLElement {
         this._toggleMute(muteBtn);
       });
     }
+    emailLinks.forEach(stopBubble);
+    phoneLinks.forEach(stopBubble);
 
     // Hover intent on desktop
     this._shell.addEventListener('mouseenter', () => {
@@ -308,6 +321,76 @@ class AppFooter extends HTMLElement {
     } catch (e) {
       // ignore
     }
+  }
+
+  _extractContact() {
+    try {
+      const cv = typeof window !== 'undefined' ? window.cvData : null;
+      const contact = cv?.contact || {};
+      const email = contact.email || this._contact.email;
+      const phoneDisplay = contact.phone || contact.phoneDisplay || this._contact.phoneDisplay;
+      const phoneHref = this._normalizePhoneHref(phoneDisplay || this._contact.phoneDisplay);
+      return {
+        email,
+        phoneDisplay,
+        phoneHref,
+      };
+    } catch (_) {
+      return this._contact;
+    }
+  }
+
+  _normalizePhoneHref(phone) {
+    if (!phone) return this._contact.phoneHref;
+    const digits = phone.replace(/[^0-9+]/g, '');
+    const normalized = digits.startsWith('+') ? digits : `+${digits}`;
+    return `tel:${normalized.replace(/[^0-9+]/g, '')}`;
+  }
+
+  _loadCvDataAndApply() {
+    try {
+      if (window.cvData) {
+        this._contact = this._extractContact();
+        this._applyContact();
+        return;
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    if (this._cvScriptLoading) return;
+    this._cvScriptLoading = true;
+    const script = document.createElement('script');
+    script.src = '/cv.js';
+    script.async = true;
+    script.onload = () => {
+      this._contact = this._extractContact();
+      this._applyContact();
+    };
+    script.onerror = () => {
+      this._cvScriptLoading = false;
+    };
+    document.head.appendChild(script);
+  }
+
+  _applyContact() {
+    if (!this._shell) return;
+    const emails = this._shell.querySelectorAll('.cta-email');
+    const phones = this._shell.querySelectorAll('.cta-phone');
+    emails.forEach((el) => {
+      const prefix = el.dataset.prefix || '';
+      el.textContent = `${prefix}${this._contact.email || ''}`;
+      if (this._contact.email) {
+        el.href = `mailto:${this._contact.email}`;
+      }
+    });
+    phones.forEach((el) => {
+      const prefix = el.dataset.prefix || '';
+      el.textContent = `${prefix}${this._contact.phoneDisplay || ''}`;
+      if (this._contact.phoneHref) {
+        el.href = this._contact.phoneHref;
+      }
+    });
   }
 
   _startDrag(e) {

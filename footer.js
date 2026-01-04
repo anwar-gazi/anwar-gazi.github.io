@@ -12,6 +12,11 @@ class AppFooter extends HTMLElement {
     this._onResize = null;
     this._stateKey = 'ctaState';
     this._collapsedKey = 'ctaCollapsed';
+    this._posKey = 'ctaPos';
+    this._dragging = false;
+    this._dragStart = null;
+    this._hasCustomPos = false;
+    this._pos = null;
   }
 
   connectedCallback() {
@@ -66,6 +71,7 @@ class AppFooter extends HTMLElement {
 
     this._setState(this._preferredState, { persistPreferred: false });
     this._applyResponsiveState();
+    this._applySavedPosition();
     this._wireEvents();
   }
 
@@ -120,7 +126,13 @@ class AppFooter extends HTMLElement {
     };
     window.addEventListener('scroll', this._onScroll, { passive: true });
 
-    this._onResize = () => this._applyResponsiveState();
+    this._onResize = () => {
+      this._applyResponsiveState();
+      if (this._hasCustomPos && this._pos) {
+        const clamped = this._clampPosition(this._pos.left, this._pos.top);
+        this._setCustomPosition(clamped.left, clamped.top, { persist: true });
+      }
+    };
     window.addEventListener('resize', this._onResize, { passive: true });
 
     this.addEventListener('keydown', (e) => {
@@ -128,6 +140,11 @@ class AppFooter extends HTMLElement {
         this._collapse(true);
       }
     });
+
+    const dragHandle = this.querySelector('.cta-bar');
+    if (dragHandle) {
+      dragHandle.addEventListener('pointerdown', (e) => this._startDrag(e));
+    }
   }
 
   _openFromUser() {
@@ -195,6 +212,108 @@ class AppFooter extends HTMLElement {
     } catch (e) {
       // ignore write failures
     }
+  }
+
+  _startDrag(e) {
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    if (e.target.closest('button,a')) return;
+    if (!this._shell) return;
+
+    e.preventDefault();
+    const rect = this._shell.getBoundingClientRect();
+    const startLeft = this._hasCustomPos ? this._pos?.left ?? rect.left : rect.left;
+    const startTop = this._hasCustomPos ? this._pos?.top ?? rect.top : rect.top;
+
+    this._dragging = true;
+    this._dragStart = {
+      pointerId: e.pointerId,
+      x: e.clientX,
+      y: e.clientY,
+      left: startLeft,
+      top: startTop,
+    };
+
+    this._setCustomPosition(startLeft, startTop, { persist: false });
+
+    window.addEventListener('pointermove', this._onDragMove, { passive: false });
+    window.addEventListener('pointerup', this._endDrag, { passive: false });
+    window.addEventListener('pointercancel', this._endDrag, { passive: false });
+  }
+
+  _onDragMove = (e) => {
+    if (!this._dragging || !this._dragStart || e.pointerId !== this._dragStart.pointerId) return;
+    if (!this._shell) return;
+    e.preventDefault();
+
+    const deltaX = e.clientX - this._dragStart.x;
+    const deltaY = e.clientY - this._dragStart.y;
+
+    const { left, top } = this._clampPosition(
+      this._dragStart.left + deltaX,
+      this._dragStart.top + deltaY
+    );
+
+    this._setCustomPosition(left, top, { persist: false });
+  };
+
+  _endDrag = (e) => {
+    if (!this._dragging || !this._dragStart || e.pointerId !== this._dragStart.pointerId) return;
+    e.preventDefault();
+    this._dragging = false;
+    this._dragStart = null;
+    window.removeEventListener('pointermove', this._onDragMove);
+    window.removeEventListener('pointerup', this._endDrag);
+    window.removeEventListener('pointercancel', this._endDrag);
+    this._persistPosition();
+  };
+
+  _setCustomPosition(left, top, { persist = true } = {}) {
+    if (!this._shell) return;
+    const clamped = this._clampPosition(left, top);
+    this._pos = clamped;
+    this._hasCustomPos = true;
+
+    this._shell.classList.add('custom-pos');
+    this._shell.style.setProperty('--cta-left', `${Math.round(clamped.left)}px`);
+    this._shell.style.setProperty('--cta-top', `${Math.round(clamped.top)}px`);
+    this._shell.style.removeProperty('right');
+    this._shell.style.removeProperty('bottom');
+    this._shell.style.removeProperty('left');
+    this._shell.style.removeProperty('top');
+
+    if (persist) {
+      this._persistPosition();
+    }
+  }
+
+  _applySavedPosition() {
+    const saved = this._readStorage(this._posKey);
+    if (!saved) return;
+    try {
+      const parsed = JSON.parse(saved);
+      if (typeof parsed.left === 'number' && typeof parsed.top === 'number') {
+        this._setCustomPosition(parsed.left, parsed.top, { persist: false });
+      }
+    } catch (_) {
+      // ignore
+    }
+  }
+
+  _persistPosition() {
+    if (!this._hasCustomPos || !this._pos) return;
+    this._writeStorage(this._posKey, JSON.stringify(this._pos));
+  }
+
+  _clampPosition(left, top) {
+    const rect = this._shell?.getBoundingClientRect();
+    const width = rect?.width || 320;
+    const height = rect?.height || 120;
+    const maxLeft = Math.max(0, window.innerWidth - width);
+    const maxTop = Math.max(0, window.innerHeight - height);
+    return {
+      left: Math.min(Math.max(0, left), maxLeft),
+      top: Math.min(Math.max(0, top), maxTop),
+    };
   }
 }
 

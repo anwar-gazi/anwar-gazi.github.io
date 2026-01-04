@@ -19,7 +19,7 @@ class AppFooter extends HTMLElement {
     this._pos = null;
     this._progressFill = null;
     this._idleTimer = null;
-    this._idleDelay = 45000;
+    this._idleDelay = 15000;
     this._lastAnimate = 0;
     this._animateCooldown = 90000;
     this._activityHandler = null;

@@ -113,6 +113,10 @@
     display: none;
 }
 
+.cta-shell[data-state="toast"] .cta-close {
+    display: none;
+}
+
 .cta-shell.incoming {
     width: 100%;
     justify-content: center;

@@ -57,7 +57,7 @@ class AppFooter extends HTMLElement {
               </div>
               <div class="cta-bar-actions">
                 <button class="cta-btn primary" data-action="open" type="button">Let’s talk</button>
-                <button class="cta-icon-btn" data-action="dismiss" type="button" aria-label="Hide contact bar">✕</button>
+                <button class="cta-icon-btn cta-close" data-action="dismiss" type="button" aria-label="Hide contact bar">✕</button>
               </div>
             </div>
 

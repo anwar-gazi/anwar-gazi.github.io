@@ -24,6 +24,8 @@ class AppFooter extends HTMLElement {
     this._animateCooldown = 90000;
     this._activityHandler = null;
     this._chime = null;
+    this._idleActive = false;
+    this._idleLoopTimer = null;
   }
 
   connectedCallback() {
@@ -111,6 +113,9 @@ class AppFooter extends HTMLElement {
     }
     this._chime = null;
     this._progressFill = null;
+    if (this._idleLoopTimer) {
+      clearInterval(this._idleLoopTimer);
+    }
   }
 
   _wireEvents() {
@@ -357,6 +362,7 @@ class AppFooter extends HTMLElement {
   }
 
   _resetIdleTimer() {
+    this._stopIdleLoop();
     if (this._idleTimer) clearTimeout(this._idleTimer);
     this._idleTimer = setTimeout(() => this._maybeAnimate(), this._idleDelay);
     this._restartIdleProgress();
@@ -364,24 +370,24 @@ class AppFooter extends HTMLElement {
 
   _maybeAnimate() {
     if (this._prefersReducedMotion()) return;
+    if (this._idleActive) return;
     const now = Date.now();
     if (now - this._lastAnimate < this._animateCooldown) {
       this._resetIdleTimer();
       return;
     }
-    this._playAttentionAnimation();
+    this._startIdleLoop();
     this._lastAnimate = now;
-    this._resetIdleTimer();
   }
 
-  _playAttentionAnimation() {
+  _playAttentionAnimation(playSound = true) {
     if (!this._shell) return;
     this._shell.classList.remove('cta-animate');
     // force reflow
     void this._shell.offsetWidth;
     this._shell.classList.add('cta-animate');
     setTimeout(() => this._shell && this._shell.classList.remove('cta-animate'), 1700);
-    this._playChime();
+    if (playSound) this._playChime();
   }
 
   _prefersReducedMotion() {
@@ -401,6 +407,32 @@ class AppFooter extends HTMLElement {
     // force reflow
     void el.offsetWidth;
     el.classList.add('running');
+  }
+
+  _startIdleLoop() {
+    this._idleActive = true;
+    if (this._progressFill) {
+      this._progressFill.classList.remove('running');
+      this._progressFill.style.transform = 'scaleX(0)';
+    }
+    this._playAttentionAnimation(true);
+    this._idleLoopTimer = setInterval(() => this._playAttentionAnimation(false), 2200);
+    if (this._idleTimer) {
+      clearTimeout(this._idleTimer);
+      this._idleTimer = null;
+    }
+  }
+
+  _stopIdleLoop() {
+    if (!this._idleActive) return;
+    this._idleActive = false;
+    if (this._idleLoopTimer) {
+      clearInterval(this._idleLoopTimer);
+      this._idleLoopTimer = null;
+    }
+    if (this._shell) {
+      this._shell.classList.remove('cta-animate');
+    }
   }
 
   _setupAudio() {

@@ -88,6 +88,7 @@ class AppFooter extends HTMLElement {
             <div class="incoming-kicker">Incoming call</div>
             <div class="incoming-title">Let’s work together</div>
             <p class="incoming-sub">Minhaj is available — pick a channel to connect.</p>
+            <button class="incoming-mute cta-action" type="button" aria-label="Mute ringtone" data-action="mute">🔇</button>
             <div class="incoming-actions">
               <a class="cta-btn primary cta-action" href="mailto:minhaj.me.bd@gmail.com">Answer via email: minhaj.me.bd@gmail.com</a>
               <a class="cta-btn ghost cta-action" href="tel:+8801716734974">Call / WhatsApp: +88 01716-734974</a>
@@ -157,6 +158,14 @@ class AppFooter extends HTMLElement {
     }
     if (collapseBtn) collapseBtn.addEventListener('click', () => this._collapse(true));
     if (dismissBtn) dismissBtn.addEventListener('click', () => this._toast());
+
+    const muteBtn = this.querySelector('[data-action="mute"]');
+    if (muteBtn) {
+      muteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this._toggleMute(muteBtn);
+      });
+    }
 
     // Hover intent on desktop
     this._shell.addEventListener('mouseenter', () => {
@@ -587,6 +596,16 @@ class AppFooter extends HTMLElement {
       this._ringtonePlaying = false;
     } catch (e) {
       // ignore
+    }
+  }
+
+  _toggleMute(btn) {
+    if (!this._chime) return;
+    const muted = !this._chime.muted;
+    this._chime.muted = muted;
+    if (btn) {
+      btn.textContent = muted ? '🔈' : '🔇';
+      btn.setAttribute('aria-label', muted ? 'Unmute ringtone' : 'Mute ringtone');
     }
   }
 }

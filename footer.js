@@ -54,7 +54,6 @@ class AppFooter extends HTMLElement {
                 <div class="cta-bar-text">
                   <div class="cta-kicker">Let’s work together</div>
                 <div class="cta-bar-title">Open to Senior/Staff backend roles</div>
-                <div class="cta-bar-sub">14+ yrs • PHP • Go • Node • React • Remote-friendly</div>
               </div>
               <div class="cta-bar-actions">
                 <button class="cta-btn primary" data-action="open" type="button">Let’s talk</button>
@@ -66,7 +65,7 @@ class AppFooter extends HTMLElement {
               <div class="cta-panel-copy">
                 <div class="cta-kicker">Available now</div>
                 <div class="cta-title">Ship reliable systems together</div>
-                <p class="cta-body">Fast fixes, calm launches, pragmatic architecture. <span class="cta-highlight">Dhaka (UTC+6)</span> · Replies within 1 business day.</p>
+                <p class="cta-body">Backend-focused, senior leadership available now. <span class="cta-highlight">Dhaka (UTC+6)</span> · Replies within 1 business day.</p>
               </div>
             <div class="cta-panel-actions">
               <a class="cta-btn primary cta-action" href="mailto:minhaj.me.bd@gmail.com">Email minhaj.me.bd@gmail.com</a>

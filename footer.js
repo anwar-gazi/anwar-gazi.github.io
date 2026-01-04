@@ -29,6 +29,7 @@ class AppFooter extends HTMLElement {
     this._audioPrimed = false;
     this._ringtonePlaying = false;
     this._incomingActive = false;
+    this._actionDelay = 260;
   }
 
   connectedCallback() {
@@ -67,14 +68,14 @@ class AppFooter extends HTMLElement {
                 <div class="cta-title">Ship reliable systems together</div>
                 <p class="cta-body">Fast fixes, calm launches, pragmatic architecture. <span class="cta-highlight">Dhaka (UTC+6)</span> · Replies within 1 business day.</p>
               </div>
-              <div class="cta-panel-actions">
-                <a class="cta-btn primary" href="mailto:minhaj.me.bd@gmail.com">Email Minhaj</a>
-                <a class="cta-btn ghost" href="tel:+8801716734974">Call / WhatsApp</a>
-              </div>
-              <button class="cta-minimize" data-action="collapse" type="button">Minimize</button>
+            <div class="cta-panel-actions">
+              <a class="cta-btn primary cta-action" href="mailto:minhaj.me.bd@gmail.com">Email minhaj.me.bd@gmail.com</a>
+              <a class="cta-btn ghost cta-action" href="tel:+8801716734974">Call / WhatsApp +88 01716-734974</a>
             </div>
+            <button class="cta-minimize" data-action="collapse" type="button">Minimize</button>
           </div>
-          <div class="cta-sparkles" aria-hidden="true">
+        </div>
+        <div class="cta-sparkles" aria-hidden="true">
             <span class="sp1"></span><span class="sp2"></span><span class="sp3"></span>
             <span class="sp4"></span><span class="sp5"></span><span class="sp6"></span>
           </div>
@@ -89,8 +90,8 @@ class AppFooter extends HTMLElement {
             <div class="incoming-title">Let’s work together</div>
             <p class="incoming-sub">Minhaj is available — pick a channel to connect.</p>
             <div class="incoming-actions">
-              <a class="cta-btn primary" href="mailto:minhaj.me.bd@gmail.com">Answer via email</a>
-              <a class="cta-btn ghost" href="tel:+8801716734974">Call / WhatsApp</a>
+              <a class="cta-btn primary cta-action" href="mailto:minhaj.me.bd@gmail.com">Answer via email: minhaj.me.bd@gmail.com</a>
+              <a class="cta-btn ghost cta-action" href="tel:+8801716734974">Call / WhatsApp: +88 01716-734974</a>
             </div>
           </div>
         </div>
@@ -396,6 +397,11 @@ class AppFooter extends HTMLElement {
   _startIdleTracking() {
     this._activityHandler = () => {
       this._primeAudio();
+      const target = window.event?.target;
+      if (target && target.closest && target.closest('.cta-action')) {
+        setTimeout(() => this._resetIdleTimer(), this._actionDelay);
+        return;
+      }
       this._resetIdleTimer();
     };
     const opts = { passive: true };

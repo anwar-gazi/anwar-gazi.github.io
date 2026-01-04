@@ -113,6 +113,18 @@
     display: none;
 }
 
+.cta-shell.incoming {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+.cta-shell.incoming .cta-surface {
+    width: 100% !important;
+    max-width: none;
+}
+
 .cta-shell.incoming .cta-surface-inner,
 .cta-shell.incoming .cta-idle-progress {
     display: none;

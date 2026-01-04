@@ -68,6 +68,7 @@ class CaseNav extends HTMLElement {
         inset: 0 auto 0 0;
         z-index: 1200;
         display: block;
+        pointer-events: none;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
@@ -87,6 +88,7 @@ class CaseNav extends HTMLElement {
         backdrop-filter: blur(10px);
         position: relative;
         z-index: 2;
+        pointer-events: auto;
       }
 
       .case-nav.collapsed {
@@ -101,6 +103,7 @@ class CaseNav extends HTMLElement {
       .case-nav.is-mobile.mobile-hidden {
         transform: translateX(-105%);
         box-shadow: none;
+        pointer-events: none;
       }
 
       .brand-row {
@@ -303,6 +306,7 @@ class CaseNav extends HTMLElement {
         justify-content: center;
         box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
         z-index: 3;
+        pointer-events: auto;
       }
 
       .floating-toggle:hover {

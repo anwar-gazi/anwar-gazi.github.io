@@ -131,5 +131,11 @@
       "degree": "BSc, Mechanical Engineering",
       "period": "2007 \u2013 2012"
     }
-  ]
+  ],
+  "ctaBot": {
+    "photoSrc": "/minhaj.jpg",
+    "audioSrc": "/cta-chime.wav",
+    "audioPlay": true,
+    "idleTimeout": 15000
+  }
 }

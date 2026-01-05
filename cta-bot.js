@@ -496,6 +496,12 @@ class CtaBot extends HTMLElement {
     const phoneFromCv = cvContact.phone || cvContact.phoneDisplay || this._contact.phoneDisplay;
     const phoneHrefFromCv = this._normalizePhoneHref(phoneFromCv || this._contact.phoneDisplay);
 
+    const cvCta = cv.ctaBot || {};
+    const ctaPhoto = cvCta.photoSrc || cvCta.photo;
+    const ctaAudioSrc = cvCta.audioSrc;
+    const ctaAudioPlay = typeof cvCta.audioPlay === 'boolean' ? cvCta.audioPlay : null;
+    const ctaIdle = typeof cvCta.idleTimeout === 'number' ? cvCta.idleTimeout : null;
+
     // cvjson-priority: primary (default) or fallback
     if (this._cvPriority === 'primary') {
       this._contact = {
@@ -504,8 +510,17 @@ class CtaBot extends HTMLElement {
         phoneDisplay: phoneFromCv,
         phoneHref: phoneHrefFromCv,
       };
-      if (cv.photoSrc || cv.photo) {
-        this._photoSrc = cv.photoSrc || cv.photo;
+      if (ctaPhoto || cv.photoSrc || cv.photo) {
+        this._photoSrc = ctaPhoto || cv.photoSrc || cv.photo;
+      }
+      if (ctaAudioSrc) {
+        this._audioSrc = this._resolveUrl(ctaAudioSrc);
+      }
+      if (ctaAudioPlay !== null) {
+        this._startMuted = !ctaAudioPlay;
+      }
+      if (ctaIdle !== null && ctaIdle > 500) {
+        this._idleDelay = ctaIdle;
       }
     } else {
       // fallback: only fill missing fields
@@ -515,8 +530,17 @@ class CtaBot extends HTMLElement {
         phoneDisplay: this._contact.phoneDisplay || phoneFromCv,
         phoneHref: this._contact.phoneHref || phoneHrefFromCv,
       };
-      if (!this._hasAttrPhoto && (cv.photoSrc || cv.photo)) {
-        this._photoSrc = cv.photoSrc || cv.photo;
+      if (!this._hasAttrPhoto && (ctaPhoto || cv.photoSrc || cv.photo)) {
+        this._photoSrc = ctaPhoto || cv.photoSrc || cv.photo;
+      }
+      if (!this._audioSrc && ctaAudioSrc) {
+        this._audioSrc = this._resolveUrl(ctaAudioSrc);
+      }
+      if (ctaAudioPlay !== null && this.getAttribute('audio-play') === null) {
+        this._startMuted = !ctaAudioPlay;
+      }
+      if (ctaIdle !== null && this.getAttribute('idle-timeout') === null && ctaIdle > 500) {
+        this._idleDelay = ctaIdle;
       }
     }
 

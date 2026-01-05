@@ -19,6 +19,10 @@ class AppFooter extends HTMLElement {
     this._storagePrefix = '';
     this._hasAttrEmail = false;
     this._hasAttrPhone = false;
+    this._hasAttrPhoto = false;
+    this._cvJsPath = null;
+    this._cvData = null;
+    this._cvLoading = false;
     this._contact = {
       email: 'polarglow06@gmail.com',
       phoneDisplay: '+88 01534-303074',
@@ -128,6 +132,7 @@ class AppFooter extends HTMLElement {
     this._startIdleTracking();
     this._setupAudio();
     this._applyContactOnly();
+    this._hydrateCvIfNeeded();
   }
 
   disconnectedCallback() {
@@ -211,11 +216,17 @@ class AppFooter extends HTMLElement {
 
     const photoAttr = this.getAttribute('photo-src');
     if (photoAttr) {
+      this._hasAttrPhoto = true;
       this._photoSrc = this._resolveUrl(photoAttr);
     }
     const audioAttr = this.getAttribute('audio-src');
     if (audioAttr) {
       this._audioSrc = this._resolveUrl(audioAttr);
+    }
+
+    const cvAttr = this.getAttribute('cvjs-path');
+    if (cvAttr) {
+      this._cvJsPath = this._resolveUrl(cvAttr);
     }
 
     const playAttr = this.getAttribute('audio-play');
@@ -449,8 +460,45 @@ class AppFooter extends HTMLElement {
   }
 
   _applyContactOnly() {
-    // Contact is sourced only from attributes/defaults.
     this._contact = this._extractContact();
+    this._applyContact();
+  }
+
+  _hydrateCvIfNeeded() {
+    if (!this._cvJsPath || this._cvLoading) return;
+    this._cvLoading = true;
+    const script = document.createElement('script');
+    script.src = this._cvJsPath;
+    script.async = true;
+    script.onload = () => {
+      this._cvLoading = false;
+      const cv = typeof window !== 'undefined' ? window.cvData : globalThis?.cvData;
+      this._applyCvData(cv);
+    };
+    script.onerror = () => {
+      this._cvLoading = false;
+    };
+    document.head.appendChild(script);
+  }
+
+  _applyCvData(cv) {
+    if (!cv || typeof cv !== 'object') return;
+    this._cvData = cv;
+    const cvContact = cv.contact || {};
+    const email = this._hasAttrEmail ? this._contact.email : (cvContact.email || this._contact.email);
+    const phoneDisplay = this._hasAttrPhone ? this._contact.phoneDisplay : (cvContact.phone || cvContact.phoneDisplay || this._contact.phoneDisplay);
+    const phoneHref = this._normalizePhoneHref(phoneDisplay || this._contact.phoneDisplay);
+    this._contact = {
+      ...this._contact,
+      email,
+      phoneDisplay,
+      phoneHref,
+    };
+
+    if (!this._hasAttrPhoto && (cv.photoSrc || cv.photo)) {
+      this._photoSrc = cv.photoSrc || cv.photo;
+    }
+
     this._applyContact();
   }
 
@@ -458,6 +506,8 @@ class AppFooter extends HTMLElement {
     if (!this._shell) return;
     const emails = this._shell.querySelectorAll('.cta-email');
     const phones = this._shell.querySelectorAll('.cta-phone');
+    const photoEl = this._shell.querySelector('.incoming-photo');
+    const subEl = this._shell.querySelector('.incoming-sub');
     emails.forEach((el) => {
       const prefix = el.dataset.prefix || '';
       el.textContent = `${prefix}${this._contact.email || ''}`;
@@ -472,6 +522,14 @@ class AppFooter extends HTMLElement {
         el.href = this._contact.phoneHref;
       }
     });
+    if (photoEl && this._photoSrc) {
+      photoEl.src = this._photoSrc;
+    }
+    if (subEl && this._cvData?.shortName) {
+      subEl.textContent = `${this._cvData.shortName} is available — pick a channel to connect.`;
+    } else if (subEl && this._cvData?.name) {
+      subEl.textContent = `${this._cvData.name} is available — pick a channel to connect.`;
+    }
   }
 
   _startDrag(e) {

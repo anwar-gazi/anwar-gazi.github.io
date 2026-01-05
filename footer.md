@@ -29,6 +29,7 @@
 - `photo-src` (default `/minhaj.jpg`): Image for the incoming-call overlay.
 - `audio-src` (default resolves to `cta-chime.wav` alongside `footer.js`): Ringtone for idle/incoming mode.
 - `audio-play` (optional, boolean): Accepts only `true` or `false`. Empty/present (e.g., `audio-play`) is treated as `true`; omitting the attribute is treated as `false`.
+- `cvjs-path` (optional): Path/URL to a `cv.js` script (resolved with the same rules as other asset paths). Currently stored for future contact hydration; attributes remain the source of truth.
 - `idle-timeout` (optional, ms; default `15000`): Idle delay before triggering the incoming/animation state.
 - `drag-enabled` (optional, boolean; default `false`): Controls whether the CTA can be dragged. Accepts only `true` or `false`; any other value is treated as `false`.
 - `email` (optional): Email text + mailto link.

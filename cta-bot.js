@@ -77,6 +77,7 @@ class CtaBot extends HTMLElement {
               <div class="cta-bar">
                 <div class="cta-avatar">
                   <img class="cta-avatar-img" src="${this._photoSrc}" alt="Profile" loading="lazy" />
+                  <span class="cta-status-dot" aria-hidden="true"></span>
                 </div>
                 <div class="cta-bar-text">
                   <div class="cta-kicker">Let’s work together</div>
@@ -111,6 +112,7 @@ class CtaBot extends HTMLElement {
             <div class="cta-incoming-overlay" aria-hidden="true">
             <div class="incoming-wave">
               <img class="incoming-photo" src="${this._photoSrc}" alt="Minhaj" loading="lazy" />
+              <span class="cta-status-dot incoming" aria-hidden="true"></span>
             </div>
             <div class="incoming-kicker">Incoming call</div>
             <div class="incoming-title">Let’s work together</div>

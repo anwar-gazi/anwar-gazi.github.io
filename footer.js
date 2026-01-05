@@ -20,7 +20,8 @@ class AppFooter extends HTMLElement {
     this._hasAttrEmail = false;
     this._hasAttrPhone = false;
     this._hasAttrPhoto = false;
-    this._cvJsPath = null;
+    this._cvJsonPath = null;
+    this._cvPriority = 'primary';
     this._cvData = null;
     this._cvLoading = false;
     this._contact = {
@@ -224,9 +225,15 @@ class AppFooter extends HTMLElement {
       this._audioSrc = this._resolveUrl(audioAttr);
     }
 
-    const cvAttr = this.getAttribute('cvjs-path');
-    if (cvAttr) {
-      this._cvJsPath = this._resolveUrl(cvAttr);
+    const cvJsonAttr = this.getAttribute('cvjson-src');
+    if (cvJsonAttr) {
+      this._cvJsonPath = this._resolveUrl(cvJsonAttr);
+    }
+
+    const cvPriorityAttr = this.getAttribute('cvjson-priority');
+    if (cvPriorityAttr !== null) {
+      const val = (cvPriorityAttr || '').trim().toLowerCase();
+      this._cvPriority = val === 'fallback' ? 'fallback' : 'primary';
     }
 
     const playAttr = this.getAttribute('audio-play');
@@ -465,38 +472,49 @@ class AppFooter extends HTMLElement {
   }
 
   _hydrateCvIfNeeded() {
-    if (!this._cvJsPath || this._cvLoading) return;
+    if (!this._cvJsonPath || this._cvLoading) return;
     this._cvLoading = true;
-    const script = document.createElement('script');
-    script.src = this._cvJsPath;
-    script.async = true;
-    script.onload = () => {
-      this._cvLoading = false;
-      const cv = typeof window !== 'undefined' ? window.cvData : globalThis?.cvData;
-      this._applyCvData(cv);
-    };
-    script.onerror = () => {
-      this._cvLoading = false;
-    };
-    document.head.appendChild(script);
+    fetch(this._cvJsonPath, { credentials: 'same-origin' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((cv) => {
+        this._cvLoading = false;
+        if (cv) this._applyCvData(cv);
+      })
+      .catch(() => {
+        this._cvLoading = false;
+      });
   }
 
   _applyCvData(cv) {
     if (!cv || typeof cv !== 'object') return;
     this._cvData = cv;
     const cvContact = cv.contact || {};
-    const email = this._hasAttrEmail ? this._contact.email : (cvContact.email || this._contact.email);
-    const phoneDisplay = this._hasAttrPhone ? this._contact.phoneDisplay : (cvContact.phone || cvContact.phoneDisplay || this._contact.phoneDisplay);
-    const phoneHref = this._normalizePhoneHref(phoneDisplay || this._contact.phoneDisplay);
-    this._contact = {
-      ...this._contact,
-      email,
-      phoneDisplay,
-      phoneHref,
-    };
+    const emailFromCv = cvContact.email || this._contact.email;
+    const phoneFromCv = cvContact.phone || cvContact.phoneDisplay || this._contact.phoneDisplay;
+    const phoneHrefFromCv = this._normalizePhoneHref(phoneFromCv || this._contact.phoneDisplay);
 
-    if (!this._hasAttrPhoto && (cv.photoSrc || cv.photo)) {
-      this._photoSrc = cv.photoSrc || cv.photo;
+    // cvjson-priority: primary (default) or fallback
+    if (this._cvPriority === 'primary') {
+      this._contact = {
+        ...this._contact,
+        email: emailFromCv,
+        phoneDisplay: phoneFromCv,
+        phoneHref: phoneHrefFromCv,
+      };
+      if (cv.photoSrc || cv.photo) {
+        this._photoSrc = cv.photoSrc || cv.photo;
+      }
+    } else {
+      // fallback: only fill missing fields
+      this._contact = {
+        ...this._contact,
+        email: this._contact.email || emailFromCv,
+        phoneDisplay: this._contact.phoneDisplay || phoneFromCv,
+        phoneHref: this._contact.phoneHref || phoneHrefFromCv,
+      };
+      if (!this._hasAttrPhoto && (cv.photoSrc || cv.photo)) {
+        this._photoSrc = cv.photoSrc || cv.photo;
+      }
     }
 
     this._applyContact();

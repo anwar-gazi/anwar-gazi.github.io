@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minhajul Anwar – Portfolio</title>
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="icon" sizes="192x192" href="/shortcut.png" type="image/png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0d0f14;
+      color: #e5e7eb;
+    }
+    a { color: inherit; text-decoration: none; }
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px 48px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 960px) { .page { grid-template-columns: 1fr; } }
+    .card {
+      background: linear-gradient(145deg, #161922, #12141c);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    }
+    .sidebar { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+    .avatar-box {
+      width: 110px; height: 110px; border-radius: 22px; overflow: hidden;
+      position: relative; border: 3px solid rgba(245, 184, 74, 0.35); margin: 0 auto;
+    }
+    .status-dot {
+      width: 10px; height: 10px; border-radius: 50%; background: #34d399;
+      position: absolute; bottom: 10px; right: 10px; border: 2px solid #12141c;
+    }
+    .sidebar h1 { text-align: center; margin: 10px 0 4px; font-size: 20px; font-weight: 600; color: #fff; }
+    .sidebar .role { text-align: center; font-size: 13px; color: #cbd5e1; }
+    .divider { border: none; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 12px 0; }
+    .contact-item { display: flex; gap: 12px; align-items: center; padding: 10px 0; }
+    .contact-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 2px; }
+    .contact-value { font-size: 13px; color: #e5e7eb; word-break: break-word; }
+    .socials { display: flex; justify-content: center; gap: 10px; font-size: 13px; color: #cbd5e1; }
+    .main-card { padding: 20px; }
+    .tabs { display: flex; gap: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 16px; }
+    .tab-btn { background: none; border: none; padding: 10px 6px; color: #cbd5e1; font-size: 14px; border-bottom: 2px solid transparent; cursor: pointer; }
+    .tab-btn.active { color: #f5b84a; border-color: #f5b84a; }
+    .section-title { font-size: 22px; font-weight: 600; color: #fff; margin: 0 0 10px; }
+    .about-text { color: #d1d5db; line-height: 1.6; font-size: 14px; margin: 0 0 14px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+    .service-card { border-radius: 14px; padding: 14px; background: linear-gradient(145deg, #1a1d26, #161922); border: 1px solid rgba(255, 255, 255, 0.04); }
+    .service-card h4 { margin: 0 0 6px; color: #fff; font-size: 15px; font-weight: 600; }
+    .service-card p { margin: 0; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
+    .skills-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .skill-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 12px; padding: 12px; }
+    .skill-card h5 { margin: 0 0 8px; color: #fff; font-size: 14px; font-weight: 600; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #e5e7eb; padding: 4px 8px; border-radius: 999px; font-size: 12px; }
+    .timeline {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding-left: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, #f5b84a, rgba(245, 184, 74, 0.2));
+    }
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 14px 1fr;
+      column-gap: 10px;
+      align-items: flex-start;
+      padding: 0 0 2px 0;
+    }
+    .timeline-item::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f5b84a;
+      box-shadow: 0 0 0 4px rgba(245, 184, 74, 0.15);
+      grid-column: 1;
+      margin-top: 6px;
+    }
+    .timeline-item > * {
+      grid-column: 2;
+    }
+    .timeline-header { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+    .timeline-title { margin: 0; color: #fff; font-size: 15px; font-weight: 600; }
+    .timeline-sub { margin: 2px 0 0; color: #cbd5e1; font-size: 12px; }
+    .timeline-period { background: rgba(255, 255, 255, 0.05); color: #e5e7eb; font-size: 11px; padding: 4px 8px; border-radius: 8px; flex-shrink: 0; }
+    .timeline-bullets { margin: 10px 0 0; padding-left: 14px; color: #d1d5db; font-size: 13px; line-height: 1.5; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Sidebar -->
+    <aside class="card sidebar">
+      <div class="avatar-box">
+        <img src="../minhaj.jpg" alt="Minhajul Anwar" style="width: 100%; height: 100%; object-fit: cover;">
+        <span class="status-dot"></span>
+      </div>
+      <h1 id="side-name">Minhajul Anwar</h1>
+      <p id="side-title" class="role">Senior Backend / Full-Stack Engineer</p>
+      <hr class="divider">
+      <div class="contact-item">
+        <span style="color:#f5b84a;">✉️</span>
+        <div>
+          <div class="contact-label">Email</div>
+          <a class="contact-value" href="mailto:minhaj.me.bd@gmail.com">minhaj.me.bd@gmail.com</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span style="color:#f5b84a;">📞</span>
+        <div>
+          <div class="contact-label">Phone</div>
+          <a class="contact-value" href="tel:+8801716734974">+88 01716-734974</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span style="color:#f5b84a;">📍</span>
+        <div>
+          <div class="contact-label">Location</div>
+          <div id="side-location" class="contact-value">Dhaka, Bangladesh</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="socials">
+        <a href="https://github.com/anwar-gazi" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="/portfolio" target="_blank" rel="noreferrer">Portfolio</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="card main-card">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="about">About</button>
+        <button class="tab-btn" data-tab="resume">Resume</button>
+        <button class="tab-btn" data-tab="portfolio">Portfolio</button>
+      </div>
+
+      <!-- About -->
+      <section data-page="about" class="space-y-6">
+        <div>
+          <h2 class="section-title">About Me</h2>
+          <p class="about-text">
+            Senior software engineer with ~8+ years designing, building, and debugging production systems across fintech,
+            GovTech, logistics, and digital media. Backend-focused (Node.js, PHP/Laravel, Python) with modern frontends
+            (React/Next.js, Vue), strong SQL foundations, payment integrations, multi-tenant SaaS, and production hardening
+            via caching, observability mindset, and secure integrations.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="section-title" style="font-size: 18px;">What I'm Doing</h3>
+          <div class="grid-2">
+            <div class="service-card">
+              <div style="display:flex; gap:12px;">
+                <div style="font-size:18px; color:#f5b84a;">💻</div>
+                <div>
+                  <h4>FinTech & payments</h4>
+                  <p>Hands-on delivery across this domain.</p>
+                </div>
+              </div>
+            </div>
+            <div class="service-card">
+              <div style="display:flex; gap:12px;">
+                <div style="font-size:18px; color:#f5b84a;">🧭</div>
+                <div>
+                  <h4>GovTech & public-sector SaaS</h4>
+                  <p>Hands-on delivery across this domain.</p>
+                </div>
+              </div>
+            </div>
+            <div class="service-card">
+              <div style="display:flex; gap:12px;">
+                <div style="font-size:18px; color:#f5b84a;">🛠️</div>
+                <div>
+                  <h4>Digital media & publishing</h4>
+                  <p>Hands-on delivery across this domain.</p>
+                </div>
+              </div>
+            </div>
+            <div class="service-card">
+              <div style="display:flex; gap:12px;">
+                <div style="font-size:18px; color:#f5b84a;">📈</div>
+                <div>
+                  <h4>Logistics & freight forwarding</h4>
+                  <p>Hands-on delivery across this domain.</p>
+                </div>
+              </div>
+            </div>
+            <div class="service-card">
+              <div style="display:flex; gap:12px;">
+                <div style="font-size:18px; color:#f5b84a;">🔒</div>
+                <div>
+                  <h4>Telephony/IVR</h4>
+                  <p>Hands-on delivery across this domain.</p>
+                </div>
+              </div>
+            </div>
+            <div class="service-card">
+              <div style="display:flex; gap:12px;">
+                <div style="font-size:18px; color:#f5b84a;">⚡</div>
+                <div>
+                  <h4>Healthcare operations</h4>
+                  <p>Hands-on delivery across this domain.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="section-title" style="font-size: 18px;">Skills</h3>
+          <div class="skills-wrap">
+            <div class="skill-card">
+              <h5>Backend</h5>
+              <div class="skill-tags">
+                <span class="tag">Node.js (Express/microservice-style APIs)</span>
+                <span class="tag">PHP (Laravel)</span>
+                <span class="tag">Python (Django, Flask)</span>
+                <span class="tag">REST APIs</span>
+                <span class="tag">Background jobs & webhooks</span>
+                <span class="tag">Secure integrations</span>
+                <span class="tag">Async workflows</span>
+              </div>
+            </div>
+            <div class="skill-card">
+              <h5>Frontend</h5>
+              <div class="skill-tags">
+                <span class="tag">React</span>
+                <span class="tag">Next.js</span>
+                <span class="tag">Vue.js</span>
+                <span class="tag">TypeScript/JavaScript (ES6+)</span>
+                <span class="tag">HTML5/CSS3</span>
+                <span class="tag">Responsive layouts</span>
+                <span class="tag">SPA dashboards</span>
+              </div>
+            </div>
+            <div class="skill-card">
+              <h5>Data</h5>
+              <div class="skill-tags">
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">MySQL</span>
+                <span class="tag">MongoDB (working proficiency)</span>
+                <span class="tag">Redis</span>
+                <span class="tag">Schema design & migrations</span>
+                <span class="tag">Indexes & query optimization</span>
+                <span class="tag">Reporting queries</span>
+                <span class="tag">Multi-tenant data patterns</span>
+              </div>
+            </div>
+            <div class="skill-card">
+              <h5>Messaging</h5>
+              <div class="skill-tags">
+                <span class="tag">Kafka</span>
+                <span class="tag">RabbitMQ</span>
+                <span class="tag">Payment gateways</span>
+                <span class="tag">Twilio</span>
+                <span class="tag">Asterisk</span>
+                <span class="tag">3rd-party APIs, webhooks/callbacks</span>
+              </div>
+            </div>
+            <div class="skill-card">
+              <h5>Architecture</h5>
+              <div class="skill-tags">
+                <span class="tag">Monoliths and microservice-style backends</span>
+                <span class="tag">Multi-tenant SaaS</span>
+                <span class="tag">Docker/Docker Compose</span>
+                <span class="tag">Linux (CentOS/Debian)</span>
+                <span class="tag">Nginx</span>
+                <span class="tag">Git/GitHub</span>
+                <span class="tag">CI-friendly workflows</span>
+              </div>
+            </div>
+            <div class="skill-card">
+              <h5>Quality</h5>
+              <div class="skill-tags">
+                <span class="tag">Defensive coding for payments/GovTech</span>
+                <span class="tag">Input validation</span>
+                <span class="tag">OWASP basics</span>
+                <span class="tag">Secure secret handling</span>
+                <span class="tag">Log-driven debugging</span>
+                <span class="tag">Code review & refactoring</span>
+              </div>
+            </div>
+            <div class="skill-card">
+              <h5>Ways of Working</h5>
+              <div class="skill-tags">
+                <span class="tag">System design & architecture discussions</span>
+                <span class="tag">Mentoring and code review</span>
+                <span class="tag">Agile/Scrum</span>
+                <span class="tag">Collaborating with product and non-technical stakeholders</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Portfolio -->
+      <section data-page="portfolio" class="space-y-6 hidden">
+        <div>
+          <h3 class="section-title" style="font-size: 18px;">
+            <a href="/portfolio/index.html" target="_blank" rel="noreferrer" style="color: inherit; text-decoration: none;">Portfolio ↗</a>
+          </h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">AmiProbashi – Migrant Services Platform</p>
+                  <p class="timeline-sub">GovTech • National migrant services SaaS</p>
+                </div>
+                <span class="timeline-period">Senior Software Engineer • 2025</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/amiprobashi/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">Multi-tenant News CMS (DoptorITMart)</p>
+                  <p class="timeline-sub">Media CMS • Next.js + Laravel</p>
+                </div>
+                <span class="timeline-period">2023 – 2025 • Dhaka, Bangladesh</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/dailyniropekkho_doptorit/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">ShurjoPay – Gateway Reliability</p>
+                  <p class="timeline-sub">Fintech • Payment gateway stability</p>
+                </div>
+                <span class="timeline-period">Software Engineer • 2022</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/shurjopay/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">ShurjoPay – Brac Bank COF</p>
+                  <p class="timeline-sub">Fintech • Card-on-file incident fix</p>
+                </div>
+                <span class="timeline-period">Software Engineer • 2022</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/shurjopay/shurjopay_bracbank_cof_case_study.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">CPC/CPA/CPM Bid Prediction (SulacoTec)</p>
+                  <p class="timeline-sub">AdTech • Bidding prediction platform</p>
+                </div>
+                <span class="timeline-period">Senior Software Engineer • 2023 – 2024</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/sulacotec/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">Freight Operations Portal (OneIXchange)</p>
+                  <p class="timeline-sub">Logistics • Freight workflow portal</p>
+                </div>
+                <span class="timeline-period">Senior Software Engineer • 2018 – 2019</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/freightforwarding_oneixchange/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">Healthcare Plan Operations (MS Concitus)</p>
+                  <p class="timeline-sub">Healthcare • Plan ops tooling</p>
+                </div>
+                <span class="timeline-period">Senior Software Engineer • 2017 – 2021</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/healthcare/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">Twilio + Asterisk IVR Automation</p>
+                  <p class="timeline-sub">Telephony • IVR automation</p>
+                </div>
+                <span class="timeline-period">Telephony/IVR Experience • 2016 – 2021</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/telephony/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">eBay Inventory & Packing Automation</p>
+                  <p class="timeline-sub">Ecommerce • Ops automation</p>
+                </div>
+                <span class="timeline-period">Dropshipping Client • 2014 – 2016</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/dropshipping/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">IIG Ticketing & Notifications Prototype</p>
+                  <p class="timeline-sub">Infrastructure • Ticketing prototype</p>
+                </div>
+                <span class="timeline-period">IIG Tools • 2012 – 2014</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/IIG/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">Notion-Clone – Login RCA</p>
+                  <p class="timeline-sub">RCA • NextAuth login issue</p>
+                </div>
+                <span class="timeline-period">Independent Project • 2025</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/projects/notion-clone-login-issue.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">Zustand Migration – Re-render Analysis</p>
+                  <p class="timeline-sub">RCA • React state rerenders</p>
+                </div>
+                <span class="timeline-period">January 2026</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/projects/zustand-migration-rerender-analysis.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">BoardContext → Zustand Migration Docs</p>
+                  <p class="timeline-sub">Docs • State mgmt migration</p>
+                </div>
+                <span class="timeline-period">State Management Refactor • 2026</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/projects/zustand-migration-docs.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">TaskPane Flicker Investigation</p>
+                  <p class="timeline-sub">Next.js UI flicker analysis</p>
+                </div>
+                <span class="timeline-period">Rendering RCA • 2026</span>
+              </div>
+              <div style="margin-top:8px;">
+                <a href="/portfolio/projects/taskpane-flicker-investigation.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Resume -->
+      <section data-page="resume" class="space-y-6 hidden">
+        <div>
+          <h3 class="section-title" style="font-size: 18px;">Experience</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">Senior Software Engineer</p>
+                  <p class="timeline-sub">AmiProbashi (BanglaTrac Group) · Dhaka, Bangladesh</p>
+                </div>
+                <span class="timeline-period">2025</span>
+              </div>
+              <ul class="timeline-bullets">
+                <li>Delivered critical fixes and features for a national migrant GovTech SaaS (~7M records) in Laravel/Vue/MySQL.</li>
+                <li>Stabilised core workflows and protected a multi-year government revenue channel.</li>
+              </ul>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">Senior Software Engineer</p>
+                  <p class="timeline-sub">Doptor Ltd · Dhaka, Bangladesh</p>
+                </div>
+                <span class="timeline-period">2023 – 2025</span>
+              </div>
+              <ul class="timeline-bullets">
+                <li>Led development of a multi-tenant news portal SaaS using Next.js, TypeScript, Laravel, MongoDB, and MySQL.</li>
+                <li>Launched multiple media tenants and streamlined go-live for new publishers.</li>
+              </ul>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">Senior Software Engineer</p>
+                  <p class="timeline-sub">ShurjoPay Ltd. (Payment Gateway) · Dhaka, Bangladesh</p>
+                </div>
+                <span class="timeline-period">2022</span>
+              </div>
+              <ul class="timeline-bullets">
+                <li>Resolved a critical payment gateway failure in a PHP/Laravel/Vue/MySQL platform.</li>
+                <li>Restored stable card-on-file payments and enabled growth in customer acquisition and partner trust.</li>
+              </ul>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">Software Engineer</p>
+                  <p class="timeline-sub">Concitus.com · Dhaka, Bangladesh</p>
+                </div>
+                <span class="timeline-period">2017 – 2020</span>
+              </div>
+              <ul class="timeline-bullets">
+                <li>Built logistics, healthcare, and IVR systems including a freight forwarding portal (Django/React/PostgreSQL).</li>
+                <li>Delivered Twilio/Asterisk IVR flows that reduced manual support workload.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 class="section-title" style="font-size: 18px;">Education</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-header">
+                <div>
+                  <p class="timeline-title">BSc, Mechanical Engineering</p>
+                  <p class="timeline-sub">Bangladesh University of Engineering and Technology (BUET) · Dhaka, Bangladesh</p>
+                </div>
+                <span class="timeline-period">2007 – 2012</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer style="text-align:center; font-size:10px; opacity:0.25; margin:12px 0;">
+    Static snapshot (pre-rendered) · <a href="/index.html" style="color:inherit;">Hydrated version</a>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = document.querySelectorAll('.tab-btn');
+      const pages = document.querySelectorAll('[data-page]');
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          buttons.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          pages.forEach((p) => p.classList.add('hidden'));
+          const page = document.querySelector(`[data-page="${btn.dataset.tab}"]`);
+          if (page) page.classList.remove('hidden');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

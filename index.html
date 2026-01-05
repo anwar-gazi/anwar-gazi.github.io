@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minhajul Anwar – Portfolio</title>
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="icon" sizes="192x192" href="/shortcut.png" type="image/png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -63,10 +66,45 @@
     .skill-card h5 { margin: 0 0 8px; color: #fff; font-size: 14px; font-weight: 600; }
     .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .tag { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #e5e7eb; padding: 4px 8px; border-radius: 999px; font-size: 12px; }
-    .timeline { position: relative; padding-left: 18px; }
-    .timeline::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, #f5b84a, rgba(245, 184, 74, 0.2)); }
-    .timeline-item { position: relative; padding: 0 0 16px 0; }
-    .timeline-dot { position: absolute; left: -2px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #f5b84a; box-shadow: 0 0 0 4px rgba(245, 184, 74, 0.15); }
+    .timeline {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding-left: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, #f5b84a, rgba(245, 184, 74, 0.2));
+    }
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 14px 1fr;
+      column-gap: 10px;
+      align-items: flex-start;
+      padding: 0 0 2px 0;
+    }
+    .timeline-item::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f5b84a;
+      box-shadow: 0 0 0 4px rgba(245, 184, 74, 0.15);
+      grid-column: 1;
+      margin-top: 6px;
+    }
+    .timeline-item > * {
+      grid-column: 2;
+    }
     .timeline-header { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
     .timeline-title { margin: 0; color: #fff; font-size: 15px; font-weight: 600; }
     .timeline-sub { margin: 2px 0 0; color: #cbd5e1; font-size: 12px; }
@@ -83,28 +121,28 @@
         <img src="../minhaj.jpg" alt="Minhajul Anwar" style="width: 100%; height: 100%; object-fit: cover;">
         <span class="status-dot"></span>
       </div>
-      <h1 id="side-name">Minhajul Anwar</h1>
-      <p id="side-title" class="role">Senior Backend / Full-Stack Engineer</p>
+      <h1 id="side-name"></h1>
+      <p id="side-title" class="role"></p>
       <hr class="divider">
       <div class="contact-item">
         <span style="color:#f5b84a;">✉️</span>
         <div>
           <div class="contact-label">Email</div>
-          <a id="side-email" href="#" class="contact-value">minhaj.me.bd@gmail.com</a>
+          <a id="side-email" class="contact-value" href="#"></a>
         </div>
       </div>
       <div class="contact-item">
         <span style="color:#f5b84a;">📞</span>
         <div>
           <div class="contact-label">Phone</div>
-          <a id="side-phone" href="#" class="contact-value">+88 01716-734974</a>
+          <a id="side-phone" class="contact-value" href="#"></a>
         </div>
       </div>
       <div class="contact-item">
         <span style="color:#f5b84a;">📍</span>
         <div>
           <div class="contact-label">Location</div>
-          <div id="side-location" class="contact-value">Dhaka, Bangladesh</div>
+          <div id="side-location" class="contact-value"></div>
         </div>
       </div>
       <hr class="divider">
@@ -146,7 +184,7 @@
           <h3 class="section-title" style="font-size: 18px;">
             <a href="/portfolio/index.html" target="_blank" rel="noreferrer" style="color: inherit; text-decoration: none;">Portfolio ↗</a>
           </h3>
-          <div class="timeline" id="portfolio-list"></div>
+          <div id="portfolio-list" class="timeline"></div>
         </div>
       </section>
 
@@ -154,200 +192,62 @@
       <section data-page="resume" class="space-y-6 hidden">
         <div>
           <h3 class="section-title" style="font-size: 18px;">Experience</h3>
-          <div class="timeline" id="experience"></div>
+          <div id="experience" class="timeline"></div>
         </div>
         <div>
           <h3 class="section-title" style="font-size: 18px;">Education</h3>
-          <div class="timeline" id="education"></div>
+          <div id="education" class="timeline"></div>
         </div>
       </section>
     </main>
   </div>
 
-  <script src="../cv.js"></script>
+  <footer style="text-align:center; font-size:10px; opacity:0.25; margin:12px 0;">
+    Hydrated version · <a href="/index.static.html" style="color:inherit;">Static snapshot</a>
+  </footer>
+
   <script>
-    const getCv = () => { try { return window.cvData; } catch (_) { return null; } };
-    let tabsInitialized = false;
+    (function () {
+      const needsTranspile = () => {
+        try {
+          new Function('const x={y:{z:1}}; return x?.y?.z === 1;')();
+          if (typeof fetch !== 'function') return true;
+          return false;
+        } catch (_) {
+          return true;
+        }
+      };
 
-    const setContact = (cv) => {
-      const c = cv?.contact || {};
-      const phone = c.phone || '+88 01716-734974';
-      const email = c.email || 'minhaj.me.bd@gmail.com';
-      const loc = c.location || 'Dhaka, Bangladesh';
-      const phoneHref = 'tel:' + phone.replace(/[^0-9+]/g, '').replace(/^\+?/, '+');
-      document.getElementById('side-name').textContent = cv?.name || 'Minhajul Anwar';
-      document.getElementById('side-title').textContent = cv?.title || 'Senior Backend / Full-Stack Engineer';
-      const e = document.getElementById('side-email'); e.textContent = email; e.href = `mailto:${email}`;
-      const p = document.getElementById('side-phone'); p.textContent = phone; p.href = phoneHref;
-      document.getElementById('side-location').textContent = loc;
-      document.getElementById('side-github').href = c.links?.github || 'https://github.com/anwar-gazi';
-      document.getElementById('side-portfolio').href = c.links?.portfolio || 'https://anwar-gazi.github.io';
-    };
+      const runModern = () => {
+        const s = document.createElement('script');
+        s.src = '/hydrate.js';
+        s.defer = true;
+        document.head.appendChild(s);
+      };
 
-    const renderSummary = (cv) => { document.getElementById('summary').textContent = cv?.summary || ''; };
-
-    const renderDomains = (cv) => {
-      const wrap = document.getElementById('domains');
-      wrap.innerHTML = '';
-      (cv?.domains || []).forEach((d, idx) => {
-        const card = document.createElement('div');
-        card.className = 'service-card';
-        const icon = ['💻','🧭','🛠️','📈','🔒','⚡'][idx % 6];
-        card.innerHTML = `
-          <div style="display:flex; gap:12px;">
-            <div style="font-size:18px; color:#f5b84a;">${icon}</div>
-            <div>
-              <h4>${d}</h4>
-              <p>Hands-on delivery across this domain.</p>
-            </div>
-          </div>
-        `;
-        wrap.appendChild(card);
-      });
-    };
-
-    const renderSkills = (cv) => {
-      const container = document.getElementById('skills');
-      container.innerHTML = '';
-      Object.entries(cv?.skills || {}).forEach(([group, items]) => {
-        const card = document.createElement('div');
-        card.className = 'skill-card';
-        card.innerHTML = `
-          <h5>${group.replace(/([A-Z])/g, ' $1').trim()}</h5>
-          <div class="skill-tags">
-            ${(items || []).map(i => `<span class="tag">${i}</span>`).join('')}
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    };
-
-    const renderTimeline = (entries, containerId) => {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-      entries.forEach((item) => {
-        const row = document.createElement('div');
-        row.className = 'timeline-item';
-        row.innerHTML = `
-          <span class="timeline-dot"></span>
-          <div class="timeline-header">
-            <div>
-              <p class="timeline-title">${item.title || item.degree || ''}</p>
-              <p class="timeline-sub">${item.company || item.school || ''}${item.location ? ' · ' + item.location : ''}</p>
-            </div>
-            <span class="timeline-period">${item.period || ''}</span>
-          </div>
-          ${item.bullets ? `<ul class="timeline-bullets">${item.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ''}
-        `;
-        container.appendChild(row);
-      });
-    };
-
-    const portfolioItems = [
-      { title: 'AmiProbashi – Migrant Services Platform', link: '/portfolio/amiprobashi/index.html', period: 'Senior Software Engineer • 2025', blurb: 'GovTech • National migrant services SaaS' },
-      { title: 'Multi-tenant News CMS (DoptorITMart)', link: '/portfolio/dailyniropekkho_doptorit/index.html', period: '2023 – 2025 • Dhaka, Bangladesh', blurb: 'Media CMS • Next.js + Laravel' },
-      { title: 'ShurjoPay – Gateway Reliability', link: '/portfolio/shurjopay/index.html', period: 'Software Engineer • 2022', blurb: 'Fintech • Payment gateway stability' },
-      { title: 'ShurjoPay – Brac Bank COF', link: '/portfolio/shurjopay/shurjopay_bracbank_cof_case_study.html', period: 'Software Engineer • 2022', blurb: 'Fintech • Card-on-file incident fix' },
-      { title: 'CPC/CPA/CPM Bid Prediction (SulacoTec)', link: '/portfolio/sulacotec/index.html', period: 'Senior Software Engineer • 2023 – 2024', blurb: 'AdTech • Bidding prediction platform' },
-      { title: 'Freight Operations Portal (OneIXchange)', link: '/portfolio/freightforwarding_oneixchange/index.html', period: 'Senior Software Engineer • 2018 – 2019', blurb: 'Logistics • Freight workflow portal' },
-      { title: 'Healthcare Plan Operations (MS Concitus)', link: '/portfolio/healthcare/index.html', period: 'Senior Software Engineer • 2017 – 2021', blurb: 'Healthcare • Plan ops tooling' },
-      { title: 'Twilio + Asterisk IVR Automation', link: '/portfolio/telephony/index.html', period: 'Telephony/IVR Experience • 2016 – 2021', blurb: 'Telephony • IVR automation' },
-      { title: 'eBay Inventory & Packing Automation', link: '/portfolio/dropshipping/index.html', period: 'Dropshipping Client • 2014 – 2016', blurb: 'Ecommerce • Ops automation' },
-      { title: 'IIG Ticketing & Notifications Prototype', link: '/portfolio/IIG/index.html', period: 'IIG Tools • 2012 – 2014', blurb: 'Infrastructure • Ticketing prototype' },
-      { title: 'Notion-Clone – Login RCA', link: '/portfolio/projects/notion-clone-login-issue.html', period: 'Independent Project • 2025', blurb: 'RCA • NextAuth login issue' },
-      { title: 'Zustand Migration – Re-render Analysis', link: '/portfolio/projects/zustand-migration-rerender-analysis.html', period: 'January 2026', blurb: 'RCA • React state rerenders' },
-      { title: 'BoardContext → Zustand Migration Docs', link: '/portfolio/projects/zustand-migration-docs.html', period: 'State Management Refactor • 2026', blurb: 'Docs • State mgmt migration' },
-      { title: 'TaskPane Flicker Investigation', link: '/portfolio/projects/taskpane-flicker-investigation.html', period: 'Rendering RCA • 2026', blurb: 'Next.js UI flicker analysis' },
-    ];
-
-    const normalizeLink = (href, baseHref) => {
-      try {
-        const url = new URL(href, baseHref || window.location.href);
-        return url.pathname.replace(/\/$/, '');
-      } catch (_) {
-        return href || '';
+      if (!needsTranspile()) {
+        runModern();
+        return;
       }
-    };
 
-    const fetchPortfolioPeriods = async () => {
-      try {
-        const portfolioBase = new URL('portfolio/index.html', window.location.href);
-        const res = await fetch(portfolioBase.href, { cache: 'no-store' });
-        if (!res.ok) return {};
-        const html = await res.text();
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const map = {};
-        doc.querySelectorAll('a.card-link').forEach(anchor => {
-          const href = anchor.getAttribute('href') || '';
-          const key = normalizeLink(href, portfolioBase.href);
-          const periodNode = anchor.querySelector('.card-subtitle time') || anchor.querySelector('.card-subtitle');
-          const periodText = periodNode?.textContent?.trim();
-          if (key && periodText) map[key] = periodText;
-        });
-        return map;
-      } catch (err) {
-        console.warn('Unable to read portfolio cards', err);
-        return {};
-      }
-    };
-
-    const renderPortfolio = (periodMap = {}) => {
-      const container = document.getElementById('portfolio-list');
-      container.innerHTML = '';
-      portfolioItems.forEach(item => {
-        const normalized = normalizeLink(item.link);
-        const period = periodMap[normalized] || item.period || '';
-        const row = document.createElement('div');
-        row.className = 'timeline-item';
-        row.innerHTML = `
-          <span class="timeline-dot"></span>
-          <div class="timeline-header">
-            <div>
-              <p class="timeline-title">${item.title}</p>
-              <p class="timeline-sub">${item.blurb}</p>
-            </div>
-            <span class="timeline-period">${period}</span>
-          </div>
-          <div style="margin-top:8px;">
-            <a href="${item.link}" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
-          </div>
-        `;
-        container.appendChild(row);
-      });
-    };
-
-    const initTabs = () => {
-      if (tabsInitialized) return;
-      tabsInitialized = true;
-      const buttons = document.querySelectorAll('.tab-btn');
-      const pages = document.querySelectorAll('[data-page]');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          buttons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          pages.forEach(p => p.classList.add('hidden'));
-          const page = document.querySelector(`[data-page="${btn.dataset.tab}"]`);
-          if (page) page.classList.remove('hidden');
-        });
-      });
-    };
-
-    function hydrate() {
-      const cv = getCv();
-      if (!cv) return;
-      setContact(cv);
-      renderSummary(cv);
-      renderDomains(cv);
-      renderSkills(cv);
-      renderTimeline(cv.experience || [], 'experience');
-      renderTimeline(cv.education || [], 'education');
-      fetchPortfolioPeriods().then(periodMap => {
-        renderPortfolio(periodMap);
-        initTabs();
-      });
-    }
-
-    document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', hydrate) : hydrate();
+      const babelScript = document.createElement('script');
+      babelScript.src = 'https://unpkg.com/@babel/standalone/babel.min.js';
+      babelScript.onload = () => {
+        fetch('/hydrate.js')
+          .then(res => res.text())
+          .then(src => {
+            const out = window.Babel.transform(src, { presets: ['env'] }).code;
+            (0, eval)(out);
+          })
+          .catch(() => {
+            window.location.href = '/index.static.html';
+          });
+      };
+      babelScript.onerror = () => {
+        window.location.href = '/index.static.html';
+      };
+      document.head.appendChild(babelScript);
+    })();
   </script>
 </body>
 </html>

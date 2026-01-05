@@ -17,7 +17,7 @@
 <app-footer
   photo-src="/minhaj.jpg"
   audio-src="/cta-chime.wav"
-  audio-muted="false"
+  audio-play="true"
   idle-timeout="15000"
   email="you@example.com"
   phone="+8801716734974"
@@ -28,7 +28,7 @@
 ## Attributes (configuration surface)
 - `photo-src` (default `/minhaj.jpg`): Image for the incoming-call overlay.
 - `audio-src` (default resolves to `cta-chime.wav` alongside `footer.js`): Ringtone for idle/incoming mode.
-- `audio-muted` (optional, boolean-ish): Start with ringtone muted. Presence/`true`/`1`/`yes` mutes; omit or `false` keeps audio on.
+- `audio-play` (optional, boolean): Accepts only `true` or `false`. Empty/present (e.g., `audio-play`) is treated as `true`; omitting the attribute is treated as `false`.
 - `idle-timeout` (optional, ms; default `15000`): Idle delay before triggering the incoming/animation state.
 - `drag-enabled` (optional, boolean; default `false`): Controls whether the CTA can be dragged. Accepts only `true` or `false`; any other value is treated as `false`.
 - `email` (optional): Email text + mailto link.

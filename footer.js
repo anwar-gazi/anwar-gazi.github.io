@@ -36,6 +36,7 @@ class AppFooter extends HTMLElement {
     this._animateCooldown = 90000;
     this._activityHandler = null;
     this._chime = null;
+    this._muted = false;
     this._startMuted = false;
     this._idleActive = false;
     this._idleLoopTimer = null;
@@ -217,10 +218,17 @@ class AppFooter extends HTMLElement {
       this._audioSrc = this._resolveUrl(audioAttr);
     }
 
-    const muteAttr = this.getAttribute('audio-muted');
-    if (muteAttr !== null) {
-      const val = (muteAttr || '').trim().toLowerCase();
-      this._startMuted = val === '' || val === 'true' || val === '1' || val === 'yes';
+    const playAttr = this.getAttribute('audio-play');
+    if (playAttr === null) {
+      // attribute absent -> treat as false (muted)
+      this._startMuted = true;
+    } else {
+      const val = (playAttr || '').trim().toLowerCase();
+      if (val === '' || val === 'true') {
+        this._startMuted = false;
+      } else {
+        this._startMuted = true;
+      }
     }
 
     const idleAttr = this.getAttribute('idle-timeout');
@@ -713,16 +721,17 @@ class AppFooter extends HTMLElement {
     try {
       if (!this._audioSrc) {
         this._chime = null;
-        this._setMuteUi(true);
+        this._applyMuteState(true, null, { autoPlay: false });
         return;
       }
       const audio = new Audio(this._audioSrc);
       audio.preload = 'auto';
       audio.volume = 0.22;
       audio.loop = true;
-      audio.muted = this._startMuted;
+      this._muted = this._startMuted;
+      audio.muted = this._muted;
       this._chime = audio;
-      this._setMuteUi(this._startMuted);
+      this._applyMuteState(this._muted, null, { autoPlay: false });
     } catch (e) {
       this._chime = null;
     }
@@ -760,7 +769,7 @@ class AppFooter extends HTMLElement {
   }
 
   _startRingtone() {
-    if (!this._chime) return;
+    if (!this._chime || this._muted) return;
     try {
       this._chime.currentTime = 0;
       this._ringtonePlaying = true;
@@ -785,17 +794,30 @@ class AppFooter extends HTMLElement {
   }
 
   _toggleMute(btn) {
-    const muted = !(this._chime && !this._chime.muted);
-    this._setMuteUi(muted, btn);
+    const newMuted = !this._muted;
+    this._applyMuteState(newMuted, btn);
   }
 
   _forceMute() {
-    this._setMuteUi(true);
+    this._applyMuteState(true);
   }
 
-  _setMuteUi(muted, btnOverride = null) {
+  _applyMuteState(muted, btnOverride = null, opts = {}) {
+    const { autoPlay = true } = opts;
+    this._muted = muted;
     if (this._chime) {
       this._chime.muted = muted;
+      if (muted) {
+        this._chime.pause();
+        this._chime.currentTime = 0;
+        this._ringtonePlaying = false;
+      } else if (autoPlay) {
+        this._ringtonePlaying = true;
+        const res = this._chime.play();
+        if (res && typeof res.catch === 'function') {
+          res.catch(() => {});
+        }
+      }
     }
     const muteBtn = btnOverride || this.querySelector('[data-action="mute"]');
     if (muteBtn) {

@@ -1,19 +1,19 @@
 // case-nav.js
 const CASE_STUDIES = [
-  { label: 'AmiProbashi – Migrant Services', href: 'amiprobashi/index.html', tag: 'GovTech' },
-  { label: 'Multi-tenant News CMS (DoptorITMart)', href: 'dailyniropekkho_doptorit/index.html', tag: 'Media' },
-  { label: 'ShurjoPay – Gateway Reliability', href: 'shurjopay/index.html', tag: 'Fintech' },
-  { label: 'ShurjoPay – Brac Bank COF', href: 'shurjopay/shurjopay_bracbank_cof_case_study.html', tag: 'Fintech' },
-  { label: 'CPC/CPA/CPM Bid Prediction (SulacoTec)', href: 'sulacotec/index.html', tag: 'AdTech' },
-  { label: 'Freight Operations Portal (OneIXchange)', href: 'freightforwarding_oneixchange/index.html', tag: 'Logistics' },
-  { label: 'Healthcare Plan Operations (MS Concitus)', href: 'healthcare/index.html', tag: 'Healthcare' },
-  { label: 'Twilio + Asterisk IVR Automation', href: 'telephony/index.html', tag: 'Telephony' },
-  { label: 'eBay Inventory & Packing Automation', href: 'dropshipping/index.html', tag: 'Ecommerce' },
-  { label: 'IIG Ticketing & Notifications Prototype', href: 'IIG/index.html', tag: 'Infrastructure' },
-  { label: 'Notion-Clone – Login RCA', href: 'projects/notion-clone-login-issue.html', tag: 'RCA' },
-  { label: 'Zustand Migration – Re-render Analysis', href: 'projects/zustand-migration-rerender-analysis.html', tag: 'RCA' },
-  { label: 'BoardContext → Zustand Migration Docs', href: 'projects/zustand-migration-docs.html', tag: 'State Mgmt' },
-  { label: 'TaskPane Flicker Investigation', href: 'projects/taskpane-flicker-investigation.html', tag: 'Next.js' },
+  { label: 'AmiProbashi – Migrant Services', href: 'amiprobashi/index.html', tag: 'GovTech', icon: '🌏' },
+  { label: 'Multi-tenant News CMS (DoptorITMart)', href: 'dailyniropekkho_doptorit/index.html', tag: 'Media', icon: '📰' },
+  { label: 'ShurjoPay – Gateway Reliability', href: 'shurjopay/index.html', tag: 'Fintech', icon: '💳' },
+  { label: 'ShurjoPay – Brac Bank COF', href: 'shurjopay/shurjopay_bracbank_cof_case_study.html', tag: 'Fintech', icon: '💳' },
+  { label: 'CPC/CPA/CPM Bid Prediction (SulacoTec)', href: 'sulacotec/index.html', tag: 'AdTech', icon: '📈' },
+  { label: 'Freight Operations Portal (OneIXchange)', href: 'freightforwarding_oneixchange/index.html', tag: 'Logistics', icon: '🚢' },
+  { label: 'Healthcare Plan Operations (MS Concitus)', href: 'healthcare/index.html', tag: 'Healthcare', icon: '🩺' },
+  { label: 'Twilio + Asterisk IVR Automation', href: 'telephony/index.html', tag: 'Telephony', icon: '☎️' },
+  { label: 'eBay Inventory & Packing Automation', href: 'dropshipping/index.html', tag: 'Ecommerce', icon: '📦' },
+  { label: 'IIG Ticketing & Notifications Prototype', href: 'IIG/index.html', tag: 'Infrastructure', icon: '🛰️' },
+  { label: 'Notion-Clone – Login RCA', href: 'projects/notion-clone-login-issue.html', tag: 'RCA', icon: '🛠️' },
+  { label: 'Zustand Migration – Re-render Analysis', href: 'projects/zustand-migration-rerender-analysis.html', tag: 'RCA', icon: '🔁' },
+  { label: 'BoardContext → Zustand Migration Docs', href: 'projects/zustand-migration-docs.html', tag: 'State Mgmt', icon: '📑' },
+  { label: 'TaskPane Flicker Investigation', href: 'projects/taskpane-flicker-investigation.html', tag: 'Next.js', icon: '⚡' },
 ];
 
 class CaseNav extends HTMLElement {
@@ -26,6 +26,7 @@ class CaseNav extends HTMLElement {
       absHref: new URL(item.href, this._base).href,
     }));
     this._homeHref = new URL('index.html', this._base).href;
+    this._resumeHref = new URL('../index.html', this._base).href;
     this._navEl = null;
     this._toggleBtn = null;
     this._floatingToggle = null;
@@ -73,8 +74,8 @@ class CaseNav extends HTMLElement {
       }
 
       .case-nav {
-        --nav-width: 260px;
-        --nav-collapsed-width: 88px;
+        --nav-width: 351px;
+        --nav-collapsed-width: 119px;
         height: 100vh;
         width: var(--nav-width);
         background: linear-gradient(180deg, rgba(7, 11, 24, 0.96), rgba(9, 14, 30, 0.94));
@@ -113,6 +114,14 @@ class CaseNav extends HTMLElement {
         gap: 10px;
       }
 
+      .brand-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        flex: 1;
+      }
+
       .brand-link {
         display: inline-flex;
         align-items: center;
@@ -130,6 +139,12 @@ class CaseNav extends HTMLElement {
       .brand-link:hover {
         border-color: rgba(99, 102, 241, 0.6);
         background: rgba(99, 102, 241, 0.12);
+      }
+
+      .brand-actions .brand-link {
+        flex: 1;
+        min-width: 0;
+        width: 100%;
       }
 
       .brand-logo {
@@ -228,11 +243,16 @@ class CaseNav extends HTMLElement {
         box-shadow: 0 12px 28px rgba(99, 102, 241, 0.15);
       }
 
-      .dot {
-        width: 9px;
-        height: 9px;
-        border-radius: 10px;
-        background: radial-gradient(circle at 30% 30%, #c7d2fe, #6366f1);
+      .item-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: rgba(99, 102, 241, 0.16);
+        border: 1px solid rgba(99, 102, 241, 0.35);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
         flex-shrink: 0;
       }
 
@@ -265,6 +285,11 @@ class CaseNav extends HTMLElement {
       .case-nav.collapsed .brand-link {
         justify-content: center;
         padding: 9px;
+      }
+
+      .case-nav.collapsed .brand-actions {
+        gap: 6px;
+        align-items: center;
       }
 
       .case-nav.collapsed .item {
@@ -335,6 +360,9 @@ class CaseNav extends HTMLElement {
     const brandRow = document.createElement('div');
     brandRow.className = 'brand-row';
 
+    const brandActions = document.createElement('div');
+    brandActions.className = 'brand-actions';
+
     const home = document.createElement('a');
     home.className = 'brand-link';
     home.href = this._homeHref;
@@ -347,6 +375,20 @@ class CaseNav extends HTMLElement {
       </div>
     `;
 
+    const resume = document.createElement('a');
+    resume.className = 'brand-link';
+    resume.href = this._resumeHref;
+    resume.target = '_blank';
+    resume.rel = 'noreferrer';
+    resume.setAttribute('aria-label', 'Go to resume site');
+    resume.innerHTML = `
+      <span class="brand-logo">R</span>
+      <div class="brand-copy">
+        <span class="brand-title">Resume ↗</span>
+        <span class="brand-sub">Root site</span>
+      </div>
+    `;
+
     const toggle = document.createElement('button');
     toggle.className = 'toggle';
     toggle.type = 'button';
@@ -354,7 +396,8 @@ class CaseNav extends HTMLElement {
     toggle.addEventListener('click', () => this.toggle());
     toggle.textContent = '◀';
 
-    brandRow.append(home, toggle);
+    brandActions.append(home, resume);
+    brandRow.append(brandActions, toggle);
 
     const sectionTitle = document.createElement('div');
     sectionTitle.className = 'section-title';
@@ -377,8 +420,9 @@ class CaseNav extends HTMLElement {
       const active = current === target.href || current.endsWith(target.pathname);
       if (active) link.classList.add('active');
 
-      const dot = document.createElement('span');
-      dot.className = 'dot';
+      const icon = document.createElement('span');
+      icon.className = 'item-icon';
+      icon.textContent = item.icon || '•';
 
       const label = document.createElement('span');
       label.className = 'label';
@@ -388,7 +432,7 @@ class CaseNav extends HTMLElement {
       tag.className = 'tag';
       tag.textContent = item.tag;
 
-      link.append(dot, label, tag);
+      link.append(icon, label, tag);
       list.appendChild(link);
     });
 

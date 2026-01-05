@@ -474,7 +474,10 @@ class AppFooter extends HTMLElement {
   _hydrateCvIfNeeded() {
     if (!this._cvJsonPath || this._cvLoading) return;
     this._cvLoading = true;
-    fetch(this._cvJsonPath, { credentials: 'same-origin' })
+    fetch(this._cvJsonPath, {
+      credentials: 'same-origin',
+      cache: 'no-store',
+    })
       .then((res) => (res.ok ? res.json() : null))
       .then((cv) => {
         this._cvLoading = false;

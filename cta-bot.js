@@ -80,7 +80,7 @@ class CtaBot extends HTMLElement {
                   <span class="cta-status-dot" aria-hidden="true"></span>
                 </div>
                 <div class="cta-bar-text">
-                  <div class="cta-kicker"><span class="cta-status-pill">● Available</span> Let’s work together</div>
+                  <div class="cta-kicker">Let’s work together <span class="cta-status-pill">● Available</span></div>
                 <div class="cta-bar-title">Open to Senior/Staff backend roles</div>
               </div>
               <div class="cta-bar-actions">

@@ -219,6 +219,15 @@
     box-shadow: 0 0 12px rgba(22, 163, 74, 0.25);
 }
 
+.avatar-pill {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translate(10px, -50%);
+    white-space: nowrap;
+    padding: 2px 10px;
+}
+
 .cta-sparkles {
     position: absolute;
     inset: -8px;

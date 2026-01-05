@@ -3,7 +3,7 @@
   const cv = {
     name: 'Minhajul Anwar',
     shortName: 'Anwar',
-    photo: '/minhaj.jpg',
+    photoSrc: '/minhaj.jpg',
     title: 'Senior Backend / Full-Stack Engineer – Payments, SaaS, GovTech',
     contact: {
       phone: '+880 1716-734974',

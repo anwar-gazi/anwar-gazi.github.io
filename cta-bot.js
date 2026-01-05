@@ -233,7 +233,8 @@ class CtaBot extends HTMLElement {
     const cvPriorityAttr = this.getAttribute('cvjson-priority');
     if (cvPriorityAttr !== null) {
       const val = (cvPriorityAttr || '').trim().toLowerCase();
-      this._cvPriority = val === 'fallback' ? 'fallback' : 'primary';
+      // Anything other than explicit "primary" is treated as fallback/secondary (attrs win)
+      this._cvPriority = val === 'primary' ? 'primary' : 'fallback';
     }
 
     const playAttr = this.getAttribute('audio-play');
@@ -501,6 +502,7 @@ class CtaBot extends HTMLElement {
     const ctaAudioSrc = cvCta.audioSrc;
     const ctaAudioPlay = typeof cvCta.audioPlay === 'boolean' ? cvCta.audioPlay : null;
     const ctaIdle = typeof cvCta.idleTimeout === 'number' ? cvCta.idleTimeout : null;
+    let audioChanged = false;
 
     // cvjson-priority: primary (default) or fallback
     if (this._cvPriority === 'primary') {
@@ -515,9 +517,11 @@ class CtaBot extends HTMLElement {
       }
       if (ctaAudioSrc) {
         this._audioSrc = this._resolveUrl(ctaAudioSrc);
+        audioChanged = true;
       }
       if (ctaAudioPlay !== null) {
         this._startMuted = !ctaAudioPlay;
+        audioChanged = true;
       }
       if (ctaIdle !== null && ctaIdle > 500) {
         this._idleDelay = ctaIdle;
@@ -535,13 +539,19 @@ class CtaBot extends HTMLElement {
       }
       if (!this._audioSrc && ctaAudioSrc) {
         this._audioSrc = this._resolveUrl(ctaAudioSrc);
+        audioChanged = true;
       }
       if (ctaAudioPlay !== null && this.getAttribute('audio-play') === null) {
         this._startMuted = !ctaAudioPlay;
+        audioChanged = true;
       }
       if (ctaIdle !== null && this.getAttribute('idle-timeout') === null && ctaIdle > 500) {
         this._idleDelay = ctaIdle;
       }
+    }
+
+    if (audioChanged) {
+      this._setupAudio();
     }
 
     this._applyContact();

@@ -30,7 +30,7 @@
 - `audio-src` (default resolves to `cta-chime.wav` alongside `cta-bot.js`): Ringtone for idle/incoming mode.
 - `audio-play` (optional, boolean): Accepts only `true` or `false`. Empty/present (e.g., `audio-play`) is treated as `true`; omitting the attribute is treated as `false`.
 - `cvjson-src` (optional): Path/URL to a `cv.json` file (resolved with the same rules as other asset paths). If provided, the footer fetches it and uses `email`, `phone`, `photoSrc`/`photo`, `name`, `shortName` when attributes are not set.
-- `cvjson-priority` (optional): `primary` (default when absent/empty) makes CV JSON overwrite contact/photo; `fallback` only fills missing fields.
+- `cvjson-priority` (optional): `primary` (default when absent/empty) makes CV JSON overwrite contact/photo; `fallback` (or any other value such as `secondary`) only fills missing fields and defers to element attributes when present.
 - `idle-timeout` (optional, ms; default `15000`): Idle delay before triggering the incoming/animation state.
 - `drag-enabled` (optional, boolean; default `false`): Controls whether the CTA can be dragged. Accepts only `true` or `false`; any other value is treated as `false`.
 - `email` (optional): Email text + mailto link.

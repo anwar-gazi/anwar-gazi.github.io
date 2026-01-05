@@ -1,0 +1,25 @@
+BUET License (Bangladesh University of Engineering and Technology)
+
+Copyright (c) 2025 Minhajul Anwar
+
+Permission is granted to any person obtaining a copy of this software and
+associated documentation files (the "Software") to deal in the Software
+without restriction. This includes, without limitation, the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit others to do so, subject to the following
+conditions:
+
+1. The above copyright notice and this BUET License text shall be included
+   in all copies or substantial portions of the Software.
+
+2. Any distribution of the Software, in source or binary form, must include
+   a copy of this BUET License or a clear reference to where it can be
+   found.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT ANY WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED. THIS INCLUDES, BUT IS NOT LIMITED TO, IMPLIED
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OF OR OTHER DEALINGS IN THE SOFTWARE.

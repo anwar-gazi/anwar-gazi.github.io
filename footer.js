@@ -13,34 +13,44 @@ class AppFooter extends HTMLElement {
     this._stateKey = 'ctaState';
     this._collapsedKey = 'ctaCollapsed';
     this._posKey = 'ctaPos';
-    this._cvScriptLoading = false;
+    // Default fallback: professional, Muslim-themed male avatar (can be overridden via photo-src)
+    this._photoSrc = 'https://api.dicebear.com/6.x/adventurer/svg?seed=Imran&accessories=turban&hairColor=black&skinColor=brown';
+    this._audioSrc = null;
+    this._storagePrefix = '';
+    this._hasAttrEmail = false;
+    this._hasAttrPhone = false;
     this._contact = {
-      email: 'minhaj.me.bd@gmail.com',
-      phoneDisplay: '+88 01716-734974',
-      phoneHref: 'tel:+8801716734974',
+      email: 'polarglow06@gmail.com',
+      phoneDisplay: '+88 01534-303074',
+      phoneHref: 'tel:+8801534303074',
     };
     this._dragging = false;
     this._dragStart = null;
     this._hasCustomPos = false;
     this._pos = null;
     this._progressFill = null;
+    this._dragEnabled = false;
     this._idleTimer = null;
     this._idleDelay = 15000;
     this._lastAnimate = 0;
     this._animateCooldown = 90000;
     this._activityHandler = null;
     this._chime = null;
+    this._startMuted = false;
     this._idleActive = false;
     this._idleLoopTimer = null;
     this._audioPrimed = false;
     this._ringtonePlaying = false;
     this._incomingActive = false;
     this._actionDelay = 260;
+    this._assetBase = null;
   }
 
   connectedCallback() {
     if (this._initialized) return;
     this._initialized = true;
+
+    this._applyAttributes();
 
     const storedState = this._readStorage(this._stateKey);
     if (storedState === 'bar' || storedState === 'open' || storedState === 'toast') {
@@ -89,9 +99,9 @@ class AppFooter extends HTMLElement {
           <div class="cta-idle-progress" aria-hidden="true">
             <div class="cta-idle-fill"></div>
           </div>
-          <div class="cta-incoming-overlay" aria-hidden="true">
+            <div class="cta-incoming-overlay" aria-hidden="true">
             <div class="incoming-wave">
-              <img class="incoming-photo" src="/minhaj.jpg" alt="Minhaj" loading="lazy" />
+              <img class="incoming-photo" src="${this._photoSrc}" alt="Minhaj" loading="lazy" />
             </div>
             <div class="incoming-kicker">Incoming call</div>
             <div class="incoming-title">Let’s work together</div>
@@ -116,7 +126,7 @@ class AppFooter extends HTMLElement {
     this._wireEvents();
     this._startIdleTracking();
     this._setupAudio();
-    this._loadCvDataAndApply();
+    this._applyContactOnly();
   }
 
   disconnectedCallback() {
@@ -146,6 +156,100 @@ class AppFooter extends HTMLElement {
     this._stopRingtone();
   }
 
+  _resolveUrl(input, base) {
+    if (!input) return input;
+    const trimmed = String(input).trim();
+    try {
+      // Absolute URLs (http/https/data/blob/etc) go through as-is
+      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed)) {
+        return new URL(trimmed).href;
+      }
+      // Leading slash: resolve relative to footer.js directory
+      if (trimmed.startsWith('/')) {
+        const scriptBase = this._getScriptBase();
+        if (scriptBase) {
+          return new URL(trimmed.slice(1), scriptBase).href;
+        }
+        return trimmed;
+      }
+      // ./ or ../ : resolve relative to the current document
+      if (trimmed.startsWith('./') || trimmed.startsWith('../')) {
+        return new URL(trimmed, window.location.href).href;
+      }
+      // Fallback: resolve relative to current document
+      return new URL(trimmed, window.location.href).href;
+    } catch (_) {
+      return trimmed;
+    }
+  }
+
+  _getScriptBase() {
+    if (this._assetBase) return this._assetBase;
+    const scriptEl =
+      document.currentScript ||
+      Array.from(document.getElementsByTagName('script')).find((s) =>
+        s.src && s.src.includes('footer.js')
+      );
+    if (scriptEl && scriptEl.src) {
+      try {
+        this._assetBase = new URL('.', scriptEl.src).href;
+      } catch (_) {
+        this._assetBase = null;
+      }
+    }
+    return this._assetBase;
+  }
+
+  _applyAttributes() {
+    const prefixAttr = this.getAttribute('storage-prefix') || '';
+    this._storagePrefix = prefixAttr || '';
+    const prefix = this._storagePrefix ? `${this._storagePrefix}_` : '';
+    this._stateKey = `${prefix}ctaState`;
+    this._collapsedKey = `${prefix}ctaCollapsed`;
+    this._posKey = `${prefix}ctaPos`;
+
+    const photoAttr = this.getAttribute('photo-src');
+    if (photoAttr) {
+      this._photoSrc = this._resolveUrl(photoAttr);
+    }
+    const audioAttr = this.getAttribute('audio-src');
+    if (audioAttr) {
+      this._audioSrc = this._resolveUrl(audioAttr);
+    }
+
+    const muteAttr = this.getAttribute('audio-muted');
+    if (muteAttr !== null) {
+      const val = (muteAttr || '').trim().toLowerCase();
+      this._startMuted = val === '' || val === 'true' || val === '1' || val === 'yes';
+    }
+
+    const idleAttr = this.getAttribute('idle-timeout');
+    if (idleAttr) {
+      const parsed = parseInt(idleAttr, 10);
+      if (!Number.isNaN(parsed) && parsed > 500) {
+        this._idleDelay = parsed;
+      }
+    }
+
+    const dragAttr = this.getAttribute('drag-enabled');
+    if (dragAttr !== null) {
+      const val = (dragAttr || '').trim().toLowerCase();
+      this._dragEnabled = val === 'true';
+    }
+
+    const emailAttr = this.getAttribute('email');
+    const phoneAttr = this.getAttribute('phone');
+    if (emailAttr) {
+      this._hasAttrEmail = true;
+      this._contact.email = emailAttr;
+    }
+    if (phoneAttr) {
+      this._hasAttrPhone = true;
+      this._contact.phoneDisplay = phoneAttr;
+      this._contact.phoneHref = this._normalizePhoneHref(phoneAttr);
+    }
+  }
+
   _wireEvents() {
     const openBtn = this.querySelector('[data-action="open"]');
     const collapseBtn = this.querySelector('[data-action="collapse"]');
@@ -163,15 +267,10 @@ class AppFooter extends HTMLElement {
       stopBubble(openBtn);
       openBtn.addEventListener('click', () => {
         this._primeAudio();
-        if (this._isMobile()) {
-          this._userCollapsed = false;
-          if (!this._idleActive) {
-            this._lastAnimate = Date.now();
-            this._startIdleLoop();
-          }
-          return;
-        }
-        this._openFromUser();
+        this._userCollapsed = false;
+        this._lastAnimate = Date.now();
+        this._stopIdleLoop();
+        this._startIdleLoop();
       });
     }
     if (collapseBtn) {
@@ -243,7 +342,7 @@ class AppFooter extends HTMLElement {
     });
 
     const dragHandle = this.querySelector('.cta-bar');
-    if (dragHandle) {
+    if (dragHandle && this._dragEnabled) {
       dragHandle.addEventListener('pointerdown', (e) => this._startDrag(e));
     }
   }
@@ -324,20 +423,14 @@ class AppFooter extends HTMLElement {
   }
 
   _extractContact() {
-    try {
-      const cv = typeof window !== 'undefined' ? window.cvData : null;
-      const contact = cv?.contact || {};
-      const email = contact.email || this._contact.email;
-      const phoneDisplay = contact.phone || contact.phoneDisplay || this._contact.phoneDisplay;
-      const phoneHref = this._normalizePhoneHref(phoneDisplay || this._contact.phoneDisplay);
-      return {
-        email,
-        phoneDisplay,
-        phoneHref,
-      };
-    } catch (_) {
-      return this._contact;
-    }
+    const email = this._contact.email;
+    const phoneDisplay = this._contact.phoneDisplay;
+    const phoneHref = this._normalizePhoneHref(phoneDisplay || this._contact.phoneDisplay);
+    return {
+      email,
+      phoneDisplay,
+      phoneHref,
+    };
   }
 
   _normalizePhoneHref(phone) {
@@ -347,30 +440,10 @@ class AppFooter extends HTMLElement {
     return `tel:${normalized.replace(/[^0-9+]/g, '')}`;
   }
 
-  _loadCvDataAndApply() {
-    try {
-      if (window.cvData) {
-        this._contact = this._extractContact();
-        this._applyContact();
-        return;
-      }
-    } catch (e) {
-      // ignore
-    }
-
-    if (this._cvScriptLoading) return;
-    this._cvScriptLoading = true;
-    const script = document.createElement('script');
-    script.src = '/cv.js';
-    script.async = true;
-    script.onload = () => {
-      this._contact = this._extractContact();
-      this._applyContact();
-    };
-    script.onerror = () => {
-      this._cvScriptLoading = false;
-    };
-    document.head.appendChild(script);
+  _applyContactOnly() {
+    // Contact is sourced only from attributes/defaults.
+    this._contact = this._extractContact();
+    this._applyContact();
   }
 
   _applyContact() {
@@ -394,6 +467,7 @@ class AppFooter extends HTMLElement {
   }
 
   _startDrag(e) {
+    if (!this._dragEnabled) return;
     if (e.button !== 0 && e.pointerType === 'mouse') return;
     if (e.target.closest('button,a')) return;
     if (!this._shell) return;
@@ -637,11 +711,18 @@ class AppFooter extends HTMLElement {
 
   _setupAudio() {
     try {
-      const audio = new Audio('/cta-chime.wav');
+      if (!this._audioSrc) {
+        this._chime = null;
+        this._setMuteUi(true);
+        return;
+      }
+      const audio = new Audio(this._audioSrc);
       audio.preload = 'auto';
       audio.volume = 0.22;
       audio.loop = true;
+      audio.muted = this._startMuted;
       this._chime = audio;
+      this._setMuteUi(this._startMuted);
     } catch (e) {
       this._chime = null;
     }
@@ -704,22 +785,22 @@ class AppFooter extends HTMLElement {
   }
 
   _toggleMute(btn) {
-    if (!this._chime) return;
-    const muted = !this._chime.muted;
-    this._chime.muted = muted;
-    if (btn) {
-      btn.textContent = muted ? '🔇' : '🔊';
-      btn.setAttribute('aria-label', muted ? 'Unmute ringtone' : 'Mute ringtone');
-    }
+    const muted = !(this._chime && !this._chime.muted);
+    this._setMuteUi(muted, btn);
   }
 
   _forceMute() {
-    if (!this._chime) return;
-    this._chime.muted = true;
-    const muteBtn = this.querySelector('[data-action="mute"]');
+    this._setMuteUi(true);
+  }
+
+  _setMuteUi(muted, btnOverride = null) {
+    if (this._chime) {
+      this._chime.muted = muted;
+    }
+    const muteBtn = btnOverride || this.querySelector('[data-action="mute"]');
     if (muteBtn) {
-      muteBtn.textContent = '🔇';
-      muteBtn.setAttribute('aria-label', 'Unmute ringtone');
+      muteBtn.textContent = muted ? '🔇' : '🔊';
+      muteBtn.setAttribute('aria-label', muted ? 'Unmute ringtone' : 'Mute ringtone');
     }
   }
 }

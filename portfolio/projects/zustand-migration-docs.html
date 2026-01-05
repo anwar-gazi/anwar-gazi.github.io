@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="48x48" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/shortcut.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png">
+
+  <title>Zustand Migration - Complete Documentation</title>
+  <link rel="stylesheet" href="/footer.css" />
+  <script src="/footer.js" defer></script>
+  <script type="module" src="../case-nav.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface-2: #1a1a24;
+      --border: #2a2a3a;
+      --text: #e0e0e8;
+      --text-muted: #8888a0;
+      --heading: #ffffff;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --code-bg: #0f0f18;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 0 32px 0 320px; /* space for global left rail */
+      gap: 32px;
+      align-items: flex-start;
+    }
+    
+    /* Sidebar (moved to right) */
+    .sidebar {
+      order: 2;
+      width: 280px;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      padding: 2rem 0;
+      position: sticky;
+      top: 0;
+      height: calc(100vh - 24px);
+      align-self: flex-start;
+      overflow-y: auto;
+      margin-left: auto;
+    }
+    .sidebar-header { padding: 0 1.5rem 2rem; border-bottom: 1px solid var(--border); }
+    .sidebar-header h1 { font-size: 1.25rem; color: var(--heading); margin-bottom: 0.25rem; }
+    .sidebar-header p { font-size: 0.8rem; color: var(--text-muted); }
+    .nav-section { padding: 1.5rem 0; }
+    .nav-section-title { padding: 0 1.5rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .nav-item {
+      display: block;
+      padding: 0.6rem 1.5rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.15s;
+      border-left: 3px solid transparent;
+    }
+    .nav-item:hover { background: var(--surface-2); color: var(--heading); }
+    .nav-item.active { background: var(--surface-2); color: var(--accent-light); border-left-color: var(--accent); }
+    .nav-item .icon { margin-right: 0.5rem; }
+    
+    /* Main Content */
+    .main {
+      order: 1;
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+      padding: 3rem 3rem;
+      max-width: 1100px;
+    }
+    
+    /* Typography */
+    h1 { font-size: 2.5rem; color: var(--heading); margin-bottom: 1rem; font-weight: 700; }
+    h2 { font-size: 1.75rem; color: var(--heading); margin: 3rem 0 1.5rem; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; }
+    h3 { font-size: 1.25rem; color: var(--accent-light); margin: 2rem 0 1rem; font-weight: 600; }
+    h4 { font-size: 1rem; color: var(--text); margin: 1.5rem 0 0.75rem; font-weight: 500; }
+    p { margin-bottom: 1rem; }
+    strong { color: var(--heading); }
+    
+    /* Lists */
+    ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    li::marker { color: var(--accent); }
+    
+    /* Code */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.85rem;
+    }
+    code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+    }
+    pre code { color: #e6db74; }
+    p code, li code {
+      background: var(--surface-2);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: var(--accent-light);
+      font-size: 0.85em;
+    }
+    .code-filename {
+      background: var(--surface-2);
+      padding: 0.5rem 1rem;
+      border-radius: 8px 8px 0 0;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+    }
+    .code-filename + pre { border-radius: 0 0 8px 8px; margin-top: 0; }
+    
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+    th, td { padding: 0.875rem 1rem; text-align: left; border: 1px solid var(--border); }
+    th { background: var(--surface-2); color: var(--heading); font-weight: 600; font-size: 0.9rem; }
+    td { font-size: 0.9rem; }
+    tr:nth-child(even) td { background: var(--surface); }
+    
+    /* Badges */
+    .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-right: 0.5rem; }
+    .badge-new { background: #166534; color: #86efac; }
+    .badge-modify { background: #854d0e; color: #fde047; }
+    .badge-delete { background: #991b1b; color: #fca5a5; }
+    .badge-phase { background: var(--accent); color: white; font-size: 0.7rem; }
+    
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .card-icon { font-size: 1.5rem; }
+    .card-title { font-size: 1.1rem; color: var(--heading); font-weight: 600; }
+    
+    /* Checklist */
+    .checklist { list-style: none; margin-left: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+    .checklist li:last-child { border-bottom: none; }
+    .check { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .check-done { background: var(--success); color: white; font-size: 0.75rem; }
+    
+    /* Callouts */
+    .callout {
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      border-left: 4px solid;
+    }
+    .callout-info { background: #1e3a5f; border-color: #3b82f6; }
+    .callout-warning { background: #422006; border-color: var(--warning); }
+    .callout-success { background: #14532d; border-color: var(--success); }
+    .callout-title { font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .callout-info .callout-title { color: #93c5fd; }
+    .callout-warning .callout-title { color: #fcd34d; }
+    .callout-success .callout-title { color: #86efac; }
+    
+    /* Architecture diagram */
+    .diagram {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      line-height: 2;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .diagram .node { color: var(--accent-light); }
+    .diagram .arrow { color: var(--text-muted); }
+    .diagram .comment { color: var(--text-muted); font-style: italic; }
+    
+    /* File tree */
+    .file-tree { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; font-family: 'Fira Code', monospace; font-size: 0.85rem; }
+    .file-tree .folder { color: var(--accent-light); }
+    .file-tree .file { color: var(--text); }
+    .file-tree .new { color: var(--success); }
+    .file-tree .modified { color: var(--warning); }
+    
+    /* Comparison */
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .comparison-col h4 { text-align: center; margin-bottom: 1rem; }
+    .comparison-before h4 { color: var(--danger); }
+    .comparison-after h4 { color: var(--success); }
+    @media (max-width: 768px) { .comparison { grid-template-columns: 1fr; } }
+    
+    /* Section divider */
+    hr { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+    
+    /* Intro section */
+    .intro { background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-bottom: 3rem; }
+    .intro h1 { margin-bottom: 0.5rem; }
+    .intro-meta { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .intro-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: 700; color: var(--accent-light); }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+    
+    /* Hide sections for tab functionality */
+    .section { display: none; }
+    .section.active { display: block; }
+  </style>
+</head>
+<body>
+  <case-nav></case-nav>
+  <div class="layout">
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Zustand Migration</h1>
+        <p>Complete Documentation</p>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="#overview" class="nav-item active" onclick="showSection('overview')"><span class="icon">📋</span> Project Overview</a>
+        <a href="#motivation" class="nav-item" onclick="showSection('motivation')"><span class="icon">💡</span> Motivation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Implementation</div>
+        <a href="#phase1" class="nav-item" onclick="showSection('phase1')"><span class="icon">🏗️</span> Phase 1: Store Creation</a>
+        <a href="#phase2" class="nav-item" onclick="showSection('phase2')"><span class="icon">🔗</span> Phase 2: Selector Hooks</a>
+        <a href="#phase3" class="nav-item" onclick="showSection('phase3')"><span class="icon">🔄</span> Phase 3: Component Updates</a>
+        <a href="#phase4" class="nav-item" onclick="showSection('phase4')"><span class="icon">🗑️</span> Phase 4: Remove Provider</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Results</div>
+        <a href="#architecture" class="nav-item" onclick="showSection('architecture')"><span class="icon">🏛️</span> Final Architecture</a>
+        <a href="#verification" class="nav-item" onclick="showSection('verification')"><span class="icon">✅</span> Verification</a>
+        <a href="#files" class="nav-item" onclick="showSection('files')"><span class="icon">📁</span> Changed Files</a>
+      </div>
+    </nav>
+
+    <main class="main">
+      <!-- OVERVIEW SECTION -->
+      <div id="overview" class="section active">
+        <div class="intro">
+          <h1>BoardContext → Zustand Migration</h1>
+          <p class="intro-meta">State Management Refactoring • January 2026</p>
+          <p>A comprehensive migration from React Context + useReducer to Zustand for improved performance, developer experience, and simplified state management.</p>
+          <div class="intro-stats">
+            <div class="stat"><div class="stat-value">7</div><div class="stat-label">Tasks Completed</div></div>
+            <div class="stat"><div class="stat-value">12</div><div class="stat-label">Files Modified</div></div>
+            <div class="stat"><div class="stat-value">100%</div><div class="stat-label">Tests Passing</div></div>
+          </div>
+        </div>
+
+        <h2>📋 Migration Checklist</h2>
+        <div class="card">
+          <ul class="checklist">
+            <li><span class="check check-done">✓</span><div><strong>Create implementation plan</strong><br><span style="color: var(--text-muted)">Analyzed existing architecture, identified migration strategy</span></div></li>
+            <li><span class="check check-done">✓</span><div><strong>Install Zustand and create store</strong><br><span style="color: var(--text-muted)">Added zustand@5.0.9, created useBoardStore.ts</span></div></li>
+            <li><span class="check check-done">✓</span><div><strong>Migrate reducer logic to Zustand actions</strong><br><span style="color: var(--text-muted)">Converted PATCH_TASK, MOVE_TASK, UPSERT_TASK to store actions</span></div></li>
+            <li><span class="check check-done">✓</span><div><strong>Create selector hooks with shallow comparison</strong><br><span style="color: var(--text-muted)">Implemented useShallow for array-returning selectors</span></div></li>
+            <li><span class="check check-done">✓</span><div><strong>Update components to use Zustand store</strong><br><span style="color: var(--text-muted)">Migrated 8 components to use new hooks</span></div></li>
+            <li><span class="check check-done">✓</span><div><strong>Remove BoardProvider and update tests</strong><br><span style="color: var(--text-muted)">Eliminated Context wrapper, updated test setup</span></div></li>
+            <li><span class="check check-done">✓</span><div><strong>Verify functionality</strong><br><span style="color: var(--text-muted)">All tests pass, build compiles successfully</span></div></li>
+          </ul>
+        </div>
+
+        <h2>📁 Files Changed Summary</h2>
+        <div class="file-tree">
+<span class="folder">src/</span>
+  <span class="folder">store/</span>
+    <span class="file new">+ useBoardStore.ts</span>       <span style="color: var(--text-muted)"># NEW: Zustand store (290 lines)</span>
+  <span class="folder">components/</span>
+    <span class="file modified">~ boardHooks.ts</span>          <span style="color: var(--text-muted)"># RENAMED from BoardContext.tsx</span>
+    <span class="file modified">~ Board.tsx</span>               <span style="color: var(--text-muted)"># Hydrates store directly</span>
+    <span class="file modified">~ BoardDndShell.tsx</span>       <span style="color: var(--text-muted)"># Subscribes to store</span>
+    <span class="file modified">~ Column.tsx</span>              <span style="color: var(--text-muted)"># Updated imports</span>
+    <span class="file modified">~ TaskPane.tsx</span>            <span style="color: var(--text-muted)"># Updated imports</span>
+    <span class="file modified">~ SubtaskList.tsx</span>         <span style="color: var(--text-muted)"># Updated imports</span>
+    <span class="file modified">~ TaskCard.tsx</span>            <span style="color: var(--text-muted)"># Updated imports</span>
+    <span style="color: var(--text-muted)"># + 4 more components</span>
+<span class="folder">tests/</span>
+  <span class="file modified">~ setup.ts</span>                <span style="color: var(--text-muted)"># Added store reset</span>
+  <span class="file modified">~ Board.spec.tsx</span>          <span style="color: var(--text-muted)"># Uses setState()</span>
+  <span class="file modified">~ SubtaskList.spec.tsx</span>    <span style="color: var(--text-muted)"># Uses setState()</span>
+        </div>
+      </div>
+
+      <!-- MOTIVATION SECTION -->
+      <div id="motivation" class="section">
+        <h1>💡 Why Zustand?</h1>
+        
+        <h2>Problems with React Context</h2>
+        <div class="card">
+          <h4>1. Re-render Cascades</h4>
+          <p>With React Context, when any part of the board state changes, <strong>every component</strong> subscribed to the context re-renders, even if their specific data didn't change.</p>
+        </div>
+        <div class="card">
+          <h4>2. Selector Instability</h4>
+          <p>The <code>useBoardSelector</code> pattern required careful memoization. Creating new function references caused unnecessary re-renders.</p>
+        </div>
+        <div class="card">
+          <h4>3. Provider Boilerplate</h4>
+          <p>Every component needed to be wrapped in <code>BoardProvider</code>, and hooks required null checks for context access.</p>
+        </div>
+        <div class="card">
+          <h4>4. No DevTools</h4>
+          <p>Debugging state changes was difficult without built-in time-travel debugging or action logging.</p>
+        </div>
+
+        <h2>Benefits of Zustand</h2>
+        <table>
+          <thead>
+            <tr><th>Aspect</th><th>Before (Context)</th><th>After (Zustand)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Re-renders</strong></td><td>Full subtree on any change</td><td>Granular, per-selector subscriptions</td></tr>
+            <tr><td><strong>Provider</strong></td><td>Required wrapper component</td><td>No provider needed</td></tr>
+            <tr><td><strong>Null Checks</strong></td><td>Every hook call</td><td>Direct store access</td></tr>
+            <tr><td><strong>DevTools</strong></td><td>None</td><td>Redux DevTools integration</td></tr>
+            <tr><td><strong>Access Outside React</strong></td><td>Not possible</td><td><code>getState()</code> anywhere</td></tr>
+            <tr><td><strong>Bundle Size</strong></td><td>React Context (built-in)</td><td>+3KB (zustand)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PHASE 1 -->
+      <div id="phase1" class="section">
+        <h1>🏗️ Phase 1: Create Zustand Store</h1>
+        
+        <div class="callout callout-info">
+          <div class="callout-title">📦 New File</div>
+          <p>Created <code>src/store/useBoardStore.ts</code> - the central Zustand store combining state, actions, and selectors.</p>
+        </div>
+
+        <h2>Store Structure</h2>
+        <p>The store combines the existing reducer logic with async actions in a single, cohesive unit:</p>
+
+        <div class="code-filename">src/store/useBoardStore.ts</div>
+        <pre><code>"use client";
+
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
+import { useShallow } from "zustand/react/shallow";
+import { BoardDTO, TaskPatch } from "@/types/data";
+import { TaskCreatePayload, TaskView } from "@/types/taskView";
+import { boardService } from "@/services/boardService";
+import { pulseColumn, toastError } from "@/lib/uiEffects";
+
+type BoardActions = {
+  hydrate: (data: BoardDTO) => void;
+  patchTask: (id: string, patch: TaskPatch) => Promise&lt;TaskView&gt;;
+  moveTask: (id: string, toColumnId: string) => Promise&lt;void&gt;;
+  upsertTask: (task: TaskView) => void;
+  createTask: (payload: TaskCreatePayload) => Promise&lt;TaskView&gt;;
+  createSubtask: (parentId: string, title: string) => Promise&lt;TaskView&gt;;
+  reopenTask: (id: string, reason: string) => Promise&lt;TaskView&gt;;
+};
+
+type BoardStore = BoardDTO & BoardActions;
+
+const initialState: BoardDTO = {
+  id: "",
+  name: "",
+  columns: {},
+  tasks: {},
+};
+
+export const useBoardStore = create&lt;BoardStore&gt;()(
+  devtools(
+    (set, get) => ({
+      ...initialState,
+      
+      hydrate: (data) => set(data, false, "hydrate"),
+      
+      // ... actions implementation
+    }),
+    { name: "board-store" }
+  )
+);</code></pre>
+
+        <h2>Key Actions</h2>
+        
+        <h3>upsertTask</h3>
+        <p>Handles adding new tasks and updating existing ones, including column membership logic:</p>
+        <pre><code>upsertTask: (task: TaskView) => {
+  const state = get();
+  const existing = state.tasks[task.id];
+  const nextTasks = { ...state.tasks, [task.id]: task };
+
+  // Subtasks don't belong in columns
+  const isSubtask = (task.parentTaskIds?.length ?? 0) > 0;
+  if (isSubtask) {
+    set({ tasks: nextTasks }, false, "upsertTask/subtask");
+    return;
+  }
+
+  // Handle column membership for new tasks
+  if (!existing) {
+    const col = state.columns[task.columnId || ""];
+    if (col) {
+      set({
+        tasks: nextTasks,
+        columns: {
+          ...state.columns,
+          [col.id]: { ...col, taskIds: [...new Set([...col.taskIds, task.id])] },
+        },
+      }, false, "upsertTask/new");
+    }
+    return;
+  }
+
+  // Handle column changes for existing tasks
+  if (task.columnId && task.columnId !== existing.columnId) {
+    // Move between columns...
+  }
+
+  set({ tasks: nextTasks }, false, "upsertTask/update");
+}</code></pre>
+
+        <h3>moveTask (with Optimistic Updates)</h3>
+        <p>Implements optimistic UI updates with rollback on failure:</p>
+        <pre><code>moveTask: async (id: string, toColumnId: string) => {
+  const state = get();
+  const task = state.tasks[id];
+  const prevColumnId = task.columnId;
+
+  // Optimistic update
+  set({
+    tasks: { ...state.tasks, [id]: { ...task, columnId: toColumnId } },
+    columns: { /* update column taskIds */ },
+  }, false, "moveTask/optimistic");
+
+  try {
+    const updated = await boardService.moveTask(id, toColumnId);
+    get().upsertTask(updated);
+    pulseColumn(toColumnId);
+  } catch (err) {
+    // Rollback on failure
+    set({ /* restore previous state */ }, false, "moveTask/rollback");
+    toastError("Failed to move task");
+    throw err;
+  }
+}</code></pre>
+      </div>
+
+      <!-- PHASE 2 -->
+      <div id="phase2" class="section">
+        <h1>🔗 Phase 2: Selector Hooks</h1>
+        
+        <h2>The Re-render Problem</h2>
+        <p>Zustand selectors that return arrays or objects create new references on every call, causing infinite re-renders:</p>
+        
+        <div class="comparison">
+          <div class="comparison-col comparison-before">
+            <h4>❌ Problematic</h4>
+            <pre><code>// Creates new array every render
+export function useTasksInColumn(id) {
+  return useBoardStore((s) => {
+    const col = s.columns[id];
+    return col?.taskIds.map(
+      (tid) => s.tasks[tid]
+    ) ?? [];
+  });
+}</code></pre>
+          </div>
+          <div class="comparison-col comparison-after">
+            <h4>✅ Solution: useShallow</h4>
+            <pre><code>// Shallow comparison prevents loops
+export function useTasksInColumn(id) {
+  return useBoardStore(
+    useShallow((s) => {
+      const col = s.columns[id];
+      return col?.taskIds.map(
+        (tid) => s.tasks[tid]
+      ) ?? [];
+    })
+  );
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">⚠️ Critical Pattern</div>
+          <p>All selectors that return arrays or objects MUST use <code>useShallow</code> wrapper. This applies to: <code>useTasksInColumn</code>, <code>useSubtasks</code>, <code>useTasksByState</code></p>
+        </div>
+
+        <h2>Complete Selector List</h2>
+        <div class="code-filename">src/store/useBoardStore.ts (selectors)</div>
+        <pre><code>// Primitive selectors (no useShallow needed)
+export const useBoardId = () => useBoardStore((s) => s.id);
+export const useBoardName = () => useBoardStore((s) => s.name);
+export const useBoardTasks = () => useBoardStore((s) => s.tasks);
+export const useBoardColumns = () => useBoardStore((s) => s.columns);
+
+export function useTaskById(id: string) {
+  return useBoardStore((s) => s.tasks[id]);
+}
+
+export function useActiveTask(id: string | null) {
+  return useBoardStore((s) => (id ? s.tasks[id] ?? null : null));
+}
+
+// Array selectors (useShallow required)
+export function useTasksInColumn(id: string) {
+  return useBoardStore(
+    useShallow((s) => {
+      const col = s.columns[id];
+      return col?.taskIds.map((tid) => s.tasks[tid]).filter(Boolean) ?? [];
+    })
+  );
+}
+
+export function useSubtasks(parentId: string) {
+  return useBoardStore(
+    useShallow((s) =>
+      Object.values(s.tasks).filter((t) => t.parentTaskIds?.includes(parentId))
+    )
+  );
+}
+
+export function useTasksByState(state: TaskState) {
+  return useBoardStore(
+    useShallow((s) => Object.values(s.tasks).filter((t) => t.state === state))
+  );
+}</code></pre>
+      </div>
+
+      <!-- PHASE 3 -->
+      <div id="phase3" class="section">
+        <h1>🔄 Phase 3: Component Updates</h1>
+        
+        <h2>Import Migration</h2>
+        <p>All components were updated to import from the new <code>boardHooks.ts</code> (renamed from BoardContext.tsx):</p>
+
+        <div class="comparison">
+          <div class="comparison-col comparison-before">
+            <h4>❌ Before</h4>
+            <pre><code>import { 
+  useBoardTasks, 
+  useBoardActionsCtx 
+} from "./BoardContext";</code></pre>
+          </div>
+          <div class="comparison-col comparison-after">
+            <h4>✅ After</h4>
+            <pre><code>import { 
+  useBoardTasks, 
+  useBoardActionsCtx 
+} from "./boardHooks";</code></pre>
+          </div>
+        </div>
+
+        <h2>Components Updated</h2>
+        <table>
+          <thead>
+            <tr><th>Component</th><th>Hooks Used</th><th>Changes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Column.tsx</strong></td><td><code>useBoardId</code>, <code>useBoardActionsCtx</code>, <code>useTasksInColumn</code></td><td>Import path only</td></tr>
+            <tr><td><strong>TaskCard.tsx</strong></td><td><code>useSubtasks</code></td><td>Import path only</td></tr>
+            <tr><td><strong>TaskPane.tsx</strong></td><td><code>useBoardTasks</code>, <code>useBoardColumns</code>, <code>useBoardActionsCtx</code>, <code>useActiveTask</code>, <code>useSubtasks</code></td><td>Import path only</td></tr>
+            <tr><td><strong>SubtaskList.tsx</strong></td><td><code>useBoardTasks</code>, <code>useBoardColumns</code>, <code>useBoardActionsCtx</code>, <code>useSubtasks</code></td><td>Import path only</td></tr>
+            <tr><td><strong>GlobalTaskSearch.tsx</strong></td><td><code>useBoardTasks</code></td><td>Import path only</td></tr>
+            <tr><td><strong>CommandPalette.tsx</strong></td><td><code>useBoardTasks</code></td><td>Import path only</td></tr>
+            <tr><td><strong>RunningTasksBar.tsx</strong></td><td><code>useBoardTasks</code>, <code>useTasksByState</code></td><td>Import path only</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-success">
+          <div class="callout-title">✅ Backward Compatible</div>
+          <p>By re-exporting all hooks from <code>boardHooks.ts</code>, component changes were minimal - just import path updates.</p>
+        </div>
+      </div>
+
+      <!-- PHASE 4 -->
+      <div id="phase4" class="section">
+        <h1>🗑️ Phase 4: Remove BoardProvider</h1>
+        
+        <h2>The Key Change</h2>
+        <p>With Zustand, we no longer need a React Context provider. The store is a module-level singleton that components subscribe to directly.</p>
+
+        <h3>Board.tsx - Store Hydration</h3>
+        <div class="comparison">
+          <div class="comparison-col comparison-before">
+            <h4>❌ Before: Provider Wrapper</h4>
+            <pre><code>export default function Board({ board }) {
+  return (
+    &lt;BoardProvider initial={board}&gt;
+      &lt;BoardDndShell 
+        board={board} 
+        onMoveTask={...}&gt;
+        {/* children */}
+      &lt;/BoardDndShell&gt;
+    &lt;/BoardProvider&gt;
+  );
+}</code></pre>
+          </div>
+          <div class="comparison-col comparison-after">
+            <h4>✅ After: Direct Hydration</h4>
+            <pre><code>export default function Board({ board }) {
+  const hydratedRef = useRef(false);
+  
+  // Hydrate store synchronously
+  if (!hydratedRef.current) {
+    useBoardStore.setState(board);
+    hydratedRef.current = true;
+  }
+  
+  return (
+    &lt;BoardDndShell&gt;
+      {/* children */}
+    &lt;/BoardDndShell&gt;
+  );
+}</code></pre>
+          </div>
+        </div>
+
+        <h3>BoardDndShell.tsx - Direct Subscription</h3>
+        <div class="comparison">
+          <div class="comparison-col comparison-before">
+            <h4>❌ Before: Props from Provider</h4>
+            <pre><code>type Props = {
+  board: BoardDTO;
+  onMoveTask: (id, col) => void;
+  children: ReactNode;
+};
+
+export function BoardDndShell({ 
+  board, 
+  onMoveTask, 
+  children 
+}: Props) {
+  // Use props directly
+  const task = board.tasks[id];
+}</code></pre>
+          </div>
+          <div class="comparison-col comparison-after">
+            <h4>✅ After: Subscribe to Store</h4>
+            <pre><code>type Props = {
+  children: ReactNode;
+};
+
+export function BoardDndShell({ 
+  children 
+}: Props) {
+  // Subscribe to store directly
+  const tasks = useBoardStore(s => s.tasks);
+  const moveTask = useBoardStore(s => s.moveTask);
+}</code></pre>
+          </div>
+        </div>
+
+        <h2>Test Updates</h2>
+        <p>Tests were updated to use <code>useBoardStore.setState()</code> instead of wrapping in <code>BoardProvider</code>:</p>
+
+        <div class="code-filename">tests/components/Board.spec.tsx</div>
+        <pre><code>import { useBoardStore, initialState } from "../../src/store/useBoardStore";
+
+describe("Board Column", () => {
+  beforeEach(() => {
+    // Reset store between tests
+    useBoardStore.setState(initialState);
+  });
+
+  it("renders column name and tasks", () => {
+    const board = { /* test data */ };
+    
+    // Hydrate store directly instead of using BoardProvider
+    useBoardStore.setState(board);
+
+    render(&lt;Column column={column} onOpenTask={vi.fn()} /&gt;);
+    
+    expect(screen.getByText("To Do")).toBeInTheDocument();
+  });
+});</code></pre>
+      </div>
+
+      <!-- ARCHITECTURE -->
+      <div id="architecture" class="section">
+        <h1>🏛️ Final Architecture</h1>
+        
+        <h2>Component Hierarchy</h2>
+        <div class="diagram"><span class="node">page.tsx</span> <span class="comment">(Server Component - fetches board data)</span>
+    <span class="arrow">│</span>
+    <span class="arrow">└──</span> <span class="node">Board.tsx</span> <span class="comment">(Client - hydrates store with useRef guard)</span>
+         <span class="arrow">│</span>
+         <span class="arrow">└──</span> <span class="node">BoardDndShell</span> <span class="comment">(subscribes to tasks + moveTask)</span>
+              <span class="arrow">│</span>
+              <span class="arrow">├──</span> <span class="node">Column</span> <span class="comment">(useTasksInColumn, useBoardActionsCtx)</span>
+              <span class="arrow">│</span>    <span class="arrow">└──</span> <span class="node">TaskCard</span> <span class="comment">(useSubtasks)</span>
+              <span class="arrow">│</span>
+              <span class="arrow">├──</span> <span class="node">TaskPane</span> <span class="comment">(useActiveTask, useBoardActionsCtx)</span>
+              <span class="arrow">│</span>    <span class="arrow">└──</span> <span class="node">SubtaskList</span> <span class="comment">(useSubtasks)</span>
+              <span class="arrow">│</span>
+              <span class="arrow">├──</span> <span class="node">GlobalTaskSearch</span> <span class="comment">(useBoardTasks)</span>
+              <span class="arrow">├──</span> <span class="node">CommandPalette</span> <span class="comment">(useBoardTasks)</span>
+              <span class="arrow">└──</span> <span class="node">RunningTasksBar</span> <span class="comment">(useTasksByState)</span></div>
+
+        <h2>Data Flow</h2>
+        <div class="diagram"><span class="comment">1. Initial Load:</span>
+   <span class="node">Server</span> <span class="arrow">─────▶</span> <span class="node">page.tsx</span> <span class="arrow">─────▶</span> <span class="node">Board.tsx</span> <span class="arrow">─────▶</span> <span class="node">useBoardStore.setState()</span>
+                  (fetch)      (board prop)    (hydrate)
+
+<span class="comment">2. Runtime Updates:</span>
+   <span class="node">User Action</span> <span class="arrow">─────▶</span> <span class="node">Component</span> <span class="arrow">─────▶</span> <span class="node">store.action()</span> <span class="arrow">─────▶</span> <span class="node">set()</span> <span class="arrow">─────▶</span> <span class="node">Subscribers Re-render</span>
+                       (click)         (moveTask)       (state)     (only affected)</div>
+
+        <div class="callout callout-success">
+          <div class="callout-title">✅ No Context Providers</div>
+          <p>The entire component tree now operates without any React Context providers. Components subscribe to exactly the state slices they need.</p>
+        </div>
+      </div>
+
+      <!-- VERIFICATION -->
+      <div id="verification" class="section">
+        <h1>✅ Verification</h1>
+        
+        <h2>Test Results</h2>
+        <table>
+          <thead>
+            <tr><th>Test Suite</th><th>Tests</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Board.spec.tsx</td><td>2</td><td style="color: var(--success)">✅ Passed</td></tr>
+            <tr><td>SubtaskList.spec.tsx</td><td>2</td><td style="color: var(--success)">✅ Passed</td></tr>
+            <tr><td>TaskCard.spec.tsx</td><td>4</td><td style="color: var(--success)">✅ Passed</td></tr>
+            <tr><td>DragAndDrop.spec.tsx</td><td>1</td><td style="color: var(--success)">✅ Passed</td></tr>
+            <tr><td>BoardTitleSync.spec.tsx</td><td>2</td><td style="color: var(--success)">✅ Passed</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Build Status</h2>
+        <div class="card">
+          <div class="card-header">
+            <div style="font-size: 2rem;">✅</div>
+            <div>
+              <div class="card-title">Build Successful</div>
+              <p style="margin: 0; color: var(--text-muted)">TypeScript compilation passed with no new errors</p>
+            </div>
+          </div>
+        </div>
+
+        <h2>Manual Testing Checklist</h2>
+        <ul>
+          <li>Board loads correctly with all columns and tasks</li>
+          <li>Drag-and-drop moves tasks between columns</li>
+          <li>Task editing (title, state, priority) persists</li>
+          <li>Subtask operations (add parent, remove parent)</li>
+          <li>Command palette search works (Cmd+K)</li>
+          <li>Global task search filters correctly</li>
+          <li>Running tasks bar updates in real-time</li>
+        </ul>
+      </div>
+
+      <!-- FILES -->
+      <div id="files" class="section">
+        <h1>📁 Complete File Changes</h1>
+        
+        <h2>New Files</h2>
+        <div class="card">
+          <h4><span class="badge badge-new">NEW</span> src/store/useBoardStore.ts</h4>
+          <p>Central Zustand store with state, actions, and selector hooks. ~290 lines.</p>
+        </div>
+
+        <h2>Modified Files</h2>
+        <div class="card">
+          <h4><span class="badge badge-modify">MODIFY</span> src/components/boardHooks.ts</h4>
+          <p>Renamed from BoardContext.tsx. Now re-exports Zustand hooks for backward compatibility. Removed BoardProvider.</p>
+        </div>
+        <div class="card">
+          <h4><span class="badge badge-modify">MODIFY</span> src/components/Board.tsx</h4>
+          <p>Hydrates store directly using <code>useBoardStore.setState()</code> with <code>useRef</code> guard. Removed BoardProvider wrapper.</p>
+        </div>
+        <div class="card">
+          <h4><span class="badge badge-modify">MODIFY</span> src/components/BoardDndShell.tsx</h4>
+          <p>Subscribes to Zustand store directly. Removed <code>board</code> and <code>onMoveTask</code> props.</p>
+        </div>
+        <div class="card">
+          <h4><span class="badge badge-modify">MODIFY</span> Component Imports (7 files)</h4>
+          <p>Updated import paths from <code>./BoardContext</code> to <code>./boardHooks</code>:</p>
+          <ul>
+            <li>Column.tsx</li>
+            <li>TaskCard.tsx</li>
+            <li>TaskPane.tsx</li>
+            <li>SubtaskList.tsx</li>
+            <li>GlobalTaskSearch.tsx</li>
+            <li>CommandPalette.tsx</li>
+            <li>RunningTasksBar.tsx</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4><span class="badge badge-modify">MODIFY</span> tests/setup.ts</h4>
+          <p>Added <code>beforeEach</code> hook to reset Zustand store between tests.</p>
+        </div>
+        <div class="card">
+          <h4><span class="badge badge-modify">MODIFY</span> Test Files</h4>
+          <p>Updated to use <code>useBoardStore.setState()</code> instead of BoardProvider wrapper:</p>
+          <ul>
+            <li>tests/components/Board.spec.tsx</li>
+            <li>tests/components/SubtaskList.spec.tsx</li>
+            <li>tests/components/DragAndDrop.spec.tsx</li>
+            <li>tests/components/TaskPane.spec.tsx</li>
+            <li>tests/components/BoardTitleSync.spec.tsx</li>
+            <li>__tests__/boardContextSelectors.test.tsx</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function showSection(id) {
+      // Update nav
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      document.querySelector('[onclick="showSection(\'' + id + '\')"]').classList.add('active');
+      
+      // Update sections
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      
+      // Scroll to top
+      document.querySelector('.main').scrollTop = 0;
+    }
+  </script>
+
+  <app-footer idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com" phone="+8801716734974"></app-footer>
+</body>
+</html>

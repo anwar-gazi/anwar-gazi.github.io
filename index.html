@@ -1,950 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <title>Engineering Portfolio – Case Study Landing Page</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/png" sizes="48x48" href="/icon.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/shortcut.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png">
-
-
-  <link rel="stylesheet" href="footer.css" />
-  <script src="footer.js" defer></script>
-  <script type="module" src="case-nav.js" defer></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minhajul Anwar – Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0b1529;
-      --bg-alt: #0f1c33;
-      --card: #111f36;
-      --accent: #5b67ff;
-      --accent-soft: rgba(99, 102, 241, 0.18);
-      --text-main: #e9eef6;
-      --text-muted: #b8c4d8;
-      --border-subtle: #23324b;
-      --radius-lg: 20px;
-      --radius-md: 12px;
-      --shadow-soft: 0 22px 60px rgba(11, 17, 32, 0.65);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at 20% 18%, rgba(102, 126, 234, 0.16), transparent 46%),
-        radial-gradient(circle at 85% 12%, rgba(14, 165, 233, 0.18), transparent 50%),
-        linear-gradient(145deg, #0a1326, #0f1c33);
-      color: var(--text-main);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a {
-      color: #a5b4fc;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    /* Header */
-
-    header {
-      position: relative;
-      top: auto;
-      z-index: 20;
-      backdrop-filter: blur(16px);
-      background: linear-gradient(to bottom,
-          rgba(15, 23, 42, 0.98),
-          rgba(15, 23, 42, 0.9),
-          transparent);
-      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
-    }
-
-    .header-inner {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 999px;
-      background:
-        conic-gradient(from 210deg, #6366f1, #22c55e, #f97316, #0ea5e9, #6366f1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #020617;
-      font-weight: 700;
-      font-size: 18px;
-      box-shadow: 0 12px 30px rgba(99, 102, 241, 0.9);
-    }
-
-    .brand-text-main {
-      font-weight: 600;
-      font-size: 15px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .brand-text-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .header-right {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .pill {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: var(--text-muted);
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      background-color: rgba(15, 23, 42, 0.8);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .pill-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #bbf7d0, #22c55e);
-      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.35);
-    }
-
-    main {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 26px 18px 48px;
-    }
-
-    /* Hero */
-
-    .hero {
-      margin-top: 10px;
-      margin-bottom: 26px;
-      padding: 24px 22px 20px;
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at 15% 18%, rgba(91, 103, 255, 0.18), transparent 52%),
-        radial-gradient(circle at 85% 82%, rgba(34, 197, 94, 0.14), transparent 52%),
-        linear-gradient(150deg, #0d1930, #0b1529);
-      border: 1px solid rgba(184, 198, 221, 0.35);
-      box-shadow: 0 18px 50px rgba(6, 12, 26, 0.65);
-      display: grid;
-      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.8fr);
-      gap: 22px;
-      align-items: center;
-    }
-
-    @media (max-width: 860px) {
-      .hero {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .hero-kicker {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .hero-title {
-      font-size: clamp(26px, 3.3vw, 32px);
-      line-height: 1.18;
-      margin-bottom: 10px;
-      font-weight: 680;
-    }
-
-    .hero-highlight {
-      background: linear-gradient(120deg, #a5b4fc, #22c55e);
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    .hero-text {
-      font-size: 14px;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0d0f14;
       color: #e5e7eb;
-      margin-bottom: 10px;
     }
-
-    .hero-meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .hero-meta-pill {
-      font-size: 11px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background-color: rgba(15, 23, 42, 0.9);
-      color: var(--text-muted);
-    }
-
-    .hero-side {
-      border-radius: 18px;
-      padding: 14px 14px 12px;
-      background:
-        radial-gradient(circle at 80% 20%, rgba(248, 250, 252, 0.08), transparent 60%),
-        linear-gradient(135deg, #0d1830, #101f39);
-      border: 1px solid rgba(184, 198, 221, 0.35);
-    }
-
-    .hero-side-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .hero-stat-grid {
+    a { color: inherit; text-decoration: none; }
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px 48px;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 10px;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
     }
-
-    .hero-stat {
-      border-radius: 14px;
-      padding: 10px;
-      background-color: rgba(15, 23, 42, 0.98);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-    }
-
-    .hero-stat-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 3px;
-    }
-
-    .hero-stat-value {
-      font-size: 17px;
-      font-weight: 600;
-    }
-
-    .hero-stat-footnote {
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
-
-    .hero-legends {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .legend-chip {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      color: var(--text-muted);
-      background-color: rgba(15, 23, 42, 0.9);
-    }
-
-    /* Filter row */
-
-    .filter-row {
-      margin-top: 18px;
-      margin-bottom: 12px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .filter-label {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .filter-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .filter-chip {
-      font-size: 11px;
-      padding: 5px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      color: var(--text-muted);
-      background-color: rgba(15, 23, 42, 0.9);
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .filter-chip.active {
-      background: linear-gradient(130deg, #6366f1, #22c55e);
-      border-color: transparent;
-      color: #020617;
-      font-weight: 500;
-    }
-
-    /* Cards grid */
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 10px;
-    }
-
-    @media (max-width: 1024px) {
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
-      .grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .card-link {
-      text-decoration: none;
-      color: inherit;
-    }
-
+    @media (max-width: 960px) { .page { grid-template-columns: 1fr; } }
     .card {
-      position: relative;
-      border-radius: var(--radius-lg);
-      padding: 14px 14px 12px;
-      background:
-        radial-gradient(circle at top left, rgba(148, 163, 248, 0.18), transparent 60%),
-        linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 1));
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
-      transition: transform 0.14s ease, box-shadow 0.14s ease,
-        border-color 0.14s ease;
-      display: flex;
-      flex-direction: column;
-      min-height: 180px;
+      background: linear-gradient(145deg, #161922, #12141c);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
     }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 22px 55px rgba(15, 23, 42, 1);
-      border-color: rgba(129, 140, 248, 0.9);
+    .sidebar { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+    .avatar-box {
+      width: 110px; height: 110px; border-radius: 22px; overflow: hidden;
+      position: relative; border: 3px solid rgba(245, 184, 74, 0.35); margin: 0 auto;
     }
-
-    .card-industry {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.11em;
-      color: var(--text-muted);
-      margin-bottom: 4px;
+    .status-dot {
+      width: 10px; height: 10px; border-radius: 50%; background: #34d399;
+      position: absolute; bottom: 10px; right: 10px; border: 2px solid #12141c;
     }
-
-    .card-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .card-subtitle {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .card-body {
-      font-size: 13px;
-      color: #e5e7eb;
-      margin-bottom: 8px;
-      flex-grow: 1;
-    }
-
-    .card-meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-
-    .card-meta-pill {
-      font-size: 11px;
-      padding: 4px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      color: var(--text-muted);
-      background-color: rgba(15, 23, 42, 0.9);
-    }
-
-    .card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 2px;
-    }
-
-    .card-link-text {
-      font-size: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      color: #a5b4fc;
-    }
-
-    .card-link-text span {
-      font-size: 14px;
-    }
-
-    .card-tagline {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .sidebar h1 { text-align: center; margin: 10px 0 4px; font-size: 20px; font-weight: 600; color: #fff; }
+    .sidebar .role { text-align: center; font-size: 13px; color: #cbd5e1; }
+    .divider { border: none; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 12px 0; }
+    .contact-item { display: flex; gap: 12px; align-items: center; padding: 10px 0; }
+    .contact-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 2px; }
+    .contact-value { font-size: 13px; color: #e5e7eb; word-break: break-word; }
+    .socials { display: flex; justify-content: center; gap: 10px; font-size: 13px; color: #cbd5e1; }
+    .main-card { padding: 20px; }
+    .tabs { display: flex; gap: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 16px; }
+    .tab-btn { background: none; border: none; padding: 10px 6px; color: #cbd5e1; font-size: 14px; border-bottom: 2px solid transparent; cursor: pointer; }
+    .tab-btn.active { color: #f5b84a; border-color: #f5b84a; }
+    .section-title { font-size: 22px; font-weight: 600; color: #fff; margin: 0 0 10px; }
+    .about-text { color: #d1d5db; line-height: 1.6; font-size: 14px; margin: 0 0 14px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+    .service-card { border-radius: 14px; padding: 14px; background: linear-gradient(145deg, #1a1d26, #161922); border: 1px solid rgba(255, 255, 255, 0.04); }
+    .service-card h4 { margin: 0 0 6px; color: #fff; font-size: 15px; font-weight: 600; }
+    .service-card p { margin: 0; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
+    .skills-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .skill-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 12px; padding: 12px; }
+    .skill-card h5 { margin: 0 0 8px; color: #fff; font-size: 14px; font-weight: 600; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #e5e7eb; padding: 4px 8px; border-radius: 999px; font-size: 12px; }
+    .timeline { position: relative; padding-left: 18px; }
+    .timeline::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, #f5b84a, rgba(245, 184, 74, 0.2)); }
+    .timeline-item { position: relative; padding: 0 0 16px 0; }
+    .timeline-dot { position: absolute; left: -2px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #f5b84a; box-shadow: 0 0 0 4px rgba(245, 184, 74, 0.15); }
+    .timeline-header { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+    .timeline-title { margin: 0; color: #fff; font-size: 15px; font-weight: 600; }
+    .timeline-sub { margin: 2px 0 0; color: #cbd5e1; font-size: 12px; }
+    .timeline-period { background: rgba(255, 255, 255, 0.05); color: #e5e7eb; font-size: 11px; padding: 4px 8px; border-radius: 8px; flex-shrink: 0; }
+    .timeline-bullets { margin: 10px 0 0; padding-left: 14px; color: #d1d5db; font-size: 13px; line-height: 1.5; }
+    .hidden { display: none; }
   </style>
 </head>
-
 <body>
-  <case-nav></case-nav>
-  <header>
-    <div class="header-inner">
-      <div class="brand">
-        <div class="brand-avatar">M</div>
+  <div class="page">
+    <!-- Sidebar -->
+    <aside class="card sidebar">
+      <div class="avatar-box">
+        <img src="../minhaj.jpg" alt="Minhajul Anwar" style="width: 100%; height: 100%; object-fit: cover;">
+        <span class="status-dot"></span>
+      </div>
+      <h1 id="side-name">Minhajul Anwar</h1>
+      <p id="side-title" class="role">Senior Backend / Full-Stack Engineer</p>
+      <hr class="divider">
+      <div class="contact-item">
+        <span style="color:#f5b84a;">✉️</span>
         <div>
-          <div class="brand-text-main">Software Engineering Portfolio</div>
-          <div class="brand-text-sub">End-to-end case studies across industries</div>
+          <div class="contact-label">Email</div>
+          <a id="side-email" href="#" class="contact-value">minhaj.me.bd@gmail.com</a>
         </div>
       </div>
-      <div class="header-right">
-        <div class="pill">
-          <span class="pill-dot"></span>
-          Open to Senior / Staff backend roles
+      <div class="contact-item">
+        <span style="color:#f5b84a;">📞</span>
+        <div>
+          <div class="contact-label">Phone</div>
+          <a id="side-phone" href="#" class="contact-value">+88 01716-734974</a>
         </div>
       </div>
-    </div>
-  </header>
-
-  <main>
-    <!-- Hero -->
-    <section class="hero">
-      <div>
-        <div class="hero-kicker">Case Study Portfolio</div>
-        <h1 class="hero-title">
-          Real-world backend &amp; product work across
-          <span class="hero-highlight">GovTech, fintech, media, logistics, and more</span>.
-        </h1>
-        <p class="hero-text">
-          Each card below opens a detailed, story-style case study: business context, constraints,
-          architecture, execution, and impact. Together they show how I design, ship, and
-          stabilise production systems in very different domains — from government SaaS and payment
-          gateways to media CMS, logistics, IVR, and ecommerce.
-        </p>
-        <div class="hero-meta-row">
-          <div class="hero-meta-pill">9 detailed case studies</div>
-          <div class="hero-meta-pill">2012 → Present</div>
-          <div class="hero-meta-pill">PHP • Go • Node • Python • Django • Laravel • React • Vue</div>
+      <div class="contact-item">
+        <span style="color:#f5b84a;">📍</span>
+        <div>
+          <div class="contact-label">Location</div>
+          <div id="side-location" class="contact-value">Dhaka, Bangladesh</div>
         </div>
       </div>
-      <aside class="hero-side">
-        <div class="hero-side-title">At a glance</div>
-        <div class="hero-stat-grid">
-          <div class="hero-stat">
-            <div class="hero-stat-label">Industry Coverage</div>
-            <div class="hero-stat-value">8+</div>
-            <div class="hero-stat-footnote">
-              GovTech, fintech, media, logistics, ads, healthcare, telephony, ecommerce, IIG.
-            </div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-label">Focus</div>
-            <div class="hero-stat-value">Impact</div>
-            <div class="hero-stat-footnote">
-              Each page highlights concrete, business-facing outcomes — not just tech stacks.
-            </div>
-          </div>
-        </div>
-        <div class="hero-legends">
-          <span class="legend-chip">Production systems</span>
-          <span class="legend-chip">Refactors &amp; bug-fixing</span>
-          <span class="legend-chip">Architecture &amp; scaling</span>
-          <span class="legend-chip">Developer experience</span>
-        </div>
-      </aside>
-    </section>
-
-    <!-- Filters -->
-    <section class="filter-row">
-      <div class="filter-label">
-        Browse by industry focus:
+      <hr class="divider">
+      <div class="socials">
+        <a id="side-github" href="#" target="_blank" rel="noreferrer">GitHub</a>
+        <a id="side-portfolio" href="#" target="_blank" rel="noreferrer">Portfolio</a>
       </div>
-      <div class="filter-chips">
-        <span class="filter-chip active" data-category="all">All</span>
-        <span class="filter-chip" data-category="GovTech">GovTech</span>
-        <span class="filter-chip" data-category="Fintech &amp; Payments">Fintech &amp; Payments</span>
-        <span class="filter-chip" data-category="Media &amp; Content">Media &amp; Content</span>
-        <span class="filter-chip" data-category="Logistics &amp; Ops">Logistics &amp; Ops</span>
-        <span class="filter-chip" data-category="Healthcare">Healthcare</span>
-        <span class="filter-chip" data-category="Telephony &amp; IVR">Telephony &amp; IVR</span>
-        <span class="filter-chip" data-category="Ecommerce">Ecommerce</span>
-        <span class="filter-chip" data-category="Infrastructure / IIG">Infrastructure / IIG</span>
-        <span class="filter-chip" data-category="Independent">Independent/Projects</span>
+    </aside>
+
+    <!-- Main -->
+    <main class="card main-card">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="about">About</button>
+        <button class="tab-btn" data-tab="resume">Resume</button>
+        <button class="tab-btn" data-tab="portfolio">Portfolio</button>
       </div>
-    </section>
 
-    <!-- Cards grid -->
-    <section class="grid" aria-label="Case study list">
-      <!-- AmiProbashi – GovTech -->
-      <a class="card-link" href="amiprobashi/index.html" data-category="GovTech">
-        <article class="card">
-          <div class="card-industry">GovTech • National SaaS</div>
-          <h2 class="card-title">AmiProbashi – Migrant Services Platform</h2>
-          <div class="card-subtitle">Senior Software Engineer • 2025</div>
-          <p class="card-body">
-            High-impact bug fixes and feature work on the Ami-Probashi MoEWOE–BMET platform
-            (~7M records), improving reliability for a national migrant database and protecting a
-            multi-year government revenue channel.
-          </p>
-          <div class="card-meta-row">
-            <span class="card-meta-pill">PHP / Laravel / Vue</span>
-            <span class="card-meta-pill">MySQL</span>
-            <span class="card-meta-pill">GovTech</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-link-text">
-              View GovTech case study <span>↗</span>
-            </div>
-            <div class="card-tagline">National-scale, mission-critical SaaS</div>
-          </div>
-        </article>
-      </a>
+      <!-- About -->
+      <section data-page="about" class="space-y-6">
+        <div>
+          <h2 class="section-title">About Me</h2>
+          <p id="summary" class="about-text"></p>
+        </div>
 
-      <!-- Media – DoptorITMart -->
-      <a class="card-link" href="dailyniropekkho_doptorit/index.html" data-category="Media &amp; Content">
-        <article class="card">
-          <div class="card-industry">Media • Digital Publishing</div>
-          <h2 class="card-title">Multi-tenant News CMS (DoptorITMart)</h2>
-          <div class="card-subtitle">2023 – 2025 • Dhaka, Bangladesh</div>
-          <p class="card-body">
-            Built and shipped a multi-tenant news portal/CMS using Next.js, TypeScript,
-            Laravel, MongoDB, and MySQL, then commercialised it with paying media clients
-            (e.g., Daily Niropekkho), validating product–market fit.
-          </p>
-          <div class="card-meta-row">
-            <span class="card-meta-pill">Next.js / TypeScript</span>
-            <span class="card-meta-pill">Laravel • MongoDB • MySQL</span>
-            <span class="card-meta-pill">SaaS CMS</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-link-text">
-              View media case study <span>↗</span>
-            </div>
-            <div class="card-tagline">Productised CMS for newsrooms</div>
-          </div>
-        </article>
-      </a>
+        <div>
+          <h3 class="section-title" style="font-size: 18px;">What I'm Doing</h3>
+          <div id="domains" class="grid-2"></div>
+        </div>
 
-      <!-- Fintech – ShurjoPay -->
-      <a class="card-link" href="shurjopay/index.html" data-category="Fintech &amp; Payments">
-        <article class="card">
-          <div class="card-industry">Fintech • Payment Gateway</div>
-          <h2 class="card-title">ShurjoPay – Gateway Reliability</h2>
-          <div class="card-subtitle">Software Engineer • 2022</div>
-          <p class="card-body">
-            Resolved critical payment gateway failures in a PHP/Laravel/Vue stack, restoring
-            successful transactions and contributing to stronger customer trust and new customer
-            acquisition for a Bangladeshi payment gateway.
-          </p>
-          <div class="card-meta-row">
-            <span class="card-meta-pill">PHP / Laravel / Vue</span>
-            <span class="card-meta-pill">Fintech</span>
-            <span class="card-meta-pill">Production incident work</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-link-text">
-              View fintech case study <span>↗</span>
-            </div>
-            <div class="card-tagline">Stability in money flows</div>
-          </div>
-        </article>
-      </a>
+        <div>
+          <h3 class="section-title" style="font-size: 18px;">Skills</h3>
+          <div id="skills" class="skills-wrap"></div>
+        </div>
+      </section>
 
-      <a class="card-link" href="shurjopay/shurjopay_bracbank_cof_case_study.html"
-        data-category="Fintech &amp; Payments">
-        <article class="card">
-          <div class="card-industry">Fintech • Payment Gateway</div>
-          <h2 class="card-title">ShurjoPay – Gateway Reliability for Brac Bank Transactions</h2>
-          <div class="card-subtitle">Software Engineer • 2022</div>
-          <p class="card-body">
-            ShurjoPay experienced BRAC Bank–specific transaction failures because the encryption/token generation
-            library provided by BRAC Bank was built for PHP 7, while ShurjoPay’s production runtime had moved to PHP 8.
-            When the PHP 7 library was directly require-ed in PHP 8, transaction requests were not encrypted correctly,
-            causing failures for users paying with BRAC Bank cards/accounts.
-          </p>
-          <div class="card-meta-row">
-            <span class="card-meta-pill">PHP / Laravel / Vue</span>
-            <span class="card-meta-pill">Fintech</span>
-            <span class="card-meta-pill">Production incident work</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-link-text">
-              View fintech case study <span>↗</span>
-            </div>
-            <div class="card-tagline">Stability in Brac Bank transactions</div>
-          </div>
-        </article>
-      </a>
+      <!-- Portfolio -->
+      <section data-page="portfolio" class="space-y-6 hidden">
+        <div>
+          <h3 class="section-title" style="font-size: 18px;">Portfolio</h3>
+          <div class="timeline" id="portfolio-list"></div>
+        </div>
+      </section>
 
-      <!-- Ads / Click processing – SulacoTec (treated as Media & Content) -->
-      <a class="card-link" href="sulacotec/index.html" data-category="Media &amp; Content">
-        <article class="card">
-          <div class="card-industry">AdTech • Click Processing</div>
-          <h2 class="card-title">CPC/CPA/CPM Bid Prediction (SulacoTec)</h2>
-          <div class="card-subtitle">Senior Software Engineer • 2023 – 2024</div>
-          <p class="card-body">
-            Analysed ~100M historical click records to build a Laravel-based system that
-            predicts CPC/CPA/CPM bids for bulk click purchases, helping stabilise revenue and
-            bidding strategy in a high-volume ad environment.
-          </p>
-          <div class="card-meta-row">
-            <span class="card-meta-pill">Laravel</span>
-            <span class="card-meta-pill">AdTech / Bid modelling</span>
-            <span class="card-meta-pill">High-volume data</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-link-text">
-              View adtech case study <span>↗</span>
-            </div>
-            <div class="card-tagline">Turning click history into insight</div>
-          </div>
-        </article>
-      </a>
+      <!-- Resume -->
+      <section data-page="resume" class="space-y-6 hidden">
+        <div>
+          <h3 class="section-title" style="font-size: 18px;">Experience</h3>
+          <div class="timeline" id="experience"></div>
+        </div>
+        <div>
+          <h3 class="section-title" style="font-size: 18px;">Education</h3>
+          <div class="timeline" id="education"></div>
+        </div>
+      </section>
+    </main>
+  </div>
 
-      <!-- Logistics – OneIXchange -->
-      <a class="card-link" href="freightforwarding_oneixchange/index.html" data-category="Logistics &amp; Ops">
-        <article class="card">
-          <div class="card-industry">Logistics • Freight Forwarding</div>
-          <h2 class="card-title">Freight Operations Portal (OneIXchange)</h2>
-          <div class="card-subtitle">Senior Software Engineer • 2018 – 2019</div>
-          <p class="card-body">
-            Built and shipped a freight forwarding operations portal with Django, React, and
-            PostgreSQL to automate AWB and BL generation, reducing manual paperwork and errors
-            and commercialised it with Navana Logistics as anchor customer.
-          </p>
-          <div class="card-meta-row">
-            <span class="card-meta-pill">Django / React</span>
-            <span class="card-meta-pill">PostgreSQL</span>
-            <span class="card-meta-pill">Logistics SaaS</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-link-text">
-              View logistics case study <span>↗</span>
-            </div>
-            <div class="card-tagline">Document-heavy freight workflows</div>
-          </div>
-        </article>
-      </a>
-
-      <!-- Healthcare – MS Concitus -->
-      <a class="card-link" href="healthcare/index.html" data-category="Healthcare">
-        <article class="card">
-          <div class="card-industry">Healthcare • US Health Plans</div>
-          <h2 class="card-title">Healthcare Plan Operations (MS Concitus)</h2>
-          <div class="card-subtitle">Senior Software Engineer • 2017 – 2021</div>
-          <p class="card-body">
-            Delivered critical production bug fixes for a US healthcare plan operations portal
-            used by agents, stabilising enrolment and policy workflows and protecting recurring
-            revenue tied to US government contracts.
-          </p>
-          <div class="card-meta-row">
-            <span class="card-meta-pill">Production reliability</span>
-            <span class="card-meta-pill">Policy workflows</span>
-            <span class="card-meta-pill">US healthcare domain</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-link-text">
-              View healthcare case study <span>↗</span>
-            </div>
-            <div class="card-tagline">Reliability as a core feature</div>
-          </div>
-        </article>
-      </a>
-
-      <!-- Telephony / IVR -->
-      <a class="card-link" href="telephony/index.html" data-category="Telephony &amp; IVR">
-        <article class="card">
-          <div class="card-industry">Telephony • IVR</div>
-          <h2 class="card-title">Twilio + Asterisk IVR Automation</h2>
-          <div class="card-subtitle">Telephony/IVR Experience • 2016 – 2021</div>
-          <p class="card-body">
-            Designed and implemented an IVR system using Twilio APIs and Asterisk to automate
-            inbound call routing and self-service flows, reducing manual call handling and
-            improving customer support efficiency.
-          </p>
-          <div class="card-meta-row">
-            <span class="card-meta-pill">Twilio Voice</span>
-            <span class="card-meta-pill">Asterisk</span>
-            <span class="card-meta-pill">Call routing &amp; self-service</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-link-text">
-              View IVR case study <span>↗</span>
-            </div>
-            <div class="card-tagline">Smarter front door for support</div>
-          </div>
-        </article>
-      </a>
-
-      <!-- Dropshipping / eBay -->
-      <a class="card-link" href="dropshipping/index.html" data-category="Ecommerce">
-        <article class="card">
-          <div class="card-industry">Ecommerce • Dropshipping</div>
-          <h2 class="card-title">eBay Inventory &amp; Packing Automation</h2>
-          <div class="card-subtitle">Dropshipping Client • 2014 – 2016</div>
-          <p class="card-body">
-            Built a PHP + eBay API inventory tracker and packing slip automation tool that
-            streamlined fulfilment and operations, enabling a dropshipping business to scale to
-            roughly $60K in monthly revenue without proportional headcount.
-          </p>
-          <div class="card-meta-row">
-            <span class="card-meta-pill">PHP</span>
-            <span class="card-meta-pill">eBay API</span>
-            <span class="card-meta-pill">Fulfilment automation</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-link-text">
-              View dropshipping case study <span>↗</span>
-            </div>
-            <div class="card-tagline">Ops as a growth lever</div>
-          </div>
-        </article>
-      </a>
-
-      <!-- IIG / Internet Gateway -->
-      <a class="card-link" href="IIG/index.html" data-category="Infrastructure / IIG">
-        <article class="card">
-          <div class="card-industry">Infrastructure • IIG</div>
-          <h2 class="card-title">IIG Ticketing &amp; Notifications Prototype</h2>
-          <div class="card-subtitle">IIG Tools • 2012 – 2014</div>
-          <p class="card-body">
-            Built a PHP/osTicket-based prototype ticketing system with email notifications for
-            IIG stakeholders, showing how network incidents could be tracked, routed, and
-            communicated more systematically across NOC and partners.
-          </p>
-          <div class="card-meta-row">
-            <span class="card-meta-pill">osTicket / PHP</span>
-            <span class="card-meta-pill">NOC tooling</span>
-            <span class="card-meta-pill">Email notifications</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-link-text">
-              View IIG case study <span>↗</span>
-            </div>
-            <div class="card-tagline">Incident backbone for IIG ops</div>
-          </div>
-        </article>
-      </a>
-
-      <!-- Independent – Projects -->
-      <a class="card-link" href="projects/notion-clone-login-issue.html" data-category="Independent"
-        aria-labelledby="notion-clone-title">
-        <article class="card" role="article" aria-label="Notion-Clone – Notion Like Kanban Board">
-          <div class="card-industry" aria-hidden="false">Independent • Project Management Software</div>
-
-          <header>
-            <h2 id="notion-clone-title" class="card-title">Notion-Clone – Notion Like Kanban Board</h2>
-            <div class="card-subtitle">
-              <time datetime="2025">Independent Project • 2025</time>
-            </div>
-          </header>
-
-          <p class="card-body">
-            After successful credential authentication the app did not redirect the user back to the original page. The sign-in flow produced a session cookie (Auth.js / NextAuth), JWT callback logged, but the session callback did not run and middleware outputs were absent. Pages that should be protected were accessible without authentication.
-          </p>
-
-          <div class="card-meta-row" role="list" aria-label="Technologies and attributes">
-            <span class="card-meta-pill" role="listitem">TypeScript / NextJS / ReactJS</span>
-            <span class="card-meta-pill" role="listitem">PostgreSQL</span>
-            <span class="card-meta-pill" role="listitem">Independent</span>
-          </div>
-
-          <footer class="card-footer" role="contentinfo">
-            <div class="card-link-text" aria-hidden="false">
-              View Project case study <span aria-hidden="true">↗</span>
-            </div>
-            <div class="card-tagline">Independent project, mission-critical SaaS</div>
-          </footer>
-        </article>
-      </a>
-
-      <a class="card-link" href="projects/zustand-migration-rerender-analysis.html" data-category="Independent"
-        aria-labelledby="zustand-analysis-title">
-        <article class="card" role="article" aria-label="Zustand Migration – Re-render Analysis">
-          <div class="card-industry" aria-hidden="false">Independent • Performance RCA</div>
-
-          <header>
-            <h2 id="zustand-analysis-title" class="card-title">Zustand Migration – Re-render Analysis</h2>
-            <div class="card-subtitle">
-              <time datetime="2026">January 2026</time>
-            </div>
-          </header>
-
-          <p class="card-body">
-            Deep dive into the Notion-like Kanban migration from React Context to Zustand, cutting ~70% unnecessary
-            re-renders and eliminating the RunningTasksBar dock flicker through selector-based subscriptions and better
-            hydration.
-          </p>
-
-          <div class="card-meta-row" role="list" aria-label="Technologies and attributes">
-            <span class="card-meta-pill" role="listitem">React / Next.js</span>
-            <span class="card-meta-pill" role="listitem">Zustand</span>
-            <span class="card-meta-pill" role="listitem">Performance debugging</span>
-          </div>
-
-          <footer class="card-footer" role="contentinfo">
-            <div class="card-link-text" aria-hidden="false">
-              View project RCA <span aria-hidden="true">↗</span>
-            </div>
-            <div class="card-tagline">Dock flicker eliminated</div>
-          </footer>
-        </article>
-      </a>
-
-      <a class="card-link" href="projects/zustand-migration-docs.html" data-category="Independent"
-        aria-labelledby="zustand-docs-title">
-        <article class="card" role="article" aria-label="Zustand Migration Documentation">
-          <div class="card-industry" aria-hidden="false">Independent • State Management</div>
-
-          <header>
-            <h2 id="zustand-docs-title" class="card-title">BoardContext → Zustand Migration Docs</h2>
-            <div class="card-subtitle">
-              <time datetime="2026">State Management Refactor • 2026</time>
-            </div>
-          </header>
-
-          <p class="card-body">
-            Step-by-step implementation guide for replacing React Context/useReducer with a Zustand store: migration
-            checklist, file diffs, selector hooks with shallow comparison, and updated tests for a Notion-style board.
-          </p>
-
-          <div class="card-meta-row" role="list" aria-label="Technologies and attributes">
-            <span class="card-meta-pill" role="listitem">Zustand store</span>
-            <span class="card-meta-pill" role="listitem">Refactor playbook</span>
-            <span class="card-meta-pill" role="listitem">Selector hooks</span>
-          </div>
-
-          <footer class="card-footer" role="contentinfo">
-            <div class="card-link-text" aria-hidden="false">
-              View implementation doc <span aria-hidden="true">↗</span>
-            </div>
-            <div class="card-tagline">DX + performance uplift</div>
-          </footer>
-        </article>
-      </a>
-
-      <a class="card-link" href="projects/taskpane-flicker-investigation.html" data-category="Independent"
-        aria-labelledby="taskpane-flicker-title">
-        <article class="card" role="article" aria-label="TaskPane Flicker Investigation">
-          <div class="card-industry" aria-hidden="false">Independent • Next.js App Router</div>
-
-          <header>
-            <h2 id="taskpane-flicker-title" class="card-title">TaskPane Flicker Investigation</h2>
-            <div class="card-subtitle">
-              <time datetime="2026">Rendering RCA • 2026</time>
-            </div>
-          </header>
-
-          <p class="card-body">
-            Root-caused task drawer flicker to Next.js router.replace remounting server components; fixed by switching
-            to window.history.replaceState for URL syncing, keeping SPA behavior while preserving deep links and
-            back/forward navigation.
-          </p>
-
-          <div class="card-meta-row" role="list" aria-label="Technologies and attributes">
-            <span class="card-meta-pill" role="listitem">Next.js App Router</span>
-            <span class="card-meta-pill" role="listitem">SPA navigation</span>
-            <span class="card-meta-pill" role="listitem">Root-cause analysis</span>
-          </div>
-
-          <footer class="card-footer" role="contentinfo">
-            <div class="card-link-text" aria-hidden="false">
-              View investigation <span aria-hidden="true">↗</span>
-            </div>
-            <div class="card-tagline">Smooth task drawer UX</div>
-          </footer>
-        </article>
-      </a>
-
-    </section>
-  </main>
-
-  <app-footer></app-footer>
-
-
+  <script src="../cv.js"></script>
   <script>
-    (function () {
-      const chips = document.querySelectorAll('.filter-chip');
-      const cardLinks = document.querySelectorAll('.card-link');
+    const getCv = () => { try { return window.cvData; } catch (_) { return null; } };
+    let tabsInitialized = false;
 
-      function applyFilter(category) {
-        cardLinks.forEach(link => {
-          const cardCategory = link.dataset.category;
-          if (!category || category === 'all' || cardCategory === category) {
-            link.style.display = '';
-          } else {
-            link.style.display = 'none';
-          }
-        });
-      }
+    const setContact = (cv) => {
+      const c = cv?.contact || {};
+      const phone = c.phone || '+88 01716-734974';
+      const email = c.email || 'minhaj.me.bd@gmail.com';
+      const loc = c.location || 'Dhaka, Bangladesh';
+      const phoneHref = 'tel:' + phone.replace(/[^0-9+]/g, '').replace(/^\+?/, '+');
+      document.getElementById('side-name').textContent = cv?.name || 'Minhajul Anwar';
+      document.getElementById('side-title').textContent = cv?.title || 'Senior Backend / Full-Stack Engineer';
+      const e = document.getElementById('side-email'); e.textContent = email; e.href = `mailto:${email}`;
+      const p = document.getElementById('side-phone'); p.textContent = phone; p.href = phoneHref;
+      document.getElementById('side-location').textContent = loc;
+      document.getElementById('side-github').href = c.links?.github || 'https://github.com/anwar-gazi';
+      document.getElementById('side-portfolio').href = c.links?.portfolio || 'https://anwar-gazi.github.io';
+    };
 
-      chips.forEach(chip => {
-        chip.addEventListener('click', () => {
-          // Update active state
-          chips.forEach(c => c.classList.remove('active'));
-          chip.classList.add('active');
+    const renderSummary = (cv) => { document.getElementById('summary').textContent = cv?.summary || ''; };
 
-          const category = chip.dataset.category || 'all';
-          applyFilter(category);
+    const renderDomains = (cv) => {
+      const wrap = document.getElementById('domains');
+      wrap.innerHTML = '';
+      (cv?.domains || []).forEach((d, idx) => {
+        const card = document.createElement('div');
+        card.className = 'service-card';
+        const icon = ['💻','🧭','🛠️','📈','🔒','⚡'][idx % 6];
+        card.innerHTML = `
+          <div style="display:flex; gap:12px;">
+            <div style="font-size:18px; color:#f5b84a;">${icon}</div>
+            <div>
+              <h4>${d}</h4>
+              <p>Hands-on delivery across this domain.</p>
+            </div>
+          </div>
+        `;
+        wrap.appendChild(card);
+      });
+    };
+
+    const renderSkills = (cv) => {
+      const container = document.getElementById('skills');
+      container.innerHTML = '';
+      Object.entries(cv?.skills || {}).forEach(([group, items]) => {
+        const card = document.createElement('div');
+        card.className = 'skill-card';
+        card.innerHTML = `
+          <h5>${group.replace(/([A-Z])/g, ' $1').trim()}</h5>
+          <div class="skill-tags">
+            ${(items || []).map(i => `<span class="tag">${i}</span>`).join('')}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    };
+
+    const renderTimeline = (entries, containerId) => {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      entries.forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'timeline-item';
+        row.innerHTML = `
+          <span class="timeline-dot"></span>
+          <div class="timeline-header">
+            <div>
+              <p class="timeline-title">${item.title || item.degree || ''}</p>
+              <p class="timeline-sub">${item.company || item.school || ''}${item.location ? ' · ' + item.location : ''}</p>
+            </div>
+            <span class="timeline-period">${item.period || ''}</span>
+          </div>
+          ${item.bullets ? `<ul class="timeline-bullets">${item.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ''}
+        `;
+        container.appendChild(row);
+      });
+    };
+
+    const portfolioItems = [
+      { title: 'AmiProbashi – Migrant Services Platform', link: '/portfolio/amiprobashi/index.html', period: '2025', blurb: 'GovTech • National migrant services SaaS' },
+      { title: 'Multi-tenant News CMS (DoptorITMart)', link: '/portfolio/dailyniropekkho_doptorit/index.html', period: '2023–2025', blurb: 'Media CMS • Next.js + Laravel' },
+      { title: 'ShurjoPay – Gateway Reliability', link: '/portfolio/shurjopay/index.html', period: '2022', blurb: 'Fintech • Payment gateway stability' },
+      { title: 'ShurjoPay – Brac Bank COF', link: '/portfolio/shurjopay/shurjopay_bracbank_cof_case_study.html', period: '2022', blurb: 'Fintech • Card-on-file incident fix' },
+      { title: 'CPC/CPA/CPM Bid Prediction (SulacoTec)', link: '/portfolio/sulacotec/index.html', period: '2022', blurb: 'AdTech • Bidding prediction platform' },
+      { title: 'Freight Operations Portal (OneIXchange)', link: '/portfolio/freightforwarding_oneixchange/index.html', period: '2021', blurb: 'Logistics • Freight workflow portal' },
+      { title: 'Healthcare Plan Operations (MS Concitus)', link: '/portfolio/healthcare/index.html', period: '2020', blurb: 'Healthcare • Plan ops tooling' },
+      { title: 'Twilio + Asterisk IVR Automation', link: '/portfolio/telephony/index.html', period: '2019', blurb: 'Telephony • IVR automation' },
+      { title: 'eBay Inventory & Packing Automation', link: '/portfolio/dropshipping/index.html', period: '2018', blurb: 'Ecommerce • Ops automation' },
+      { title: 'IIG Ticketing & Notifications Prototype', link: '/portfolio/IIG/index.html', period: '2017', blurb: 'Infrastructure • Ticketing prototype' },
+      { title: 'Notion-Clone – Login RCA', link: '/portfolio/projects/notion-clone-login-issue.html', period: 'Project', blurb: 'RCA • NextAuth login issue' },
+      { title: 'Zustand Migration – Re-render Analysis', link: '/portfolio/projects/zustand-migration-rerender-analysis.html', period: 'Project', blurb: 'RCA • React state rerenders' },
+      { title: 'BoardContext → Zustand Migration Docs', link: '/portfolio/projects/zustand-migration-docs.html', period: 'Project', blurb: 'Docs • State mgmt migration' },
+      { title: 'TaskPane Flicker Investigation', link: '/portfolio/projects/taskpane-flicker-investigation.html', period: 'Project', blurb: 'Next.js UI flicker analysis' },
+    ];
+
+    const renderPortfolio = () => {
+      const container = document.getElementById('portfolio-list');
+      container.innerHTML = '';
+      portfolioItems.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'timeline-item';
+        row.innerHTML = `
+          <span class="timeline-dot"></span>
+          <div class="timeline-header">
+            <div>
+              <p class="timeline-title">${item.title}</p>
+              <p class="timeline-sub">${item.blurb}</p>
+            </div>
+            <span class="timeline-period">${item.period}</span>
+          </div>
+          <div style="margin-top:8px;">
+            <a href="${item.link}" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    };
+
+    const initTabs = () => {
+      if (tabsInitialized) return;
+      tabsInitialized = true;
+      const buttons = document.querySelectorAll('.tab-btn');
+      const pages = document.querySelectorAll('[data-page]');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          pages.forEach(p => p.classList.add('hidden'));
+          const page = document.querySelector(`[data-page="${btn.dataset.tab}"]`);
+          if (page) page.classList.remove('hidden');
         });
       });
+    };
 
-      // Initial state: "All"
-      applyFilter('all');
-    })();
+    function hydrate() {
+      const cv = getCv();
+      if (!cv) return;
+      setContact(cv);
+      renderSummary(cv);
+      renderDomains(cv);
+      renderSkills(cv);
+      renderTimeline(cv.experience || [], 'experience');
+      renderTimeline(cv.education || [], 'education');
+      renderPortfolio();
+      initTabs();
+    }
+
+    document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', hydrate) : hydrate();
   </script>
 </body>
-
 </html>

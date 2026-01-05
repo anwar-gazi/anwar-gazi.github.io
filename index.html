@@ -242,26 +242,59 @@
     };
 
     const portfolioItems = [
-      { title: 'AmiProbashi – Migrant Services Platform', link: '/portfolio/amiprobashi/index.html', period: '2025', blurb: 'GovTech • National migrant services SaaS' },
-      { title: 'Multi-tenant News CMS (DoptorITMart)', link: '/portfolio/dailyniropekkho_doptorit/index.html', period: '2023–2025', blurb: 'Media CMS • Next.js + Laravel' },
-      { title: 'ShurjoPay – Gateway Reliability', link: '/portfolio/shurjopay/index.html', period: '2022', blurb: 'Fintech • Payment gateway stability' },
-      { title: 'ShurjoPay – Brac Bank COF', link: '/portfolio/shurjopay/shurjopay_bracbank_cof_case_study.html', period: '2022', blurb: 'Fintech • Card-on-file incident fix' },
-      { title: 'CPC/CPA/CPM Bid Prediction (SulacoTec)', link: '/portfolio/sulacotec/index.html', period: '2022', blurb: 'AdTech • Bidding prediction platform' },
-      { title: 'Freight Operations Portal (OneIXchange)', link: '/portfolio/freightforwarding_oneixchange/index.html', period: '2021', blurb: 'Logistics • Freight workflow portal' },
-      { title: 'Healthcare Plan Operations (MS Concitus)', link: '/portfolio/healthcare/index.html', period: '2020', blurb: 'Healthcare • Plan ops tooling' },
-      { title: 'Twilio + Asterisk IVR Automation', link: '/portfolio/telephony/index.html', period: '2019', blurb: 'Telephony • IVR automation' },
-      { title: 'eBay Inventory & Packing Automation', link: '/portfolio/dropshipping/index.html', period: '2018', blurb: 'Ecommerce • Ops automation' },
-      { title: 'IIG Ticketing & Notifications Prototype', link: '/portfolio/IIG/index.html', period: '2017', blurb: 'Infrastructure • Ticketing prototype' },
-      { title: 'Notion-Clone – Login RCA', link: '/portfolio/projects/notion-clone-login-issue.html', period: 'Project', blurb: 'RCA • NextAuth login issue' },
-      { title: 'Zustand Migration – Re-render Analysis', link: '/portfolio/projects/zustand-migration-rerender-analysis.html', period: 'Project', blurb: 'RCA • React state rerenders' },
-      { title: 'BoardContext → Zustand Migration Docs', link: '/portfolio/projects/zustand-migration-docs.html', period: 'Project', blurb: 'Docs • State mgmt migration' },
-      { title: 'TaskPane Flicker Investigation', link: '/portfolio/projects/taskpane-flicker-investigation.html', period: 'Project', blurb: 'Next.js UI flicker analysis' },
+      { title: 'AmiProbashi – Migrant Services Platform', link: '/portfolio/amiprobashi/index.html', period: 'Senior Software Engineer • 2025', blurb: 'GovTech • National migrant services SaaS' },
+      { title: 'Multi-tenant News CMS (DoptorITMart)', link: '/portfolio/dailyniropekkho_doptorit/index.html', period: '2023 – 2025 • Dhaka, Bangladesh', blurb: 'Media CMS • Next.js + Laravel' },
+      { title: 'ShurjoPay – Gateway Reliability', link: '/portfolio/shurjopay/index.html', period: 'Software Engineer • 2022', blurb: 'Fintech • Payment gateway stability' },
+      { title: 'ShurjoPay – Brac Bank COF', link: '/portfolio/shurjopay/shurjopay_bracbank_cof_case_study.html', period: 'Software Engineer • 2022', blurb: 'Fintech • Card-on-file incident fix' },
+      { title: 'CPC/CPA/CPM Bid Prediction (SulacoTec)', link: '/portfolio/sulacotec/index.html', period: 'Senior Software Engineer • 2023 – 2024', blurb: 'AdTech • Bidding prediction platform' },
+      { title: 'Freight Operations Portal (OneIXchange)', link: '/portfolio/freightforwarding_oneixchange/index.html', period: 'Senior Software Engineer • 2018 – 2019', blurb: 'Logistics • Freight workflow portal' },
+      { title: 'Healthcare Plan Operations (MS Concitus)', link: '/portfolio/healthcare/index.html', period: 'Senior Software Engineer • 2017 – 2021', blurb: 'Healthcare • Plan ops tooling' },
+      { title: 'Twilio + Asterisk IVR Automation', link: '/portfolio/telephony/index.html', period: 'Telephony/IVR Experience • 2016 – 2021', blurb: 'Telephony • IVR automation' },
+      { title: 'eBay Inventory & Packing Automation', link: '/portfolio/dropshipping/index.html', period: 'Dropshipping Client • 2014 – 2016', blurb: 'Ecommerce • Ops automation' },
+      { title: 'IIG Ticketing & Notifications Prototype', link: '/portfolio/IIG/index.html', period: 'IIG Tools • 2012 – 2014', blurb: 'Infrastructure • Ticketing prototype' },
+      { title: 'Notion-Clone – Login RCA', link: '/portfolio/projects/notion-clone-login-issue.html', period: 'Independent Project • 2025', blurb: 'RCA • NextAuth login issue' },
+      { title: 'Zustand Migration – Re-render Analysis', link: '/portfolio/projects/zustand-migration-rerender-analysis.html', period: 'January 2026', blurb: 'RCA • React state rerenders' },
+      { title: 'BoardContext → Zustand Migration Docs', link: '/portfolio/projects/zustand-migration-docs.html', period: 'State Management Refactor • 2026', blurb: 'Docs • State mgmt migration' },
+      { title: 'TaskPane Flicker Investigation', link: '/portfolio/projects/taskpane-flicker-investigation.html', period: 'Rendering RCA • 2026', blurb: 'Next.js UI flicker analysis' },
     ];
 
-    const renderPortfolio = () => {
+    const normalizeLink = (href, baseHref) => {
+      try {
+        const url = new URL(href, baseHref || window.location.href);
+        return url.pathname.replace(/\/$/, '');
+      } catch (_) {
+        return href || '';
+      }
+    };
+
+    const fetchPortfolioPeriods = async () => {
+      try {
+        const portfolioBase = new URL('portfolio/index.html', window.location.href);
+        const res = await fetch(portfolioBase.href, { cache: 'no-store' });
+        if (!res.ok) return {};
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const map = {};
+        doc.querySelectorAll('a.card-link').forEach(anchor => {
+          const href = anchor.getAttribute('href') || '';
+          const key = normalizeLink(href, portfolioBase.href);
+          const periodNode = anchor.querySelector('.card-subtitle time') || anchor.querySelector('.card-subtitle');
+          const periodText = periodNode?.textContent?.trim();
+          if (key && periodText) map[key] = periodText;
+        });
+        return map;
+      } catch (err) {
+        console.warn('Unable to read portfolio cards', err);
+        return {};
+      }
+    };
+
+    const renderPortfolio = (periodMap = {}) => {
       const container = document.getElementById('portfolio-list');
       container.innerHTML = '';
       portfolioItems.forEach(item => {
+        const normalized = normalizeLink(item.link);
+        const period = periodMap[normalized] || item.period || '';
         const row = document.createElement('div');
         row.className = 'timeline-item';
         row.innerHTML = `
@@ -271,7 +304,7 @@
               <p class="timeline-title">${item.title}</p>
               <p class="timeline-sub">${item.blurb}</p>
             </div>
-            <span class="timeline-period">${item.period}</span>
+            <span class="timeline-period">${period}</span>
           </div>
           <div style="margin-top:8px;">
             <a href="${item.link}" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -306,8 +339,10 @@
       renderSkills(cv);
       renderTimeline(cv.experience || [], 'experience');
       renderTimeline(cv.education || [], 'education');
-      renderPortfolio();
-      initTabs();
+      fetchPortfolioPeriods().then(periodMap => {
+        renderPortfolio(periodMap);
+        initTabs();
+      });
     }
 
     document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', hydrate) : hydrate();

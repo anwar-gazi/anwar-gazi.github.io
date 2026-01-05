@@ -123,6 +123,28 @@
     display: none;
 }
 
+.cta-toast-expand {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+    font-size: 16px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.cta-shell[data-state="toast"] .cta-toast-expand {
+    display: inline-flex;
+}
+
 .cta-shell.incoming {
     width: 100%;
     justify-content: center;

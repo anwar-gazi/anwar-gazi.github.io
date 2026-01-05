@@ -74,6 +74,7 @@ class CtaBot extends HTMLElement {
       <footer class="cta-shell" data-state="bar">
           <div class="cta-surface">
             <div class="cta-surface-inner">
+              <button class="cta-toast-expand" data-action="expand" type="button" aria-label="Expand">‹</button>
               <div class="cta-bar">
                 <div class="cta-avatar">
                   <img class="cta-avatar-img" src="${this._photoSrc}" alt="Profile" loading="lazy" />
@@ -286,6 +287,7 @@ class CtaBot extends HTMLElement {
     const openBtn = this.querySelector('[data-action="open"]');
     const collapseBtn = this.querySelector('[data-action="collapse"]');
     const dismissBtn = this.querySelector('[data-action="dismiss"]');
+    const expandBtn = this.querySelector('[data-action="expand"]');
     const emailLinks = this.querySelectorAll('.cta-email');
     const phoneLinks = this.querySelectorAll('.cta-phone');
 
@@ -312,6 +314,13 @@ class CtaBot extends HTMLElement {
     if (dismissBtn) {
       stopBubble(dismissBtn);
       dismissBtn.addEventListener('click', () => this._toast());
+    }
+    if (expandBtn) {
+      stopBubble(expandBtn);
+      expandBtn.addEventListener('click', () => {
+        this._userCollapsed = false;
+        this._setState('bar');
+      });
     }
 
     const muteBtn = this.querySelector('[data-action="mute"]');

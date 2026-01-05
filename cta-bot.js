@@ -58,15 +58,9 @@ class CtaBot extends HTMLElement {
 
     this._applyAttributes();
 
-    const storedState = this._readStorage(this._stateKey);
-    if (storedState === 'bar' || storedState === 'open' || storedState === 'toast') {
-      this._preferredState = storedState;
-    }
-    this._userCollapsed =
-      this._readStorage(this._collapsedKey) === 'true' || this._preferredState === 'toast';
-    if (this._userCollapsed) {
-      this._preferredState = 'toast';
-    }
+    // Default to bar on fresh load; user collapse will set toast later
+    this._preferredState = 'bar';
+    this._userCollapsed = false;
 
     this._contact = this._extractContact();
 
@@ -81,8 +75,8 @@ class CtaBot extends HTMLElement {
                   <span class="cta-status-dot" aria-hidden="true"></span>
                 </div>
                 <div class="cta-bar-text">
-                  <div class="cta-kicker">Let’s work together <span class="cta-status-pill">● Available</span></div>
-                <div class="cta-bar-title">Open to Senior/Staff backend roles</div>
+                  <div class="cta-kicker">Let’s work together</div>
+                <div class="cta-bar-title">Open to Senior/Staff backend roles <span class="cta-status-pill inline-pill">● Available</span></div>
               </div>
               <div class="cta-bar-actions">
                 <button class="cta-btn primary" data-action="open" type="button">Let’s talk</button>
@@ -347,22 +341,21 @@ class CtaBot extends HTMLElement {
 
     this._lastScrollY = window.scrollY;
     this._onScroll = () => {
+      const doc = document.documentElement;
+      const progress = (window.scrollY + window.innerHeight) / Math.max(doc.scrollHeight, 1);
+
       if (this._isMobile()) {
         this._setState('toast', { persistPreferred: false });
         return;
       }
 
-      const doc = document.documentElement;
-      const progress = (window.scrollY + window.innerHeight) / Math.max(doc.scrollHeight, 1);
-      const direction = window.scrollY > this._lastScrollY ? 'down' : 'up';
-      this._lastScrollY = window.scrollY;
+      if (progress > 0.92) {
+        this._setState('toast', { persistPreferred: false });
+        return;
+      }
 
-      if (!this._userCollapsed && progress > 0.72) {
-        this._setState('open');
-      } else if (direction === 'up' && progress < 0.5) {
-        this._setState('bar');
-      } else if (this._userCollapsed && this._state !== 'toast') {
-        this._setState('toast');
+      if (!this._userCollapsed) {
+        this._setState('bar', { persistPreferred: false });
       }
     };
     window.addEventListener('scroll', this._onScroll, { passive: true });

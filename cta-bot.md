@@ -4,13 +4,13 @@
 
 ## What it is
 - A self-contained Web Component (`<cta-bot>`) that renders a floating/collapsible CTA with multiple modes: toast, bar, open panel, and an “incoming call” overlay with ringtone/animation.
-- Lives in `cta-bot.js` (logic) and `footer.css` (styles) at the project root. No build tooling required—just include the files.
+- Lives in `cta-bot.js` (logic) and `cta-bot.css` (styles) at the project root. No build tooling required—just include the files.
 - Remembers state and position in `localStorage`, plays an idle animation with an optional ringtone, and hydrates contact details from attributes (attributes are the source of truth).
 
 ## Quick start
 ```html
 <!-- 1) Include styles + script -->
-<link rel="stylesheet" href="/footer.css">
+<link rel="stylesheet" href="/cta-bot.css">
 <script src="/cta-bot.js" defer></script>
 
 <!-- 2) Drop the element near end of <body> -->
@@ -70,7 +70,7 @@ Path resolution:
 
 ## Dependencies & assumptions
 - Runs in a plain browser; no module system required.
-- Needs `footer.css` and `cta-bot.js` loaded before `<cta-bot>` is parsed.
+- Needs `cta-bot.css` and `cta-bot.js` loaded before `<cta-bot>` is parsed.
 - Defaults expect assets at:
   - `/minhaj.jpg` (photo)
   - a ringtone you provide via `audio-src` (no built-in audio is loaded unless you set it)
@@ -78,7 +78,7 @@ Path resolution:
 
 ## Extensibility tips
 - To change copy, edit the template strings in `cta-bot.js` (`this.innerHTML` block).
-- To change colors/spacing/animations, edit CSS variables and rules in `footer.css`.
+- To change colors/spacing/animations, edit CSS variables and rules in `cta-bot.css`.
 - To add new actions, append buttons/links with class `.cta-action` (they’re exempt from idle resets).
 - To override idle timings or cooldowns, tweak `_idleDelay` and `_animateCooldown` in the constructor.
 - To namespace storage in multi-tenant pages, always set `storage-prefix`.
@@ -91,7 +91,7 @@ Path resolution:
 
 ## Minimal drop-in
 ```html
-<link rel="stylesheet" href="/footer.css">
+<link rel="stylesheet" href="/cta-bot.css">
 <script src="/cta-bot.js" defer></script>
 <cta-bot
   email="hire@company.com"

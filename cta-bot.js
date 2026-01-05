@@ -75,6 +75,9 @@ class CtaBot extends HTMLElement {
           <div class="cta-surface">
             <div class="cta-surface-inner">
               <div class="cta-bar">
+                <div class="cta-avatar">
+                  <img class="cta-avatar-img" src="${this._photoSrc}" alt="Profile" loading="lazy" />
+                </div>
                 <div class="cta-bar-text">
                   <div class="cta-kicker">Let’s work together</div>
                 <div class="cta-bar-title">Open to Senior/Staff backend roles</div>
@@ -562,6 +565,7 @@ class CtaBot extends HTMLElement {
     const emails = this._shell.querySelectorAll('.cta-email');
     const phones = this._shell.querySelectorAll('.cta-phone');
     const photoEl = this._shell.querySelector('.incoming-photo');
+    const avatarEl = this._shell.querySelector('.cta-avatar-img');
     const subEl = this._shell.querySelector('.incoming-sub');
     emails.forEach((el) => {
       const prefix = el.dataset.prefix || '';
@@ -579,6 +583,9 @@ class CtaBot extends HTMLElement {
     });
     if (photoEl && this._photoSrc) {
       photoEl.src = this._photoSrc;
+    }
+    if (avatarEl && this._photoSrc) {
+      avatarEl.src = this._photoSrc;
     }
     if (subEl && this._cvData?.shortName) {
       subEl.textContent = `${this._cvData.shortName} is available — pick a channel to connect.`;

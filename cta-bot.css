@@ -136,6 +136,11 @@
     display: none;
 }
 
+.cta-shell[data-state="toast"] .cta-minimize,
+.cta-shell[data-state="bar"] .cta-minimize {
+    display: none;
+}
+
 .cta-toast-controls {
     position: absolute;
     top: 8px;
@@ -667,17 +672,6 @@
     gap: 8px;
     flex-wrap: wrap;
     justify-content: flex-end;
-}
-
-.cta-minimize {
-    grid-column: 1 / -1;
-    justify-self: flex-end;
-    background: none;
-    border: none;
-    color: var(--cta-muted);
-    font-size: 12px;
-    cursor: pointer;
-    padding: 4px 0;
 }
 
 .cta-shell[data-state="bar"] .cta-panel {

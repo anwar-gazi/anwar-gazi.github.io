@@ -82,14 +82,15 @@ class CtaBot extends HTMLElement {
                   <span class="cta-status-dot" aria-hidden="true"></span>
                 </div>
                 <div class="cta-bar-text">
-                  <div class="cta-kicker">Let’s work together</div>
-                <div class="cta-bar-title">Open to Senior/Staff backend roles <span class="cta-status-pill inline-pill">● Available</span></div>
-              </div>
-              <div class="cta-bar-actions">
-                <button class="cta-btn primary" data-action="open" type="button">Let’s talk</button>
-                <button class="cta-icon-btn cta-close" data-action="dismiss" type="button" aria-label="Hide contact bar">✕</button>
-              </div>
-            </div>
+              <div class="cta-kicker">Let’s work together</div>
+            <div class="cta-bar-title">Open to Senior/Staff backend roles <span class="cta-status-pill inline-pill">● Available</span></div>
+          </div>
+          <div class="cta-bar-actions">
+            <button class="cta-btn primary" data-action="open" type="button">Let’s talk</button>
+            <button class="cta-icon-btn cta-minimize" data-action="collapse" type="button" aria-label="Minimize">–</button>
+            <button class="cta-icon-btn cta-close" data-action="dismiss" type="button" aria-label="Hide contact bar">✕</button>
+          </div>
+        </div>
 
             <div class="cta-panel">
               <div class="cta-panel-copy">
@@ -101,7 +102,6 @@ class CtaBot extends HTMLElement {
               <a class="cta-btn primary cta-action cta-email" data-prefix="Email " href="${this._contact.email ? `mailto:${this._contact.email}` : '#'}">Email ${this._contact.email}</a>
               <a class="cta-btn ghost cta-action cta-phone" data-prefix="Call / WhatsApp " href="${this._contact.phoneHref}">Call / WhatsApp ${this._contact.phoneDisplay}</a>
             </div>
-            <button class="cta-minimize" data-action="collapse" type="button">Minimize</button>
           </div>
         </div>
         <div class="cta-sparkles" aria-hidden="true">
@@ -363,16 +363,19 @@ class CtaBot extends HTMLElement {
     emailLinks.forEach(stopBubble);
     phoneLinks.forEach(stopBubble);
 
-    // Hover intent on desktop
-    this._shell.addEventListener('mouseenter', () => {
-      if (this._isMobile()) return;
-      if (!this._userCollapsed) this._setState('open');
-    });
-    this._shell.addEventListener('mouseleave', () => {
-      if (this._isMobile()) return;
-      if (!this._userCollapsed) this._setState('bar');
-      if (this._userCollapsed) this._setState('toast');
-    });
+    // Hover is passive; do not change state on desktop mouse enter/leave
+    this._shell.addEventListener('mouseenter', () => {});
+    this._shell.addEventListener('mouseleave', () => {});
+
+    const barEl = this.querySelector('.cta-bar');
+    if (barEl) {
+      barEl.addEventListener('click', () => {
+        if (this._isMobile()) return;
+        if (this._state === 'bar' && !this._userCollapsed) {
+          this._setState('open', { persistPreferred: false });
+        }
+      });
+    }
 
     this._lastScrollY = window.scrollY;
     this._onScroll = () => {

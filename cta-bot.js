@@ -371,8 +371,10 @@ class CtaBot extends HTMLElement {
     if (barEl) {
       barEl.addEventListener('click', () => {
         if (this._isMobile()) return;
-        if (this._state === 'bar' && !this._userCollapsed) {
+        if (this._state === 'bar') {
+          this._userCollapsed = false;
           this._setState('open', { persistPreferred: false });
+          this._persistState(this._preferredState);
         }
       });
     }

@@ -753,4 +753,8 @@
     .cta-shell {
         justify-content: flex-end;
     }
+
+    .cta-toast-expand {
+        display: none !important;
+    }
 }

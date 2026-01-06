@@ -134,6 +134,7 @@
     .modal-close { background: none; border: none; color: #cbd5e1; font-size: 16px; cursor: pointer; padding: 4px; line-height: 1; }
     .modal-list { margin: 0; padding-left: 18px; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
     .hidden { display: none !important; }
+    .outbound-icon { font-size: 11px; opacity: 0.8; margin-left: 4px; }
   </style>
 </head>
 <body>
@@ -216,8 +217,12 @@
             </div>
             <hr className="divider" />
             <div className="socials">
-              <a id="side-github" href={github || '#'} target="_blank" rel="noreferrer">GitHub</a>
-              <a id="side-portfolio" href={portfolioLink || '#'} target="_blank" rel="noreferrer">Portfolio</a>
+              <a id="side-github" href={github || '#'} target="_blank" rel="noreferrer">
+                GitHub<span className="outbound-icon" aria-hidden="true">↗</span>
+              </a>
+              <a id="side-portfolio" href={portfolioLink || '#'} target="_blank" rel="noreferrer">
+                Portfolio<span className="outbound-icon" aria-hidden="true">↗</span>
+              </a>
             </div>
           </aside>
         );

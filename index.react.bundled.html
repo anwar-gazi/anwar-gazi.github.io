@@ -132,6 +132,7 @@
     .modal-close { background: none; border: none; color: #cbd5e1; font-size: 16px; cursor: pointer; padding: 4px; line-height: 1; }
     .modal-list { margin: 0; padding-left: 18px; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
     .hidden { display: none !important; }
+    .outbound-icon { font-size: 11px; opacity: 0.8; margin-left: 4px; }
   </style>
 </head>
 <body>
@@ -162,9 +163,9 @@
         const contact = cv.contact || {};
         const github = contact.links && contact.links.github;
         const portfolioLink = contact.links && contact.links.portfolio;
-        return h('aside', { className: 'card sidebar' },
-          h('div', { className: 'avatar-box' },
-            h('img', {
+      return h('aside', { className: 'card sidebar' },
+        h('div', { className: 'avatar-box' },
+          h('img', {
               src: cv.photoSrc || '../minhaj.jpg',
               alt: cv.name || 'Profile photo',
               style: { width: '100%', height: '100%', objectFit: 'cover' },
@@ -203,13 +204,19 @@
               h('div', { className: 'contact-label' }, 'Location'),
               h('div', { id: 'side-location', className: 'contact-value' }, contact.location || '—')
             )
+        ),
+        h('hr', { className: 'divider' }),
+        h('div', { className: 'socials' },
+          h('a', { id: 'side-github', href: github || '#', target: '_blank', rel: 'noreferrer' },
+            'GitHub',
+            h('span', { className: 'outbound-icon', 'aria-hidden': 'true' }, '↗')
           ),
-          h('hr', { className: 'divider' }),
-          h('div', { className: 'socials' },
-            h('a', { id: 'side-github', href: github || '#', target: '_blank', rel: 'noreferrer' }, 'GitHub'),
-            h('a', { id: 'side-portfolio', href: portfolioLink || '#', target: '_blank', rel: 'noreferrer' }, 'Portfolio')
+          h('a', { id: 'side-portfolio', href: portfolioLink || '#', target: '_blank', rel: 'noreferrer' },
+            'Portfolio',
+            h('span', { className: 'outbound-icon', 'aria-hidden': 'true' }, '↗')
           )
-        );
+        )
+      );
       };
 
       const AboutTab = ({ cv }) => h('section', { 'data-page': 'about', className: 'space-y-6' },

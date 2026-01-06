@@ -6,6 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "pages": {
+    "hydrated": "/index.html",
+    "static": "/index.static.html",
+    "reactBabel": "/index.react.html",
+    "reactBundled": "/index.react.bundled.html"
+  },
   "author": "Minhajul Anwar",
   "license": "ISC"
 }

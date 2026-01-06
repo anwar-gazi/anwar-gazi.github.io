@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minhajul Anwar – Portfolio (React, bundled)</title>
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="icon" sizes="192x192" href="/shortcut.png" type="image/png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0d0f14;
+      color: #e5e7eb;
+    }
+    a { color: inherit; text-decoration: none; }
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px 48px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 960px) { .page { grid-template-columns: 1fr; } }
+    .card {
+      background: linear-gradient(145deg, #161922, #12141c);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    }
+    .sidebar { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+    .avatar-box {
+      width: 110px; height: 110px; border-radius: 22px; overflow: hidden;
+      position: relative; border: 3px solid rgba(245, 184, 74, 0.35); margin: 0 auto;
+    }
+    .status-dot {
+      width: 10px; height: 10px; border-radius: 50%; background: #34d399;
+      position: absolute; bottom: 10px; right: 10px; border: 2px solid #12141c;
+    }
+    .sidebar h1 { text-align: center; margin: 10px 0 4px; font-size: 20px; font-weight: 600; color: #fff; }
+    .sidebar .role { text-align: center; font-size: 13px; color: #cbd5e1; }
+    .divider { border: none; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 12px 0; }
+    .contact-item { display: flex; gap: 12px; align-items: center; padding: 10px 0; }
+    .contact-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 2px; }
+    .contact-value { font-size: 13px; color: #e5e7eb; word-break: break-word; }
+    .socials { display: flex; justify-content: center; gap: 10px; font-size: 13px; color: #cbd5e1; }
+    .main-card { padding: 20px; }
+    .tabs { display: flex; gap: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 16px; }
+    .tab-btn { background: none; border: none; padding: 10px 6px; color: #cbd5e1; font-size: 14px; border-bottom: 2px solid transparent; cursor: pointer; }
+    .tab-btn.active { color: #f5b84a; border-color: #f5b84a; }
+    .section-title { font-size: 22px; font-weight: 600; color: #fff; margin: 0 0 10px; }
+    .about-text { color: #d1d5db; line-height: 1.6; font-size: 14px; margin: 0 0 14px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+    .service-card { border-radius: 14px; padding: 14px; background: linear-gradient(145deg, #1a1d26, #161922); border: 1px solid rgba(255, 255, 255, 0.04); }
+    .service-card h4 { margin: 0 0 6px; color: #fff; font-size: 15px; font-weight: 600; }
+    .service-card p { margin: 0; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
+    .skills-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .skill-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 12px; padding: 12px; }
+    .skill-card h5 { margin: 0 0 8px; color: #fff; font-size: 14px; font-weight: 600; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #e5e7eb; padding: 4px 8px; border-radius: 999px; font-size: 12px; }
+    .timeline {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding-left: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, #f5b84a, rgba(245, 184, 74, 0.2));
+    }
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 14px 1fr;
+      column-gap: 10px;
+      align-items: flex-start;
+      padding: 0 0 2px 0;
+    }
+    .timeline-item::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f5b84a;
+      box-shadow: 0 0 0 4px rgba(245, 184, 74, 0.15);
+      grid-column: 1;
+      margin-top: 6px;
+    }
+    .timeline-item > * { grid-column: 2; }
+    .timeline-header { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+    .timeline-title { margin: 0; color: #fff; font-size: 15px; font-weight: 600; }
+    .timeline-sub { margin: 2px 0 0; color: #cbd5e1; font-size: 12px; }
+    .timeline-period { background: rgba(255, 255, 255, 0.05); color: #e5e7eb; font-size: 11px; padding: 4px 8px; border-radius: 8px; flex-shrink: 0; }
+    .timeline-bullets { margin: 10px 0 0; padding-left: 14px; color: #d1d5db; font-size: 13px; line-height: 1.5; }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+    .modal-card {
+      background: #0f1118;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      max-width: 360px;
+      width: 100%;
+      padding: 16px;
+      color: #e5e7eb;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #fff; }
+    .modal-close { background: none; border: none; color: #cbd5e1; font-size: 16px; cursor: pointer; padding: 4px; line-height: 1; }
+    .modal-list { margin: 0; padding-left: 18px; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script>
+    (() => {
+      const h = React.createElement;
+      const { useState, useEffect, Fragment } = React;
+      const icons = ['💻', '🧭', '🛠️', '📈', '🔒', '⚡'];
+
+      const formatGroup = (key = '') =>
+        key.replace(/([A-Z])/g, ' $1').replace(/^\w/, (c) => c.toUpperCase());
+      const phoneHref = (phone = '') =>
+        'tel:' + phone.replace(/[^0-9+]/g, '').replace(/^\+?/, '+');
+
+      const TabButton = ({ id, active, onChange, children }) =>
+        h('button', {
+          className: `tab-btn${active === id ? ' active' : ''}`,
+          'data-tab': id,
+          onClick: () => onChange(id),
+          type: 'button'
+        }, children);
+
+      const Sidebar = ({ cv }) => {
+        const contact = cv.contact || {};
+        const github = contact.links && contact.links.github;
+        const portfolioLink = contact.links && contact.links.portfolio;
+        return h('aside', { className: 'card sidebar' },
+          h('div', { className: 'avatar-box' },
+            h('img', {
+              src: cv.photoSrc || '../minhaj.jpg',
+              alt: cv.name || 'Profile photo',
+              style: { width: '100%', height: '100%', objectFit: 'cover' },
+              loading: 'lazy'
+            }),
+            h('span', { className: 'status-dot' })
+          ),
+          h('h1', { id: 'side-name' }, cv.name),
+          h('p', { id: 'side-title', className: 'role' }, cv.title),
+          h('hr', { className: 'divider' }),
+          h('div', { className: 'contact-item' },
+            h('span', { style: { color: '#f5b84a' } }, '✉️'),
+            h('div', null,
+              h('div', { className: 'contact-label' }, 'Email'),
+              h('a', {
+                id: 'side-email',
+                className: 'contact-value',
+                href: contact.email ? `mailto:${contact.email}` : undefined
+              }, contact.email || '—')
+            )
+          ),
+          h('div', { className: 'contact-item' },
+            h('span', { style: { color: '#f5b84a' } }, '📞'),
+            h('div', null,
+              h('div', { className: 'contact-label' }, 'Phone'),
+              h('a', {
+                id: 'side-phone',
+                className: 'contact-value',
+                href: contact.phone ? phoneHref(contact.phone) : undefined
+              }, contact.phone || '—')
+            )
+          ),
+          h('div', { className: 'contact-item' },
+            h('span', { style: { color: '#f5b84a' } }, '📍'),
+            h('div', null,
+              h('div', { className: 'contact-label' }, 'Location'),
+              h('div', { id: 'side-location', className: 'contact-value' }, contact.location || '—')
+            )
+          ),
+          h('hr', { className: 'divider' }),
+          h('div', { className: 'socials' },
+            h('a', { id: 'side-github', href: github || '#', target: '_blank', rel: 'noreferrer' }, 'GitHub'),
+            h('a', { id: 'side-portfolio', href: portfolioLink || '#', target: '_blank', rel: 'noreferrer' }, 'Portfolio')
+          )
+        );
+      };
+
+      const AboutTab = ({ cv }) => h('section', { 'data-page': 'about', className: 'space-y-6' },
+        h('div', null,
+          h('h2', { className: 'section-title' }, 'About Me'),
+          h('p', { id: 'summary', className: 'about-text' }, cv.summary)
+        ),
+        h('div', null,
+          h('h3', { className: 'section-title', style: { fontSize: '18px' } }, "What I'm Doing"),
+          h('div', { id: 'domains', className: 'grid-2' },
+            (cv.domains || []).map((domain, idx) =>
+              h('div', { className: 'service-card', key: domain },
+                h('div', { style: { display: 'flex', gap: '12px' } },
+                  h('div', { style: { fontSize: '18px', color: '#f5b84a' } }, icons[idx % icons.length]),
+                  h('div', null,
+                    h('h4', null, domain),
+                    h('p', null, 'Hands-on delivery across this domain.')
+                  )
+                )
+              )
+            )
+          )
+        ),
+        h('div', null,
+          h('h3', { className: 'section-title', style: { fontSize: '18px' } }, 'Skills'),
+          h('div', { id: 'skills', className: 'skills-wrap' },
+            Object.entries(cv.skills || {}).map(([group, items]) =>
+              h('div', { className: 'skill-card', key: group },
+                h('h5', null, formatGroup(group)),
+                h('div', { className: 'skill-tags' },
+                  (items || []).map((item) => h('span', { className: 'tag', key: item }, item))
+                )
+              )
+            )
+          )
+        )
+      );
+
+      const ResumeTab = ({ experience, education }) => h('section', { 'data-page': 'resume', className: 'space-y-6' },
+        h('div', null,
+          h('h3', { className: 'section-title', style: { fontSize: '18px' } }, 'Experience'),
+          h('div', { id: 'experience', className: 'timeline' },
+            experience.map((item, idx) =>
+              h('div', { className: 'timeline-item', key: `${item.title}-${idx}` },
+                h('div', { className: 'timeline-header' },
+                  h('div', null,
+                    h('p', { className: 'timeline-title' }, item.title),
+                    h('p', { className: 'timeline-sub' }, [item.company, item.location].filter(Boolean).join(' · '))
+                  ),
+                  h('span', { className: 'timeline-period' }, item.period)
+                ),
+                item.bullets && item.bullets.length
+                  ? h('ul', { className: 'timeline-bullets' },
+                      item.bullets.map((b, bIdx) => h('li', { key: `${idx}-${bIdx}` }, b))
+                    )
+                  : null
+              )
+            )
+          )
+        ),
+        h('div', null,
+          h('h3', { className: 'section-title', style: { fontSize: '18px' } }, 'Education'),
+          h('div', { id: 'education', className: 'timeline' },
+            education.map((item, idx) =>
+              h('div', { className: 'timeline-item', key: `${item.school}-${idx}` },
+                h('div', { className: 'timeline-header' },
+                  h('div', null,
+                    h('p', { className: 'timeline-title' }, item.degree),
+                    h('p', { className: 'timeline-sub' }, [item.school, item.location].filter(Boolean).join(' · '))
+                  ),
+                  h('span', { className: 'timeline-period' }, item.period)
+                )
+              )
+            )
+          )
+        )
+      );
+
+      const PortfolioTab = ({ items }) => h('section', { 'data-page': 'portfolio', className: 'space-y-6' },
+        h('div', null,
+          h('h3', { className: 'section-title', style: { fontSize: '18px' } },
+            h('a', {
+              href: '/portfolio/index.html',
+              target: '_blank',
+              rel: 'noreferrer',
+              style: { color: 'inherit', textDecoration: 'none' }
+            }, 'Portfolio ↗')
+          ),
+          h('div', { id: 'portfolio-list', className: 'timeline' },
+            items.map((item, idx) =>
+              h('div', { className: 'timeline-item', key: `${item.title}-${idx}` },
+                h('div', { className: 'timeline-header' },
+                  h('div', null,
+                    h('p', { className: 'timeline-title' }, item.title),
+                    h('p', { className: 'timeline-sub' }, item.blurb)
+                  ),
+                  h('span', { className: 'timeline-period' }, item.period)
+                ),
+                h('div', { style: { marginTop: '8px' } },
+                  h('a', {
+                    href: item.url || '#',
+                    className: 'contact-value',
+                    target: '_blank',
+                    rel: 'noreferrer'
+                  }, 'Open case study ↗')
+                )
+              )
+            )
+          )
+        )
+      );
+
+      const App = () => {
+        const [tab, setTab] = useState('about');
+        const [cv, setCv] = useState(null);
+        const [error, setError] = useState(false);
+
+        useEffect(() => {
+          fetch('/cv.json', { cache: 'no-store', credentials: 'same-origin' })
+            .then((res) => res.ok ? res.json() : Promise.reject())
+            .then((data) => setCv(data))
+            .catch(() => setError(true));
+        }, []);
+
+        useEffect(() => {
+          if (error) window.location.href = '/index.static.html';
+        }, [error]);
+
+        if (!cv && !error) {
+          return h('div', { style: { color: '#cbd5e1', textAlign: 'center', padding: '32px' } }, 'Loading profile…');
+        }
+
+        if (!cv) {
+          return h('div', { style: { color: '#cbd5e1', textAlign: 'center', padding: '32px' } }, 'Redirecting to static snapshot…');
+        }
+
+        return h(Fragment, null,
+          h('div', { className: 'page' },
+            h(Sidebar, { cv }),
+            h('main', { className: 'card main-card' },
+              h('div', { className: 'tabs' },
+                h(TabButton, { id: 'about', active: tab, onChange: setTab }, 'About'),
+                h(TabButton, { id: 'resume', active: tab, onChange: setTab }, 'Resume'),
+                h(TabButton, { id: 'portfolio', active: tab, onChange: setTab }, 'Portfolio')
+              ),
+              tab === 'about' && h(AboutTab, { cv }),
+              tab === 'resume' && h(ResumeTab, { experience: cv.experience || [], education: cv.education || [] }),
+              tab === 'portfolio' && h(PortfolioTab, { items: cv.portfolioItems || [] })
+            )
+          ),
+          h('footer', { style: { textAlign: 'center', fontSize: '10px', opacity: 0.25, margin: '12px 0' } },
+            h('button', {
+              id: 'version-info-trigger',
+              type: 'button',
+              style: { background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0, font: 'inherit' }
+            }, 'This page: React (bundled)'),
+            ' · Other versions: ',
+            h('a', { href: '/index.react.html', style: { color: 'inherit' } }, 'React (Babel)'),
+            ' · ',
+            h('a', { href: '/index.html', style: { color: 'inherit' } }, 'Hydrated'),
+            ' · ',
+            h('a', { href: '/index.static.html', style: { color: 'inherit' } }, 'Static snapshot')
+          )
+        );
+      };
+
+      const root = document.getElementById('root');
+      ReactDOM.createRoot(root).render(h(App));
+    })();
+  </script>
+
+  <div id="version-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="version-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span id="version-modal-title">React (bundled)</span>
+        <button class="modal-close" type="button" aria-label="Close version info">x</button>
+      </div>
+      <ul class="modal-list">
+        <li>Uses React 18 UMD without in-browser Babel; rendered via <code>React.createElement</code>.</li>
+        <li>Pulls content from the data source for contact, domains, skills, experience, and portfolio.</li>
+        <li>Client-rendered tabs with minimal runtime dependencies.</li>
+        <li>Redirects to the static snapshot if data fetch fails.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const modal = document.getElementById('version-modal');
+      if (!modal) return;
+      document.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target && target.id === 'version-info-trigger') {
+          e.preventDefault();
+          modal.classList.remove('hidden');
+        }
+        if (target && target.classList && target.classList.contains('modal-close')) {
+          modal.classList.add('hidden');
+        }
+        if (target === modal) {
+          modal.classList.add('hidden');
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') modal.classList.add('hidden');
+      });
+    })();
+  </script>
+</body>
+</html>

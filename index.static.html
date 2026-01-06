@@ -110,7 +110,30 @@
     .timeline-sub { margin: 2px 0 0; color: #cbd5e1; font-size: 12px; }
     .timeline-period { background: rgba(255, 255, 255, 0.05); color: #e5e7eb; font-size: 11px; padding: 4px 8px; border-radius: 8px; flex-shrink: 0; }
     .timeline-bullets { margin: 10px 0 0; padding-left: 14px; color: #d1d5db; font-size: 13px; line-height: 1.5; }
-    .hidden { display: none; }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+    .modal-card {
+      background: #0f1118;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      max-width: 360px;
+      width: 100%;
+      padding: 16px;
+      color: #e5e7eb;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #fff; }
+    .modal-close { background: none; border: none; color: #cbd5e1; font-size: 16px; cursor: pointer; padding: 4px; line-height: 1; }
+    .modal-list { margin: 0; padding-left: 18px; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -595,8 +618,26 @@
   </div>
 
   <footer style="text-align:center; font-size:10px; opacity:0.25; margin:12px 0;">
-    Static snapshot (pre-rendered) · <a href="/index.html" style="color:inherit;">Hydrated version</a>
+    <button id="version-info-trigger" type="button" style="background:none; border:none; color:inherit; cursor:pointer; padding:0; font:inherit;">This page: Static snapshot</button> · Other versions:
+    <a href="/index.html" style="color:inherit;">Hydrated</a> ·
+    <a href="/index.react.html" style="color:inherit;">React (Babel)</a> ·
+    <a href="/index.react.bundled.html" style="color:inherit;">React (bundled)</a>
   </footer>
+
+  <div id="version-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="version-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span id="version-modal-title">Static snapshot</span>
+        <button class="modal-close" type="button" aria-label="Close version info">x</button>
+      </div>
+      <ul class="modal-list">
+        <li>All content is pre-rendered into this HTML.</li>
+        <li>No runtime data fetch; tabs are toggled with a small script.</li>
+        <li>Fastest fallback for legacy or offline scenarios.</li>
+        <li>Use hydrated or React versions for dynamic data refresh from the data source.</li>
+      </ul>
+    </div>
+  </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -612,6 +653,27 @@
         });
       });
     });
+
+    (function () {
+      const modal = document.getElementById('version-modal');
+      if (!modal) return;
+      document.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target && target.id === 'version-info-trigger') {
+          e.preventDefault();
+          modal.classList.remove('hidden');
+        }
+        if (target && target.classList && target.classList.contains('modal-close')) {
+          modal.classList.add('hidden');
+        }
+        if (target === modal) {
+          modal.classList.add('hidden');
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') modal.classList.add('hidden');
+      });
+    })();
   </script>
 </body>
 </html>

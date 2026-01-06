@@ -292,19 +292,19 @@
             <a href="/index.svelte.html" style="color:inherit;">Svelte</a>
           </footer>
 
-          <div v-if="showModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="version-modal-title" @click.self="showModal = false">
-            <div class="modal-card">
-              <div class="modal-header">
-                <span id="version-modal-title">Vue version</span>
-                <button class="modal-close" type="button" aria-label="Close version info" @click="showModal = false">x</button>
-              </div>
-              <ul class="modal-list">
-                <li>Client-rendered Vue 3 page powered by cv.json data.</li>
-                <li>Domains and skills link to related portfolio work.</li>
-                <li>Falls back to other versions via footer links if needed.</li>
-              </ul>
-            </div>
+      <div v-if="showModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="version-modal-title" @click.self="showModal = false">
+        <div class="modal-card">
+          <div class="modal-header">
+            <span id="version-modal-title">Vue version</span>
+            <button class="modal-close" type="button" aria-label="Close version info" @click="showModal = false">x</button>
           </div>
+          <ul class="modal-list">
+            <li>Client-rendered Vue 3 page populated from the data source.</li>
+            <li>Domains and skills link to related portfolio work.</li>
+            <li>Falls back to other versions via footer links if needed.</li>
+          </ul>
+        </div>
+      </div>
         </template>
       `
     };

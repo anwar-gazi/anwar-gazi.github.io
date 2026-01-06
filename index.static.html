@@ -59,71 +59,21 @@
     .service-card p { margin: 0; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
     .skills-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
     .skill-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 12px; padding: 12px; }
-    .skill-card h5 { margin: 0 0 8px; color: #fff; font-size: 14px; font-weight: 600; }
+    .skill-card h5 { margin: 0 0 8px; color: #fff; font-size: 14px; font-weight: 600; text-transform: capitalize; }
     .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .tag { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #e5e7eb; padding: 4px 8px; border-radius: 999px; font-size: 12px; }
-    .timeline {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      padding-left: 0;
-      margin: 0;
-      list-style: none;
-    }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 7px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, #f5b84a, rgba(245, 184, 74, 0.2));
-    }
-    .timeline-item {
-      position: relative;
-      display: grid;
-      grid-template-columns: 14px 1fr;
-      column-gap: 10px;
-      align-items: flex-start;
-      padding: 0 0 2px 0;
-    }
-    .timeline-item::before {
-      content: '';
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #f5b84a;
-      box-shadow: 0 0 0 4px rgba(245, 184, 74, 0.15);
-      grid-column: 1;
-      margin-top: 6px;
-    }
+    .timeline { position: relative; display: flex; flex-direction: column; gap: 18px; padding-left: 0; margin: 0; list-style: none; }
+    .timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, #f5b84a, rgba(245, 184, 74, 0.2)); }
+    .timeline-item { position: relative; display: grid; grid-template-columns: 14px 1fr; column-gap: 10px; align-items: flex-start; padding: 0 0 2px 0; }
+    .timeline-item::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #f5b84a; box-shadow: 0 0 0 4px rgba(245, 184, 74, 0.15); grid-column: 1; margin-top: 6px; }
     .timeline-item > * { grid-column: 2; }
     .timeline-header { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
     .timeline-title { margin: 0; color: #fff; font-size: 15px; font-weight: 600; }
     .timeline-sub { margin: 2px 0 0; color: #cbd5e1; font-size: 12px; }
     .timeline-period { background: rgba(255, 255, 255, 0.05); color: #e5e7eb; font-size: 11px; padding: 4px 8px; border-radius: 8px; flex-shrink: 0; }
     .timeline-bullets { margin: 10px 0 0; padding-left: 14px; color: #d1d5db; font-size: 13px; line-height: 1.5; }
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.55);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 50;
-    }
-    .modal-card {
-      background: #0f1118;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      max-width: 360px;
-      width: 100%;
-      padding: 16px;
-      color: #e5e7eb;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-    }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 50; }
+    .modal-card { background: #0f1118; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; max-width: 360px; width: 100%; padding: 16px; color: #e5e7eb; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #fff; }
     .modal-close { background: none; border: none; color: #cbd5e1; font-size: 16px; cursor: pointer; padding: 4px; line-height: 1; }
     .modal-list { margin: 0; padding-left: 18px; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
@@ -136,10 +86,10 @@
     <!-- Sidebar -->
     <aside class="card sidebar">
       <div class="avatar-box">
-        <img src="../minhaj.jpg" alt="Minhajul Anwar" style="width: 100%; height: 100%; object-fit: cover;">
+        <img src="/minhaj.jpg" alt="Minhajul Anwar" style="width: 100%; height: 100%; object-fit: cover;">
       </div>
       <h1 id="side-name">Minhajul Anwar</h1>
-      <p id="side-title" class="role">Senior Backend / Full-Stack Engineer – Payments, SaaS, GovTech</p>
+      <p id="side-title" class="role">Senior Backend / Full-Stack Engineer</p>
       <hr class="divider">
       <div class="contact-item">
         <span style="color:#f5b84a;">✉️</span>
@@ -152,7 +102,7 @@
         <span style="color:#f5b84a;">📞</span>
         <div>
           <div class="contact-label">Phone</div>
-          <a class="contact-value" href="tel:+8801716734974">+88 01716-734974</a>
+          <a class="contact-value" href="tel:+8801716734974">+880 1716-734974</a>
         </div>
       </div>
       <div class="contact-item">
@@ -289,7 +239,7 @@
           <h3 class="section-title" style="font-size: 18px;">Skills</h3>
           <div class="skills-wrap">
             <div class="skill-card">
-              <h5>backend</h5>
+              <h5>Backend</h5>
               <div class="skill-tags">
                 <a class="tag" href="/portfolio/shurjopay/index.html" target="_blank" rel="noreferrer" title="Built and stabilized gateway-facing APIs with schema validation and logging.">Node.js/TypeScript APIs (REST/JSON, validation, observability) ↗</a>
                 <a class="tag" href="/portfolio/amiprobashi/index.html" target="_blank" rel="noreferrer" title="Delivered GovTech workflows and payments features in Laravel.">PHP (Laravel) service delivery for payments/GovTech ↗</a>
@@ -299,8 +249,9 @@
                 <a class="tag" href="/portfolio/dailyniropekkho_doptorit/index.html" target="_blank" rel="noreferrer" title="Designed multi-tenant API contracts for news tenants.">API design and contract-first development ↗</a>
               </div>
             </div>
+
             <div class="skill-card">
-              <h5>frontend</h5>
+              <h5>Frontend</h5>
               <div class="skill-tags">
                 <a class="tag" href="/portfolio/dailyniropekkho_doptorit/index.html" target="_blank" rel="noreferrer" title="Built tenant-facing news portals (Next.js) and Vue admin flows.">React/Next.js (SSR/ISR) and Vue ↗</a>
                 <a class="tag" href="/portfolio/projects/zustand-migration-rerender-analysis.html" target="_blank" rel="noreferrer" title="Type-safe UI work with focused rerender analysis in React.">TypeScript-first UI development ↗</a>
@@ -309,8 +260,9 @@
                 <a class="tag" href="/portfolio/projects/zustand-migration-docs.html" target="_blank" rel="noreferrer" title="State management refactors and RCAs on complex React SPAs.">Dashboard/SPAs with state management discipline ↗</a>
               </div>
             </div>
+
             <div class="skill-card">
-              <h5>data</h5>
+              <h5>Data</h5>
               <div class="skill-tags">
                 <a class="tag" href="/portfolio/amiprobashi/index.html" target="_blank" rel="noreferrer" title="Designed and migrated schemas for GovTech and freight ops.">PostgreSQL/MySQL schema design and migrations ↗</a>
                 <a class="tag" href="/portfolio/shurjopay/index.html" target="_blank" rel="noreferrer" title="Stabilized payment queries with index and plan tuning.">Query tuning (indexes, EXPLAIN-driven optimization) ↗</a>
@@ -320,8 +272,9 @@
                 <a class="tag" href="/portfolio/dailyniropekkho_doptorit/index.html" target="_blank" rel="noreferrer" title="Implemented isolation and rollout patterns for news tenants.">Multi-tenant data patterns (tenant isolation, migrations) ↗</a>
               </div>
             </div>
+
             <div class="skill-card">
-              <h5>messaging</h5>
+              <h5>Messaging</h5>
               <div class="skill-tags">
                 <a class="tag" href="/portfolio/sulacotec/index.html" target="_blank" rel="noreferrer" title="Streamed and processed bidding signals for AdTech pipelines.">Kafka streams/consumers for event pipelines ↗</a>
                 <a class="tag" href="/portfolio/amiprobashi/index.html" target="_blank" rel="noreferrer" title="Background job delivery for GovTech service workflows.">RabbitMQ workers and delayed jobs ↗</a>
@@ -329,8 +282,9 @@
                 <a class="tag" href="/portfolio/shurjopay/index.html" target="_blank" rel="noreferrer" title="Added idempotent handlers and retry logic to payment queues.">Idempotency, retries, and queue visibility ↗</a>
               </div>
             </div>
+
             <div class="skill-card">
-              <h5>architecture</h5>
+              <h5>Architecture</h5>
               <div class="skill-tags">
                 <a class="tag" href="/portfolio/dailyniropekkho_doptorit/index.html" target="_blank" rel="noreferrer" title="Tenant isolation, RBAC, and rollout for publisher SaaS.">Multi-tenant SaaS tenancy (isolation, RBAC, rollout) ↗</a>
                 <a class="tag" href="/portfolio/amiprobashi/index.html" target="_blank" rel="noreferrer" title="Scoped service seams alongside legacy monolith code.">Service design across monolith + service seams ↗</a>
@@ -340,8 +294,9 @@
                 <a class="tag" href="/portfolio/projects/zustand-migration-docs.html" target="_blank" rel="noreferrer" title="Tuned CI for React/state refactors to guard regressions.">CI/CD pipelines with build/test gates ↗</a>
               </div>
             </div>
+
             <div class="skill-card">
-              <h5>quality</h5>
+              <h5>Quality</h5>
               <div class="skill-tags">
                 <a class="tag" href="/portfolio/shurjopay/index.html" target="_blank" rel="noreferrer" title="Hardened payment paths against common web risks.">Secure coding aligned to OWASP basics ↗</a>
                 <a class="tag" href="/portfolio/amiprobashi/index.html" target="_blank" rel="noreferrer" title="Validated payment and GovTech APIs with contract checks.">Input validation and contract tests for APIs ↗</a>
@@ -350,8 +305,9 @@
                 <a class="tag" href="/portfolio/projects/notion-clone-login-issue.html" target="_blank" rel="noreferrer" title="Performed RCAs and hardened auth/session flows.">Incident/RCA practice and regression prevention ↗</a>
               </div>
             </div>
+
             <div class="skill-card">
-              <h5>waysOfWorking</h5>
+              <h5>Ways Of Working</h5>
               <div class="skill-tags">
                 <a class="tag" href="/portfolio/amiprobashi/index.html" target="_blank" rel="noreferrer" title="Led design sessions for national-scale GovTech workloads.">System design and architecture facilitation ↗</a>
                 <a class="tag" href="/portfolio/dailyniropekkho_doptorit/index.html" target="_blank" rel="noreferrer" title="Guided multi-tenant CMS team through reviews and pairing.">Technical leadership: mentoring and code review ↗</a>
@@ -377,7 +333,7 @@
                   <p class="timeline-title">AmiProbashi – Migrant Services Platform</p>
                   <p class="timeline-sub">GovTech • National migrant services SaaS</p>
                 </div>
-                <span class="timeline-period">Senior Software Engineer • 2025</span>
+                <span class="timeline-period">AmiProbashi • 2025</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/amiprobashi/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -387,10 +343,10 @@
               <span class="timeline-dot"></span>
               <div class="timeline-header">
                 <div>
-                  <p class="timeline-title">Multi-tenant News CMS (DoptorITMart)</p>
+                  <p class="timeline-title">Multi-tenant News CMS (The DailyNiropekkho)</p>
                   <p class="timeline-sub">Media CMS • Next.js + Laravel</p>
                 </div>
-                <span class="timeline-period">2023 – 2025 • Dhaka, Bangladesh</span>
+                <span class="timeline-period">2024, 2025 • Dhaka, Bangladesh</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/dailyniropekkho_doptorit/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -403,7 +359,7 @@
                   <p class="timeline-title">ShurjoPay – Gateway Reliability</p>
                   <p class="timeline-sub">Fintech • Payment gateway stability</p>
                 </div>
-                <span class="timeline-period">Software Engineer • 2022</span>
+                <span class="timeline-period">Shurjomukhi Pvt Ltd • 2022</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/shurjopay/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -416,7 +372,7 @@
                   <p class="timeline-title">ShurjoPay – Brac Bank COF</p>
                   <p class="timeline-sub">Fintech • Card-on-file incident fix</p>
                 </div>
-                <span class="timeline-period">Software Engineer • 2022</span>
+                <span class="timeline-period">Shurjomukhi Pvt Ltd • 2022</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/shurjopay/shurjopay_bracbank_cof_case_study.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -426,10 +382,10 @@
               <span class="timeline-dot"></span>
               <div class="timeline-header">
                 <div>
-                  <p class="timeline-title">CPC/CPA/CPM Bid Prediction (SulacoTec)</p>
+                  <p class="timeline-title">CPC/CPA/CPM Bid Prediction</p>
                   <p class="timeline-sub">AdTech • Bidding prediction platform</p>
                 </div>
-                <span class="timeline-period">Senior Software Engineer • 2023 – 2024</span>
+                <span class="timeline-period">Advertisement, Click-processing • 2023, 2024</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/sulacotec/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -442,7 +398,7 @@
                   <p class="timeline-title">Freight Operations Portal (OneIXchange)</p>
                   <p class="timeline-sub">Logistics • Freight workflow portal</p>
                 </div>
-                <span class="timeline-period">Senior Software Engineer • 2018 – 2019</span>
+                <span class="timeline-period">Freight FOrwarding • 2018, 2019</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/freightforwarding_oneixchange/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -452,10 +408,10 @@
               <span class="timeline-dot"></span>
               <div class="timeline-header">
                 <div>
-                  <p class="timeline-title">Healthcare Plan Operations (MS Concitus)</p>
+                  <p class="timeline-title">Healthcare Plan Operations Tooling</p>
                   <p class="timeline-sub">Healthcare • Plan ops tooling</p>
                 </div>
-                <span class="timeline-period">Senior Software Engineer • 2017 – 2021</span>
+                <span class="timeline-period">US based healthcare agent • 2017, 2018</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/healthcare/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -468,7 +424,7 @@
                   <p class="timeline-title">Twilio + Asterisk IVR Automation</p>
                   <p class="timeline-sub">Telephony • IVR automation</p>
                 </div>
-                <span class="timeline-period">Telephony/IVR Experience • 2016 – 2021</span>
+                <span class="timeline-period">Telephony/IVR Experience • 2017, 2018</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/telephony/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -481,7 +437,7 @@
                   <p class="timeline-title">eBay Inventory & Packing Automation</p>
                   <p class="timeline-sub">Ecommerce • Ops automation</p>
                 </div>
-                <span class="timeline-period">Dropshipping Client • 2014 – 2016</span>
+                <span class="timeline-period">Dropshipping Client • 2014, 2015 2016</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/dropshipping/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -494,7 +450,7 @@
                   <p class="timeline-title">IIG Ticketing & Notifications Prototype</p>
                   <p class="timeline-sub">Infrastructure • Ticketing prototype</p>
                 </div>
-                <span class="timeline-period">IIG Tools • 2012 – 2014</span>
+                <span class="timeline-period">IIG Tools • 2012, 2013</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/IIG/index.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -546,7 +502,7 @@
                   <p class="timeline-title">TaskPane Flicker Investigation</p>
                   <p class="timeline-sub">Next.js UI flicker analysis</p>
                 </div>
-                <span class="timeline-period">Rendering RCA • 2026</span>
+                <span class="timeline-period">Rendering RCA • 2025</span>
               </div>
               <div style="margin-top:8px;">
                 <a href="/portfolio/projects/taskpane-flicker-investigation.html" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
@@ -657,13 +613,13 @@
         <li>All content is pre-rendered into this HTML.</li>
         <li>No runtime data fetch; tabs are toggled with a small script.</li>
         <li>Fastest fallback for legacy or offline scenarios.</li>
-        <li>Use hydrated or React versions for dynamic data refresh from the data source.</li>
+        <li>Use hydrated, React, Vue, or Svelte versions for live data from the data source pipeline.</li>
       </ul>
     </div>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    (function () {
       const buttons = document.querySelectorAll('.tab-btn');
       const pages = document.querySelectorAll('[data-page]');
       buttons.forEach((btn) => {
@@ -675,27 +631,19 @@
           if (page) page.classList.remove('hidden');
         });
       });
-    });
+    })();
 
     (function () {
       const modal = document.getElementById('version-modal');
       if (!modal) return;
-      document.addEventListener('click', (e) => {
-        const target = e.target;
-        if (target && target.id === 'version-info-trigger') {
-          e.preventDefault();
-          modal.classList.remove('hidden');
-        }
-        if (target && target.classList && target.classList.contains('modal-close')) {
-          modal.classList.add('hidden');
-        }
-        if (target === modal) {
-          modal.classList.add('hidden');
-        }
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') modal.classList.add('hidden');
-      });
+      const trigger = document.getElementById('version-info-trigger');
+      const closeBtn = modal.querySelector('.modal-close');
+      const hide = () => modal.classList.add('hidden');
+      const show = () => modal.classList.remove('hidden');
+      if (trigger) trigger.addEventListener('click', show);
+      if (closeBtn) closeBtn.addEventListener('click', hide);
+      modal.addEventListener('click', (e) => { if (e.target === modal) hide(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
     })();
   </script>
 </body>

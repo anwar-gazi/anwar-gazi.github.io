@@ -80,245 +80,222 @@
     .hidden { display: none !important; }
     .outbound-icon { font-size: 11px; opacity: 0.8; margin-left: 4px; }
   </style>
-  <script type="importmap">
-    {
-      "imports": {
-        "svelte/internal": "https://unpkg.com/svelte@3.59.2/internal/index.mjs"
-      }
-    }
-  </script>
 </head>
 <body>
   <div id="root" style="text-align:center; padding:32px; color:#cbd5e1;">Loading Svelte version…</div>
 
-  <script type="module">
-    import { compile } from 'https://unpkg.com/svelte@3.59.2/compiler.mjs';
+  <script>
+    (function () {
+      const icons = ['💻','🧭','🛠️','📈','🔒','⚡','📦','☎️','🩺'];
+      const formatGroup = (key = '') => key.replace(/([A-Z])/g, ' $1').trim();
 
-    const icons = ['💻','🧭','🛠️','📈','🔒','⚡','📦','☎️','🩺'];
-    const formatGroup = (key = '') => key.replace(/([A-Z])/g, ' $1').trim();
+      const safe = (val) => val == null ? '' : val;
 
-    const template = `
-      <script>
-        export let cv = {};
-        let tab = 'about';
-        let showModal = false;
-        const icons = ${JSON.stringify(icons)};
-        const formatGroup = ${formatGroup.toString()};
-
-        $: domainEntries = cv && typeof cv.domains === 'object' ? Object.entries(cv.domains) : [];
-        $: skillEntries = cv && typeof cv.skills === 'object' ? Object.entries(cv.skills) : [];
-
-        const phoneHref = (phone = '') => 'tel:' + phone.replace(/[^0-9+]/g, '').replace(/^\\+?/, '+');
-      </script>
-
-      <div class="page">
-        <aside class="card sidebar">
-          <div class="avatar-box">
-            <img src={cv.photoSrc || '../minhaj.jpg'} alt={cv.name || 'Profile photo'} style="width:100%; height:100%; object-fit:cover;" loading="lazy" />
+      const renderDomains = (domains = {}) => {
+        return Object.entries(domains).map(([name, detail], idx) => `
+          <div class="service-card">
+            <div style="display:flex; gap:12px;">
+              <div style="font-size:18px; color:#f5b84a;">${icons[idx % icons.length]}</div>
+              <div>
+                <h4>${name}</h4>
+                <p>${safe(detail?.summary) || 'Hands-on delivery across this domain.'}</p>
+                ${detail?.url ? `<div style="margin-top:6px;"><a href="${detail.url}" class="contact-value" target="_blank" rel="noreferrer">Related work ↗</a></div>` : ''}
+              </div>
+            </div>
           </div>
-          <h1 id="side-name">{cv.name}</h1>
-          <p id="side-title" class="role">{cv.title}</p>
-          <hr class="divider" />
-          <div class="contact-item">
-            <span style="color:#f5b84a;">✉️</span>
+        `).join('');
+      };
+
+      const renderSkills = (skills = {}) => {
+        return Object.entries(skills).map(([group, items]) => {
+          const tags = items && typeof items === 'object' ? Object.entries(items) : [];
+          return `
+            <div class="skill-card">
+              <h5>${formatGroup(group)}</h5>
+              <div class="skill-tags">
+                ${tags.map(([name, info]) => info?.url
+                  ? `<a class="tag" href="${info.url}" target="_blank" rel="noreferrer" title="${safe(info?.summary).replace(/"/g, '&quot;')}">${name} ↗</a>`
+                  : `<span class="tag" title="${safe(info?.summary).replace(/"/g, '&quot;')}">${name}</span>`
+                ).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      };
+
+      const renderTimeline = (items = []) => items.map((item) => `
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="timeline-header">
             <div>
-              <div class="contact-label">Email</div>
-              <a id="side-email" class="contact-value" href={cv.contact?.email ? \`mailto:\${cv.contact.email}\` : undefined}>{cv.contact?.email || '—'}</a>
+              <p class="timeline-title">${safe(item.title)}</p>
+              <p class="timeline-sub">${[item.company || item.school, item.location].filter(Boolean).join(' · ')}</p>
             </div>
+            <span class="timeline-period">${safe(item.period)}</span>
           </div>
-          <div class="contact-item">
-            <span style="color:#f5b84a;">📞</span>
+          ${item.bullets?.length ? `<ul class="timeline-bullets">${item.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ''}
+        </div>
+      `).join('');
+
+      const renderPortfolio = (items = []) => items.map((item) => `
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="timeline-header">
             <div>
-              <div class="contact-label">Phone</div>
-              <a id="side-phone" class="contact-value" href={cv.contact?.phone ? phoneHref(cv.contact.phone) : undefined}>{cv.contact?.phone || '—'}</a>
+              <p class="timeline-title">${safe(item.title)}</p>
+              <p class="timeline-sub">${safe(item.blurb)}</p>
             </div>
+            <span class="timeline-period">${safe(item.period)}</span>
           </div>
-          <div class="contact-item">
-            <span style="color:#f5b84a;">📍</span>
-            <div>
-              <div class="contact-label">Location</div>
-              <div id="side-location" class="contact-value">{cv.contact?.location || '—'}</div>
-            </div>
+          <div style="margin-top:8px;">
+            <a href="${item.url || '#'}" class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
           </div>
-          <hr class="divider" />
-          <div class="socials">
-            <a id="side-github" href={cv.contact?.links?.github || '#'} target="_blank" rel="noreferrer">GitHub<span class="outbound-icon" aria-hidden="true">↗</span></a>
-            <a id="side-portfolio" href={cv.contact?.links?.portfolio || '#'} target="_blank" rel="noreferrer">Portfolio<span class="outbound-icon" aria-hidden="true">↗</span></a>
+        </div>
+      `).join('');
+
+      const mount = (cv) => {
+        const root = document.getElementById('root');
+        if (!root) return;
+        root.innerHTML = `
+          <div class="page">
+            <aside class="card sidebar">
+              <div class="avatar-box">
+                <img src="${cv.photoSrc || '../minhaj.jpg'}" alt="${cv.name || 'Profile photo'}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+              </div>
+              <h1 id="side-name">${safe(cv.name)}</h1>
+              <p id="side-title" class="role">${safe(cv.title)}</p>
+              <hr class="divider">
+              <div class="contact-item">
+                <span style="color:#f5b84a;">✉️</span>
+                <div>
+                  <div class="contact-label">Email</div>
+                  <a id="side-email" class="contact-value" href="${cv.contact?.email ? `mailto:${cv.contact.email}` : '#'}">${cv.contact?.email || '—'}</a>
+                </div>
+              </div>
+              <div class="contact-item">
+                <span style="color:#f5b84a;">📞</span>
+                <div>
+                  <div class="contact-label">Phone</div>
+                  <a id="side-phone" class="contact-value" href="${cv.contact?.phone ? 'tel:' + cv.contact.phone.replace(/[^0-9+]/g, '').replace(/^\\+?/, '+') : '#'}">${cv.contact?.phone || '—'}</a>
+                </div>
+              </div>
+              <div class="contact-item">
+                <span style="color:#f5b84a;">📍</span>
+                <div>
+                  <div class="contact-label">Location</div>
+                  <div id="side-location" class="contact-value">${cv.contact?.location || '—'}</div>
+                </div>
+              </div>
+              <hr class="divider">
+              <div class="socials">
+                <a id="side-github" href="${cv.contact?.links?.github || '#'}" target="_blank" rel="noreferrer">GitHub<span class="outbound-icon" aria-hidden="true">↗</span></a>
+                <a id="side-portfolio" href="${cv.contact?.links?.portfolio || '#'}" target="_blank" rel="noreferrer">Portfolio<span class="outbound-icon" aria-hidden="true">↗</span></a>
+              </div>
+            </aside>
+
+            <main class="card main-card">
+              <div class="tabs">
+                <button class="tab-btn active" data-tab="about">About</button>
+                <button class="tab-btn" data-tab="resume">Experience</button>
+                <button class="tab-btn" data-tab="portfolio">Portfolio</button>
+              </div>
+
+              <section data-page="about" class="space-y-6">
+                <div>
+                  <h2 class="section-title">About Me</h2>
+                  <p id="summary" class="about-text">${safe(cv.summary)}</p>
+                </div>
+
+                <div>
+                  <h3 class="section-title" style="font-size: 18px;">Industry Experience</h3>
+                  <div id="domains" class="grid-2">${renderDomains(cv.domains || {})}</div>
+                </div>
+
+                <div>
+                  <h3 class="section-title" style="font-size: 18px;">Skills</h3>
+                  <div id="skills" class="skills-wrap">${renderSkills(cv.skills || {})}</div>
+                </div>
+              </section>
+
+              <section data-page="portfolio" class="space-y-6 hidden">
+                <div>
+                  <h3 class="section-title" style="font-size: 18px;">
+                    <a href="/portfolio/index.html" target="_blank" rel="noreferrer" style="color: inherit; text-decoration: none;">Portfolio ↗</a>
+                  </h3>
+                  <div id="portfolio-list" class="timeline">${renderPortfolio(cv.portfolioItems || [])}</div>
+                </div>
+              </section>
+
+              <section data-page="resume" class="space-y-6 hidden">
+                <div>
+                  <h3 class="section-title" style="font-size: 18px;">Experience</h3>
+                  <div id="experience" class="timeline">${renderTimeline(cv.experience || [])}</div>
+                </div>
+                <div>
+                  <h3 class="section-title" style="font-size: 18px;">Education</h3>
+                  <div id="education" class="timeline">${renderTimeline(cv.education || [])}</div>
+                </div>
+              </section>
+            </main>
           </div>
-        </aside>
 
-        <main class="card main-card">
-          <div class="tabs">
-            <button class="tab-btn" class:active={tab === 'about'} data-tab="about" on:click={() => tab = 'about'}>About</button>
-            <button class="tab-btn" class:active={tab === 'resume'} data-tab="resume" on:click={() => tab = 'resume'}>Experience</button>
-            <button class="tab-btn" class:active={tab === 'portfolio'} data-tab="portfolio" on:click={() => tab = 'portfolio'}>Portfolio</button>
-          </div>
+          <footer style="text-align:center; font-size:10px; opacity:0.25; margin:12px 0;">
+            <button id="version-info-trigger" type="button" style="background:none; border:none; color:inherit; cursor:pointer; padding:0; font:inherit;">This page: Svelte</button> · Other versions:
+            <a href="/index.html" style="color:inherit;">Hydrated</a> ·
+            <a href="/index.static.html" style="color:inherit;">Static snapshot</a> ·
+            <a href="/index.react.html" style="color:inherit;">React (Babel)</a> ·
+            <a href="/index.react.bundled.html" style="color:inherit;">React (bundled)</a> ·
+            <a href="/index.vue.html" style="color:inherit;">Vue</a> ·
+            <a href="/index.svelte.html" style="color:inherit;">Svelte</a>
+          </footer>
 
-          {#if tab === 'about'}
-            <section data-page="about" class="space-y-6">
-              <div>
-                <h2 class="section-title">About Me</h2>
-                <p id="summary" class="about-text">{cv.summary}</p>
+          <div id="version-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="version-modal-title">
+            <div class="modal-card">
+              <div class="modal-header">
+                <span id="version-modal-title">Svelte version</span>
+                <button class="modal-close" type="button" aria-label="Close version info">x</button>
               </div>
-
-              <div>
-                <h3 class="section-title" style="font-size: 18px;">Industry Experience</h3>
-                <div id="domains" class="grid-2">
-                  {#each domainEntries as [name, detail], idx}
-                    <div class="service-card">
-                      <div style="display:flex; gap:12px;">
-                        <div style="font-size:18px; color:#f5b84a;">{icons[idx % icons.length]}</div>
-                        <div>
-                          <h4>{name}</h4>
-                          <p>{detail?.summary || 'Hands-on delivery across this domain.'}</p>
-                          {#if detail?.url}
-                            <div style="margin-top:6px;">
-                              <a href={detail.url} class="contact-value" target="_blank" rel="noreferrer">Related work ↗</a>
-                            </div>
-                          {/if}
-                        </div>
-                      </div>
-                    </div>
-                  {/each}
-                </div>
-              </div>
-
-              <div>
-                <h3 class="section-title" style="font-size: 18px;">Skills</h3>
-                <div id="skills" class="skills-wrap">
-                  {#each skillEntries as [group, items]}
-                    <div class="skill-card">
-                      <h5>{formatGroup(group)}</h5>
-                      <div class="skill-tags">
-                        {#each (items && typeof items === 'object' ? Object.entries(items) : []) as [name, info]}
-                          {#if info?.url}
-                            <a class="tag" href={info.url} target="_blank" rel="noreferrer" title={info?.summary || ''}>{name} ↗</a>
-                          {:else}
-                            <span class="tag" title={info?.summary || ''}>{name}</span>
-                          {/if}
-                        {/each}
-                      </div>
-                    </div>
-                  {/each}
-                </div>
-              </div>
-            </section>
-          {:else if tab === 'portfolio'}
-            <section data-page="portfolio" class="space-y-6">
-              <div>
-                <h3 class="section-title" style="font-size: 18px;">
-                  <a href="/portfolio/index.html" target="_blank" rel="noreferrer" style="color: inherit; text-decoration: none;">Portfolio ↗</a>
-                </h3>
-                <div id="portfolio-list" class="timeline">
-                  {#each cv.portfolioItems || [] as item}
-                    <div class="timeline-item">
-                      <span class="timeline-dot"></span>
-                      <div class="timeline-header">
-                        <div>
-                          <p class="timeline-title">{item.title}</p>
-                          <p class="timeline-sub">{item.blurb}</p>
-                        </div>
-                        <span class="timeline-period">{item.period}</span>
-                      </div>
-                      <div style="margin-top:8px;">
-                        <a href={item.url || '#'} class="contact-value" target="_blank" rel="noreferrer">Open case study ↗</a>
-                      </div>
-                    </div>
-                  {/each}
-                </div>
-              </div>
-            </section>
-          {:else}
-            <section data-page="resume" class="space-y-6">
-              <div>
-                <h3 class="section-title" style="font-size: 18px;">Experience</h3>
-                <div id="experience" class="timeline">
-                  {#each cv.experience || [] as item, idx}
-                    <div class="timeline-item">
-                      <span class="timeline-dot"></span>
-                      <div class="timeline-header">
-                        <div>
-                          <p class="timeline-title">{item.title}</p>
-                          <p class="timeline-sub">{[item.company, item.location].filter(Boolean).join(' · ')}</p>
-                        </div>
-                        <span class="timeline-period">{item.period}</span>
-                      </div>
-                      {#if item.bullets?.length}
-                        <ul class="timeline-bullets">
-                          {#each item.bullets as b}
-                            <li>{b}</li>
-                          {/each}
-                        </ul>
-                      {/if}
-                    </div>
-                  {/each}
-                </div>
-              </div>
-              <div>
-                <h3 class="section-title" style="font-size: 18px;">Education</h3>
-                <div id="education" class="timeline">
-                  {#each cv.education || [] as item, idx}
-                    <div class="timeline-item">
-                      <span class="timeline-dot"></span>
-                      <div class="timeline-header">
-                        <div>
-                          <p class="timeline-title">{item.degree}</p>
-                          <p class="timeline-sub">{[item.school, item.location].filter(Boolean).join(' · ')}</p>
-                        </div>
-                        <span class="timeline-period">{item.period}</span>
-                      </div>
-                    </div>
-                  {/each}
-                </div>
-              </div>
-            </section>
-          {/if}
-        </main>
-      </div>
-
-      <footer style="text-align:center; font-size:10px; opacity:0.25; margin:12px 0;">
-        <button id="version-info-trigger" type="button" style="background:none; border:none; color:inherit; cursor:pointer; padding:0; font:inherit;" on:click={() => showModal = true}>This page: Svelte</button> · Other versions:
-        <a href="/index.html" style="color:inherit;">Hydrated</a> ·
-        <a href="/index.static.html" style="color:inherit;">Static snapshot</a> ·
-        <a href="/index.react.html" style="color:inherit;">React (Babel)</a> ·
-        <a href="/index.react.bundled.html" style="color:inherit;">React (bundled)</a> ·
-        <a href="/index.vue.html" style="color:inherit;">Vue</a>
-      </footer>
-
-      {#if showModal}
-        <div class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="version-modal-title" on:click={(e) => { if (e.target.classList.contains('modal-backdrop')) showModal = false; }}>
-          <div class="modal-card">
-            <div class="modal-header">
-              <span id="version-modal-title">Svelte version</span>
-              <button class="modal-close" type="button" aria-label="Close version info" on:click={() => showModal = false}>x</button>
-            </div>
-            <ul class="modal-list">
-              <li>Client-rendered Svelte page powered by cv.json data.</li>
+              <ul class="modal-list">
+              <li>Client-rendered page populated from the data source.</li>
               <li>Domains and skills link to related portfolio work.</li>
               <li>Falls back to other versions via footer links if needed.</li>
             </ul>
           </div>
         </div>
-      {/if}
-    `;
+        `;
 
-    const mount = async () => {
-      try {
-        const res = await fetch('/cv.json', { cache: 'no-store', credentials: 'same-origin' });
-        if (!res.ok) throw new Error('cv load failed');
-        const cv = await res.json();
-        const { js } = compile(template, { format: 'esm', name: 'App' });
-        const blob = new Blob([js.code], { type: 'text/javascript' });
-        const url = URL.createObjectURL(blob);
-        const mod = await import(url);
-        new mod.default({ target: document.getElementById('root'), props: { cv } });
-      } catch (err) {
-        console.error('Unable to load Svelte page', err);
-        window.location.href = '/index.static.html';
-      }
-    };
+        // Tabs
+        const buttons = root.querySelectorAll('.tab-btn');
+        const pages = root.querySelectorAll('[data-page]');
+        buttons.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            buttons.forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            pages.forEach((p) => p.classList.add('hidden'));
+            const page = root.querySelector(`[data-page="${btn.dataset.tab}"]`);
+            if (page) page.classList.remove('hidden');
+          });
+        });
 
-    mount();
+        // Modal
+        const modal = document.getElementById('version-modal');
+        const trigger = document.getElementById('version-info-trigger');
+        const closeBtn = modal ? modal.querySelector('.modal-close') : null;
+        const hide = () => modal && modal.classList.add('hidden');
+        const show = () => modal && modal.classList.remove('hidden');
+        if (trigger && modal) trigger.addEventListener('click', show);
+        if (closeBtn) closeBtn.addEventListener('click', hide);
+        if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) hide(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
+      };
+
+      fetch('/cv.json', { cache: 'no-store', credentials: 'same-origin' })
+        .then((res) => res.ok ? res.json() : Promise.reject())
+        .then((cv) => mount(cv))
+        .catch(() => {
+          window.location.href = '/index.static.html';
+        });
+    })();
   </script>
 </body>
 </html>

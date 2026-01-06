@@ -506,7 +506,8 @@
 }
 
 .cta-shell[data-state="toast"]:hover .cta-idle-toggle,
-.cta-shell[data-state="bar"]:hover .cta-idle-toggle {
+.cta-shell[data-state="bar"]:hover .cta-idle-toggle,
+.cta-shell[data-state="open"]:hover .cta-idle-toggle {
     display: inline-flex;
 }
 

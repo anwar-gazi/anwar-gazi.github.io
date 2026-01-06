@@ -5,7 +5,7 @@
 ## What it is
 - A self-contained Web Component (`<cta-bot>`) that renders a floating/collapsible CTA with multiple modes: toast, bar, open panel, and an “incoming call” overlay with ringtone/animation.
 - Lives in `cta-bot.js` (logic) and `cta-bot.css` (styles) at the project root. No build tooling required—just include the files.
-- Remembers state and position in `localStorage`, plays an idle animation with an optional ringtone, and hydrates contact details from attributes (attributes are the source of truth).
+- Remembers state and position in `localStorage`, plays an idle animation with an optional ringtone, and hydrates contact details from attributes (attributes are the source of truth). Toast can anchor top/bottom; an idle pause/play control sits near the progress bar and is hover-only on desktop; mobile hides the expand chevron.
 
 ## Quick start
 ```html
@@ -43,25 +43,27 @@ Path resolution:
 - Absolute URLs (`https://…`) are used as-is.
 
 ## Modes and state
-- `toast`: Minimal pill in a corner; used when user dismisses/minimizes on mobile or when collapsed preference is saved.
-- `bar`: Compact bar with CTA text and buttons.
+- `toast`: Minimal pill in a corner; used when user dismisses/minimizes on mobile or when collapsed preference is saved. Up/down arrows move it between top/bottom (arrows hidden on mobile).
+- `bar`: Compact bar with CTA text and buttons. Clicking the bar (desktop) opens the CTA even after a manual minimize.
 - `open`: Expanded panel showing title/body and action buttons.
 - `incoming`: Full-screen/large overlay with photo, “incoming call” layout, and ringtone. Triggered by idle timer or by clicking “Let’s talk.”
 - State is persisted in `localStorage` under the keys noted above. Position is also persisted when the user drags it.
 
 ## Idle/attention behavior
-- Idle timer: 15 seconds (`_idleDelay`). After inactivity, enters `incoming` mode, plays animation + ringtone, shows a slim progress bar at the bottom of the CTA.
-- Animation loops until user interaction. Any user interaction (except inside action buttons) resets the timer and stops sound/overlay.
+- Idle timer: 15 seconds (`_idleDelay`). After inactivity, enters `incoming` mode, plays animation + ringtone, shows a slim progress bar at the bottom of the CTA. Hover reveals a tiny pause/play control in toast/bar/open (desktop-only).
+- Animation loops until user interaction. Any user interaction (except inside action buttons) resets the timer and stops sound/overlay unless paused.
 - Ringtone respects browser autoplay rules; playback is primed on first interaction.
 
 ## Interaction rules
 - Click “Let’s talk”: Immediately enters `incoming` mode (desktop and mobile), starts idle loop and ringtone.
-- “Minimize” → switches to toast and saves preference.
+- “Minimize” (bar button) → switches to toast/bar and saves preference; clicking the bar reopens even after minimizing.
 - “Hide” (✕) → switches to toast.
+- Toast anchor: up/down arrows switch top/bottom (hidden on mobile); switching anchor clears custom drag position.
 - Dragging: grab the bar to drag; position is clamped to the viewport and saved to `localStorage`.
 - Mute button: toggles ringtone mute; clicking does not close the overlay.
 - Action buttons (email / call) stop event bubbling so clicks are not treated as overlay-dismiss events.
 - Escape key and general interactions exit incoming mode and mute.
+- Idle pause/play: hover over the CTA (toast/bar/open) to reveal the control; click to pause/resume idle/incoming behavior (desktop).
 
 ## Accessibility and safety
 - Uses semantic buttons/links; aria-labels on mute.

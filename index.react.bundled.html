@@ -215,41 +215,66 @@
       );
       };
 
-      const AboutTab = ({ cv }) => h('section', { 'data-page': 'about', className: 'space-y-6' },
-        h('div', null,
-          h('h2', { className: 'section-title' }, 'About Me'),
-          h('p', { id: 'summary', className: 'about-text' }, cv.summary)
-        ),
-        h('div', null,
-          h('h3', { className: 'section-title', style: { fontSize: '18px' } }, "What I'm Doing"),
-          h('div', { id: 'domains', className: 'grid-2' },
-            (cv.domains || []).map((domain, idx) =>
-              h('div', { className: 'service-card', key: domain },
-                h('div', { style: { display: 'flex', gap: '12px' } },
-                  h('div', { style: { fontSize: '18px', color: '#f5b84a' } }, icons[idx % icons.length]),
-                  h('div', null,
-                    h('h4', null, domain),
-                    h('p', null, 'Hands-on delivery across this domain.')
+      const AboutTab = ({ cv }) => {
+        const domainEntries = cv.domains && typeof cv.domains === 'object'
+          ? Object.entries(cv.domains)
+          : [];
+        const skillEntries = cv.skills && typeof cv.skills === 'object'
+          ? Object.entries(cv.skills)
+          : [];
+        return h('section', { 'data-page': 'about', className: 'space-y-6' },
+          h('div', null,
+            h('h2', { className: 'section-title' }, 'About Me'),
+            h('p', { id: 'summary', className: 'about-text' }, cv.summary)
+          ),
+          h('div', null,
+            h('h3', { className: 'section-title', style: { fontSize: '18px' } }, "Industry Experience"),
+            h('div', { id: 'domains', className: 'grid-2' },
+              domainEntries.map(([name, detail], idx) =>
+                h('div', { className: 'service-card', key: name },
+                  h('div', { style: { display: 'flex', gap: '12px' } },
+                    h('div', { style: { fontSize: '18px', color: '#f5b84a' } }, icons[idx % icons.length]),
+                    h('div', null,
+                      h('h4', null, name),
+                      h('p', null, detail?.summary || 'Hands-on delivery across this domain.'),
+                      detail?.url
+                        ? h('div', { style: { marginTop: '6px' } },
+                            h('a', { href: detail.url, className: 'contact-value', target: '_blank', rel: 'noreferrer' }, 'Related work ↗')
+                          )
+                        : null
+                    )
                   )
                 )
               )
             )
-          )
-        ),
-        h('div', null,
-          h('h3', { className: 'section-title', style: { fontSize: '18px' } }, 'Skills'),
-          h('div', { id: 'skills', className: 'skills-wrap' },
-            Object.entries(cv.skills || {}).map(([group, items]) =>
-              h('div', { className: 'skill-card', key: group },
-                h('h5', null, formatGroup(group)),
-                h('div', { className: 'skill-tags' },
-                  (items || []).map((item) => h('span', { className: 'tag', key: item }, item))
-                )
-              )
+          ),
+          h('div', null,
+            h('h3', { className: 'section-title', style: { fontSize: '18px' } }, 'Skills'),
+            h('div', { id: 'skills', className: 'skills-wrap' },
+              skillEntries.map(([group, items]) => {
+                const tags = items && typeof items === 'object' ? Object.entries(items) : [];
+                return h('div', { className: 'skill-card', key: group },
+                  h('h5', null, formatGroup(group)),
+                  h('div', { className: 'skill-tags' },
+                    tags.map(([name, info]) =>
+                      info?.url
+                        ? h('a', {
+                            className: 'tag',
+                            key: name,
+                            href: info.url,
+                            target: '_blank',
+                            rel: 'noreferrer',
+                            title: info?.summary || ''
+                          }, `${name} ↗`)
+                        : h('span', { className: 'tag', key: name, title: info?.summary || '' }, name)
+                    )
+                  )
+                );
+              })
             )
           )
-        )
-      );
+        );
+      };
 
       const ResumeTab = ({ experience, education }) => h('section', { 'data-page': 'resume', className: 'space-y-6' },
         h('div', null,
@@ -355,7 +380,7 @@
             h('main', { className: 'card main-card' },
               h('div', { className: 'tabs' },
                 h(TabButton, { id: 'about', active: tab, onChange: setTab }, 'About'),
-                h(TabButton, { id: 'resume', active: tab, onChange: setTab }, 'Resume'),
+                h(TabButton, { id: 'resume', active: tab, onChange: setTab }, 'Experience'),
                 h(TabButton, { id: 'portfolio', active: tab, onChange: setTab }, 'Portfolio')
               ),
               tab === 'about' && h(AboutTab, { cv }),
@@ -374,7 +399,11 @@
             ' · ',
             h('a', { href: '/index.html', style: { color: 'inherit' } }, 'Hydrated'),
             ' · ',
-            h('a', { href: '/index.static.html', style: { color: 'inherit' } }, 'Static snapshot')
+            h('a', { href: '/index.static.html', style: { color: 'inherit' } }, 'Static snapshot'),
+            ' · ',
+            h('a', { href: '/index.vue.html', style: { color: 'inherit' } }, 'Vue'),
+            ' · ',
+            h('a', { href: '/index.svelte.html', style: { color: 'inherit' } }, 'Svelte')
           )
         );
       };

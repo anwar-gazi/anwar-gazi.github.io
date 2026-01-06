@@ -224,49 +224,80 @@
         );
       };
 
-      const AboutTab = ({ cv }) => (
-        <section data-page="about" className="space-y-6">
-          <div>
-            <h2 className="section-title">About Me</h2>
-            <p id="summary" className="about-text">{cv.summary}</p>
-          </div>
+      const AboutTab = ({ cv }) => {
+        const domainEntries = cv.domains && typeof cv.domains === 'object'
+          ? Object.entries(cv.domains)
+          : [];
+        const skillEntries = cv.skills && typeof cv.skills === 'object'
+          ? Object.entries(cv.skills)
+          : [];
+        return (
+          <section data-page="about" className="space-y-6">
+            <div>
+              <h2 className="section-title">About Me</h2>
+              <p id="summary" className="about-text">{cv.summary}</p>
+            </div>
 
-          <div>
-            <h3 className="section-title" style={{ fontSize: '18px' }}>What I'm Doing</h3>
-            <div id="domains" className="grid-2">
-              {(cv.domains || []).map((domain, idx) => (
-                <div className="service-card" key={domain}>
-                  <div style={{ display: 'flex', gap: '12px' }}>
-                    <div style={{ fontSize: '18px', color: '#f5b84a' }}>
-                      {icons[idx % icons.length]}
-                    </div>
-                    <div>
-                      <h4>{domain}</h4>
-                      <p>Hands-on delivery across this domain.</p>
+            <div>
+              <h3 className="section-title" style={{ fontSize: '18px' }}>Industry Experience</h3>
+              <div id="domains" className="grid-2">
+                {domainEntries.map(([name, detail], idx) => (
+                  <div className="service-card" key={name}>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <div style={{ fontSize: '18px', color: '#f5b84a' }}>
+                        {icons[idx % icons.length]}
+                      </div>
+                      <div>
+                        <h4>{name}</h4>
+                        <p>{detail?.summary || 'Hands-on delivery across this domain.'}</p>
+                        {detail?.url ? (
+                          <div style={{ marginTop: '6px' }}>
+                            <a href={detail.url} className="contact-value" target="_blank" rel="noreferrer">
+                              Related work ↗
+                            </a>
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div>
-            <h3 className="section-title" style={{ fontSize: '18px' }}>Skills</h3>
-            <div id="skills" className="skills-wrap">
-              {Object.entries(cv.skills || {}).map(([group, items]) => (
-                <div className="skill-card" key={group}>
-                  <h5>{formatGroup(group)}</h5>
-                  <div className="skill-tags">
-                    {(items || []).map((item) => (
-                      <span className="tag" key={item}>{item}</span>
-                    ))}
-                  </div>
-                </div>
-              ))}
+            <div>
+              <h3 className="section-title" style={{ fontSize: '18px' }}>Skills</h3>
+              <div id="skills" className="skills-wrap">
+                {skillEntries.map(([group, items]) => {
+                  const tags = items && typeof items === 'object' ? Object.entries(items) : [];
+                  return (
+                    <div className="skill-card" key={group}>
+                      <h5>{formatGroup(group)}</h5>
+                      <div className="skill-tags">
+                        {tags.map(([name, info]) => (
+                          info?.url ? (
+                            <a
+                              className="tag"
+                              key={name}
+                              href={info.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              title={info?.summary || ''}
+                            >
+                              {name} ↗
+                            </a>
+                          ) : (
+                            <span className="tag" key={name} title={info?.summary || ''}>{name}</span>
+                          )
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </section>
-      );
+          </section>
+        );
+      };
 
       const ResumeTab = ({ experience, education }) => (
         <section data-page="resume" className="space-y-6">
@@ -393,7 +424,7 @@
               <main className="card main-card">
                 <div className="tabs">
                   <TabButton id="about" active={tab} onChange={setTab}>About</TabButton>
-                  <TabButton id="resume" active={tab} onChange={setTab}>Resume</TabButton>
+                  <TabButton id="resume" active={tab} onChange={setTab}>Experience</TabButton>
                   <TabButton id="portfolio" active={tab} onChange={setTab}>Portfolio</TabButton>
                 </div>
 
@@ -407,7 +438,9 @@
               <button id="version-info-trigger" type="button" style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0, font: 'inherit' }}>This page: React (Babel)</button> · Other versions:{' '}
               <a href="/index.react.bundled.html" style={{ color: 'inherit' }}>React (bundled)</a> ·{' '}
               <a href="/index.html" style={{ color: 'inherit' }}>Hydrated</a> ·{' '}
-              <a href="/index.static.html" style={{ color: 'inherit' }}>Static snapshot</a>
+              <a href="/index.static.html" style={{ color: 'inherit' }}>Static snapshot</a> ·{' '}
+              <a href="/index.vue.html" style={{ color: 'inherit' }}>Vue</a> ·{' '}
+              <a href="/index.svelte.html" style={{ color: 'inherit' }}>Svelte</a>
             </footer>
           </>
         );

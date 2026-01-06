@@ -10,7 +10,9 @@
     "hydrated": "/index.html",
     "static": "/index.static.html",
     "reactBabel": "/index.react.html",
-    "reactBundled": "/index.react.bundled.html"
+    "reactBundled": "/index.react.bundled.html",
+    "vue": "/index.vue.html",
+    "svelte": "/index.svelte.html"
   },
   "author": "Minhajul Anwar",
   "license": "ISC"

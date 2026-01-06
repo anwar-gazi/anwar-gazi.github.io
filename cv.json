@@ -2,7 +2,7 @@
   "name": "Minhajul Anwar",
   "shortName": "Anwar",
   "photoSrc": "/minhaj.jpg",
-  "title": "Senior Backend / Full-Stack Engineer – Payments, SaaS, GovTech",
+  "title": "Senior Backend / Full-Stack Engineer",
   "contact": {
     "phone": "+880 1716-734974",
     "email": "minhaj.me.bd@gmail.com",
@@ -14,65 +14,164 @@
   },
   "summary": "Senior software engineer with ~8+ years designing, building, and debugging production systems across fintech, GovTech, logistics, and digital media. Backend-focused (Node.js, PHP/Laravel, Python) with modern frontends (React/Next.js, Vue), strong SQL foundations, payment integrations, multi-tenant SaaS, and production hardening via caching, observability mindset, and secure integrations.",
   "skills": {
-    "backend": [
-      "Node.js (Express/microservice-style APIs)",
-      "PHP (Laravel)",
-      "Python (Django, Flask)",
-      "REST APIs",
-      "Background jobs & webhooks",
-      "Secure integrations",
-      "Async workflows"
-    ],
-    "frontend": [
-      "React",
-      "Next.js",
-      "Vue.js",
-      "TypeScript/JavaScript (ES6+)",
-      "HTML5/CSS3",
-      "Responsive layouts",
-      "SPA dashboards"
-    ],
-    "data": [
-      "PostgreSQL",
-      "MySQL",
-      "MongoDB (working proficiency)",
-      "Redis",
-      "Schema design & migrations",
-      "Indexes & query optimization",
-      "Reporting queries",
-      "Multi-tenant data patterns"
-    ],
-    "messaging": [
-      "Kafka",
-      "RabbitMQ",
-      "Payment gateways",
-      "Twilio",
-      "Asterisk",
-      "3rd-party APIs, webhooks/callbacks"
-    ],
-    "architecture": [
-      "Monoliths and microservice-style backends",
-      "Multi-tenant SaaS",
-      "Docker/Docker Compose",
-      "Linux (CentOS/Debian)",
-      "Nginx",
-      "Git/GitHub",
-      "CI-friendly workflows"
-    ],
-    "quality": [
-      "Defensive coding for payments/GovTech",
-      "Input validation",
-      "OWASP basics",
-      "Secure secret handling",
-      "Log-driven debugging",
-      "Code review & refactoring"
-    ],
-    "waysOfWorking": [
-      "System design & architecture discussions",
-      "Mentoring and code review",
-      "Agile/Scrum",
-      "Collaborating with product and non-technical stakeholders"
-    ]
+    "backend": {
+      "Node.js/TypeScript APIs (REST/JSON, validation, observability)": {
+        "summary": "Built and stabilized gateway-facing APIs with schema validation and logging.",
+        "url": "/portfolio/shurjopay/index.html"
+      },
+      "PHP (Laravel) service delivery for payments/GovTech": {
+        "summary": "Delivered GovTech workflows and payments features in Laravel.",
+        "url": "/portfolio/amiprobashi/index.html"
+      },
+      "Python (Django/Flask) for service work": {
+        "summary": "Shipped Django services with React frontends for ops workflows.",
+        "url": "/portfolio/freightforwarding_oneixchange/index.html"
+      },
+      "Evented jobs & webhooks (idempotent handlers, retries)": {
+        "summary": "Hardened async payment webhooks with idempotency and retries.",
+        "url": "/portfolio/shurjopay/shurjopay_bracbank_cof_case_study.html"
+      },
+      "Payment/telephony integrations with secure flows": {
+        "summary": "Integrated telephony IVR and payment callbacks with secure flows.",
+        "url": "/portfolio/telephony/index.html"
+      },
+      "API design and contract-first development": {
+        "summary": "Designed multi-tenant API contracts for news CMS tenants.",
+        "url": "/portfolio/dailyniropekkho_doptorit/index.html"
+      }
+    },
+    "frontend": {
+      "React/Next.js (SSR/ISR) and Vue": {
+        "summary": "Built tenant-facing news portals (Next.js) and Vue admin flows.",
+        "url": "/portfolio/dailyniropekkho_doptorit/index.html"
+      },
+      "TypeScript-first UI development": {
+        "summary": "Type-safe UI work with focused rerender analysis in React.",
+        "url": "/portfolio/projects/zustand-migration-rerender-analysis.html"
+      },
+      "Component-driven design systems": {
+        "summary": "Componentized multi-tenant layouts for publisher brands.",
+        "url": "/portfolio/dailyniropekkho_doptorit/index.html"
+      },
+      "Responsive layouts and accessibility basics": {
+        "summary": "Responsive media and case-study pages for multiple devices.",
+        "url": "/portfolio/dailyniropekkho_doptorit/index.html"
+      },
+      "Dashboard/SPAs with state management discipline": {
+        "summary": "State management refactors and RCAs on complex React SPAs.",
+        "url": "/portfolio/projects/zustand-migration-docs.html"
+      }
+    },
+    "data": {
+      "PostgreSQL/MySQL schema design and migrations": {
+        "summary": "Designed and migrated schemas for GovTech and freight ops.",
+        "url": "/portfolio/amiprobashi/index.html"
+      },
+      "Query tuning (indexes, EXPLAIN-driven optimization)": {
+        "summary": "Stabilized payment queries with index and plan tuning.",
+        "url": "/portfolio/shurjopay/index.html"
+      },
+      "Redis caching patterns": {
+        "summary": "Applied caching for bid prediction and API responsiveness.",
+        "url": "/portfolio/sulacotec/index.html"
+      },
+      "Reporting/analytics SQL": {
+        "summary": "Built reporting queries for bidding and operational metrics.",
+        "url": "/portfolio/sulacotec/index.html"
+      },
+      "MongoDB for document use cases": {
+        "summary": "Used MongoDB for multi-tenant media content storage.",
+        "url": "/portfolio/dailyniropekkho_doptorit/index.html"
+      },
+      "Multi-tenant data patterns (tenant isolation, migrations)": {
+        "summary": "Implemented isolation and rollout patterns for news tenants.",
+        "url": "/portfolio/dailyniropekkho_doptorit/index.html"
+      }
+    },
+    "messaging": {
+      "Kafka streams/consumers for event pipelines": {
+        "summary": "Streamed and processed bidding signals for AdTech pipelines.",
+        "url": "/portfolio/sulacotec/index.html"
+      },
+      "RabbitMQ workers and delayed jobs": {
+        "summary": "Background job delivery for GovTech service workflows.",
+        "url": "/portfolio/amiprobashi/index.html"
+      },
+      "Webhook/callback platforms (payments, telephony)": {
+        "summary": "Managed payment and telephony callbacks with SLAs.",
+        "url": "/portfolio/shurjopay/shurjopay_bracbank_cof_case_study.html"
+      },
+      "Idempotency, retries, and queue visibility": {
+        "summary": "Added idempotent handlers and retry logic to payment queues.",
+        "url": "/portfolio/shurjopay/index.html"
+      }
+    },
+    "architecture": {
+      "Multi-tenant SaaS tenancy (isolation, RBAC, rollout)": {
+        "summary": "Tenant isolation, RBAC, and rollout for publisher SaaS.",
+        "url": "/portfolio/dailyniropekkho_doptorit/index.html"
+      },
+      "Service design across monolith + service seams": {
+        "summary": "Scoped service seams alongside legacy monolith code.",
+        "url": "/portfolio/amiprobashi/index.html"
+      },
+      "Docker/Docker Compose for local and CI": {
+        "summary": "Containerized local/CI workflows for React and service work.",
+        "url": "/portfolio/projects/notion-clone-login-issue.html"
+      },
+      "Nginx/reverse proxying and TLS termination": {
+        "summary": "Fronted payment services with hardened Nginx/TLS configs.",
+        "url": "/portfolio/shurjopay/index.html"
+      },
+      "Linux operations (CentOS/Debian) and scripting": {
+        "summary": "Maintained service hosts and scripts for internal tools.",
+        "url": "/portfolio/IIG/index.html"
+      },
+      "CI/CD pipelines with build/test gates": {
+        "summary": "Tuned CI for React/state refactors to guard regressions.",
+        "url": "/portfolio/projects/zustand-migration-docs.html"
+      }
+    },
+    "quality": {
+      "Secure coding aligned to OWASP basics": {
+        "summary": "Hardened payment paths against common web risks.",
+        "url": "/portfolio/shurjopay/index.html"
+      },
+      "Input validation and contract tests for APIs": {
+        "summary": "Validated payment and GovTech APIs with contract checks.",
+        "url": "/portfolio/amiprobashi/index.html"
+      },
+      "Secret management and configuration hygiene": {
+        "summary": "Tightened secret/config handling in payment services.",
+        "url": "/portfolio/shurjopay/shurjopay_bracbank_cof_case_study.html"
+      },
+      "Log-driven debugging and lightweight monitoring": {
+        "summary": "Investigated React UI flicker via logs and tracing.",
+        "url": "/portfolio/projects/taskpane-flicker-investigation.html"
+      },
+      "Incident/RCA practice and regression prevention": {
+        "summary": "Performed RCAs and hardened auth/session flows.",
+        "url": "/portfolio/projects/notion-clone-login-issue.html"
+      }
+    },
+    "waysOfWorking": {
+      "System design and architecture facilitation": {
+        "summary": "Led design sessions for national-scale GovTech workloads.",
+        "url": "/portfolio/amiprobashi/index.html"
+      },
+      "Technical leadership: mentoring and code review": {
+        "summary": "Guided multi-tenant CMS team through reviews and pairing.",
+        "url": "/portfolio/dailyniropekkho_doptorit/index.html"
+      },
+      "Stakeholder communication across product/ops": {
+        "summary": "Coordinated with government/product/ops for SaaS delivery.",
+        "url": "/portfolio/amiprobashi/index.html"
+      },
+      "Pragmatic agile delivery and iteration": {
+        "summary": "Delivered iterative releases across news and payment work.",
+        "url": "/portfolio/shurjopay/index.html"
+      }
+    }
   },
   "experience": [
     {
@@ -116,14 +215,44 @@
       ]
     }
   ],
-  "domains": [
-    "FinTech & payments",
-    "GovTech & public-sector SaaS",
-    "Digital media & publishing",
-    "Logistics & freight forwarding",
-    "Telephony/IVR",
-    "Healthcare operations"
-  ],
+  "domains": {
+    "FinTech & payment gateway reliability": {
+      "summary": "Stabilized payment gateway flows, card-on-file, and API reliability.",
+      "url": "/portfolio/shurjopay/index.html"
+    },
+    "GovTech & migrant services SaaS": {
+      "summary": "Delivered national-scale migrant services with SaaS workflows.",
+      "url": "/portfolio/amiprobashi/index.html"
+    },
+    "Media CMS & multi-tenant publishing": {
+      "summary": "Built multi-tenant news CMS and publisher experiences.",
+      "url": "/portfolio/dailyniropekkho_doptorit/index.html"
+    },
+    "AdTech bidding and optimization": {
+      "summary": "Implemented bidding prediction and optimization pipelines.",
+      "url": "/portfolio/sulacotec/index.html"
+    },
+    "Logistics & freight operations portals": {
+      "summary": "Built freight operations portal with workflow automation.",
+      "url": "/portfolio/freightforwarding_oneixchange/index.html"
+    },
+    "Healthcare plan operations tooling": {
+      "summary": "Delivered plan ops tooling and workflows for healthcare.",
+      "url": "/portfolio/healthcare/index.html"
+    },
+    "Telephony/IVR automation": {
+      "summary": "Automated IVR flows and telephony integrations.",
+      "url": "/portfolio/telephony/index.html"
+    },
+    "Ecommerce operations automation": {
+      "summary": "Automated ecommerce inventory and packing processes.",
+      "url": "/portfolio/dropshipping/index.html"
+    },
+    "Engineering productivity & RCA (React/Next.js/state)": {
+      "summary": "RCA and refactors to stabilize React/Next.js stateful UIs.",
+      "url": "/portfolio/projects/zustand-migration-rerender-analysis.html"
+    }
+  },
   "education": [
     {
       "school": "Bangladesh University of Engineering and Technology (BUET)",
@@ -136,61 +265,61 @@
     {
       "title": "AmiProbashi – Migrant Services Platform",
       "url": "/portfolio/amiprobashi/index.html",
-      "period": "Senior Software Engineer • 2025",
+      "period": "AmiProbashi • 2025",
       "blurb": "GovTech • National migrant services SaaS"
     },
     {
-      "title": "Multi-tenant News CMS (DoptorITMart)",
+      "title": "Multi-tenant News CMS (The DailyNiropekkho)",
       "url": "/portfolio/dailyniropekkho_doptorit/index.html",
-      "period": "2023 – 2025 • Dhaka, Bangladesh",
+      "period": "2024, 2025 • Dhaka, Bangladesh",
       "blurb": "Media CMS • Next.js + Laravel"
     },
     {
       "title": "ShurjoPay – Gateway Reliability",
       "url": "/portfolio/shurjopay/index.html",
-      "period": "Software Engineer • 2022",
+      "period": "Shurjomukhi Pvt Ltd • 2022",
       "blurb": "Fintech • Payment gateway stability"
     },
     {
       "title": "ShurjoPay – Brac Bank COF",
       "url": "/portfolio/shurjopay/shurjopay_bracbank_cof_case_study.html",
-      "period": "Software Engineer • 2022",
+      "period": "Shurjomukhi Pvt Ltd • 2022",
       "blurb": "Fintech • Card-on-file incident fix"
     },
     {
-      "title": "CPC/CPA/CPM Bid Prediction (SulacoTec)",
+      "title": "CPC/CPA/CPM Bid Prediction",
       "url": "/portfolio/sulacotec/index.html",
-      "period": "Senior Software Engineer • 2023 – 2024",
+      "period": "Advertisement, Click-processing • 2023, 2024",
       "blurb": "AdTech • Bidding prediction platform"
     },
     {
       "title": "Freight Operations Portal (OneIXchange)",
       "url": "/portfolio/freightforwarding_oneixchange/index.html",
-      "period": "Senior Software Engineer • 2018 – 2019",
+      "period": "Freight FOrwarding • 2018, 2019",
       "blurb": "Logistics • Freight workflow portal"
     },
     {
-      "title": "Healthcare Plan Operations (MS Concitus)",
+      "title": "Healthcare Plan Operations Tooling",
       "url": "/portfolio/healthcare/index.html",
-      "period": "Senior Software Engineer • 2017 – 2021",
+      "period": "US based healthcare agent • 2017, 2018",
       "blurb": "Healthcare • Plan ops tooling"
     },
     {
       "title": "Twilio + Asterisk IVR Automation",
       "url": "/portfolio/telephony/index.html",
-      "period": "Telephony/IVR Experience • 2016 – 2021",
+      "period": "Telephony/IVR Experience • 2017, 2018",
       "blurb": "Telephony • IVR automation"
     },
     {
       "title": "eBay Inventory & Packing Automation",
       "url": "/portfolio/dropshipping/index.html",
-      "period": "Dropshipping Client • 2014 – 2016",
+      "period": "Dropshipping Client • 2014, 2015 2016",
       "blurb": "Ecommerce • Ops automation"
     },
     {
       "title": "IIG Ticketing & Notifications Prototype",
       "url": "/portfolio/IIG/index.html",
-      "period": "IIG Tools • 2012 – 2014",
+      "period": "IIG Tools • 2012, 2013",
       "blurb": "Infrastructure • Ticketing prototype"
     },
     {
@@ -214,7 +343,7 @@
     {
       "title": "TaskPane Flicker Investigation",
       "url": "/portfolio/projects/taskpane-flicker-investigation.html",
-      "period": "Rendering RCA • 2026",
+      "period": "Rendering RCA • 2025",
       "blurb": "Next.js UI flicker analysis"
     }
   ],

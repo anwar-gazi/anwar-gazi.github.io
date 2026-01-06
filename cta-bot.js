@@ -51,6 +51,7 @@ class CtaBot extends HTMLElement {
     this._ringtonePlaying = false;
     this._incomingActive = false;
     this._actionDelay = 260;
+    this._idlePaused = false;
     this._assetBase = null;
   }
 
@@ -108,6 +109,7 @@ class CtaBot extends HTMLElement {
             <span class="sp4"></span><span class="sp5"></span><span class="sp6"></span>
           </div>
           <div class="cta-idle-progress" aria-hidden="true">
+            <button class="cta-idle-toggle" type="button" aria-label="Pause idle animation" data-action="idle-toggle">❚❚</button>
             <div class="cta-idle-fill"></div>
           </div>
             <div class="cta-incoming-overlay" aria-hidden="true">
@@ -131,6 +133,7 @@ class CtaBot extends HTMLElement {
     this._shell = this.querySelector('.cta-shell');
     if (!this._shell) return;
     this._progressFill = this.querySelector('.cta-idle-fill');
+    this._idleToggleBtn = this.querySelector('.cta-idle-toggle');
 
     this._setState(this._preferredState, { persistPreferred: false });
     this._applyResponsiveState();
@@ -297,6 +300,7 @@ class CtaBot extends HTMLElement {
     const expandBtn = this.querySelector('[data-action="expand"]');
     const toastUpBtn = this.querySelector('[data-action="toast-up"]');
     const toastDownBtn = this.querySelector('[data-action="toast-down"]');
+    const idleToggleBtn = this.querySelector('[data-action="idle-toggle"]');
     const emailLinks = this.querySelectorAll('.cta-email');
     const phoneLinks = this.querySelectorAll('.cta-phone');
 
@@ -338,6 +342,14 @@ class CtaBot extends HTMLElement {
     if (toastDownBtn) {
       stopBubble(toastDownBtn);
       toastDownBtn.addEventListener('click', () => this._setToastAnchor('bottom'));
+    }
+    if (idleToggleBtn) {
+      stopBubble(idleToggleBtn);
+      idleToggleBtn.addEventListener('click', () => this._toggleIdleTimer(idleToggleBtn));
+      if (this._idlePaused) {
+        idleToggleBtn.textContent = '▶';
+        idleToggleBtn.setAttribute('aria-label', 'Resume idle animation');
+      }
     }
 
     const muteBtn = this.querySelector('[data-action="mute"]');
@@ -813,6 +825,7 @@ class CtaBot extends HTMLElement {
   }
 
   _resetIdleTimer() {
+    if (this._idlePaused) return;
     this._stopIdleLoop();
     if (this._idleTimer) clearTimeout(this._idleTimer);
     this._idleTimer = setTimeout(() => this._maybeAnimate(), this._idleDelay);
@@ -906,6 +919,27 @@ class CtaBot extends HTMLElement {
     this._exitIncomingMode();
     this._incomingActive = false;
     this._forceMute();
+  }
+
+  _toggleIdleTimer(btn) {
+    this._idlePaused = !this._idlePaused;
+    if (btn) {
+      btn.textContent = this._idlePaused ? '▶' : '❚❚';
+      btn.setAttribute('aria-label', this._idlePaused ? 'Resume idle animation' : 'Pause idle animation');
+    }
+    if (this._idlePaused) {
+      if (this._idleTimer) {
+        clearTimeout(this._idleTimer);
+        this._idleTimer = null;
+      }
+      this._stopIdleLoop();
+      if (this._progressFill) {
+        this._progressFill.classList.remove('running');
+        this._progressFill.style.transform = 'scaleX(0)';
+      }
+    } else {
+      this._resetIdleTimer();
+    }
   }
 
   _setupAudio() {

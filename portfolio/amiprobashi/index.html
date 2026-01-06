@@ -304,6 +304,254 @@
       background-color: rgba(15, 23, 42, 0.85);
     }
 
+    /* Problem → Solution → Impact rail */
+
+    .value-rail {
+      margin-bottom: 24px;
+      padding: 18px 18px 16px;
+      border-radius: 20px;
+      background: linear-gradient(140deg, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.96));
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      box-shadow: 0 16px 38px rgba(8, 15, 26, 0.75);
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 820px) {
+      .value-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .value-card {
+      position: relative;
+      padding: 14px 14px 12px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .value-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #020617;
+      margin-bottom: 10px;
+      background: radial-gradient(circle at 30% 30%, #e0f2fe, #38bdf8);
+      box-shadow: 0 12px 22px rgba(56, 189, 248, 0.45);
+      font-size: 16px;
+    }
+
+    .value-icon.warning {
+      background: radial-gradient(circle at 30% 30%, #fde68a, #fbbf24);
+      box-shadow: 0 12px 22px rgba(251, 191, 36, 0.35);
+    }
+
+    .value-icon.action {
+      background: radial-gradient(circle at 30% 30%, #bbf7d0, #22c55e);
+      box-shadow: 0 12px 22px rgba(34, 197, 94, 0.35);
+    }
+
+    .value-icon.impact {
+      background: radial-gradient(circle at 30% 30%, #c7d2fe, #6366f1);
+      box-shadow: 0 12px 22px rgba(99, 102, 241, 0.35);
+    }
+
+    .value-title {
+      margin: 0 0 6px;
+      font-size: 15px;
+      letter-spacing: 0.02em;
+    }
+
+    .value-card ul {
+      margin: 4px 0 0;
+      padding-left: 16px;
+    }
+
+    .value-card li {
+      font-size: 13px;
+      color: #cdd6e5;
+      margin-bottom: 4px;
+    }
+
+    /* Delta metrics */
+
+    .delta-metrics {
+      margin: 14px 0 6px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .delta-card {
+      flex: 1 1 240px;
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .delta-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .delta-values {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .delta-pill {
+      padding: 6px 8px;
+      border-radius: 10px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: #dbeafe;
+    }
+
+    .delta-pill::before {
+      content: "⬆";
+      font-size: 12px;
+    }
+
+    .delta-pill.after {
+      background: linear-gradient(120deg, rgba(56, 189, 248, 0.18), rgba(34, 197, 94, 0.18));
+      border-color: rgba(34, 197, 94, 0.35);
+      color: #d1fae5;
+    }
+
+    .delta-pill.after::before {
+      content: "⬇";
+    }
+
+    /* Flow ribbon */
+
+    .flow-ribbon {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 820px) {
+      .flow-ribbon {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .flow-step {
+      position: relative;
+      padding: 12px 12px 10px;
+      border-radius: 14px;
+      background: rgba(12, 18, 32, 0.9);
+      border: 1px dashed rgba(148, 163, 184, 0.35);
+      min-height: 120px;
+    }
+
+    .flow-step::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0.8));
+    }
+
+    .flow-step:last-child::after {
+      display: none;
+    }
+
+    @media (max-width: 820px) {
+      .flow-step::after {
+        display: none;
+      }
+    }
+
+    .flow-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 30% 30%, #bae6fd, #38bdf8);
+      color: #020617;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .flow-title {
+      margin: 0 0 4px;
+      font-size: 14px;
+      letter-spacing: 0.01em;
+    }
+
+    .flow-body {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Impact spotlight */
+
+    .impact-spotlight {
+      margin-top: 14px;
+      padding: 12px 12px 10px;
+      border-radius: 14px;
+      background: linear-gradient(140deg, rgba(34, 197, 94, 0.14), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(74, 222, 128, 0.35);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .spotlight-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 30%, #d1fae5, #22c55e);
+      color: #052e16;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      box-shadow: 0 12px 22px rgba(34, 197, 94, 0.35);
+    }
+
+    .impact-spotlight ul {
+      margin: 0;
+      padding-left: 16px;
+    }
+
+    .impact-spotlight li {
+      font-size: 13px;
+      color: #d1fae5;
+      margin-bottom: 3px;
+    }
+
     /* Content layout */
 
     .layout {
@@ -647,6 +895,93 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="value-rail" aria-label="Problem to solution to impact">
+      <div class="eyebrow">Problem → Solution → Impact</div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon warning" aria-hidden="true">!</div>
+          <h3 class="value-title">Problem</h3>
+          <ul>
+            <li>Peak-load errors on core registration/clearance flows.</li>
+            <li>Slow, complex MySQL queries against ~7M-row tables.</li>
+            <li>Manual deployments with limited observability and higher regression risk.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon action" aria-hidden="true">⧉</div>
+          <h3 class="value-title">Solution</h3>
+          <ul>
+            <li>Production-grade fixes and validation guardrails on critical paths.</li>
+            <li>Query/index tuning plus clearer logging to pinpoint hotspots quickly.</li>
+            <li>Smaller, safer releases with realistic test data and rollback awareness.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon impact" aria-hidden="true">✓</div>
+          <h3 class="value-title">Impact</h3>
+          <ul>
+            <li>Fewer user-visible errors during peak activity windows.</li>
+            <li>Snappier search/report screens when traffic spikes.</li>
+            <li>Reduced post-deploy firefighting; calmer releases.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="delta-metrics" aria-label="Directional before/after indicators">
+        <div class="delta-card">
+          <div class="delta-label">User-facing errors</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: spiky at deadline peaks</span>
+            <span class="delta-pill after">After: trending down + stable</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Search / reporting latency</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: slow on heavy tables</span>
+            <span class="delta-pill after">After: tighter P95 during spikes</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Post-deploy hotfixes</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: frequent emergency fixes</span>
+            <span class="delta-pill after">After: calmer, predictable releases</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-ribbon" aria-label="Condensed improvement flow">
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">1</div>
+          <div class="flow-title">Peak-load incidents</div>
+          <p class="flow-body">Triage noisy error paths, stabilize registration/clearance flows with targeted fixes and validation.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">2</div>
+          <div class="flow-title">Query + logging work</div>
+          <p class="flow-body">Profile bottlenecks, tune queries/indexes on high-volume tables, add logging to shorten root-cause time.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">3</div>
+          <div class="flow-title">Safer releases</div>
+          <p class="flow-body">Ship smaller increments with production-like test data and clearer rollback plans for low-stress deployments.</p>
+        </div>
+      </div>
+
+      <div class="impact-spotlight">
+        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+        <div>
+          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+          <ul>
+            <li>Calmer day-to-day operations for government offices handling migrant workflows.</li>
+            <li>Higher confidence in fee collection reliability across a multi-year revenue channel.</li>
+            <li>Engineering team can evolve the product without destabilizing core services.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="layout" aria-label="Case study content layout">

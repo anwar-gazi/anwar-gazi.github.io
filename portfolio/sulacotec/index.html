@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/cta-bot.css" />
   <script src="/cta-bot.js" defer></script>
   <script type="module" src="/portfolio/case-nav.js" defer></script>
+  <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
     :root {
       /* AdTech / click-processing theme – neon screens & dashboards */
@@ -657,6 +658,93 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="value-rail" aria-label="Problem to solution to impact">
+      <div class="eyebrow">Problem → Solution → Impact</div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon warning" aria-hidden="true">!</div>
+          <h3 class="value-title">Problem</h3>
+          <ul>
+            <li>Bidding large click volumes with little guidance on expected outcomes.</li>
+            <li>Margins at risk when entering new sources without benchmarks.</li>
+            <li>Heuristic pricing couldn’t scale to 100M+ rows of history.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon action" aria-hidden="true">⧉</div>
+          <h3 class="value-title">Solution</h3>
+          <ul>
+            <li>Built a predictive layer on CPC/CPA/CPM using historical click data.</li>
+            <li>Feature engineered traffic/source attributes into Laravel/MySQL pipelines.</li>
+            <li>Fed bid guidance into pricing workflows for new campaigns.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon impact" aria-hidden="true">✓</div>
+          <h3 class="value-title">Impact</h3>
+          <ul>
+            <li>More accurate bids on unfamiliar traffic sources.</li>
+            <li>Lower margin volatility on bulk deals.</li>
+            <li>Faster, more confident quoting for customers.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="delta-metrics" aria-label="Directional before/after indicators">
+        <div class="delta-card">
+          <div class="delta-label">Bid accuracy</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: heuristic ranges</span>
+            <span class="delta-pill after">After: data-backed guidance</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Margin stability</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: volatile per source</span>
+            <span class="delta-pill after">After: tighter guardrails</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Quote speed</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: manual analysis</span>
+            <span class="delta-pill after">After: automated signals</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-ribbon" aria-label="Condensed improvement flow">
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">1</div>
+          <div class="flow-title">Audit &amp; label</div>
+          <p class="flow-body">Clean historic click data; define outcome labels for bidding targets.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">2</div>
+          <div class="flow-title">Model &amp; pipeline</div>
+          <p class="flow-body">Engineer source features and build predictive guidance in Laravel/MySQL.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">3</div>
+          <div class="flow-title">Operationalize</div>
+          <p class="flow-body">Feed bid suggestions into pricing flows to improve deal quality.</p>
+        </div>
+      </div>
+
+      <div class="impact-spotlight">
+        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+        <div>
+          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+          <ul>
+            <li>Pricing grounded in data, not guesswork.</li>
+            <li>Revenue stream steadier on high-volume traffic buys.</li>
+            <li>Sales/ops teams can quote faster with clearer guardrails.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="layout" aria-label="Case study content layout">

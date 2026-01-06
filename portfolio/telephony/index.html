@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/cta-bot.css" />
   <script src="/cta-bot.js" defer></script>
   <script type="module" src="/portfolio/case-nav.js" defer></script>
+  <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
     :root {
       /* Telephony / IVR theme – dark network night + neon signal lines */
@@ -655,6 +656,93 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="value-rail" aria-label="Problem to solution to impact">
+      <div class="eyebrow">Problem → Solution → Impact</div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon warning" aria-hidden="true">!</div>
+          <h3 class="value-title">Problem</h3>
+          <ul>
+            <li>Every inbound call required a human, even for simple tasks.</li>
+            <li>Routing was inconsistent; callers landed on the wrong queues.</li>
+            <li>Support teams were overloaded during peaks.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon action" aria-hidden="true">⧉</div>
+          <h3 class="value-title">Solution</h3>
+          <ul>
+            <li>Designed IVR call flows with authentication and self-service steps.</li>
+            <li>Built on Twilio Voice APIs and Asterisk with webhook-driven logic.</li>
+            <li>Routing, prioritisation, and fallbacks codified instead of ad-hoc.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon impact" aria-hidden="true">✓</div>
+          <h3 class="value-title">Impact</h3>
+          <ul>
+            <li>Higher call deflection for routine requests.</li>
+            <li>More consistent queueing and faster time-to-agent for priority calls.</li>
+            <li>Support teams focus on complex issues; caller experience improves.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="delta-metrics" aria-label="Directional before/after indicators">
+        <div class="delta-card">
+          <div class="delta-label">Agent load</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: every call live</span>
+            <span class="delta-pill after">After: IVR deflection</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Routing accuracy</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: uneven queueing</span>
+            <span class="delta-pill after">After: intent-based routing</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Caller experience</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: longer waits</span>
+            <span class="delta-pill after">After: faster self-service/agent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-ribbon" aria-label="Condensed improvement flow">
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">1</div>
+          <div class="flow-title">Map intents</div>
+          <p class="flow-body">Identify common call reasons and the data needed to resolve them.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">2</div>
+          <div class="flow-title">Build IVR + routing</div>
+          <p class="flow-body">Twilio/Asterisk flows with auth, self-service, and clear queue logic.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">3</div>
+          <div class="flow-title">Harden &amp; monitor</div>
+          <p class="flow-body">Fallbacks, error handling, and monitoring to keep voice reliable.</p>
+        </div>
+      </div>
+
+      <div class="impact-spotlight">
+        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+        <div>
+          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+          <ul>
+            <li>Callers get faster answers without always needing an agent.</li>
+            <li>Agents spend time on the cases that truly need them.</li>
+            <li>Telephony stack is predictable and easier to maintain.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="layout" aria-label="Case study content layout">

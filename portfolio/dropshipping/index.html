@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/cta-bot.css" />
   <script src="/cta-bot.js" defer></script>
   <script type="module" src="/portfolio/case-nav.js" defer></script>
+  <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
     :root {
       /* Dropshipping / ecommerce theme – warm marketplace vibe */
@@ -656,6 +657,93 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="value-rail" aria-label="Problem to solution to impact">
+      <div class="eyebrow">Problem → Solution → Impact</div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon warning" aria-hidden="true">!</div>
+          <h3 class="value-title">Problem</h3>
+          <ul>
+            <li>Manual inventory checks and packing slips limited growth.</li>
+            <li>Oversell/stockout risk as listings scaled across suppliers.</li>
+            <li>Owner time sunk into repetitive fulfilment admin.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon action" aria-hidden="true">⧉</div>
+          <h3 class="value-title">Solution</h3>
+          <ul>
+            <li>PHP + eBay API automation for inventory sync and pricing.</li>
+            <li>Auto-generated packing slips with batch printing.</li>
+            <li>Guardrails around stock levels and order processing.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon impact" aria-hidden="true">✓</div>
+          <h3 class="value-title">Impact</h3>
+          <ul>
+            <li>Scaled to ≈$60K/mo without proportional headcount.</li>
+            <li>Fewer stockouts/oversells; smoother buyer experience.</li>
+            <li>Time freed for sourcing and pricing, not admin.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="delta-metrics" aria-label="Directional before/after indicators">
+        <div class="delta-card">
+          <div class="delta-label">Inventory accuracy</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: manual, error-prone</span>
+            <span class="delta-pill after">After: API-sync + alerts</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Fulfilment time</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: hand-made slips</span>
+            <span class="delta-pill after">After: batch slip generation</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Owner focus</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: reactive order handling</span>
+            <span class="delta-pill after">After: focus on sourcing/margins</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-ribbon" aria-label="Condensed improvement flow">
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">1</div>
+          <div class="flow-title">Map &amp; triage</div>
+          <p class="flow-body">Document listing → order → fulfilment flow; find the slow/manual points.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">2</div>
+          <div class="flow-title">Automate core loops</div>
+          <p class="flow-body">Inventory/pricing sync via eBay API; packing slips with batch print support.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">3</div>
+          <div class="flow-title">Protect &amp; monitor</div>
+          <p class="flow-body">Stock guards and operational checks to keep orders flowing cleanly.</p>
+        </div>
+      </div>
+
+      <div class="impact-spotlight">
+        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+        <div>
+          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+          <ul>
+            <li>Consistent fulfilment experience with fewer order exceptions.</li>
+            <li>Better inventory hygiene across fast-changing listings.</li>
+            <li>Lean team can keep revenue growing without burnout.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="layout" aria-label="Case study content layout">

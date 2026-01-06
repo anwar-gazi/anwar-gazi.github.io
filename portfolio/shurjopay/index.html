@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/cta-bot.css" />
   <script src="/cta-bot.js" defer></script>
   <script type="module" src="/portfolio/case-nav.js" defer></script>
+  <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
     :root {
       /* Fintech color theme – clean blues/teals */
@@ -656,6 +657,93 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="value-rail" aria-label="Problem to solution to impact">
+      <div class="eyebrow">Problem → Solution → Impact</div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon warning" aria-hidden="true">!</div>
+          <h3 class="value-title">Problem</h3>
+          <ul>
+            <li>Severe production failure in the core payment flow.</li>
+            <li>Merchant trust and revenue at risk with every failed transaction.</li>
+            <li>Fragile code paths made rapid fixes risky.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon action" aria-hidden="true">⧉</div>
+          <h3 class="value-title">Solution</h3>
+          <ul>
+            <li>Root-cause analysis on the payment pipeline and API edge cases.</li>
+            <li>Targeted fixes plus validation and logging guardrails.</li>
+            <li>Incremental, tested releases to restore stability quickly.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon impact" aria-hidden="true">✓</div>
+          <h3 class="value-title">Impact</h3>
+          <ul>
+            <li>Gateway restored; transactions flowing reliably.</li>
+            <li>Merchant confidence returned; new acquisition accelerated.</li>
+            <li>Clear reliability story for future feature work.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="delta-metrics" aria-label="Directional before/after indicators">
+        <div class="delta-card">
+          <div class="delta-label">Payment success</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: critical failures</span>
+            <span class="delta-pill after">After: stable transactions</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Support load</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: high merchant escalations</span>
+            <span class="delta-pill after">After: calmer post-fix</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Release safety</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: risky hotfixes</span>
+            <span class="delta-pill after">After: guarded deploys</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-ribbon" aria-label="Condensed improvement flow">
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">1</div>
+          <div class="flow-title">Diagnose outage</div>
+          <p class="flow-body">Trace failing payment paths and external dependencies.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">2</div>
+          <div class="flow-title">Patch &amp; harden</div>
+          <p class="flow-body">Fix the core issue; add validation, logging, and safeguards.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">3</div>
+          <div class="flow-title">Rebuild trust</div>
+          <p class="flow-body">Deploy carefully, communicate with merchants, and track stability.</p>
+        </div>
+      </div>
+
+      <div class="impact-spotlight">
+        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+        <div>
+          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+          <ul>
+            <li>Merchants regained confidence in the gateway’s reliability.</li>
+            <li>Growth resumed with stronger outreach and retention.</li>
+            <li>Engineering had a safer footing for future features.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="layout" aria-label="Case study content layout">

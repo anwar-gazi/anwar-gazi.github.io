@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/cta-bot.css" />
   <script src="/cta-bot.js" defer></script>
   <script type="module" src="/portfolio/case-nav.js" defer></script>
+  <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
     :root {
       /* Media / editorial color theme */
@@ -669,6 +670,93 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="value-rail" aria-label="Problem to solution to impact">
+      <div class="eyebrow">Problem → Solution → Impact</div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon warning" aria-hidden="true">!</div>
+          <h3 class="value-title">Problem</h3>
+          <ul>
+            <li>Regional publishers stuck on fragile, one-off WordPress stacks.</li>
+            <li>Slow pages and plugin breakage during traffic spikes.</li>
+            <li>No shared platform to onboard multiple brands efficiently.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon action" aria-hidden="true">⧉</div>
+          <h3 class="value-title">Solution</h3>
+          <ul>
+            <li>Multi-tenant SaaS with tenant-aware routing, themes, and config.</li>
+            <li>Next.js SSR for fast, SEO-friendly reader experiences.</li>
+            <li>Editorial-friendly tooling plus onboarding flows for paying clients.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon impact" aria-hidden="true">✓</div>
+          <h3 class="value-title">Impact</h3>
+          <ul>
+            <li>Faster sites under breaking-news load.</li>
+            <li>Reduced setup friction when adding new publications.</li>
+            <li>Commercial validation: multiple tenants live and paying.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="delta-metrics" aria-label="Directional before/after indicators">
+        <div class="delta-card">
+          <div class="delta-label">Page speed &amp; stability</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: slow, plugin-sensitive</span>
+            <span class="delta-pill after">After: SSR + tuned assets</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Tenant onboarding</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: bespoke projects</span>
+            <span class="delta-pill after">After: repeatable SaaS rollout</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Editorial workflow</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: tooling gaps &amp; rework</span>
+            <span class="delta-pill after">After: streamlined publishing</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-ribbon" aria-label="Condensed improvement flow">
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">1</div>
+          <div class="flow-title">Design for multi-tenancy</div>
+          <p class="flow-body">Tenant-aware API, auth, and theming to host multiple brands safely on one platform.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">2</div>
+          <div class="flow-title">Optimize reader &amp; editor UX</div>
+          <p class="flow-body">Next.js SSR, rich story tools, and performance tuning for newsroom spikes.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">3</div>
+          <div class="flow-title">Launch &amp; onboard</div>
+          <p class="flow-body">Commercial rollout with paying media clients; repeatable onboarding playbook.</p>
+        </div>
+      </div>
+
+      <div class="impact-spotlight">
+        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+        <div>
+          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+          <ul>
+            <li>Editors publish faster with fewer platform surprises.</li>
+            <li>Brands keep their identity while sharing infrastructure.</li>
+            <li>Business sees a SaaS product, not one-off implementations.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="layout" aria-label="Case study content layout">

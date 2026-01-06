@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/cta-bot.css" />
   <script src="/cta-bot.js" defer></script>
   <script type="module" src="/portfolio/case-nav.js" defer></script>
+  <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
     :root {
       /* IIG / internet gateway theme – backbone network vibe: deep navy + magenta + cyan */
@@ -655,6 +656,93 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="value-rail" aria-label="Problem to solution to impact">
+      <div class="eyebrow">Problem → Solution → Impact</div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon warning" aria-hidden="true">!</div>
+          <h3 class="value-title">Problem</h3>
+          <ul>
+            <li>Incident updates were ad-hoc emails with little traceability.</li>
+            <li>Stakeholders (NOC, upstreams, customers) lacked timely visibility.</li>
+            <li>No lightweight system to prove structured incident handling.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon action" aria-hidden="true">⧉</div>
+          <h3 class="value-title">Solution</h3>
+          <ul>
+            <li>osTicket-based prototype tailored to IIG network events.</li>
+            <li>Email-triggered notifications tied to ticket lifecycle.</li>
+            <li>Configured flows for routing, updates, and accountability.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon impact" aria-hidden="true">✓</div>
+          <h3 class="value-title">Impact</h3>
+          <ul>
+            <li>Incidents became trackable with owners and status.</li>
+            <li>Stakeholders received timely, automated updates.</li>
+            <li>Proof of concept for a full incident system at the gateway.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="delta-metrics" aria-label="Directional before/after indicators">
+        <div class="delta-card">
+          <div class="delta-label">Incident visibility</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: inbox chaos</span>
+            <span class="delta-pill after">After: tickets + timelines</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Routing &amp; updates</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: manual forwarding</span>
+            <span class="delta-pill after">After: automated notifications</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Closure clarity</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: unclear resolutions</span>
+            <span class="delta-pill after">After: structured ticket states</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-ribbon" aria-label="Condensed improvement flow">
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">1</div>
+          <div class="flow-title">Map NOC communication</div>
+          <p class="flow-body">Document how incidents were escalated and where updates got lost.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">2</div>
+          <div class="flow-title">Configure osTicket</div>
+          <p class="flow-body">Tailor categories, roles, and email hooks for IIG-specific events.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">3</div>
+          <div class="flow-title">Demo &amp; iterate</div>
+          <p class="flow-body">Show NOC and management how structured tickets improve response.</p>
+        </div>
+      </div>
+
+      <div class="impact-spotlight">
+        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+        <div>
+          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+          <ul>
+            <li>Network events no longer vanish in inbox threads.</li>
+            <li>Stakeholders know owners, status, and next steps sooner.</li>
+            <li>Foundation laid for a production-grade incident system.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="layout" aria-label="Case study content layout">

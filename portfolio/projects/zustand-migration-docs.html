@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/cta-bot.css" />
   <script src="/cta-bot.js" defer></script>
   <script type="module" src="/portfolio/case-nav.js" defer></script>
+  <link rel="stylesheet" href="/portfolio/narrative.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -271,6 +272,93 @@
             <div class="stat"><div class="stat-value">100%</div><div class="stat-label">Tests Passing</div></div>
           </div>
         </div>
+
+        <section class="value-rail" aria-label="Problem to solution to impact">
+          <div class="eyebrow" style="color: var(--text-muted);">Problem → Solution → Impact</div>
+          <div class="value-grid">
+            <div class="value-card">
+              <div class="value-icon warning" aria-hidden="true">!</div>
+              <h3 class="value-title">Problem</h3>
+              <ul>
+                <li>React Context + useReducer caused broad re-renders.</li>
+                <li>State spread across providers made additions noisy.</li>
+                <li>DX friction for selectors, testing, and composability.</li>
+              </ul>
+            </div>
+            <div class="value-card">
+              <div class="value-icon action" aria-hidden="true">⧉</div>
+              <h3 class="value-title">Solution</h3>
+              <ul>
+                <li>Introduce a centralized Zustand store for board state.</li>
+                <li>Use selector hooks to scope subscriptions and cut renders.</li>
+                <li>Type-safe actions, devtools support, and no provider boilerplate.</li>
+              </ul>
+            </div>
+            <div class="value-card">
+              <div class="value-icon impact" aria-hidden="true">✓</div>
+              <h3 class="value-title">Impact</h3>
+              <ul>
+                <li>Cleaner components with targeted subscriptions.</li>
+                <li>Lower re-render churn; faster UI response.</li>
+                <li>Simpler DX for future features and tests.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="delta-metrics" aria-label="Directional before/after indicators">
+            <div class="delta-card">
+              <div class="delta-label">Re-render scope</div>
+              <div class="delta-values">
+                <span class="delta-pill">Before: broad context updates</span>
+                <span class="delta-pill after">After: selector-scoped</span>
+              </div>
+            </div>
+            <div class="delta-card">
+              <div class="delta-label">DX</div>
+              <div class="delta-values">
+                <span class="delta-pill">Before: provider boilerplate</span>
+                <span class="delta-pill after">After: direct hooks</span>
+              </div>
+            </div>
+            <div class="delta-card">
+              <div class="delta-label">Testability</div>
+              <div class="delta-values">
+                <span class="delta-pill">Before: coupled reducers</span>
+                <span class="delta-pill after">After: focused store actions</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-ribbon" aria-label="Condensed improvement flow">
+            <div class="flow-step">
+              <div class="flow-icon" aria-hidden="true">1</div>
+              <div class="flow-title">Plan &amp; scaffold</div>
+              <p class="flow-body">Map context state/actions; scaffold Zustand store and types.</p>
+            </div>
+            <div class="flow-step">
+              <div class="flow-icon" aria-hidden="true">2</div>
+              <div class="flow-title">Wire components</div>
+              <p class="flow-body">Replace context usage with selector hooks to isolate updates.</p>
+            </div>
+            <div class="flow-step">
+              <div class="flow-icon" aria-hidden="true">3</div>
+              <div class="flow-title">Verify &amp; clean</div>
+              <p class="flow-body">Remove provider, run tests, and confirm render improvements.</p>
+            </div>
+          </div>
+
+          <div class="impact-spotlight">
+            <div class="spotlight-icon" aria-hidden="true">🛡</div>
+            <div>
+              <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+              <ul>
+                <li>State changes stay local; UI feels snappier.</li>
+                <li>Developers add features without wrestling providers.</li>
+                <li>Foundation ready for future board features.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
 
         <h2>📋 Migration Checklist</h2>
         <div class="card">

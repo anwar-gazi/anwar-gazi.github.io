@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/cta-bot.css" />
   <script src="/cta-bot.js" defer></script>
   <script type="module" src="/portfolio/case-nav.js" defer></script>
+  <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
     /* Notion-like minimal theme with a slightly different color palette */
     :root{
@@ -26,6 +27,14 @@
       --callout-bg: #f0f7ff;
       --callout-border: #cbe0ff;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+      --narrative-surface: #ffffff;
+      --narrative-surface-strong: #f5f7fb;
+      --narrative-border: #e6e7eb;
+      --narrative-strong: #0f1724;
+      --narrative-muted: #6b7280;
+      --narrative-accent: var(--accent);
+      --narrative-accent-2: var(--accent-2);
+      --narrative-soft: rgba(37, 99, 235, 0.12);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
 
@@ -207,6 +216,93 @@
             <div class="snap-card" role="listitem">
               <h3>Status</h3>
               <p>Resolved — middleware moved to src and made edge-safe</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="value-rail" aria-label="Problem to solution to impact">
+          <div class="eyebrow" style="color: var(--muted);">Problem → Solution → Impact</div>
+          <div class="value-grid">
+            <div class="value-card">
+              <div class="value-icon warning" aria-hidden="true">!</div>
+              <h3 class="value-title">Problem</h3>
+              <ul>
+                <li>Login appeared successful but redirects didn’t happen.</li>
+                <li>Protected pages were reachable without authentication.</li>
+                <li>Middleware and session callback were not executing at all.</li>
+              </ul>
+            </div>
+            <div class="value-card">
+              <div class="value-icon action" aria-hidden="true">⧉</div>
+              <h3 class="value-title">Solution</h3>
+              <ul>
+                <li>Traced absence of middleware logs; confirmed module not loaded.</li>
+                <li>Moved middleware to the expected path and made imports edge-safe.</li>
+                <li>Re-tested with logging to confirm execution and redirect behaviour.</li>
+              </ul>
+            </div>
+            <div class="value-card">
+              <div class="value-icon impact" aria-hidden="true">✓</div>
+              <h3 class="value-title">Impact</h3>
+              <ul>
+                <li>Auth redirect works; protected pages are gated again.</li>
+                <li>Session callbacks and middleware run reliably.</li>
+                <li>Clear RCA for future auth/middleware changes.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="delta-metrics" aria-label="Directional before/after indicators">
+            <div class="delta-card">
+              <div class="delta-label">Route protection</div>
+              <div class="delta-values">
+                <span class="delta-pill">Before: bypassed</span>
+                <span class="delta-pill after">After: enforced</span>
+              </div>
+            </div>
+            <div class="delta-card">
+              <div class="delta-label">Redirect flow</div>
+              <div class="delta-values">
+                <span class="delta-pill">Before: silent failure</span>
+                <span class="delta-pill after">After: consistent redirect</span>
+              </div>
+            </div>
+            <div class="delta-card">
+              <div class="delta-label">Debug visibility</div>
+              <div class="delta-values">
+                <span class="delta-pill">Before: no middleware logs</span>
+                <span class="delta-pill after">After: instrumented &amp; verifiable</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-ribbon" aria-label="Condensed improvement flow">
+            <div class="flow-step">
+              <div class="flow-icon" aria-hidden="true">1</div>
+              <div class="flow-title">Reproduce &amp; log</div>
+              <p class="flow-body">Confirm missing middleware/session callbacks with targeted logging.</p>
+            </div>
+            <div class="flow-step">
+              <div class="flow-icon" aria-hidden="true">2</div>
+              <div class="flow-title">Fix execution</div>
+              <p class="flow-body">Move middleware to /src, adjust imports for edge compatibility.</p>
+            </div>
+            <div class="flow-step">
+              <div class="flow-icon" aria-hidden="true">3</div>
+              <div class="flow-title">Verify redirects</div>
+              <p class="flow-body">Retest login and gated pages with logs to confirm correct flow.</p>
+            </div>
+          </div>
+
+          <div class="impact-spotlight">
+            <div class="spotlight-icon" aria-hidden="true">🛡</div>
+            <div>
+              <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+              <ul>
+                <li>Login UX works end-to-end; no silent failures.</li>
+                <li>Protected routes stay protected.</li>
+                <li>Actionable RCA for future onboarding or audits.</li>
+              </ul>
             </div>
           </div>
         </section>

@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/cta-bot.css" />
   <script src="/cta-bot.js" defer></script>
   <script type="module" src="/portfolio/case-nav.js" defer></script>
+  <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
     :root {
       --bg: #0c1427;
@@ -390,6 +391,93 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="value-rail" aria-label="Problem to solution to impact">
+      <div class="eyebrow">Problem → Solution → Impact</div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon warning" aria-hidden="true">!</div>
+          <h3 class="value-title">Problem</h3>
+          <ul>
+            <li>BRAC Bank encryption library (PHP 7) produced bad tokens in PHP 8.</li>
+            <li>Workaround via PHP 7 subdomain kept payments alive but blocked CoF.</li>
+            <li>Extra surface area increased operational and security risk.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon action" aria-hidden="true">⧉</div>
+          <h3 class="value-title">Solution</h3>
+          <ul>
+            <li>Identified salt and OpenSSL differences between runtimes.</li>
+            <li>Made encryption deterministic in PHP 8; aligned token generation.</li>
+            <li>Removed PHP 7 subdomain dependency; unified the payment flow.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon impact" aria-hidden="true">✓</div>
+          <h3 class="value-title">Impact</h3>
+          <ul>
+            <li>BRAC Bank payments restored under PHP 8.</li>
+            <li>Card-on-File re-enabled as a key product milestone.</li>
+            <li>Simpler architecture with fewer operational failure points.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="delta-metrics" aria-label="Directional before/after indicators">
+        <div class="delta-card">
+          <div class="delta-label">Payment success</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: failures on BRAC tokens</span>
+            <span class="delta-pill after">After: stable under PHP 8</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Architecture complexity</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: dual runtime + subdomain</span>
+            <span class="delta-pill after">After: single runtime flow</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Card-on-File</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: blocked by workaround</span>
+            <span class="delta-pill after">After: restored and launchable</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-ribbon" aria-label="Condensed improvement flow">
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">1</div>
+          <div class="flow-title">Trace mismatch</div>
+          <p class="flow-body">Compare PHP 7 vs. PHP 8 encryption outputs; isolate salt handling differences.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">2</div>
+          <div class="flow-title">Fix token generation</div>
+          <p class="flow-body">Update library usage for PHP 8 to produce identical tokens.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">3</div>
+          <div class="flow-title">Simplify runtime</div>
+          <p class="flow-body">Remove the PHP 7 subdomain; keep payments and CoF in one flow.</p>
+        </div>
+      </div>
+
+      <div class="impact-spotlight">
+        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+        <div>
+          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+          <ul>
+            <li>Merchants regain confidence in BRAC Bank transactions.</li>
+            <li>Card-on-File becomes launch-ready after long downtime.</li>
+            <li>Ops surface area shrinks, reducing risk and maintenance load.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="layout" aria-label="Case study content layout">

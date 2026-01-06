@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/cta-bot.css" />
   <script src="/cta-bot.js" defer></script>
   <script type="module" src="/portfolio/case-nav.js" defer></script>
+  <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
     :root {
       /* Healthcare theme – calm teal + clean blue */
@@ -656,6 +657,93 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="value-rail" aria-label="Problem to solution to impact">
+      <div class="eyebrow">Problem → Solution → Impact</div>
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon warning" aria-hidden="true">!</div>
+          <h3 class="value-title">Problem</h3>
+          <ul>
+            <li>Agents hit intermittent errors in enrolment, changes, and terminations.</li>
+            <li>Edge cases in policy rules created UI/back-office mismatches.</li>
+            <li>Manual, high-stakes releases risked regression in regulated flows.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon action" aria-hidden="true">⧉</div>
+          <h3 class="value-title">Solution</h3>
+          <ul>
+            <li>Shadowed real agent scenarios, instrumented logs, and reproduced failures.</li>
+            <li>Hardened validation and business-rule handling across policy workflows.</li>
+            <li>Shipped smaller, tested fixes aligned with QA and compliance teams.</li>
+          </ul>
+        </div>
+        <div class="value-card">
+          <div class="value-icon impact" aria-hidden="true">✓</div>
+          <h3 class="value-title">Impact</h3>
+          <ul>
+            <li>More predictable enrolments and mid-year changes.</li>
+            <li>Fewer user-visible errors and data correction tickets.</li>
+            <li>Lower deploy anxiety; steadier service for members and agents.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="delta-metrics" aria-label="Directional before/after indicators">
+        <div class="delta-card">
+          <div class="delta-label">Enrolment stability</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: session errors under load</span>
+            <span class="delta-pill after">After: guarded flows, fewer retries</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Policy change correctness</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: edge-case regressions</span>
+            <span class="delta-pill after">After: validated rules &amp; logging</span>
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="delta-label">Release risk</div>
+          <div class="delta-values">
+            <span class="delta-pill">Before: manual, stressful deploys</span>
+            <span class="delta-pill after">After: smaller, QA-paired drops</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-ribbon" aria-label="Condensed improvement flow">
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">1</div>
+          <div class="flow-title">Observe &amp; triage</div>
+          <p class="flow-body">Mine logs and shadow agents to isolate the noisiest failure cases in policy workflows.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">2</div>
+          <div class="flow-title">Patch &amp; guard</div>
+          <p class="flow-body">Tighten validation, rule handling, and data sync; add checks that mirror real-world edge cases.</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon" aria-hidden="true">3</div>
+          <div class="flow-title">Release safely</div>
+          <p class="flow-body">Ship smaller changes with QA pairing and better logging to keep regulated flows calm.</p>
+        </div>
+      </div>
+
+      <div class="impact-spotlight">
+        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+        <div>
+          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+          <ul>
+            <li>Agents complete member workflows without rework or escalations.</li>
+            <li>Members see accurate coverage updates sooner.</li>
+            <li>Compliance and revenue risk lowered through steadier operations.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="layout" aria-label="Case study content layout">

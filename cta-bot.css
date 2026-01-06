@@ -497,12 +497,17 @@
     color: #e5e7eb;
     font-size: 11px;
     cursor: pointer;
-    display: inline-flex;
+    display: none;
     align-items: center;
     justify-content: center;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
     pointer-events: auto;
     z-index: 3;
+}
+
+.cta-shell[data-state="toast"]:hover .cta-idle-toggle,
+.cta-shell[data-state="bar"]:hover .cta-idle-toggle {
+    display: inline-flex;
 }
 
 .cta-idle-fill {

@@ -67,6 +67,18 @@
     padding-right: 20px;
 }
 
+.cta-shell.toast-top {
+    top: 0;
+    bottom: auto;
+    padding: 12px 12px 0;
+}
+
+.cta-shell.toast-bottom {
+    bottom: 0;
+    top: auto;
+    padding: 0 12px 12px;
+}
+
 .cta-shell[data-state="toast"] .cta-surface {
     width: 420px;
     transform: translateY(0);
@@ -124,10 +136,36 @@
     display: none;
 }
 
-.cta-toast-expand {
+.cta-toast-controls {
     position: absolute;
     top: 8px;
     right: 10px;
+    display: none;
+    gap: 6px;
+    align-items: center;
+    z-index: 4;
+}
+
+.cta-shell[data-state="toast"] .cta-toast-controls {
+    display: flex;
+}
+
+.cta-toast-move {
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+    font-size: 14px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.cta-toast-expand {
     width: 28px;
     height: 28px;
     border-radius: 10px;
@@ -140,7 +178,6 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
-    z-index: 3;
 }
 
 .cta-shell[data-state="toast"] .cta-toast-expand {

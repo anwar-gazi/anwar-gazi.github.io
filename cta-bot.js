@@ -13,6 +13,8 @@ class CtaBot extends HTMLElement {
     this._stateKey = 'ctaState';
     this._collapsedKey = 'ctaCollapsed';
     this._posKey = 'ctaPos';
+    this._toastAnchorKey = 'ctaToastAnchor';
+    this._toastAnchor = 'bottom'; // 'top' | 'bottom'
     // Default fallback: professional, Muslim-themed male avatar (can be overridden via photo-src)
     this._photoSrc = 'https://api.dicebear.com/6.x/adventurer/svg?seed=Imran&accessories=turban&hairColor=black&skinColor=brown';
     this._audioSrc = null;
@@ -68,7 +70,11 @@ class CtaBot extends HTMLElement {
       <footer class="cta-shell" data-state="bar">
           <div class="cta-surface">
             <div class="cta-surface-inner">
-              <button class="cta-toast-expand" data-action="expand" type="button" aria-label="Expand">‹</button>
+              <div class="cta-toast-controls">
+                <button class="cta-toast-move cta-toast-up" data-action="toast-up" type="button" aria-label="Move toast to top">↑</button>
+                <button class="cta-toast-move cta-toast-down" data-action="toast-down" type="button" aria-label="Move toast to bottom">↓</button>
+                <button class="cta-toast-expand" data-action="expand" type="button" aria-label="Expand">‹</button>
+              </div>
               <div class="cta-bar">
                 <div class="cta-avatar">
                   <img class="cta-avatar-img" src="${this._photoSrc}" alt="Profile" loading="lazy" />
@@ -129,6 +135,7 @@ class CtaBot extends HTMLElement {
     this._setState(this._preferredState, { persistPreferred: false });
     this._applyResponsiveState();
     this._applySavedPosition();
+    this._applyToastAnchor();
     this._wireEvents();
     this._startIdleTracking();
     this._setupAudio();
@@ -214,6 +221,7 @@ class CtaBot extends HTMLElement {
     this._stateKey = `${prefix}ctaState`;
     this._collapsedKey = `${prefix}ctaCollapsed`;
     this._posKey = `${prefix}ctaPos`;
+    this._toastAnchorKey = `${prefix}ctaToastAnchor`;
 
     const photoAttr = this.getAttribute('photo-src');
     if (photoAttr) {
@@ -275,6 +283,11 @@ class CtaBot extends HTMLElement {
       this._contact.phoneDisplay = phoneAttr;
       this._contact.phoneHref = this._normalizePhoneHref(phoneAttr);
     }
+
+    const savedAnchor = this._readStorage(this._toastAnchorKey);
+    if (savedAnchor === 'top' || savedAnchor === 'bottom') {
+      this._toastAnchor = savedAnchor;
+    }
   }
 
   _wireEvents() {
@@ -282,6 +295,8 @@ class CtaBot extends HTMLElement {
     const collapseBtn = this.querySelector('[data-action="collapse"]');
     const dismissBtn = this.querySelector('[data-action="dismiss"]');
     const expandBtn = this.querySelector('[data-action="expand"]');
+    const toastUpBtn = this.querySelector('[data-action="toast-up"]');
+    const toastDownBtn = this.querySelector('[data-action="toast-down"]');
     const emailLinks = this.querySelectorAll('.cta-email');
     const phoneLinks = this.querySelectorAll('.cta-phone');
 
@@ -316,6 +331,14 @@ class CtaBot extends HTMLElement {
         this._setState('bar');
       });
     }
+    if (toastUpBtn) {
+      stopBubble(toastUpBtn);
+      toastUpBtn.addEventListener('click', () => this._setToastAnchor('top'));
+    }
+    if (toastDownBtn) {
+      stopBubble(toastDownBtn);
+      toastDownBtn.addEventListener('click', () => this._setToastAnchor('bottom'));
+    }
 
     const muteBtn = this.querySelector('[data-action="mute"]');
     if (muteBtn) {
@@ -343,8 +366,13 @@ class CtaBot extends HTMLElement {
     this._onScroll = () => {
       const doc = document.documentElement;
       const progress = (window.scrollY + window.innerHeight) / Math.max(doc.scrollHeight, 1);
+      const atBottom =
+        window.innerHeight + window.scrollY >= (doc.scrollHeight || document.body.scrollHeight) - 4;
 
       if (this._isMobile()) {
+        if (!this._hasCustomPos) {
+          this._setToastAnchor(atBottom ? 'top' : 'bottom');
+        }
         this._setState('toast', { persistPreferred: false });
         return;
       }
@@ -411,6 +439,43 @@ class CtaBot extends HTMLElement {
     }
 
     this._persistState(persistPreferred ? next : this._preferredState);
+    this._applyToastAnchor();
+    this._updateToastControls();
+  }
+
+  _setToastAnchor(anchor) {
+    if (anchor !== 'top' && anchor !== 'bottom') return;
+    this._toastAnchor = anchor;
+    this._clearPosition(true);
+    this._applyToastAnchor();
+    // Avoid persisting anchor toggles; only remember when drag sets custom pos
+  }
+
+  _applyToastAnchor() {
+    if (!this._shell) return;
+    const applyAnchor = this._state === 'toast' && !this._hasCustomPos;
+    this._shell.classList.toggle('toast-top', applyAnchor && this._toastAnchor === 'top');
+    this._shell.classList.toggle('toast-bottom', applyAnchor && this._toastAnchor === 'bottom');
+    if (applyAnchor) {
+      this._shell.style.top = this._toastAnchor === 'top' ? '0' : '';
+      this._shell.style.bottom = this._toastAnchor === 'bottom' ? '0' : '';
+    } else {
+      this._shell.style.top = '';
+      this._shell.style.bottom = '';
+    }
+    this._updateToastControls();
+  }
+
+  _updateToastControls() {
+    const upBtn = this.querySelector('[data-action="toast-up"]');
+    const downBtn = this.querySelector('[data-action="toast-down"]');
+    const showControls = this._state === 'toast' && !this._hasCustomPos;
+    if (upBtn) {
+      upBtn.style.display = showControls && this._toastAnchor !== 'top' ? 'inline-flex' : 'none';
+    }
+    if (downBtn) {
+      downBtn.style.display = showControls && this._toastAnchor !== 'bottom' ? 'inline-flex' : 'none';
+    }
   }
 
   _isMobile() {
@@ -669,6 +734,7 @@ class CtaBot extends HTMLElement {
     if (persist) {
       this._persistPosition();
     }
+    this._updateToastControls();
   }
 
   _applySavedPosition() {
@@ -716,6 +782,7 @@ class CtaBot extends HTMLElement {
     if (clearStorage) {
       this._removeStorage(this._posKey);
     }
+    this._applyToastAnchor();
   }
 
   _startIdleTracking() {

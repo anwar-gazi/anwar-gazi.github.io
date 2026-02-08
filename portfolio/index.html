@@ -1358,7 +1358,15 @@
       font-size: 18px;
       margin-bottom: 20px;
       color: white;
-      opacity: 0.9;
+      opacity: 0.95;
+      font-weight: 600;
+    }
+
+    .cta-card.card,
+    .cta-card.menu-card {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
     }
 
     .cta-mini-btn {
@@ -1380,24 +1388,68 @@
       text-decoration: none;
     }
 
+    .cta-mini-btn:hover {
+      background: white;
+      color: #0F172A;
+      text-decoration: none;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Premium Flavors 2.0 */
     .cta-indigo {
       background: linear-gradient(135deg, #312E81 0%, #1E1B4B 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-indigo::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(79, 70, 229, 0.4) 0%, transparent 70%);
+      pointer-events: none;
     }
 
     .cta-emerald {
-      background: linear-gradient(135deg, #064E3B 0%, #064E3B 100%);
+      background: linear-gradient(135deg, #064E3B 0%, #022C22 100%);
+      box-shadow: inset 0 0 40px rgba(16, 185, 129, 0.1);
     }
 
     .cta-slate {
       background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .cta-purple {
       background: linear-gradient(135deg, #4C1D95 0%, #2E1065 100%);
+      position: relative;
+    }
+
+    .cta-purple::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, transparent 40%, rgba(167, 139, 250, 0.1) 50%, transparent 60%);
+      animation: sweep 4s infinite linear;
     }
 
     .cta-amber {
       background: linear-gradient(135deg, #78350F 0%, #451A03 100%);
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.05);
+    }
+
+    @keyframes sweep {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(100%);
+      }
     }
 
     .tech-tag {
@@ -1608,22 +1660,34 @@
 
       <!-- Cards grid -->
       <section class="grid" aria-label="Case study list">
-        <a v-for="c in filteredStudies" :key="c.id" :href="c.href"
-          :class="['card-link', getSpanClass(c.weight), getCategoryClass(c.tag)]" :data-category="c.tag">
-          <article class="card" style="height: 100%">
-            <div class="card-industry">{{ c.industry }}</div>
-            <h2 class="card-title">{{ c.title }}</h2>
-            <p class="card-body">{{ c.subtitle }}</p>
-            <div class="card-meta-row">
-              <span v-for="tech in (c.tech_stack || []).slice(0, 4)" class="card-meta-pill">{{ tech }}</span>
-            </div>
-            <div class="card-footer">
-              <div class="card-link-text">
-                Read case study <span>↗</span>
+        <template v-for="(item, idx) in mainGridItems">
+          <!-- Case Study Card -->
+          <a v-if="!item.isFiller" :key="'main-study-' + item.id" :href="item.href"
+            :class="['card-link', getSpanClass(item.weight), getCategoryClass(item.tag)]" :data-category="item.tag">
+            <article class="card" style="height: 100%">
+              <div class="card-industry">{{ item.industry }}</div>
+              <h2 class="card-title">{{ item.title }}</h2>
+              <p class="card-body">{{ item.subtitle }}</p>
+              <div class="card-meta-row">
+                <span v-for="tech in (item.tech_stack || []).slice(0, 4)" class="card-meta-pill">{{ tech }}</span>
               </div>
-            </div>
-          </article>
-        </a>
+              <div class="card-footer">
+                <div class="card-link-text">
+                  Read case study <span>↗</span>
+                </div>
+              </div>
+            </article>
+          </a>
+
+          <!-- CTA Card (Main Grid) -->
+          <div v-else :key="'main-cta-' + idx" :class="['card-link', 'cta-card', item.flavor]" style="display: block;">
+            <article class="card" style="height: 100%; background: none; border: none; box-shadow: none;">
+              <div class="menu-icon" style="font-size: 32px; margin-bottom: 16px;">{{ item.icon }}</div>
+              <div class="card-title" style="color: white; margin-bottom: 20px; font-size: 18px;">{{ item.msg }}</div>
+              <a href="mailto:anwar.gazi@gmail.com" class="cta-mini-btn">Get in Touch</a>
+            </article>
+          </div>
+        </template>
       </section>
     </main>
 
@@ -1739,11 +1803,29 @@
               const finalItems = [];
               let currentSlots = 0;
               let fillerIndex = 0;
+              let studyCount = 0;
 
               items.forEach((item) => {
                 const weight = parseInt(item.weight) || 0;
                 let span = (weight >= 90) ? 2 : 1;
 
+                // Rhythmic Injection: Add a CTA after every 4 studies
+                if (studyCount > 0 && studyCount % 4 === 0) {
+                  // If we are at the end of a row or need to fill a gap before the CTA
+                  const rem = currentSlots % cols;
+                  if (rem !== 0 && rem + 1 > cols) {
+                    // Fill the gap in the current row if the CTA (span 1) won't fit
+                    // But CTAs are span 1, so they usually fit unless it's full.
+                  }
+
+                  const f = this.fillerPool[fillerIndex % this.fillerPool.length];
+                  finalItems.push({ ...f, isFiller: true });
+                  fillerIndex++;
+                  currentSlots += 1; // CTAs are span 1
+                  studyCount = 0; // Reset counter after injection
+                }
+
+                // Normal Gap Filling for Bento Alignment
                 if ((currentSlots % cols) + span > cols && (currentSlots % cols) !== 0) {
                   const gapSize = cols - (currentSlots % cols);
                   for (let g = 0; g < gapSize; g++) {
@@ -1756,8 +1838,10 @@
 
                 finalItems.push({ ...item, isFiller: false });
                 currentSlots += span;
+                studyCount++;
               });
 
+              // End-of-grid filling
               const remaining = (cols - (currentSlots % cols)) % cols;
               for (let g = 0; g < remaining; g++) {
                 const f = this.fillerPool[fillerIndex % this.fillerPool.length];
@@ -1912,10 +1996,37 @@
                 { id: 'Ecommerce', label: 'Ecommerce' },
                 { id: 'Infrastructure', label: 'Infrastructure / IIG' },
                 { id: 'Engineering', label: 'Engineering & Architecture' }
+              ],
+              fillerPool: [
+                { msg: "Staff-Level Infrastructure", flavor: "cta-indigo", icon: "🚀" },
+                { msg: "Scale Your Architecture", flavor: "cta-emerald", icon: "💎" },
+                { msg: "Backend Performance RCA", flavor: "cta-slate", icon: "🛠️" },
+                { id: 'cta-purple', msg: "Hire for Strategic Impact", flavor: "cta-purple", icon: "🎯" },
+                { msg: "Let's Build the Future", flavor: "cta-amber", icon: "📈" }
               ]
             }
           },
           computed: {
+            mainGridItems() {
+              const items = this.filteredStudies;
+              // On desktop we have 4 cols, on mobile 1.
+              // But for the main grid, we just want rhythmic injection every 4 items.
+              const finalItems = [];
+              let fillerIndex = 0;
+              let studyCount = 0;
+
+              items.forEach((item) => {
+                if (studyCount > 0 && studyCount % 4 === 0) {
+                  const f = this.fillerPool[fillerIndex % this.fillerPool.length];
+                  finalItems.push({ ...f, isFiller: true });
+                  fillerIndex++;
+                  studyCount = 0;
+                }
+                finalItems.push({ ...item, isFiller: false });
+                studyCount++;
+              });
+              return finalItems;
+            },
             filteredStudies() {
               const sorted = [...this.studies].sort((a, b) => (parseInt(b.weight) || 0) - (parseInt(a.weight) || 0));
               if (this.currentFilter === 'all') return sorted;

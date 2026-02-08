@@ -1506,6 +1506,25 @@
         background: rgba(255, 255, 255, 0.8);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       }
+
+      /* Main Landing Grid Mobile Fix */
+      .grid {
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+      }
+
+      .span-col-2,
+      .span-both,
+      .row-span-2 {
+        grid-column: auto !important;
+        grid-row: auto !important;
+      }
+
+      .card {
+        margin: 0 -1px -1px 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+      }
     }
   </style>
 </head>

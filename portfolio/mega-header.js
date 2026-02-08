@@ -7,8 +7,10 @@ const MegaHeader = {
           <a href="/" class="brand">
             <div class="brand-avatar">AG</div>
             <div class="brand-text">
-              <span class="brand-name">Anwar Gazi</span>
-              <span class="brand-sub">Software Engineer</span>
+              <slot name="brand-content">
+                <span class="brand-name">Anwar Gazi</span>
+                <span class="brand-sub">Software Engineer</span>
+              </slot>
             </div>
           </a>
 

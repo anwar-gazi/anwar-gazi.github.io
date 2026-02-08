@@ -9,10 +9,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png">
 
   <title>RCA — Login / Middleware Issue</title>
-  <link rel="stylesheet" href="../cta-bot.css" />
-  <script src="../cta-bot.js" defer></script>
   <script src="case-data.js" defer></script>
-  <script src="mega-header.js" defer></script>
+  <script src="mega-header.js"></script>
   <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
     /* Notion-like minimal theme with a slightly different color palette */
@@ -322,9 +320,11 @@
       text-decoration: none;
     }
   </style>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 
 <body>
+  <div id="app">
   <div class="page" role="main" aria-labelledby="title">
     <mega-header>
       <div slot="brand-content">
@@ -715,8 +715,19 @@ callbacks: {
     // nothing more needed for this static report
   </script>
 
-  <cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com"
-    phone="+8801716734974" audio-play="true"></cta-bot>
+  
+
+    
+  </div>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      components: {
+        'mega-header': MegaHeader,
+        
+      }
+    }).mount('#app');
+  </script>
 </body>
 
 </html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Standalone Component Demo</title>
+
+  <!-- 1. Include The Styles -->
+  <link rel="stylesheet" href="./mega-header.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #0f172a;
+      /* Just for contrast */
+      color: white;
+    }
+
+    .content-placeholder {
+      padding: 100px 20px;
+      text-align: center;
+      min-height: 200vh;
+      /* Force scroll to test CTA Bot */
+    }
+  </style>
+
+  <!-- 2. Include Vue (Development Build for debugging, use Production for live) -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <!-- 3. Include The Component Scripts (Just JS Objects!) -->
+  <script src="./mega-header.js"></script>
+  <!-- Dummy Data for MegaHeader (usually from case-data.js) -->
+  <script>
+    window.CASE_STUDIES = [
+      // Minimal data required for the mega menu to render
+      { id: '1', title: 'Demo Case Study 1', tag: 'System Architecture', weight: '90', icon: '🚀', href: '#' },
+      { id: '2', title: 'Demo Case Study 2', tag: 'Fintech', weight: '85', icon: '💳', href: '#' },
+      { id: '3', title: 'Demo Case Study 3', tag: 'GovTech', weight: '95', icon: '🌏', href: '#' },
+      { id: '4', title: 'Demo Case Study 4', tag: 'Media', weight: '88', icon: '📰', href: '#' },
+    ];
+  </script>
+</head>
+
+<body>
+
+  <!-- 4. Mount Point: Can be anywhere! Doesn't have to be 'app' -->
+  <div id="demo-root">
+
+    <!-- Use Components Exactly like HTML Tags -->
+    <mega-header></mega-header>
+
+    <div class="content-placeholder">
+      <h1>Regular HTML Page</h1>
+      <p>This page is NOT a Single Page App.</p>
+      <p>It's just standard HTML with Vue components "sprinkled" in.</p>
+      <p>Scroll down to see the CtaBot change state!</p>
+    </div>
+
+    <!-- Pass props as HTML attributes (kebab-case) -->
+    
+
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    // 5. Initialize Vue on the specific container
+    createApp({
+      components: {
+        'mega-header': MegaHeader,
+        
+      }
+    }).mount('#demo-root');
+  </script>
+
+</body>
+
+</html>

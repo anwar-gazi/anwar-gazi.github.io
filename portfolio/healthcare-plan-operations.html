@@ -9,10 +9,8 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/shortcut.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png">
 
-  <link rel="stylesheet" href="../cta-bot.css" />
-  <script src="../cta-bot.js" defer></script>
   <script src="case-data.js" defer></script>
-  <script src="mega-header.js" defer></script>
+  <script src="mega-header.js"></script>
   <link rel="stylesheet" href="narrative.css" />
   <link rel="stylesheet" href="/portfolio/narrative.css" />
   <style>
@@ -575,9 +573,11 @@
       margin-bottom: 3px;
     }
   </style>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 
 <body>
+  <div id="app">
   <!-- Header -->
   <mega-header>
     <div slot="brand-content">
@@ -1172,8 +1172,7 @@
     </div>
   </div>
 
-  <cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com"
-    phone="+8801716734974" audio-play="true"></cta-bot>
+  
 
   <script>
     (function () {
@@ -1206,6 +1205,18 @@
         }
       });
     })();
+  </script>
+
+    
+  </div>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      components: {
+        'mega-header': MegaHeader,
+        
+      }
+    }).mount('#app');
   </script>
 </body>
 

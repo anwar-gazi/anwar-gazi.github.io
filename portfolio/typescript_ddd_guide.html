@@ -5,10 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TypeScript & Domain-Driven Design: Architectural Guide</title>
-    <link rel="stylesheet" href="../cta-bot.css" />
-    <script src="../cta-bot.js" defer></script>
     <script src="case-data.js" defer></script>
-    <script src="mega-header.js" defer></script>
+    <script src="mega-header.js"></script>
     <link rel="stylesheet" href="narrative.css" />
     <style>
         :root {
@@ -273,9 +271,11 @@
             background-color: #fffbeb;
         }
     </style>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 
 <body>
+  <div id="app">
     <div class="container">
 
         <mega-header>
@@ -526,7 +526,18 @@
 
     </div>
 
+
+    
+  </div>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      components: {
+        'mega-header': MegaHeader,
+        
+      }
+    }).mount('#app');
+  </script>
 </body>
 
-</html><cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com"
-    phone="+8801716734974" audio-play="true"></cta-bot>
+</html>

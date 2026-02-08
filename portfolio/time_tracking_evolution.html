@@ -5,10 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Time Tracking Evolution Report</title>
-  <link rel="stylesheet" href="../cta-bot.css" />
-  <script src="../cta-bot.js" defer></script>
   <script src="case-data.js" defer></script>
-  <script src="mega-header.js" defer></script>
+  <script src="mega-header.js"></script>
   <link rel="stylesheet" href="narrative.css" />
   <style>
     body {
@@ -108,9 +106,11 @@
       background-color: #f6f8fa;
     }
   </style>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 
 <body>
+  <div id="app">
 
   <h1>Time Tracking Machinery: Evolution Report</h1>
 
@@ -373,6 +373,17 @@
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
     mermaid.initialize({ startOnLoad: true, theme: 'neutral', logLevel: 'debug', });
+  </script>
+
+  </div>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      components: {
+        'mega-header': MegaHeader,
+        
+      }
+    }).mount('#app');
   </script>
 </body>
 

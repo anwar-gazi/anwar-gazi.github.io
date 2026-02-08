@@ -9,10 +9,8 @@
         href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Mono:wght@400;700&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <link rel="stylesheet" href="../cta-bot.css" />
-    <script src="../cta-bot.js" defer></script>
     <script src="case-data.js" defer></script>
-    <script src="mega-header.js" defer></script>
+    <script src="mega-header.js"></script>
     <link rel="stylesheet" href="narrative.css" />
     <style>
         :root {
@@ -464,9 +462,11 @@
             filter: invert(0.9) hue-rotate(180deg);
         }
     </style>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 
 <body>
+  <div id="app">
     <button class="theme-toggle" onclick="toggleTheme()">
         <span id="theme-icon">☀️</span> Toggle Theme
     </button>
@@ -1520,7 +1520,18 @@
         window.addEventListener('scroll', updateActiveTocLink);
         updateActiveTocLink(); // Initial call
     </script>
+
+    
+  </div>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      components: {
+        'mega-header': MegaHeader,
+        
+      }
+    }).mount('#app');
+  </script>
 </body>
 
-</html><cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com"
-    phone="+8801716734974" audio-play="true"></cta-bot>
+</html>

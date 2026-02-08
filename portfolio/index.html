@@ -96,33 +96,36 @@
     .hero {
       margin-top: 10px;
       margin-bottom: 40px;
-      padding: 10px 40px 60px;
-      /* Minimal top space to remove the gap */
+      padding: 10px 48px 60px;
       border-radius: var(--radius-lg);
       background: #0F172A;
-      /* Deep Base */
       color: white;
       border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
       position: relative;
       overflow: hidden;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
     }
 
+    .hero-top-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+      gap: 64px;
+      width: 100%;
+      align-items: center;
+      margin-bottom: 48px;
+      text-align: left;
+    }
+
     .hero-artwork-container {
       width: 100%;
-      max-width: 100%;
-      margin-bottom: 20px;
       position: relative;
       z-index: 1;
       display: flex;
       justify-content: center;
-      aspect-ratio: 3 / 1;
+      aspect-ratio: 16 / 9;
       background: #0F172A;
-      /* Direct color match to eliminate seams */
       border-radius: var(--radius-lg);
       overflow: hidden;
     }
@@ -207,11 +210,21 @@
 
     @media (max-width: 860px) {
       .hero {
-        padding: 60px 24px;
+        padding: 40px 24px;
+      }
+
+      .hero-top-row {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 32px;
       }
 
       .hero-stat-grid {
         grid-template-columns: 1fr;
+      }
+
+      .hero-meta-row {
+        justify-content: center;
       }
     }
 
@@ -256,7 +269,7 @@
     .hero-meta-row {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 10px;
       margin-top: 16px;
     }
@@ -873,26 +886,29 @@
     <section class="hero">
       <div class="hero-glow-3"></div>
 
-      <div class="hero-artwork-container">
-        <img src="hero-artwork.png" alt="Resilient Systems Architecture Artwork" class="hero-artwork">
-      </div>
+      <div class="hero-top-row">
+        <div class="hero-artwork-container">
+          <img src="hero-artwork.png" alt="Resilient Systems Architecture Artwork" class="hero-artwork">
+        </div>
 
-      <div class="hero-content">
-        <div class="hero-kicker">Case Study Portfolio</div>
-        <h1 class="hero-title">
-          Building Resilient Systems at <span class="hero-highlight">National Scale</span>.
-        </h1>
-        <p class="hero-text">
-          Architecture and engineering lead in **GovTech**, **Fintech**, and **Media**.
-          Focused on high-performance distributed systems, system reliability,
-          and critical root-cause analysis for production environments.
-        </p>
-        <div class="hero-meta-row">
-          <div class="hero-meta-pill">9+ Years of Engineering</div>
-          <div class="hero-meta-pill">Go • Next.js • Python • Node.js</div>
-          <div class="hero-meta-pill">Distributed Architecture</div>
+        <div class="hero-content">
+          <div class="hero-kicker">Case Study Portfolio</div>
+          <h1 class="hero-title">
+            Building Resilient Systems at <span class="hero-highlight">National Scale</span>.
+          </h1>
+          <p class="hero-text">
+            Architecture and engineering lead in **GovTech**, **Fintech**, and **Media**.
+            Focused on high-performance distributed systems, system reliability,
+            and critical root-cause analysis for production environments.
+          </p>
+          <div class="hero-meta-row">
+            <div class="hero-meta-pill">9+ Years of Engineering</div>
+            <div class="hero-meta-pill">Go • Next.js • Python • Node.js</div>
+            <div class="hero-meta-pill">Distributed Architecture</div>
+          </div>
         </div>
       </div>
+
       <aside class="hero-side">
         <div class="hero-side-title">At a glance</div>
         <div class="hero-stat-grid">

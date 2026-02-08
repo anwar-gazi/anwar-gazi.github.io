@@ -485,6 +485,138 @@
       grid-row: span 2;
     }
 
+    /* Contextual Industry Gradients */
+
+    /* GovTech / Infrastructure - Professional Blues */
+    .cat-govtech .card {
+      background: linear-gradient(135deg, #039BE5 0%, #01579B 100%);
+      border-color: #0288D1;
+      color: white;
+    }
+
+    .cat-govtech .card-title,
+    .cat-govtech .card-body {
+      color: white;
+    }
+
+    .cat-govtech .card-industry {
+      -webkit-text-fill-color: #FFCA28;
+    }
+
+    .cat-govtech .card-link-text {
+      color: #FFCA28;
+    }
+
+    .cat-govtech .card-meta-pill {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Fintech / Logistics - Deep Teals/Greens */
+    .cat-fintech .card {
+      background: linear-gradient(135deg, #00897B 0%, #004D40 100%);
+      border-color: #00695C;
+      color: white;
+    }
+
+    .cat-fintech .card-title,
+    .cat-fintech .card-body {
+      color: white;
+    }
+
+    .cat-fintech .card-industry {
+      -webkit-text-fill-color: #80CBC4;
+    }
+
+    .cat-fintech .card-link-text {
+      color: #80CBC4;
+    }
+
+    .cat-fintech .card-meta-pill {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Media / Content - Vibrant Purples */
+    .cat-media .card {
+      background: linear-gradient(135deg, #673AB7 0%, #4527A0 100%);
+      border-color: #512DA8;
+      color: white;
+    }
+
+    .cat-media .card-title,
+    .cat-media .card-body {
+      color: white;
+    }
+
+    .cat-media .card-industry {
+      -webkit-text-fill-color: #B39DDB;
+    }
+
+    .cat-media .card-link-text {
+      color: #B39DDB;
+    }
+
+    .cat-media .card-meta-pill {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Engineering / Architecture / Performance - Modern Slates */
+    .cat-eng .card {
+      background: linear-gradient(135deg, #455A64 0%, #263238 100%);
+      border-color: #37474F;
+      color: white;
+    }
+
+    .cat-eng .card-title,
+    .cat-eng .card-body {
+      color: #ECEFF1;
+    }
+
+    .cat-eng .card-industry {
+      -webkit-text-fill-color: #90A4AE;
+    }
+
+    .cat-eng .card-link-text {
+      color: #90A4AE;
+    }
+
+    .cat-eng .card-meta-pill {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Specialist (Healthcare/Telephony) - Cool Greys */
+    .cat-specialist .card {
+      background: linear-gradient(135deg, #546E7A 0%, #37474F 100%);
+      border-color: #455A64;
+      color: white;
+    }
+
+    .cat-specialist .card-title,
+    .cat-specialist .card-body {
+      color: white;
+    }
+
+    .cat-specialist .card-industry {
+      -webkit-text-fill-color: #CFD8DC;
+    }
+
+    .cat-specialist .card-link-text {
+      color: #CFD8DC;
+    }
+
+    .cat-specialist .card-meta-pill {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
     .span-both {
       grid-column: span 2;
       grid-row: span 2;
@@ -763,8 +895,17 @@
           if (weight >= 95) spanClass = 'span-both';
           else if (weight >= 90) spanClass = 'span-col-2';
 
+          // Mapping tags to contextual gradient classes
+          let colorClass = '';
+          const tag = c.tag;
+          if (['GovTech', 'Infrastructure'].includes(tag)) colorClass = 'cat-govtech';
+          else if (['Fintech', 'Logistics'].includes(tag)) colorClass = 'cat-fintech';
+          else if (['Media'].includes(tag)) colorClass = 'cat-media';
+          else if (['System Architecture', 'Backend Engineering', 'Engineering RCA', 'Performance Eng.', 'Frontend Performance'].includes(tag)) colorClass = 'cat-eng';
+          else if (['Healthcare', 'Telephony'].includes(tag)) colorClass = 'cat-specialist';
+
           return `
-          <a class="card-link ${spanClass}" href="${c.href}" data-category="${c.tag}">
+          <a class="card-link ${spanClass} ${colorClass}" href="${c.href}" data-category="${c.tag}">
             <article class="card" style="height: 100%">
               <div class="card-industry">${c.industry}</div>
               <h2 class="card-title">${c.title}</h2>

@@ -121,13 +121,34 @@ class MegaHeader extends HTMLElement {
         spanClass = 'span-col-2';
       }
 
+      // Mapping tags to contextual gradient classes
+      let colorClass = '';
+      let darkTextClass = ''; // For high-contrast text on dark backgrounds
+      const tag = item.tag;
+      if (['GovTech', 'Infrastructure'].includes(tag)) {
+        colorClass = 'cat-govtech';
+        darkTextClass = 'dark-text';
+      } else if (['Fintech', 'Logistics'].includes(tag)) {
+        colorClass = 'cat-fintech';
+        darkTextClass = 'dark-text';
+      } else if (['Media'].includes(tag)) {
+        colorClass = 'cat-media';
+        darkTextClass = 'dark-text';
+      } else if (['System Architecture', 'Backend Engineering', 'Engineering RCA', 'Performance Eng.', 'Frontend Performance'].includes(tag)) {
+        colorClass = 'cat-eng';
+        darkTextClass = 'dark-text';
+      } else if (['Healthcare', 'Telephony'].includes(tag)) {
+        colorClass = 'cat-specialist';
+        darkTextClass = 'dark-text';
+      }
+
       // For compact bento, we'll show first 3 tech tags as small badges
       const techBadges = (item.tech_stack || []).slice(0, 3)
         .map(tech => `<span class="tech-tag">${tech}</span>`)
         .join('');
 
       return `
-        <a href="${item.href}" class="menu-card ${spanClass}">
+        <a href="${item.href}" class="menu-card ${spanClass} ${colorClass}">
           <div class="menu-card-header">
             <span class="menu-icon">${item.icon || '📄'}</span>
             <span class="menu-tag">${item.tag || 'Work'}</span>
@@ -316,6 +337,54 @@ class MegaHeader extends HTMLElement {
            border-color: #FFE082;
         }
 
+        /* Contextual Industry Gradients */
+        
+        /* GovTech / Infrastructure - Professional Blues */
+        .cat-govtech {
+          background: linear-gradient(135deg, #039BE5 0%, #01579B 100%) !important;
+          border-color: #0288D1 !important;
+        }
+        .cat-govtech .menu-title, .cat-govtech .menu-desc { color: white !important; }
+        .cat-govtech .menu-tag { background: #FFCA28 !important; color: #B26B00 !important; }
+        .cat-govtech .tech-tag { background: rgba(255,255,255,0.1) !important; color: white !important; border-color: rgba(255,255,255,0.2) !important; }
+        .cat-govtech .menu-icon { color: #FFCA28 !important; }
+
+        /* Fintech / Logistics - Deep Teals/Greens */
+        .cat-fintech {
+          background: linear-gradient(135deg, #00897B 0%, #004D40 100%) !important;
+          border-color: #00695C !important;
+        }
+        .cat-fintech .menu-title, .cat-fintech .menu-desc { color: white !important; }
+        .cat-fintech .menu-tag { background: #80CBC4 !important; color: #004D40 !important; }
+        .cat-fintech .tech-tag { background: rgba(255,255,255,0.1) !important; color: white !important; border-color: rgba(255,255,255,0.2) !important; }
+
+        /* Media / Content - Vibrant Purples */
+        .cat-media {
+          background: linear-gradient(135deg, #673AB7 0%, #4527A0 100%) !important;
+          border-color: #512DA8 !important;
+        }
+        .cat-media .menu-title, .cat-media .menu-desc { color: white !important; }
+        .cat-media .menu-tag { background: #B39DDB !important; color: #311B92 !important; }
+        .cat-media .tech-tag { background: rgba(255,255,255,0.1) !important; color: white !important; border-color: rgba(255,255,255,0.2) !important; }
+
+        /* Engineering / Architecture / Performance - Modern Slates */
+        .cat-eng {
+          background: linear-gradient(135deg, #455A64 0%, #263238 100%) !important;
+          border-color: #37474F !important;
+        }
+        .cat-eng .menu-title, .cat-eng .menu-desc { color: white !important; }
+        .cat-eng .menu-tag { background: #90A4AE !important; color: #263238 !important; }
+        .cat-eng .tech-tag { background: rgba(255,255,255,0.1) !important; color: white !important; border-color: rgba(255,255,255,0.2) !important; }
+
+        /* Specialist (Healthcare/Telephony) - Cool Greys */
+        .cat-specialist {
+          background: linear-gradient(135deg, #546E7A 0%, #37474F 100%) !important;
+          border-color: #455A64 !important;
+        }
+        .cat-specialist .menu-title, .cat-specialist .menu-desc { color: white !important; }
+        .cat-specialist .menu-tag { background: #CFD8DC !important; color: #37474F !important; }
+        .cat-specialist .tech-tag { background: rgba(255,255,255,0.1) !important; color: white !important; border-color: rgba(255,255,255,0.2) !important; }
+        
         .menu-card.span-both .tech-stack-mini {
            justify-content: center;
         }

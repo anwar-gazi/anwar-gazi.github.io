@@ -237,43 +237,57 @@ class MegaHeader extends HTMLElement {
     const rawItems = window.CASE_STUDIES || [];
     const items = [...rawItems].sort((a, b) => (parseInt(b.weight) || 0) - (parseInt(a.weight) || 0));
 
-    const gridHtml = items.map((item, index) => {
+    // Calculate grid columns basically to detect gaps
+    // repeat(auto-fill, minmax(450px, 1fr))
+    const containerWidth = window.innerWidth - 128; // Subtracting the 4rem padding (64px each side)
+    const cols = Math.floor(containerWidth / 450) || 1;
+
+    const fillerPool = [
+      { msg: "Staff-Level Infrastructure", flavor: "cta-indigo", icon: "🚀" },
+      { msg: "Scale Your Architecture", flavor: "cta-emerald", icon: "💎" },
+      { msg: "Backend Performance RCA", flavor: "cta-slate", icon: "🛠️" },
+      { msg: "Hire for Strategic Impact", flavor: "cta-purple", icon: "🎯" },
+      { msg: "Let's Build the Future", flavor: "cta-amber", icon: "📈" }
+    ];
+
+    // REDO: Let's just generate the HTML in one go including injections
+    let finalHtml = '';
+    let currentSlots = 0;
+    let fillerIndex = 0;
+
+    items.forEach((item, index) => {
       const weight = parseInt(item.weight) || 0;
-      let spanClass = '';
+      let span = (weight >= 90) ? 2 : 1;
+      let spanClass = (weight >= 95) ? 'span-both' : (weight >= 90 ? 'span-col-2' : '');
 
-      if (weight >= 95) {
-        spanClass = 'span-both';
-      } else if (weight >= 90) {
-        spanClass = 'span-col-2';
+      if ((currentSlots % cols) + span > cols && (currentSlots % cols) !== 0) {
+        const gapSize = cols - (currentSlots % cols);
+        for (let g = 0; g < gapSize; g++) {
+          const f = fillerPool[fillerIndex % fillerPool.length];
+          finalHtml += `
+            <div class="menu-card cta-card ${f.flavor}" style="transition-delay: ${(items.length + fillerIndex) * 0.05 + 0.1}s">
+              <div class="menu-icon">${f.icon}</div>
+              <div class="menu-title">${f.msg}</div>
+              <a href="mailto:anwar.gazi@gmail.com" class="cta-mini-btn">Get in Touch</a>
+            </div>
+          `;
+          fillerIndex++;
+          currentSlots++;
+        }
       }
 
-      // Mapping tags to contextual gradient classes
+      // Render the item
       let colorClass = '';
-      let darkTextClass = ''; // For high-contrast text on dark backgrounds
       const tag = item.tag;
-      if (['GovTech', 'Infrastructure'].includes(tag)) {
-        colorClass = 'cat-govtech';
-        darkTextClass = 'dark-text';
-      } else if (['Fintech', 'Logistics'].includes(tag)) {
-        colorClass = 'cat-fintech';
-        darkTextClass = 'dark-text';
-      } else if (['Media'].includes(tag)) {
-        colorClass = 'cat-media';
-        darkTextClass = 'dark-text';
-      } else if (['System Architecture', 'Backend Engineering', 'Engineering RCA', 'Performance Eng.', 'Frontend Performance'].includes(tag)) {
-        colorClass = 'cat-eng';
-        darkTextClass = 'dark-text';
-      } else if (['Healthcare', 'Telephony'].includes(tag)) {
-        colorClass = 'cat-specialist';
-        darkTextClass = 'dark-text';
-      }
+      if (['GovTech', 'Infrastructure'].includes(tag)) colorClass = 'cat-govtech';
+      else if (['Fintech', 'Logistics'].includes(tag)) colorClass = 'cat-fintech';
+      else if (['Media'].includes(tag)) colorClass = 'cat-media';
+      else if (['System Architecture', 'Backend Engineering', 'Engineering RCA', 'Performance Eng.', 'Frontend Performance'].includes(tag)) colorClass = 'cat-eng';
+      else if (['Healthcare', 'Telephony'].includes(tag)) colorClass = 'cat-specialist';
 
-      // For compact bento, we'll show first 3 tech tags as small badges
-      const techBadges = (item.tech_stack || []).slice(0, 3)
-        .map(tech => `<span class="tech-tag">${tech}</span>`)
-        .join('');
+      const techBadges = (item.tech_stack || []).slice(0, 3).map(tech => `<span class="tech-tag">${tech}</span>`).join('');
 
-      return `
+      finalHtml += `
         <a href="${item.href}" class="menu-card ${spanClass} ${colorClass}" style="transition-delay: ${index * 0.05 + 0.1}s">
           <div class="menu-card-header">
             <span class="menu-icon">${item.icon || '📄'}</span>
@@ -285,7 +299,25 @@ class MegaHeader extends HTMLElement {
           </div>
         </a>
       `;
-    }).join('');
+      currentSlots += span;
+    });
+
+    // Final row fillers
+    const remaining = (cols - (currentSlots % cols)) % cols;
+    for (let g = 0; g < remaining; g++) {
+      const f = fillerPool[fillerIndex % fillerPool.length];
+      finalHtml += `
+        <div class="menu-card cta-card ${f.flavor}" style="transition-delay: ${(items.length + fillerIndex) * 0.05 + 0.1}s">
+          <div class="menu-icon">${f.icon}</div>
+          <div class="menu-title">${f.msg}</div>
+          <a href="mailto:anwar.gazi@gmail.com" class="cta-mini-btn">Get in Touch</a>
+        </div>
+      `;
+      fillerIndex++;
+      currentSlots++;
+    }
+
+    const gridHtml = finalHtml;
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -597,6 +629,45 @@ class MegaHeader extends HTMLElement {
            gap: 4px;
            justify-content: center;
         }
+
+        /* Premium CTA Filler Flavors */
+        .cta-card {
+           padding: 40px;
+           border: 1px solid rgba(255, 255, 255, 0.1);
+           color: white;
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           align-items: center;
+        }
+        
+        .cta-card .menu-icon { font-size: 32px; margin-bottom: 16px; }
+        .cta-card .menu-title { font-size: 18px; margin-bottom: 20px; color: white; opacity: 0.9; }
+        
+        .cta-mini-btn {
+           font-size: 11px;
+           text-transform: uppercase;
+           letter-spacing: 0.1em;
+           padding: 8px 16px;
+           border-radius: 4px;
+           background: rgba(255, 255, 255, 0.15);
+           color: white;
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           font-weight: 700;
+           transition: all 0.2s;
+        }
+        
+        .cta-mini-btn:hover {
+           background: white;
+           color: #0F172A;
+           text-decoration: none;
+        }
+
+        .cta-indigo { background: linear-gradient(135deg, #312E81 0%, #1E1B4B 100%); }
+        .cta-emerald { background: linear-gradient(135deg, #064E3B 0%, #064E3B 100%); }
+        .cta-slate { background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); }
+        .cta-purple { background: linear-gradient(135deg, #4C1D95 0%, #2E1065 100%); }
+        .cta-amber { background: linear-gradient(135deg, #78350F 0%, #451A03 100%); }
 
          .tech-tag {
             font-size: 9px;

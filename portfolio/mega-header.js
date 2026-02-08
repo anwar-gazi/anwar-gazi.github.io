@@ -62,7 +62,7 @@ const MegaHeader = {
                        :style="{ transitionDelay: (idx * (isMobile ? 0.05 : 0.12) + 0.1) + 's' }">
                     <div class="menu-icon">{{ item.icon }}</div>
                     <div class="menu-title">{{ item.msg }}</div>
-                    <a href="mailto:anwar.gazi@gmail.com" class="cta-mini-btn">Get in Touch</a>
+                    <a href="mailto:minhaj.me.bd@gmail.com" class="cta-mini-btn">Get in Touch</a>
                   </div>
                 </template>
               </div>
@@ -87,6 +87,8 @@ const MegaHeader = {
       isDisintegrating: false,
       currentCols: 1,
       isMobile: false,
+      sortedStudies: [], // Cache sorted items
+      resizeTimeout: null, // For debouncing
       fillerPool: [
         { msg: "Staff-Level Infrastructure", flavor: "cta-indigo", icon: "🚀" },
         { msg: "Scale Your Architecture", flavor: "cta-emerald", icon: "💎" },
@@ -98,8 +100,8 @@ const MegaHeader = {
   },
   computed: {
     gridItems() {
-      const rawItems = window.CASE_STUDIES || [];
-      const items = [...rawItems].sort((a, b) => (parseInt(b.weight) || 0) - (parseInt(a.weight) || 0));
+      // Use cached sorted items
+      const items = this.sortedStudies;
       const cols = this.currentCols;
 
       const finalItems = [];
@@ -107,13 +109,21 @@ const MegaHeader = {
       let fillerIndex = 0;
       let studyCount = 0;
 
+      // Helper to calculate delay efficiently
+      const calcDelay = (index) => {
+        const rawDelay = index * (this.isMobile ? 0.03 : 0.08) + 0.05;
+        // Cap max delay to 1.2s to prevent endless staggered animations
+        return Math.min(rawDelay, 1.2).toFixed(3) + 's';
+      };
+
       items.forEach((item) => {
         const weight = parseInt(item.weight) || 0;
         let span = (weight >= 90) ? 2 : 1;
 
         if (studyCount > 0 && studyCount % 4 === 0) {
           const f = this.fillerPool[fillerIndex % this.fillerPool.length];
-          finalItems.push({ ...f, isFiller: true });
+          // Pre-calculate delay
+          finalItems.push({ ...f, isFiller: true, delay: calcDelay(finalItems.length) });
           fillerIndex++;
           currentSlots += 1;
           studyCount = 0;
@@ -123,13 +133,13 @@ const MegaHeader = {
           const gapSize = cols - (currentSlots % cols);
           for (let g = 0; g < gapSize; g++) {
             const f = this.fillerPool[fillerIndex % this.fillerPool.length];
-            finalItems.push({ ...f, isFiller: true });
+            finalItems.push({ ...f, isFiller: true, delay: calcDelay(finalItems.length) });
             fillerIndex++;
             currentSlots++;
           }
         }
 
-        finalItems.push({ ...item, isFiller: false });
+        finalItems.push({ ...item, isFiller: false, delay: calcDelay(finalItems.length) });
         currentSlots += span;
         studyCount++;
       });
@@ -137,7 +147,7 @@ const MegaHeader = {
       const remaining = (cols - (currentSlots % cols)) % cols;
       for (let g = 0; g < remaining; g++) {
         const f = this.fillerPool[fillerIndex % this.fillerPool.length];
-        finalItems.push({ ...f, isFiller: true });
+        finalItems.push({ ...f, isFiller: true, delay: calcDelay(finalItems.length) });
         fillerIndex++;
         currentSlots++;
       }
@@ -149,7 +159,15 @@ const MegaHeader = {
     updateCols() {
       this.isMobile = window.innerWidth <= 768;
       const containerWidth = window.innerWidth - (this.isMobile ? 0 : 128);
-      this.currentCols = Math.floor(containerWidth / 450) || 1;
+      // Ensure we don't divide by zero and default to 1
+      this.currentCols = Math.max(1, Math.floor(containerWidth / 450));
+    },
+    handleResize() {
+      // Debounce resize
+      if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = setTimeout(() => {
+        this.updateCols();
+      }, 100);
     },
     toggleMenu() {
       if (this.isOpen) this.closeMenu();
@@ -173,7 +191,7 @@ const MegaHeader = {
 
         const menu = this.$el.querySelector('.mega-menu');
         if (menu) menu.style.setProperty('--mask-pos', '100%');
-      }, 1600);
+      }, 1400); // Reduced total animation time slightly
     },
     disintegrate() {
       const canvas = this.$refs.particleCanvas;
@@ -182,24 +200,35 @@ const MegaHeader = {
       const cards = this.$el.querySelectorAll('.menu-card');
       const ctx = canvas.getContext('2d');
 
-      canvas.width = menu.offsetWidth;
-      canvas.height = menu.offsetHeight;
+      // Use offsetWidth/Height to avoid fractional pixels and force layout once
+      const w = menu.offsetWidth;
+      const h = menu.offsetHeight;
+      canvas.width = w;
+      canvas.height = h;
 
       const particles = [];
+      // Optimization: Limit total particles to keep FPS high.
+      // If many cards, use fewer particles per card.
+      const cardCount = cards.length;
+      const particlesPerCard = cardCount > 20 ? 15 : 25;
+
       cards.forEach(card => {
         const rect = card.getBoundingClientRect();
+        // Calculate relative position efficiently
+        // Note: This relies on menu being the offset parent or close to it
+        // Simpler to rely on getBoundingClientRect diffs
         const menuRect = menu.getBoundingClientRect();
         const relativeTop = rect.top - menuRect.top;
         const relativeLeft = rect.left - menuRect.left;
         const color = getComputedStyle(card).backgroundColor;
 
-        for (let i = 0; i < 60; i++) {
+        for (let i = 0; i < particlesPerCard; i++) {
           particles.push({
             x: relativeLeft + Math.random() * rect.width,
             y: relativeTop + Math.random() * rect.height,
-            vx: Math.random() * 4 - 1,
+            vx: Math.random() * 4 - 2, // Symmetrical spread
             vy: Math.random() * -5 - 2,
-            size: Math.random() * 4 + 1,
+            size: Math.random() * 3 + 1, // Slightly smaller particles
             opacity: 1,
             life: 1 + Math.random(),
             color: color
@@ -210,21 +239,38 @@ const MegaHeader = {
       let startTime = null;
       const animate = (timestamp) => {
         if (!startTime) startTime = timestamp;
-        const progress = (timestamp - startTime) / 1500;
+        const progress = (timestamp - startTime) / 1200; // Faster disintegration
+
+        // Batch style update? No, existing one is fine, but check frame budget
         menu.style.setProperty('--mask-pos', `${Math.max(0, 100 - progress * 130)}%`);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Remove dead particles from array to speed up subsequent frames? 
+        // Filter in place might be expensive, just check opacity
+        let activeParticles = 0;
+
         particles.forEach(p => {
+          if (p.opacity <= 0) return;
+          activeParticles++;
+
           p.x += p.vx + (Math.random() - 0.5);
           p.y += p.vy;
-          p.opacity -= 0.008;
-          if (p.opacity > 0) {
-            ctx.fillStyle = p.color;
-            ctx.globalAlpha = p.opacity;
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
-          }
+          p.opacity -= 0.015; // Faster fade out
+
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.opacity;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
         });
-        if (progress < 1 && this.isDisintegrating) requestAnimationFrame(animate);
+
+        if (progress < 1 && this.isDisintegrating && activeParticles > 0) {
+          requestAnimationFrame(animate);
+        } else if (activeParticles === 0) {
+          // Early clear if all particles dead
+          this.clearParticles();
+        }
       };
       requestAnimationFrame(animate);
     },
@@ -251,18 +297,24 @@ const MegaHeader = {
     }
   },
   mounted() {
+    // Perform sort ONCE on mount
+    const rawItems = window.CASE_STUDIES || [];
+    this.sortedStudies = [...rawItems].sort((a, b) => (parseInt(b.weight) || 0) - (parseInt(a.weight) || 0));
+
     this.updateCols();
-    window.addEventListener('resize', this.updateCols);
+    window.addEventListener('resize', this.handleResize);
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.isOpen) this.closeMenu();
     });
     document.addEventListener('click', (e) => {
+      // Use a ref-based check if possible, or keep existing logic
       if (window.innerWidth > 768 && this.isOpen && !this.$el.contains(e.target)) {
         this.closeMenu();
       }
     });
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.updateCols);
+    window.removeEventListener('resize', this.handleResize);
+    if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
   }
 };

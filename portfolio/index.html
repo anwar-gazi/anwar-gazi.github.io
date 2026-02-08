@@ -893,7 +893,20 @@
       border-radius: 100px;
     }
 
+    html,
+    body {
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Robust Vertical Scroll-Locking */
+    html.no-scroll {
+      overflow-y: hidden !important;
+    }
+
     @media (max-width: 768px) {
+
       .value-grid {
         grid-template-columns: 1fr;
       }
@@ -1049,7 +1062,7 @@
       position: fixed;
       top: 64px;
       left: 0;
-      width: 100vw;
+      width: 100%;
       height: calc(100vh - 64px);
       background: var(--menu-bg);
       backdrop-filter: blur(20px);
@@ -1058,9 +1071,18 @@
       opacity: 0;
       visibility: hidden;
       transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      padding: 4rem 0;
-      overflow-y: auto;
+      padding: 0;
+      /* Padding moved to scroll-view */
+      overflow: hidden;
       z-index: 1001;
+    }
+
+    .mega-scroll-view {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding: 4rem 0;
+      -webkit-overflow-scrolling: touch;
     }
 
     .mega-menu.active {
@@ -1118,7 +1140,7 @@
       margin: 0 -1px -1px 0;
       padding: 40px 24px;
       text-decoration: none;
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
       height: 100%;
       position: relative;
       justify-content: center;
@@ -1432,15 +1454,50 @@
     @media (max-width: 768px) {
       .mega-grid {
         grid-template-columns: 1fr;
+        gap: 0;
       }
 
       .menu-card {
         grid-column: auto !important;
         grid-row: auto !important;
+        padding: 40px 24px;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        margin: 0;
       }
 
       .header-inner {
         padding: 0 1rem;
+      }
+
+      .mega-menu {
+        top: 0;
+        height: 100vh;
+        height: 100dvh;
+        /* Dynamic viewport height for mobile */
+        padding: 0 !important;
+        overflow: hidden;
+      }
+
+      .mega-scroll-view {
+        padding: 0 !important;
+        /* True edge-to-edge bento */
+      }
+
+      .mega-container {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .close-menu-btn {
+        position: fixed;
+        /* Always visible floating anchor */
+        top: 20px;
+        right: 20px;
+        z-index: 2000;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       }
     }
   </style>
@@ -1585,45 +1642,49 @@
                 </div>
 
                 <div :class="['mega-menu', { active: isOpen }]">
+                  <div class="mega-scroll-view">
+                    <div class="mega-container">
+                      <div class="mega-grid">
+                        <template v-for="(item, idx) in gridItems">
+                          <!-- Case Study Card -->
+                          <a v-if="!item.isFiller" 
+                             :key="'study-' + idx" 
+                             :href="item.href" 
+                             :class="['menu-card', getSpanClass(item.weight), getCategoryClass(item.tag)]"
+                             :style="{ transitionDelay: (idx * 0.12 + 0.1) + 's' }">
+                            <div class="menu-card-header">
+                              <span class="menu-icon">{{ item.icon || '📄' }}</span>
+                              <span class="menu-tag">{{ item.tag || 'Work' }}</span>
+                            </div>
+                            <div class="menu-content">
+                              <div class="menu-title">{{ item.title }}</div>
+                              <div class="tech-stack-mini">
+                                <span v-for="tech in (item.tech_stack || []).slice(0, 3)" class="tech-tag">{{ tech }}</span>
+                              </div>
+                            </div>
+                          </a>
+                          <!-- CTA Filler Card -->
+                          <div v-else 
+                               :key="'filler-' + idx"
+                               :class="['menu-card', 'cta-card', item.flavor]"
+                               :style="{ transitionDelay: (idx * 0.12 + 0.1) + 's' }">
+                            <div class="menu-icon">{{ item.icon }}</div>
+                            <div class="menu-title">{{ item.msg }}</div>
+                            <a href="mailto:anwar.gazi@gmail.com" class="cta-mini-btn">Get in Touch</a>
+                          </div>
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+                  
                   <canvas ref="particleCanvas" id="particle-canvas"></canvas>
+                  
                   <button class="close-menu-btn" aria-label="Close Case Study Explorer" @click.stop="closeMenu">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
                       <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                   </button>
-                  <div class="mega-container">
-                    <div class="mega-grid">
-                      <template v-for="(item, idx) in gridItems">
-                        <!-- Case Study Card -->
-                        <a v-if="!item.isFiller" 
-                           :key="'study-' + idx" 
-                           :href="item.href" 
-                           :class="['menu-card', getSpanClass(item.weight), getCategoryClass(item.tag)]"
-                           :style="{ transitionDelay: (idx * 0.05 + 0.1) + 's' }">
-                          <div class="menu-card-header">
-                            <span class="menu-icon">{{ item.icon || '📄' }}</span>
-                            <span class="menu-tag">{{ item.tag || 'Work' }}</span>
-                          </div>
-                          <div class="menu-content">
-                            <div class="menu-title">{{ item.title }}</div>
-                            <div class="tech-stack-mini">
-                              <span v-for="tech in (item.tech_stack || []).slice(0, 3)" class="tech-tag">{{ tech }}</span>
-                            </div>
-                          </div>
-                        </a>
-                        <!-- CTA Filler Card -->
-                        <div v-else 
-                             :key="'filler-' + idx"
-                             :class="['menu-card', 'cta-card', item.flavor]"
-                             :style="{ transitionDelay: (idx * 0.05 + 0.1) + 's' }">
-                          <div class="menu-icon">{{ item.icon }}</div>
-                          <div class="menu-title">{{ item.msg }}</div>
-                          <a href="mailto:anwar.gazi@gmail.com" class="cta-mini-btn">Get in Touch</a>
-                        </div>
-                      </template>
-                    </div>
-                  </div>
                 </div>
               </header>
             </div>
@@ -1692,7 +1753,7 @@
             },
             openMenu() {
               this.isOpen = true;
-              document.body.style.overflow = 'hidden';
+              document.documentElement.classList.add('no-scroll');
             },
             closeMenu() {
               if (this.isDisintegrating) return;
@@ -1702,7 +1763,7 @@
               setTimeout(() => {
                 this.isOpen = false;
                 this.isDisintegrating = false;
-                document.body.style.overflow = '';
+                document.documentElement.classList.remove('no-scroll');
                 this.clearParticles();
 
                 // Reset mask
@@ -1792,7 +1853,10 @@
               if (e.key === 'Escape' && this.isOpen) this.closeMenu();
             });
             document.addEventListener('click', (e) => {
-              if (this.isOpen && !this.$el.contains(e.target)) this.closeMenu();
+              // Click-away closure is disabled on mobile (width < 768px)
+              if (window.innerWidth > 768 && this.isOpen && !this.$el.contains(e.target)) {
+                this.closeMenu();
+              }
             });
           },
           beforeUnmount() {

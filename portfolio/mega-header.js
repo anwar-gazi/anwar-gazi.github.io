@@ -55,22 +55,27 @@ class MegaHeader extends HTMLElement {
   _setupEventListeners() {
     const trigger = this.shadowRoot.querySelector('.nav-trigger');
     const menu = this.shadowRoot.querySelector('.mega-menu');
-    const header = this.shadowRoot.querySelector('header');
 
     if (trigger && menu) {
-      // Hover for desktop
-      trigger.addEventListener('mouseenter', () => this._openMenu());
-      trigger.addEventListener('mouseleave', () => this._startCloseTimeout());
-
-      menu.addEventListener('mouseenter', () => this._openMenu());
-      menu.addEventListener('mouseleave', () => this._startCloseTimeout());
-
-      // Click for mobile/touch or keyboard
+      // Toggle on click
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation(); // Prevent immediate close from document click
         this._toggleMenu();
       });
+
+      // Prevent clicks inside menu from closing it
+      menu.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
     }
+
+    // Close on click anywhere else
+    document.addEventListener('click', () => {
+      if (this.hasAttribute('open')) {
+        this._closeMenu();
+      }
+    });
 
     // Close on escape
     document.addEventListener('keydown', (e) => {
@@ -79,10 +84,6 @@ class MegaHeader extends HTMLElement {
   }
 
   _openMenu() {
-    if (this._closeTimeout) {
-      clearTimeout(this._closeTimeout);
-      this._closeTimeout = null;
-    }
     const menu = this.shadowRoot.querySelector('.mega-menu');
     const trigger = this.shadowRoot.querySelector('.nav-trigger');
     if (menu) menu.classList.add('active');
@@ -90,18 +91,7 @@ class MegaHeader extends HTMLElement {
     this.setAttribute('open', '');
   }
 
-  _startCloseTimeout() {
-    if (this._closeTimeout) clearTimeout(this._closeTimeout);
-    this._closeTimeout = setTimeout(() => {
-      this._closeMenu();
-    }, 300);
-  }
-
   _closeMenu() {
-    if (this._closeTimeout) {
-      clearTimeout(this._closeTimeout);
-      this._closeTimeout = null;
-    }
     const menu = this.shadowRoot.querySelector('.mega-menu');
     const trigger = this.shadowRoot.querySelector('.nav-trigger');
     if (menu) menu.classList.remove('active');
@@ -200,7 +190,7 @@ class MegaHeader extends HTMLElement {
           --text-muted: #475569;
           --border: #E2E8F0;
           --header-bg: rgba(255, 255, 255, 0.98);
-          --menu-bg: #FFFFFF;
+          --menu-bg: rgba(255, 255, 255, 0.95);
           --radius: 12px;
           --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
           --shadow-lg: 0 10px 15px -3px rgba(255, 202, 40, 0.2), 0 4px 6px -4px rgba(255, 202, 40, 0.1);
@@ -287,38 +277,32 @@ class MegaHeader extends HTMLElement {
 
         /* Mega Menu - Premium Floating Pane */
         .mega-menu {
-          position: absolute;
-          top: 100%;
-          left: 50%;
-          transform: translateX(-50%) translateY(-10px);
-          width: calc(100% - 40px);
-          max-width: 1200px;
+          position: fixed;
+          top: 64px;
+          left: 0;
+          width: 100vw;
+          height: calc(100vh - 64px);
           background: var(--menu-bg);
-          border: 1px solid var(--border);
-          border-radius: 16px;
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-top: 1px solid var(--border);
           opacity: 0;
           visibility: hidden;
-          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          padding: 1.5rem;
-          box-shadow: 
-            0 20px 50px -12px rgba(0, 0, 0, 0.15),
-            0 10px 20px -5px rgba(0, 0, 0, 0.08),
-            0 0 0 1px rgba(0, 0, 0, 0.02);
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          padding: 2rem 0;
           overflow-y: auto;
-          max-height: 80vh;
-          margin-top: 12px;
           z-index: 1001;
         }
 
         .mega-menu.active {
           opacity: 1;
           visibility: visible;
-          transform: translateX(-50%) translateY(0);
         }
 
         .mega-container {
-          max-width: 100%;
-          margin: 0;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 1.25rem;
         }
 
         .mega-grid {

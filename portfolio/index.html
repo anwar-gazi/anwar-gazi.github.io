@@ -96,7 +96,8 @@
     .hero {
       margin-top: 10px;
       margin-bottom: 40px;
-      padding: 80px 48px;
+      padding: 10px 40px 60px;
+      /* Minimal top space to remove the gap */
       border-radius: var(--radius-lg);
       background: #0F172A;
       /* Deep Base */
@@ -113,25 +114,30 @@
 
     .hero-artwork-container {
       width: 100%;
-      max-width: 900px;
-      margin-bottom: 48px;
+      max-width: 100%;
+      margin-bottom: 20px;
       position: relative;
       z-index: 1;
       display: flex;
       justify-content: center;
+      aspect-ratio: 3 / 1;
+      background: #0F172A;
+      /* Direct color match to eliminate seams */
+      border-radius: var(--radius-lg);
+      overflow: hidden;
     }
 
     .hero-artwork {
       width: 100%;
-      max-width: 800px;
-      height: auto;
+      height: 100%;
+      object-fit: contain;
       border-radius: var(--radius-lg);
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
-      transition: transform 0.3s ease;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .hero-artwork:hover {
-      transform: translateY(-5px);
+      transform: scale(1.02);
     }
 
     /* Hero Decoration - clean abstract shapes */

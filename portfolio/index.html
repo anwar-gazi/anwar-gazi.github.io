@@ -96,29 +96,30 @@
     .hero {
       margin-top: 10px;
       margin-bottom: 40px;
-      padding: 70px 40px;
+      padding: 80px 48px;
       border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, #039BE5 0%, #673AB7 100%);
+      background: #0F172A;
+      /* Midnight Deep Slate */
       color: white;
-      border: none;
+      border: 1px solid rgba(255, 255, 255, 0.05);
       display: grid;
       grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
       gap: 48px;
-      align-items: flex-start;
+      align-items: center;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 10px 30px -5px rgba(3, 155, 229, 0.3);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
 
     /* Hero Decoration - clean abstract shapes */
     .hero::before {
       content: "";
       position: absolute;
-      top: -100px;
-      right: -100px;
-      width: 450px;
-      height: 450px;
-      background: radial-gradient(circle, rgba(255, 202, 40, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+      top: -150px;
+      right: -150px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
       border-radius: 50%;
       z-index: 0;
       pointer-events: none;
@@ -127,11 +128,11 @@
     .hero::after {
       content: "";
       position: absolute;
-      bottom: -100px;
-      left: -100px;
-      width: 450px;
-      height: 450px;
-      background: radial-gradient(circle, rgba(245, 124, 0, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+      bottom: -150px;
+      left: -150px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(3, 155, 229, 0.1) 0%, rgba(15, 23, 42, 0) 70%);
       border-radius: 50%;
       z-index: 0;
       pointer-events: none;
@@ -188,8 +189,9 @@
     }
 
     .hero-text {
-      font-size: 19px;
-      color: rgba(255, 255, 255, 0.9);
+      font-size: 20px;
+      color: #94A3B8;
+      /* Slate 400 */
       margin-bottom: 32px;
       max-width: 95%;
       line-height: 1.6;
@@ -203,15 +205,18 @@
     }
 
     .hero-meta-pill {
-      font-size: 12px;
+      font-size: 11px;
       padding: 6px 16px;
       border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      background-color: rgba(255, 255, 255, 0.1);
-      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.03);
+      color: #CBD5E1;
+      /* Slate 300 */
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .hero-side {

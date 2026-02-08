@@ -31,39 +31,32 @@
 
   <style>
     :root {
-      /* Electric Tech Palette */
+      /* Vibrant Firebase Palette */
       --bg: #FFFFFF;
       --bg-alt: #F8FAFC;
-      /* Slate 50 */
 
-      --primary: #4F46E5;
-      /* Indigo 600 */
-      --primary-hover: #4338CA;
-      /* Indigo 700 */
-      --secondary: #10B981;
-      /* Emerald 500 */
-      --secondary-dark: #059669;
-      /* Emerald 600 */
-      --accent: #8B5CF6;
-      /* Violet 500 */
+      --primary: #039BE5;
+      /* Firebase Blue */
+      --primary-hover: #0288D1;
+      --secondary: #FFCA28;
+      /* Firebase Amber */
+      --secondary-dark: #F57C00;
+      /* Firebase Orange */
+      --accent: #673AB7;
+      /* Deep Purple for contrast */
 
       /* Typography */
       --text-main: #0F172A;
-      /* Slate 900 */
       --text-muted: #475569;
-      /* Slate 600 */
       --text-light: #64748B;
-      /* Slate 500 */
 
       --border-subtle: #E2E8F0;
-      /* Slate 200 */
-      --radius-lg: 12px;
-      --radius-md: 8px;
+      --radius-lg: 16px;
+      --radius-md: 10px;
 
-      /* Modern Shadows */
-      --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-      --shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-      --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      /* Glowing Shadows */
+      --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-hover: 0 20px 25px -5px rgba(255, 202, 40, 0.15), 0 8px 10px -6px rgba(255, 202, 40, 0.1);
     }
 
     * {
@@ -103,16 +96,18 @@
     .hero {
       margin-top: 10px;
       margin-bottom: 40px;
-      padding: 60px 40px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
-      border: 1px solid #E0E7FF;
+      padding: 70px 40px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #039BE5 0%, #673AB7 100%);
+      color: white;
+      border: none;
       display: grid;
       grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
       gap: 48px;
       align-items: flex-start;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 10px 30px -5px rgba(3, 155, 229, 0.3);
     }
 
     /* Hero Decoration - clean abstract shapes */
@@ -121,9 +116,9 @@
       position: absolute;
       top: -100px;
       right: -100px;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(79, 70, 229, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(255, 202, 40, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
       border-radius: 50%;
       z-index: 0;
       pointer-events: none;
@@ -134,9 +129,9 @@
       position: absolute;
       bottom: -100px;
       left: -100px;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(245, 124, 0, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
       border-radius: 50%;
       z-index: 0;
       pointer-events: none;
@@ -178,25 +173,24 @@
     }
 
     .hero-title {
-      font-size: clamp(32px, 4vw, 44px);
-      line-height: 1.2;
-      margin-bottom: 20px;
-      font-weight: 700;
-      /* Google Sans Bold */
-      color: var(--text-main);
-      letter-spacing: -0.5px;
+      font-size: clamp(34px, 4.5vw, 48px);
+      line-height: 1.15;
+      margin-bottom: 24px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -1px;
     }
 
     .hero-highlight {
-      color: var(--primary);
+      color: var(--secondary);
       background: none;
       -webkit-text-fill-color: initial;
     }
 
     .hero-text {
-      font-size: 18px;
-      color: var(--text-muted);
-      margin-bottom: 24px;
+      font-size: 19px;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 32px;
       max-width: 95%;
       line-height: 1.6;
     }
@@ -204,19 +198,20 @@
     .hero-meta-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 16px;
     }
 
     .hero-meta-pill {
       font-size: 12px;
-      padding: 6px 14px;
+      padding: 6px 16px;
       border-radius: 999px;
-      border: 1px solid #E0E7FF;
-      background-color: #FFFFFF;
-      color: var(--primary);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       font-weight: 600;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     .hero-side {
@@ -282,10 +277,11 @@
       font-size: 12px;
       padding: 6px 12px;
       border-radius: 6px;
-      background-color: #F0FDF4;
-      /* Emerald 50 */
-      color: var(--secondary-dark);
-      border: 1px solid #DCFCE7;
+      background-color: #FFF9E6;
+      /* Light Amber */
+      color: #B26B00;
+      /* Deep Burnt Orange */
+      border: 1px solid #FFE082;
       font-weight: 600;
     }
 
@@ -379,6 +375,10 @@
       color: var(--secondary-dark);
       font-weight: 700;
       margin-bottom: 10px;
+      background: linear-gradient(90deg, #FFCA28, #F57C00);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .card-title {
@@ -435,19 +435,20 @@
       gap: 4px;
       color: var(--primary);
       font-weight: 700;
+      transition: color 0.2s ease;
     }
 
     .card-link-text span {
-      font-size: 16px;
+      font-size: 14px;
       transition: transform 0.2s;
     }
 
     .card:hover .card-link-text {
-      color: var(--accent);
+      color: var(--secondary-dark);
     }
 
     .card:hover .card-link-text span {
-      transform: translate(2px, -2px);
+      transform: translate(3px, -3px);
     }
 
 
@@ -463,32 +464,35 @@
       grid-auto-flow: dense;
     }
 
-    .col-span-2.row-span-2 .card {
-      background: linear-gradient(to bottom right, #FFFFFF, #F8FAFC);
-      border-width: 2px;
-      border-color: #E0E7FF;
+    .span-both .card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%);
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 10px 20px -5px rgba(3, 155, 229, 0.05);
       justify-content: center;
       align-items: center;
       text-align: center;
     }
 
-    .col-span-2.row-span-2 .card-meta-row {
+    .span-both .card-meta-row {
       justify-content: center;
+    }
+
+    .span-col-2 {
+      grid-column: span 2;
     }
 
     .row-span-2 {
       grid-row: span 2;
     }
 
+    .span-both {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
     @media (max-width: 1024px) {
       .grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      /* Reset spans on tablet if needed, or keep them if they fit 2 cols */
-      .col-span-2 {
-        grid-column: span 2;
-        /* Still spans full width of 2-col grid */
       }
     }
 
@@ -756,8 +760,8 @@
         grid.innerHTML = (cases || []).map(c => {
           const weight = parseInt(c.weight) || 0;
           let spanClass = '';
-          if (weight >= 95) spanClass = 'col-span-2 row-span-2';
-          else if (weight >= 90) spanClass = 'col-span-2';
+          if (weight >= 95) spanClass = 'span-both';
+          else if (weight >= 90) spanClass = 'span-col-2';
 
           return `
           <a class="card-link ${spanClass}" href="${c.href}" data-category="${c.tag}">

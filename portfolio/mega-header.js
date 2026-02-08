@@ -147,18 +147,18 @@ class MegaHeader extends HTMLElement {
           position: sticky;
           top: 0;
           z-index: 1000;
-          --primary: #4F46E5;
-          --primary-hover: #4338CA;
-          --accent: #10B981;
-          --accent-light: #F0FDF4;
+          --primary: #039BE5; /* Firebase Blue */
+          --primary-hover: #0288D1;
+          --accent: #FFCA28; /* Firebase Amber */
+          --accent-dark: #F57C00; /* Firebase Orange */
           --text-main: #0F172A;
           --text-muted: #475569;
           --border: #E2E8F0;
           --header-bg: rgba(255, 255, 255, 0.98);
           --menu-bg: #FFFFFF;
-          --radius: 8px;
-          --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-          --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+          --radius: 12px;
+          --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+          --shadow-lg: 0 10px 15px -3px rgba(255, 202, 40, 0.2), 0 4px 6px -4px rgba(255, 202, 40, 0.1);
         }
 
         header {
@@ -312,8 +312,8 @@ class MegaHeader extends HTMLElement {
         .menu-card.span-both {
            grid-column: span 2;
            grid-row: span 2;
-           background: linear-gradient(135deg, #FFFFFF 0%, #F5F3FF 100%);
-           border-color: #E0E7FF;
+           background: linear-gradient(135deg, #FFFFFF 0%, #FFF9E6 100%);
+           border-color: #FFE082;
         }
 
         .menu-card.span-both .tech-stack-mini {
@@ -338,8 +338,8 @@ class MegaHeader extends HTMLElement {
         .menu-tag {
            font-size: 10px;
            text-transform: uppercase;
-           background: #F0FDF4; /* Emerald 50 */
-           color: #059669; /* Emerald 600 */
+           background: #FFF9E6; /* Light Amber */
+           color: #B26B00; /* Deep Burnt Orange */
            padding: 2px 8px;
            border-radius: 4px;
            font-weight: 700;
@@ -361,14 +361,15 @@ class MegaHeader extends HTMLElement {
            justify-content: center;
         }
 
-        .tech-tag {
-           font-size: 9px;
-           background: #F1F3F4;
-           color: var(--text-muted);
-           padding: 1px 6px;
-           border-radius: 3px;
-           font-weight: 500;
-        }
+         .tech-tag {
+            font-size: 9px;
+            background: #F1F5F9;
+            color: var(--primary);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            border: 1px solid #E2E8F0;
+         }
 
         .menu-desc {
            font-size: 12px;

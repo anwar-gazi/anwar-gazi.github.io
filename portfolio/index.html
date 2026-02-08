@@ -58,6 +58,9 @@
       --text-muted-on-light: #475569;
       /* Slate 600 for muted text inside light cards */
 
+      --menu-bg: #1e1e1e;
+      /* Solid base for mega menu */
+
       --border-subtle: rgba(255, 255, 255, 0.1);
       --radius-lg: 16px;
       --radius-md: 10px;
@@ -1478,6 +1481,10 @@
         /* Dynamic viewport height for mobile */
         padding: 0 !important;
         overflow: hidden;
+        background: #1e1e1e !important;
+        /* Force solid opaque background */
+        backdrop-filter: none !important;
+        /* Remove blur to prevent artifacting */
       }
 
       .mega-scroll-view {
@@ -1651,7 +1658,7 @@
                              :key="'study-' + idx" 
                              :href="item.href" 
                              :class="['menu-card', getSpanClass(item.weight), getCategoryClass(item.tag)]"
-                             :style="{ transitionDelay: (idx * 0.12 + 0.1) + 's' }">
+                             :style="{ transitionDelay: (idx * (isMobile ? 0.05 : 0.12) + 0.1) + 's' }">
                             <div class="menu-card-header">
                               <span class="menu-icon">{{ item.icon || '📄' }}</span>
                               <span class="menu-tag">{{ item.tag || 'Work' }}</span>
@@ -1667,7 +1674,7 @@
                           <div v-else 
                                :key="'filler-' + idx"
                                :class="['menu-card', 'cta-card', item.flavor]"
-                               :style="{ transitionDelay: (idx * 0.12 + 0.1) + 's' }">
+                               :style="{ transitionDelay: (idx * (isMobile ? 0.05 : 0.12) + 0.1) + 's' }">
                             <div class="menu-icon">{{ item.icon }}</div>
                             <div class="menu-title">{{ item.msg }}</div>
                             <a href="mailto:anwar.gazi@gmail.com" class="cta-mini-btn">Get in Touch</a>
@@ -1694,6 +1701,7 @@
               isOpen: false,
               isDisintegrating: false,
               currentCols: 1,
+              isMobile: false,
               fillerPool: [
                 { msg: "Staff-Level Infrastructure", flavor: "cta-indigo", icon: "🚀" },
                 { msg: "Scale Your Architecture", flavor: "cta-emerald", icon: "💎" },
@@ -1744,7 +1752,8 @@
           },
           methods: {
             updateCols() {
-              const containerWidth = window.innerWidth - 128;
+              this.isMobile = window.innerWidth <= 768;
+              const containerWidth = window.innerWidth - (this.isMobile ? 0 : 128);
               this.currentCols = Math.floor(containerWidth / 450) || 1;
             },
             toggleMenu() {
@@ -1753,6 +1762,7 @@
             },
             openMenu() {
               this.isOpen = true;
+              this.clearParticles(); // Ensure canvas is fresh
               document.documentElement.classList.add('no-scroll');
             },
             closeMenu() {

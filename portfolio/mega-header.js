@@ -261,40 +261,46 @@ class MegaHeader extends HTMLElement {
         .nav-trigger span { transition: transform 0.2s ease; font-size: 0.6em; margin-left: 4px; opacity: 0.7; }
         .nav-trigger.active span { transform: rotate(180deg); }
 
-        /* Mega Menu - Bento Style */
+        /* Mega Menu - Premium Floating Pane */
         .mega-menu {
           position: absolute;
           top: 100%;
-          left: 0;
-          width: 100%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-10px);
+          width: calc(100% - 40px);
+          max-width: 1200px;
           background: var(--menu-bg);
-          border-bottom: 1px solid var(--border);
+          border: 1px solid var(--border);
+          border-radius: 16px;
           opacity: 0;
           visibility: hidden;
-          transform: translateY(-8px);
-          transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-          padding: 1.5rem 0;
-          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          padding: 1.5rem;
+          box-shadow: 
+            0 20px 50px -12px rgba(0, 0, 0, 0.15),
+            0 10px 20px -5px rgba(0, 0, 0, 0.08),
+            0 0 0 1px rgba(0, 0, 0, 0.02);
           overflow-y: auto;
-          max-height: 85vh;
+          max-height: 80vh;
+          margin-top: 12px;
+          z-index: 1001;
         }
 
         .mega-menu.active {
           opacity: 1;
           visibility: visible;
-          transform: translateY(0);
+          transform: translateX(-50%) translateY(0);
         }
 
         .mega-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 1.25rem;
+          max-width: 100%;
+          margin: 0;
         }
 
         .mega-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 12px;
+          gap: 14px;
         }
 
         /* Menu Card Styling */

@@ -96,19 +96,42 @@
     .hero {
       margin-top: 10px;
       margin-bottom: 40px;
-      padding: 90px 48px;
+      padding: 80px 48px;
       border-radius: var(--radius-lg);
       background: #0F172A;
       /* Deep Base */
       color: white;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-      gap: 48px;
+      display: flex;
+      flex-direction: column;
       align-items: center;
+      text-align: center;
       position: relative;
       overflow: hidden;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-artwork-container {
+      width: 100%;
+      max-width: 900px;
+      margin-bottom: 48px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-artwork {
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .hero-artwork:hover {
+      transform: translateY(-5px);
     }
 
     /* Hero Decoration - clean abstract shapes */
@@ -178,7 +201,11 @@
 
     @media (max-width: 860px) {
       .hero {
-        grid-template-columns: minmax(0, 1fr);
+        padding: 60px 24px;
+      }
+
+      .hero-stat-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -213,8 +240,8 @@
     .hero-text {
       font-size: 19px;
       color: rgba(255, 255, 255, 0.85);
-      margin-bottom: 32px;
-      max-width: 95%;
+      margin-bottom: 48px;
+      max-width: 800px;
       line-height: 1.6;
       position: relative;
       z-index: 1;
@@ -223,6 +250,7 @@
     .hero-meta-row {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
       gap: 10px;
       margin-top: 16px;
     }
@@ -244,25 +272,29 @@
     }
 
     .hero-side {
-      /* Remove side card look for cleaner integrated look */
-      border-radius: 0;
-      padding: 0;
-      background: transparent;
-      border: none;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
+      width: 100%;
+      max-width: 1000px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 48px;
+      margin-top: 40px;
+      text-align: left;
     }
 
     .hero-side-title {
-      display: none;
-      /* Hide generic title */
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 24px;
+      text-align: center;
     }
 
     .hero-stat-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 24px;
     }
 
     .hero-stat {
@@ -834,7 +866,12 @@
     <!-- Hero -->
     <section class="hero">
       <div class="hero-glow-3"></div>
-      <div>
+
+      <div class="hero-artwork-container">
+        <img src="hero-artwork.png" alt="Resilient Systems Architecture Artwork" class="hero-artwork">
+      </div>
+
+      <div class="hero-content">
         <div class="hero-kicker">Case Study Portfolio</div>
         <h1 class="hero-title">
           Building Resilient Systems at <span class="hero-highlight">National Scale</span>.

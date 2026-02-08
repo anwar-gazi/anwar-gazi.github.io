@@ -3,6 +3,81 @@
 window.CASE_STUDIES = [
   // --- High Value Tech (Go, Next.js, React, Python, Architecture) ---
   {
+    "id": "api-first-component-strategy",
+    "href": "api-first-component-strategy.html",
+    "tag": "System Architecture",
+    "icon": "🔌",
+    "industry": "Component Design",
+    "title": "API-First Component Strategy",
+    "subtitle": "Transforming components into passive consumers via centralized service layers.",
+    "tech_stack": [
+      "Architecture",
+      "React",
+      "Design Patterns"
+    ],
+    "weight": "88"
+  },
+  {
+    "id": "react-spa-client-cache",
+    "href": "react-spa-client-cache.html",
+    "tag": "System Architecture",
+    "icon": "💾",
+    "industry": "Infrastructure Optimization",
+    "title": "React SPA as Client-Side Cache",
+    "subtitle": "Architectural analysis: Shifting read traffic from server to client state.",
+    "tech_stack": [
+      "React",
+      "State Management",
+      "Infrastructure"
+    ],
+    "weight": "85"
+  },
+  {
+    "id": "time-tracking-evolution",
+    "href": "time_tracking_evolution.html",
+    "tag": "System Architecture",
+    "icon": "⏱️",
+    "industry": "Software Engineering",
+    "title": "Time Tracking Machinery Evolution",
+    "subtitle": "Evolution of logic centralization and recursive time tracking architecture.",
+    "tech_stack": [
+      "React",
+      "Zustand",
+      "Architecture"
+    ],
+    "weight": "80"
+  },
+  {
+    "id": "taskpane-flicker-investigation",
+    "href": "taskpane-flicker-investigation.html",
+    "tag": "Engineering RCA",
+    "icon": "🕵️",
+    "industry": "RCA • Next.js Rendering",
+    "title": "RCA: TaskPane Flicker Root Cause",
+    "subtitle": "Deep dive into Next.js App Router re-render cascades and unmount issues.",
+    "tech_stack": [
+      "Next.js",
+      "React",
+      "Zustand"
+    ],
+    "weight": "76"
+  },
+  {
+    "id": "scroll-focus-issue-report",
+    "href": "scroll-focus-issue-report.html",
+    "tag": "Engineering RCA",
+    "icon": "🔍",
+    "industry": "UX • Bug Investigation",
+    "title": "RCA: Scroll Focus Bleed-Through",
+    "subtitle": "Technical analysis of scroll event containment in overlay components.",
+    "tech_stack": [
+      "React",
+      "CSS",
+      "UX"
+    ],
+    "weight": "74"
+  },
+  {
     "id": "distributed-task-systems-whitepaper",
     "href": "distributed-task-systems-whitepaper.html",
     "tag": "System Architecture",

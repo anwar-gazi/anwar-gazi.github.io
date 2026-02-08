@@ -127,8 +127,9 @@ class MegaHeader extends HTMLElement {
   }
 
   render() {
-    // Flatten items from window.CASE_STUDIES (already sorted in source via case-data.js)
-    const items = window.CASE_STUDIES || [];
+    // Flatten items from window.CASE_STUDIES and sort by weight for optimal bento packing
+    const rawItems = window.CASE_STUDIES || [];
+    const items = [...rawItems].sort((a, b) => (parseInt(b.weight) || 0) - (parseInt(a.weight) || 0));
 
     const gridHtml = items.map((item, index) => {
       const weight = parseInt(item.weight) || 0;
@@ -319,7 +320,7 @@ class MegaHeader extends HTMLElement {
         .mega-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 14px;
+          gap: 0;
         }
 
         /* Menu Card Styling */
@@ -328,7 +329,7 @@ class MegaHeader extends HTMLElement {
            flex-direction: column;
            background: #FFFFFF;
            border: 1px solid var(--border-subtle);
-           border-radius: 6px;
+           margin: 0 -1px -1px 0;
            padding: 12px;
            text-decoration: none;
            transition: all 0.2s ease;

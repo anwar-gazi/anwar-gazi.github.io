@@ -6,6 +6,7 @@ class MegaHeader extends HTMLElement {
     super();
     this.attachShadow({ mode: 'open' });
     this._initialized = false;
+    this._closeTimeout = null;
   }
 
   _initGroups() {
@@ -59,7 +60,10 @@ class MegaHeader extends HTMLElement {
     if (trigger && menu) {
       // Hover for desktop
       trigger.addEventListener('mouseenter', () => this._openMenu());
-      header.addEventListener('mouseleave', () => this._closeMenu());
+      trigger.addEventListener('mouseleave', () => this._startCloseTimeout());
+
+      menu.addEventListener('mouseenter', () => this._openMenu());
+      menu.addEventListener('mouseleave', () => this._startCloseTimeout());
 
       // Click for mobile/touch or keyboard
       trigger.addEventListener('click', (e) => {
@@ -75,6 +79,10 @@ class MegaHeader extends HTMLElement {
   }
 
   _openMenu() {
+    if (this._closeTimeout) {
+      clearTimeout(this._closeTimeout);
+      this._closeTimeout = null;
+    }
     const menu = this.shadowRoot.querySelector('.mega-menu');
     const trigger = this.shadowRoot.querySelector('.nav-trigger');
     if (menu) menu.classList.add('active');
@@ -82,7 +90,18 @@ class MegaHeader extends HTMLElement {
     this.setAttribute('open', '');
   }
 
+  _startCloseTimeout() {
+    if (this._closeTimeout) clearTimeout(this._closeTimeout);
+    this._closeTimeout = setTimeout(() => {
+      this._closeMenu();
+    }, 300);
+  }
+
   _closeMenu() {
+    if (this._closeTimeout) {
+      clearTimeout(this._closeTimeout);
+      this._closeTimeout = null;
+    }
     const menu = this.shadowRoot.querySelector('.mega-menu');
     const trigger = this.shadowRoot.querySelector('.nav-trigger');
     if (menu) menu.classList.remove('active');

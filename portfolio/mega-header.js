@@ -57,7 +57,7 @@ class MegaHeader extends HTMLElement {
     const menu = this.shadowRoot.querySelector('.mega-menu');
 
     if (trigger && menu) {
-      // Toggle on click
+      // Click for mobile/touch or keyboard
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation(); // Prevent immediate close from document click
@@ -68,6 +68,16 @@ class MegaHeader extends HTMLElement {
       menu.addEventListener('click', (e) => {
         e.stopPropagation();
       });
+
+      // Close button specific listener
+      const closeBtn = this.shadowRoot.querySelector('.close-menu-btn');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this._closeMenu();
+        });
+      }
     }
 
     // Close on click anywhere else
@@ -92,11 +102,117 @@ class MegaHeader extends HTMLElement {
   }
 
   _closeMenu() {
+    if (this.hasAttribute('disintegrating')) return; // Already closing
+
+    this.setAttribute('disintegrating', '');
+    this._disintegrate();
+
+    // Final cleanup after animation (1.5s) completes
+    // Using 1.6s to ensure all frames are rendered
+    setTimeout(() => {
+      const menu = this.shadowRoot.querySelector('.mega-menu');
+      const trigger = this.shadowRoot.querySelector('.nav-trigger');
+
+      if (menu) {
+        // Suppress transition to prevent flicker upon class removal
+        menu.style.transition = 'none';
+        menu.classList.remove('active');
+        menu.style.opacity = '0';
+        menu.style.visibility = 'hidden';
+      }
+
+      if (trigger) trigger.classList.remove('active');
+      this.removeAttribute('open');
+      this.removeAttribute('disintegrating');
+      this._clearParticles();
+
+      // Reset menu style for next opening after attributes are cleared
+      requestAnimationFrame(() => {
+        if (menu) {
+          menu.style.transition = '';
+          menu.style.opacity = '';
+          menu.style.visibility = '';
+          menu.style.setProperty('--mask-pos', '100%');
+        }
+      });
+    }, 1600);
+  }
+
+  _disintegrate() {
+    const canvas = this.shadowRoot.querySelector('#particle-canvas');
+    if (!canvas) return;
+
     const menu = this.shadowRoot.querySelector('.mega-menu');
-    const trigger = this.shadowRoot.querySelector('.nav-trigger');
-    if (menu) menu.classList.remove('active');
-    if (trigger) trigger.classList.remove('active');
-    this.removeAttribute('open');
+    const cards = this.shadowRoot.querySelectorAll('.menu-card');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = menu.offsetWidth;
+    canvas.height = menu.offsetHeight;
+
+    const particles = [];
+
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      const menuRect = menu.getBoundingClientRect();
+      const relativeTop = rect.top - menuRect.top;
+      const relativeLeft = rect.left - menuRect.left;
+
+      const cardStyle = getComputedStyle(card);
+      const color = cardStyle.backgroundColor;
+
+      for (let i = 0; i < 60; i++) {
+        particles.push({
+          x: relativeLeft + Math.random() * rect.width,
+          y: relativeTop + Math.random() * rect.height,
+          vx: Math.random() * 4 - 1, // Mostly drift right
+          vy: Math.random() * -5 - 2, // Drift up (ash)
+          size: Math.random() * 4 + 1,
+          opacity: 1,
+          life: 1 + Math.random(),
+          color: color
+        });
+      }
+    });
+
+    let startTime = null;
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = (timestamp - startTime) / 1500;
+
+      // Update mask
+      const maskSize = Math.max(0, 100 - progress * 130);
+      menu.style.setProperty('--mask-pos', `${maskSize}%`);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => {
+        p.x += p.vx + (Math.random() - 0.5); // Add jitter
+        p.y += p.vy;
+        p.opacity -= 0.008;
+
+        if (p.opacity > 0) {
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.opacity;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }
+
+  _clearParticles() {
+    const canvas = this.shadowRoot.querySelector('#particle-canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
   }
 
   _toggleMenu() {
@@ -158,7 +274,7 @@ class MegaHeader extends HTMLElement {
         .join('');
 
       return `
-        <a href="${item.href}" class="menu-card ${spanClass} ${colorClass}">
+        <a href="${item.href}" class="menu-card ${spanClass} ${colorClass}" style="transition-delay: ${index * 0.05 + 0.1}s">
           <div class="menu-card-header">
             <span class="menu-icon">${item.icon || '📄'}</span>
             <span class="menu-tag">${item.tag || 'Work'}</span>
@@ -288,8 +404,8 @@ class MegaHeader extends HTMLElement {
           border-top: 1px solid var(--border);
           opacity: 0;
           visibility: hidden;
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          padding: 2rem 0;
+          transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          padding: 4rem 0;
           overflow-y: auto;
           z-index: 1001;
         }
@@ -299,15 +415,46 @@ class MegaHeader extends HTMLElement {
           visibility: visible;
         }
 
+        :host([disintegrating]) .mega-menu {
+          pointer-events: none;
+          transition: none !important; /* Prevent transition conflicts with mask */
+          mask-image: radial-gradient(circle at center, 
+            rgba(0,0,0,1) 0%, 
+            rgba(0,0,0,1) var(--mask-pos, 100%), 
+            rgba(0,0,0,0) calc(var(--mask-pos, 100%) + 10%)
+          );
+          -webkit-mask-image: radial-gradient(circle at center, 
+            rgba(0,0,0,1) 0%, 
+            rgba(0,0,0,1) var(--mask-pos, 100%), 
+            rgba(0,0,0,0) calc(var(--mask-pos, 100%) + 10%)
+          );
+          opacity: 1;
+        }
+
+        :host([disintegrating]) .menu-card {
+          opacity: 0;
+          transition: opacity 0.8s ease-out;
+        }
+
+        #particle-canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 1020;
+        }
+
         .mega-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 1.25rem;
+          max-width: none;
+          margin: 0;
+          padding: 0 4rem;
         }
 
         .mega-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
           gap: 0;
         }
 
@@ -318,14 +465,21 @@ class MegaHeader extends HTMLElement {
            background: #FFFFFF;
            border: 1px solid var(--border-subtle);
            margin: 0 -1px -1px 0;
-           padding: 12px;
+           padding: 40px 24px;
            text-decoration: none;
-           transition: all 0.2s ease;
+           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
            height: 100%;
            position: relative;
            justify-content: center;
            align-items: center;
            text-align: center;
+           opacity: 0;
+           transform: translateY(30px);
+        }
+
+        .mega-menu.active .menu-card {
+           opacity: 1;
+           transform: translateY(0);
         }
 
         .menu-card:hover {
@@ -430,11 +584,11 @@ class MegaHeader extends HTMLElement {
         }
 
         .menu-title {
-           font-size: 14px;
-           font-weight: 600;
+           font-size: 22px;
+           font-weight: 700;
            color: var(--text-main);
-           margin-bottom: 8px;
-           line-height: 1.25;
+           margin-bottom: 12px;
+           line-height: 1.2;
         }
 
         .tech-stack-mini {
@@ -462,6 +616,40 @@ class MegaHeader extends HTMLElement {
            -webkit-line-clamp: 2;
            -webkit-box-orient: vertical;
            overflow: hidden;
+        }
+
+        .close-menu-btn {
+          position: absolute;
+          top: 32px;
+          right: 32px;
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          background: rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          z-index: 1010;
+          color: var(--text-muted);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .close-menu-btn:hover {
+          background: rgba(255, 255, 255, 0.9);
+          transform: rotate(90deg) scale(1.1);
+          color: var(--text-main);
+          border-color: rgba(0, 0, 0, 0.2);
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-menu-btn svg {
+          width: 20px;
+          height: 20px;
         }
         
         /* Mobile handling */
@@ -504,6 +692,13 @@ class MegaHeader extends HTMLElement {
         </div>
 
         <div class="mega-menu">
+          <canvas id="particle-canvas"></canvas>
+          <button class="close-menu-btn" aria-label="Close Case Study Explorer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
           <div class="mega-container">
             <div class="mega-grid">
               ${gridHtml}

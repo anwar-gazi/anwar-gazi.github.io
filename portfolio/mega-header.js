@@ -183,6 +183,10 @@ class MegaHeader extends HTMLElement {
 
     this.shadowRoot.innerHTML = `
       <style>
+        * {
+          box-sizing: border-box;
+        }
+
         :host {
           display: block;
           position: sticky;
@@ -344,7 +348,7 @@ class MegaHeader extends HTMLElement {
            box-shadow: var(--shadow-lg);
            border-color: #cbd5e1;
            transform: translateY(-2px);
-           z-index: 1;
+           z-index: 10;
         }
 
         .menu-card.span-col-2 {
@@ -479,7 +483,7 @@ class MegaHeader extends HTMLElement {
         /* Mobile handling */
         @media (max-width: 768px) {
            .mega-grid { grid-template-columns: 1fr; }
-           .menu-card.span-col-2 { grid-column: auto; }
+           .menu-card { grid-column: auto !important; grid-row: auto !important; }
            .header-inner { padding: 0 1rem; }
            .nav-link span { display: none; } /* Hide arrow on mobile if needed */
         }

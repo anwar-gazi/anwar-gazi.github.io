@@ -15,5 +15,16 @@
     "svelte": "/index.svelte.html"
   },
   "author": "Minhajul Anwar",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anwar-gazi/anwar-gazi.github.io.git"
+  },
+  "keywords": [
+    "portfolio"
+  ],
+  "bugs": {
+    "url": "https://github.com/anwar-gazi/anwar-gazi.github.io/issues"
+  },
+  "homepage": "https://github.com/anwar-gazi/anwar-gazi.github.io#readme"
 }

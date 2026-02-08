@@ -29,34 +29,44 @@
   <link rel="stylesheet" href="../cta-bot.css" />
   <link rel="stylesheet" href="./narrative.css" />
 
+  <!-- Vue 3 Global Build -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
   <style>
     :root {
-      /* Vibrant Firebase Palette */
-      --bg: #FFFFFF;
-      --bg-alt: #F8FAFC;
+      /* Dark Mode Palette */
+      --bg: #1e1e1e;
+      --bg-alt: #262626;
+      /* Darker slate for alt backgrounds */
 
       --primary: #039BE5;
-      /* Firebase Blue */
       --primary-hover: #0288D1;
       --secondary: #FFCA28;
-      /* Firebase Amber */
       --secondary-dark: #F57C00;
-      /* Firebase Orange */
       --accent: #673AB7;
-      /* Deep Purple for contrast */
 
-      /* Typography */
-      --text-main: #0F172A;
-      --text-muted: #475569;
+      /* Typography for Dark Mode */
+      --text-main: #F1F5F9;
+      /* Slate 100 */
+      --text-muted: #94A3B8;
+      /* Slate 400 */
       --text-light: #64748B;
+      /* Slate 500 */
 
-      --border-subtle: #E2E8F0;
+      --text-on-light: #0F172A;
+      /* Slate 900 for text inside light cards */
+      --text-muted-on-light: #475569;
+      /* Slate 600 for muted text inside light cards */
+
+      --border-subtle: rgba(255, 255, 255, 0.1);
       --radius-lg: 16px;
       --radius-md: 10px;
 
-      /* Glowing Shadows */
-      --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --shadow-hover: 0 20px 25px -5px rgba(255, 202, 40, 0.15), 0 8px 10px -6px rgba(255, 202, 40, 0.1);
+      /* Glowing Shadows for Dark Mode */
+      --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+        0 2px 4px -2px rgba(0, 0, 0, 0.4);
+      --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.5),
+        0 8px 10px -6px rgba(0, 0, 0, 0.5);
     }
 
     * {
@@ -84,6 +94,10 @@
       color: var(--primary-hover);
     }
 
+
+    [v-cloak] {
+      display: none;
+    }
 
     main {
       max-width: 1120px;
@@ -401,7 +415,7 @@
       border-radius: 100px;
       border: 1px solid var(--border-subtle);
       color: var(--text-muted);
-      background-color: #FFFFFF;
+      background-color: var(--bg-alt);
       cursor: pointer;
       user-select: none;
       transition: all 0.2s;
@@ -409,8 +423,9 @@
     }
 
     .filter-chip:hover {
-      background-color: #F1F3F4;
+      background-color: #334155;
       color: var(--text-main);
+      border-color: #475569;
     }
 
     .filter-chip.active {
@@ -434,7 +449,7 @@
       position: relative;
       padding: 20px;
       background: #ffffff;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid rgba(0, 0, 0, 0.1);
       margin: 0 -1px -1px 0;
       box-shadow: var(--shadow-card);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -444,11 +459,12 @@
       justify-content: center;
       align-items: center;
       text-align: center;
+      color: var(--text-on-light);
     }
 
     .card:hover {
       transform: translateY(-4px);
-      box-shadow: var(--shadow-hover);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
       border-color: #cbd5e1;
     }
 
@@ -470,7 +486,7 @@
       font-weight: 700;
       margin-bottom: 8px;
       line-height: 1.25;
-      color: #1e293b;
+      color: var(--text-on-light);
     }
 
     .card-subtitle {
@@ -479,8 +495,7 @@
 
     .card-body {
       font-size: 14px;
-      color: #475569;
-      /* Slate 600 */
+      color: var(--text-muted-on-light);
       margin-bottom: 16px;
       line-height: 1.6;
     }
@@ -729,7 +744,7 @@
 
     /* Value Rail & Delta Metrics */
     .value-rail {
-      background: #F8F9FA;
+      background: var(--bg-alt);
       border-top: 1px solid var(--border-subtle);
       border-bottom: 1px solid var(--border-subtle);
       padding: 40px 24px;
@@ -759,8 +774,18 @@
       background: #FFFFFF;
       padding: 24px;
       border-radius: 8px;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      color: var(--text-on-light);
+    }
+
+    .value-card p,
+    .value-card li {
+      color: var(--text-muted-on-light);
+    }
+
+    .value-card .value-title {
+      color: var(--text-on-light);
     }
 
     .value-icon {
@@ -774,24 +799,30 @@
       border-radius: 50%;
     }
 
+    /* Value Icons (Landing Page) */
     .value-icon.warning {
-      background: #FEF7E0;
-      color: #F9AB00;
+      background: #45371c;
+      /* Darker amber base */
+      color: #FFCA28;
+      /* Firebase Amber */
+      box-shadow: 0 4px 12px rgba(255, 202, 40, 0.15);
     }
 
-    /* Amber */
     .value-icon.action {
-      background: #E8F0FE;
-      color: #1967D2;
+      background: #1a3a5f;
+      /* Darker blue base */
+      color: #039BE5;
+      /* Firebase Blue */
+      box-shadow: 0 4px 12px rgba(3, 155, 229, 0.15);
     }
 
-    /* Blue */
     .value-icon.impact {
-      background: #E6F4EA;
-      color: #1E8E3E;
+      background: #1b4332;
+      /* Darker green base */
+      color: #81c784;
+      /* Lighter green */
+      box-shadow: 0 4px 12px rgba(129, 199, 132, 0.15);
     }
-
-    /* Green */
 
     .value-title {
       font-size: 16px;
@@ -820,19 +851,20 @@
       background: #FFFFFF;
       padding: 16px 24px;
       border-radius: 8px;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
+      color: var(--text-on-light);
     }
 
     .delta-label {
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: var(--text-muted);
+      color: var(--text-muted-on-light);
       font-weight: 500;
     }
 
@@ -841,19 +873,22 @@
       align-items: center;
       gap: 12px;
       font-size: 13px;
+      color: var(--text-on-light);
     }
 
     .delta-pill {
-      color: var(--text-light);
+      color: var(--text-muted-on-light);
       text-decoration: line-through;
+      opacity: 0.7;
     }
 
     .delta-pill.after {
-      color: #188038;
-      /* Google Green */
-      font-weight: 600;
+      color: #1b5e20;
+      /* Deep Green */
+      font-weight: 700;
       text-decoration: none;
-      background: #E6F4EA;
+      background: #c8e6c9;
+      /* Light Green */
       padding: 4px 12px;
       border-radius: 100px;
     }
@@ -872,223 +907,183 @@
 </head>
 
 <body>
-  <mega-header>
-    <div slot="brand-content">
-      <div class="brand-text-main">Software Engineering Portfolio</div>
-      <div class="brand-text-sub">End-to-end case studies across industries</div>
-    </div>
-    <div slot="right-content">
-      <div class="pill">
-        <span class="pill-dot"></span>
-        Open to Senior / Staff backend roles
-      </div>
-    </div>
-  </mega-header>
-
-  <main>
-    <!-- Hero -->
-    <section class="hero">
-
-      <div class="hero-top-row">
-        <div class="hero-artwork-container">
-          <img src="hero-artwork.png" alt="Resilient Systems Architecture Artwork" class="hero-artwork">
-        </div>
-
-        <div class="hero-content">
-          <!-- <div class="hero-kicker">Case Study Portfolio</div> -->
-          <h1 class="hero-title">
-            Building Resilient Systems at <span class="hero-highlight">National Scale</span>.
-          </h1>
-          <p class="hero-text">
-            Architecture and engineering lead in **GovTech**, **Fintech**, and **Media**.
-            Focused on high-performance distributed systems, system reliability,
-            and critical root-cause analysis for production environments.
-          </p>
-          <div class="hero-meta-row">
-            <div class="hero-meta-pill">9+ Years of Engineering</div>
-            <div class="hero-meta-pill">Go • Next.js • Python • Node.js</div>
-            <div class="hero-meta-pill">Distributed Architecture</div>
-          </div>
+  <div id="app" v-cloak>
+    <mega-header>
+      <div slot="right-content">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          Open to Senior / Staff backend roles
         </div>
       </div>
+    </mega-header>
 
-      <aside class="hero-side">
-        <div class="hero-side-title">At a glance</div>
-        <div class="hero-stat-grid">
-          <div class="hero-stat">
-            <div class="hero-stat-label">Industry Coverage</div>
-            <div class="hero-stat-value">8+</div>
-            <div class="hero-stat-footnote">
-              GovTech, fintech, media, logistics, ads, healthcare, telephony, ecommerce, IIG.
-            </div>
+    <main>
+      <!-- Hero -->
+      <section class="hero">
+
+        <div class="hero-top-row">
+          <div class="hero-artwork-container">
+            <img src="hero-artwork.png" alt="Resilient Systems Architecture Artwork" class="hero-artwork">
           </div>
-          <div class="hero-stat">
-            <div class="hero-stat-label">Focus</div>
-            <div class="hero-stat-value">Impact</div>
-            <div class="hero-stat-footnote">
-              Each page highlights concrete, business-facing outcomes — not just tech stacks.
+
+          <div class="hero-content">
+            <!-- <div class="hero-kicker">Case Study Portfolio</div> -->
+            <h1 class="hero-title">
+              Building Resilient Systems at <span class="hero-highlight">National Scale</span>.
+            </h1>
+            <p class="hero-text">
+              Architecture and engineering lead in **GovTech**, **Fintech**, and **Media**.
+              Focused on high-performance distributed systems, system reliability,
+              and critical root-cause analysis for production environments.
+            </p>
+            <div class="hero-meta-row">
+              <div class="hero-meta-pill">9+ Years of Engineering</div>
+              <div class="hero-meta-pill">Go • Next.js • Python • Node.js</div>
+              <div class="hero-meta-pill">Distributed Architecture</div>
             </div>
           </div>
         </div>
-        <div class="hero-legends">
-          <span class="legend-chip">Production systems</span>
-          <span class="legend-chip">Refactors &amp; bug-fixing</span>
-          <span class="legend-chip">Architecture &amp; scaling</span>
-          <span class="legend-chip">Developer experience</span>
+
+        <aside class="hero-side">
+          <div class="hero-side-title">At a glance</div>
+          <div class="hero-stat-grid">
+            <div class="hero-stat">
+              <div class="hero-stat-label">Industry Coverage</div>
+              <div class="hero-stat-value">8+</div>
+              <div class="hero-stat-footnote">
+                GovTech, fintech, media, logistics, ads, healthcare, telephony, ecommerce, IIG.
+              </div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-label">Focus</div>
+              <div class="hero-stat-value">Impact</div>
+              <div class="hero-stat-footnote">
+                Each page highlights concrete, business-facing outcomes — not just tech stacks.
+              </div>
+            </div>
+          </div>
+          <div class="hero-legends">
+            <span class="legend-chip">Production systems</span>
+            <span class="legend-chip">Refactors &amp; bug-fixing</span>
+            <span class="legend-chip">Architecture &amp; scaling</span>
+            <span class="legend-chip">Developer experience</span>
+          </div>
+        </aside>
+      </section>
+
+
+      <!-- Filters -->
+      <section class="filter-row">
+        <div class="filter-label">
+          Browse by industry focus:
         </div>
-      </aside>
-    </section>
+        <div class="filter-chips">
+          <span v-for="cat in categories" :key="cat.id" :class="['filter-chip', { active: currentFilter === cat.id }]"
+            @click="setFilter(cat.id)">{{ cat.label }}</span>
+        </div>
+      </section>
 
-
-    <!-- Filters -->
-    <section class="filter-row">
-      <div class="filter-label">
-        Browse by industry focus:
-      </div>
-      <div class="filter-chips">
-        <span class="filter-chip active" data-category="all">All</span>
-        <span class="filter-chip" data-category="GovTech">GovTech</span>
-        <span class="filter-chip" data-category="Fintech &amp; Payments">Fintech &amp; Payments</span>
-        <span class="filter-chip" data-category="Media &amp; Content">Media &amp; Content</span>
-        <span class="filter-chip" data-category="Logistics &amp; Ops">Logistics &amp; Ops</span>
-        <span class="filter-chip" data-category="Healthcare">Healthcare</span>
-        <span class="filter-chip" data-category="Telephony &amp; IVR">Telephony &amp; IVR</span>
-        <span class="filter-chip" data-category="Ecommerce">Ecommerce</span>
-        <span class="filter-chip" data-category="Infrastructure / IIG">Infrastructure / IIG</span>
-        <span class="filter-chip" data-category="Engineering">Engineering & Architecture</span>
-      </div>
-    </section>
-
-    <!-- Cards grid -->
-    <section class="grid" aria-label="Case study list">
-      <!-- Cards rendered dynamically via case-data.js -->
-    </section>
-  </main>
-
-  <cta-bot cvjson-src="../cv.json" cvjson-priority="primary" idle-timeout="15000" photo-src="../minhaj.jpg"
-    audio-src="../cta-chime.wav" audio-play="true" email="resgef@gmail.com" phone="+8801716-ANWAR"></cta-bot>
-
-  <!-- Load scripts at the bottom, removing defer to ensure synchronous execution order -->
-  <script src="./case-data.js"></script>
-  <script src="./mega-header.js"></script>
-  <script src="../cta-bot.js"></script>
-
-  <script>
-    (function () {
-      const grid = document.querySelector('.grid');
-      const chips = document.querySelectorAll('.filter-chip');
-
-      function renderCards(cases) {
-        if (!grid) return;
-
-        const sortedCases = [...(cases || [])].sort((a, b) => (parseInt(b.weight) || 0) - (parseInt(a.weight) || 0));
-
-        grid.innerHTML = sortedCases.map(c => {
-          const weight = parseInt(c.weight) || 0;
-          let spanClass = '';
-          if (weight >= 95) spanClass = 'span-both';
-          else if (weight >= 90) spanClass = 'span-col-2';
-
-          // Mapping tags to contextual gradient classes
-          let colorClass = '';
-          const tag = c.tag;
-          if (['GovTech', 'Infrastructure'].includes(tag)) colorClass = 'cat-govtech';
-          else if (['Fintech', 'Logistics'].includes(tag)) colorClass = 'cat-fintech';
-          else if (['Media'].includes(tag)) colorClass = 'cat-media';
-          else if (['System Architecture', 'Backend Engineering', 'Engineering RCA', 'Performance Eng.', 'Frontend Performance'].includes(tag)) colorClass = 'cat-eng';
-          else if (['Healthcare', 'Telephony'].includes(tag)) colorClass = 'cat-specialist';
-
-          return `
-          <a class="card-link ${spanClass} ${colorClass}" href="${c.href}" data-category="${c.tag}">
-            <article class="card" style="height: 100%">
-              <div class="card-industry">${c.industry}</div>
-              <h2 class="card-title">${c.title}</h2>
-              <p class="card-body">${c.subtitle}</p> 
-              <div class="card-meta-row">
-                ${(c.tech_stack || []).slice(0, 4).map(tech => `<span class="card-meta-pill">${tech}</span>`).join('')}
+      <!-- Cards grid -->
+      <section class="grid" aria-label="Case study list">
+        <a v-for="c in filteredStudies" :key="c.id" :href="c.href"
+          :class="['card-link', getSpanClass(c.weight), getCategoryClass(c.tag)]" :data-category="c.tag">
+          <article class="card" style="height: 100%">
+            <div class="card-industry">{{ c.industry }}</div>
+            <h2 class="card-title">{{ c.title }}</h2>
+            <p class="card-body">{{ c.subtitle }}</p>
+            <div class="card-meta-row">
+              <span v-for="tech in (c.tech_stack || []).slice(0, 4)" class="card-meta-pill">{{ tech }}</span>
+            </div>
+            <div class="card-footer">
+              <div class="card-link-text">
+                Read case study <span>↗</span>
               </div>
-              <div class="card-footer">
-                <div class="card-link-text">
-                  Read case study <span>↗</span>
-                </div>
-              </div>
-            </article>
-          </a>
-        `}).join('');
-      }
+            </div>
+          </article>
+        </a>
+      </section>
+    </main>
 
-      function applyFilter(category) {
-        const cardLinks = document.querySelectorAll('.card-link');
-        cardLinks.forEach(link => {
-          const cardTag = link.dataset.category;
-          // Match logic: The filter chips use "GovTech", "Fintech & Payments" etc.
-          // The data tags are "GovTech", "Fintech", "Media", "Logistics".
-          // We need to map or loose match.
+    <div id="app-footer-wrap">
+      <script src="./case-data.js"></script>
+      <script src="./mega-header.js"></script>
+      <script src="../cta-bot.js"></script>
 
-          let match = false;
-          if (!category || category === 'all') {
-            match = true;
-          } else if (cardTag === category) {
-            match = true;
-          } else if (category.includes(cardTag)) {
-            // e.g. category="Fintech & Payments" includes cardTag="Fintech"
-            match = true;
-          } else if (category.includes('Infrastructure') && cardTag === 'Infrastructure') {
-            match = true;
-          } else if (category === 'Engineering') {
-            if (['System Architecture', 'Backend Engineering', 'Frontend Performance', 'Performance Eng.', 'Engineering RCA'].includes(cardTag)) {
-              match = true;
+      <script>
+        const { createApp } = Vue;
+        createApp({
+          data() {
+            return {
+              currentFilter: 'all',
+              studies: window.CASE_STUDIES || [],
+              categories: [
+                { id: 'all', label: 'All' },
+                { id: 'GovTech', label: 'GovTech' },
+                { id: 'Fintech', label: 'Fintech & Payments' },
+                { id: 'Media', label: 'Media & Content' },
+                { id: 'Logistics', label: 'Logistics & Ops' },
+                { id: 'Healthcare', label: 'Healthcare' },
+                { id: 'Telephony', label: 'Telephony & IVR' },
+                { id: 'Ecommerce', label: 'Ecommerce' },
+                { id: 'Infrastructure', label: 'Infrastructure / IIG' },
+                { id: 'Engineering', label: 'Engineering & Architecture' }
+              ]
             }
+          },
+          computed: {
+            filteredStudies() {
+              const sorted = [...this.studies].sort((a, b) => (parseInt(b.weight) || 0) - (parseInt(a.weight) || 0));
+              if (this.currentFilter === 'all') return sorted;
+
+              return sorted.filter(c => {
+                const tag = c.tag;
+                if (this.currentFilter === 'Engineering') {
+                  return ['System Architecture', 'Backend Engineering', 'Frontend Performance', 'Performance Eng.', 'Engineering RCA'].includes(tag);
+                }
+                // Loose match for safety with labels like "Fintech & Payments"
+                return tag === this.currentFilter || (tag && tag.includes(this.currentFilter));
+              });
+            }
+          },
+          methods: {
+            setFilter(id) {
+              this.currentFilter = id;
+              // Update hash without triggering reload
+              const hash = id === 'all' ? '' : '#' + id;
+              history.replaceState(undefined, undefined, window.location.pathname + window.location.search + hash);
+            },
+            getSpanClass(weight) {
+              const w = parseInt(weight) || 0;
+              if (w >= 95) return 'span-both';
+              if (w >= 90) return 'span-col-2';
+              return '';
+            },
+            getCategoryClass(tag) {
+              if (['GovTech', 'Infrastructure'].includes(tag)) return 'cat-govtech';
+              if (['Fintech', 'Logistics'].includes(tag)) return 'cat-fintech';
+              if (['Media'].includes(tag)) return 'cat-media';
+              if (['System Architecture', 'Backend Engineering', 'Engineering RCA', 'Performance Eng.', 'Frontend Performance'].includes(tag)) return 'cat-eng';
+              if (['Healthcare', 'Telephony'].includes(tag)) return 'cat-specialist';
+              return '';
+            }
+          },
+          mounted() {
+            // Handle initial hash
+            const hash = window.location.hash.substring(1);
+            if (hash && this.categories.some(c => c.id === hash)) {
+              this.currentFilter = hash;
+            }
+
+            // Sync with back/forward buttons
+            window.addEventListener('hashchange', () => {
+              const newHash = window.location.hash.substring(1);
+              this.currentFilter = (newHash && this.categories.some(c => c.id === newHash)) ? newHash : 'all';
+            });
           }
-
-          if (match) {
-            link.style.display = '';
-          } else {
-            link.style.display = 'none';
-          }
-        });
-      }
-
-      function init() {
-        console.log('Initializing portfolio index...');
-        const cases = window.CASE_STUDIES;
-        if (!cases) {
-          console.warn('CASE_STUDIES not found immediately. Retrying...');
-          // Retry logic in case case-data.js loads slower (unlikely now with sync script)
-          setTimeout(init, 100);
-          return;
-        }
-        console.log('CASE_STUDIES found:', cases.length);
-        renderCards(cases);
-
-        chips.forEach(chip => {
-          chip.addEventListener('click', () => {
-            chips.forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            const category = chip.dataset.category || 'all';
-            applyFilter(category);
-          });
-        });
-
-        // Set initial filter based on hash if present
-        const hash = window.location.hash.substring(1);
-        if (hash) {
-          const targetChip = Array.from(chips).find(c =>
-            decodeURIComponent(hash).toLowerCase() === c.dataset.category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')
-            || c.dataset.category === decodeURIComponent(hash)
-          );
-          if (targetChip) targetChip.click();
-        }
-      }
-
-      // Initial render immediately if body is parsed, or wait for DOMContentLoaded
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-      } else {
-        init();
-      }
-    })();
-  </script>
+        }).mount('#app');
+      </script>
+    </div>
+  </div> <!-- Close #app -->
 </body>
 
 </html>

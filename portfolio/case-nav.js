@@ -1,20 +1,5 @@
 // case-nav.js
-const CASE_STUDIES = [
-  { label: 'AmiProbashi – Migrant Services', href: 'amiprobashi/index.html', tag: 'GovTech', icon: '🌏' },
-  { label: 'Multi-tenant News CMS (DoptorITMart)', href: 'dailyniropekkho_doptorit/index.html', tag: 'Media', icon: '📰' },
-  { label: 'ShurjoPay – Gateway Reliability', href: 'shurjopay/index.html', tag: 'Fintech', icon: '💳' },
-  { label: 'ShurjoPay – Brac Bank COF', href: 'shurjopay/shurjopay_bracbank_cof_case_study.html', tag: 'Fintech', icon: '💳' },
-  { label: 'CPC/CPA/CPM Bid Prediction (SulacoTec)', href: 'sulacotec/index.html', tag: 'AdTech', icon: '📈' },
-  { label: 'Freight Operations Portal (OneIXchange)', href: 'freightforwarding_oneixchange/index.html', tag: 'Logistics', icon: '🚢' },
-  { label: 'Healthcare Plan Operations (MS Concitus)', href: 'healthcare/index.html', tag: 'Healthcare', icon: '🩺' },
-  { label: 'Twilio + Asterisk IVR Automation', href: 'telephony/index.html', tag: 'Telephony', icon: '☎️' },
-  { label: 'eBay Inventory & Packing Automation', href: 'dropshipping/index.html', tag: 'Ecommerce', icon: '📦' },
-  { label: 'IIG Ticketing & Notifications Prototype', href: 'IIG/index.html', tag: 'Infrastructure', icon: '🛰️' },
-  { label: 'Notion-Clone – Login RCA', href: 'projects/notion-clone-login-issue.html', tag: 'RCA', icon: '🛠️' },
-  { label: 'Zustand Migration – Re-render Analysis', href: 'projects/zustand-migration-rerender-analysis.html', tag: 'RCA', icon: '🔁' },
-  { label: 'BoardContext → Zustand Migration Docs', href: 'projects/zustand-migration-docs.html', tag: 'State Mgmt', icon: '📑' },
-  { label: 'TaskPane Flicker Investigation', href: 'projects/taskpane-flicker-investigation.html', tag: 'Next.js', icon: '⚡' },
-];
+import { CASE_STUDIES } from './case-data.js';
 
 class CaseNav extends HTMLElement {
   constructor() {

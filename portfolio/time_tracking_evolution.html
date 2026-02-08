@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Tracking Evolution Report</title>
+  <link rel="stylesheet" href="../cta-bot.css" />
+  <script src="../cta-bot.js" defer></script>
+  <script src="case-data.js" defer></script>
+  <script src="mega-header.js" defer></script>
+  <link rel="stylesheet" href="narrative.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.6;
+      color: #24292f;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px;
+      background-color: #ffffff;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 24px;
+      margin-bottom: 16px;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    h1 {
+      font-size: 2em;
+      border-bottom: 1px solid #eaecef;
+      padding-bottom: .3em;
+    }
+
+    h2 {
+      font-size: 1.5em;
+      border-bottom: 1px solid #eaecef;
+      padding-bottom: .3em;
+    }
+
+    h3 {
+      font-size: 1.25em;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+
+    code {
+      padding: .2em .4em;
+      margin: 0;
+      font-size: 85%;
+      background-color: #f6f8fa;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+    }
+
+    blockquote {
+      padding: 0 1em;
+      color: #57606a;
+      border-left: .25em solid #d0d7de;
+      margin: 0 0 16px 0;
+    }
+
+    .mermaid {
+      background-color: #f6f8fa;
+      padding: 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: block;
+      /* Removed flex to avoid constriction */
+      overflow-x: auto;
+      /* Allow scrolling if really huge */
+    }
+
+    .mermaid svg {
+      display: block;
+      width: 100% !important;
+      height: auto;
+      max-width: none !important;
+      margin: 0 auto;
+    }
+
+    table {
+      border-spacing: 0;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+
+    table th,
+    table td {
+      padding: 6px 13px;
+      border: 1px solid #d0d7de;
+    }
+
+    table th {
+      font-weight: 600;
+      background-color: #f6f8fa;
+    }
+
+    table tr:nth-child(2n) {
+      background-color: #f6f8fa;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Time Tracking Machinery: Evolution Report</h1>
+
+  <blockquote>
+    <p><strong>Note</strong></p>
+    <p><strong>Scope</strong>: Evolution of time tracking architecture from commit <code>1c03a4b</code> to present.</p>
+    <p><strong>Focus</strong>: Refactoring, Componentization, and Logic Centralization.</p>
+  </blockquote>
+
+  <h2>1. Timeline Overview</h2>
+  <div class="mermaid">
+    flowchart LR
+    P1[Phase 1: Foundation<br />Standardized TimeDisplay] --> P2[Phase 2: UX Polish<br />Green Pulsing Dot]
+    P2 --> P3[Phase 3: The Split<br />Logic vs Presentation]
+    P3 --> P4[Phase 4: Intelligence<br />Context Aware Formats]
+    P4 --> P5[Phase 5: Maturity<br />Recursive Scopes]
+
+    style P1 fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,rx:10,min-width:200px
+    style P2 fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,rx:10,min-width:200px
+    style P3 fill:#fdf4ff,stroke:#c026d3,stroke-width:2px,rx:10,min-width:200px
+    style P4 fill:#fff7ed,stroke:#ea580c,stroke-width:2px,rx:10,min-width:200px
+    style P5 fill:#fef2f2,stroke:#dc2626,stroke-width:2px,rx:10,min-width:200px
+  </div>
+
+  <h2>2. Phase Breakdown</h2>
+
+  <h3>Phase 1: Foundation (Standardization)</h3>
+  <p><strong>Objective</strong>: Fix inconsistent timer displays across the app. We moved from disparate inline
+    formatting to a single responsible component.</p>
+  <div class="mermaid">
+    graph LR
+    subgraph Before [Chaos: Scattered Logic]
+    A[ActiveTimers] --"Manual Math"--> S1["01:23"]
+    B[TaskCard] --"Different Math"--> S2["1h 23m"]
+    C[Summary] --"No Refresh"--> S3["1.5h"]
+    end
+
+    subgraph After [Order: Single Source]
+    U[Unified TimeDisplay]
+
+    A & B & C --"Props: {seconds}"--> U
+    U --"Standard Formatter"--> OUT["01:23 / 1h 23m"]
+    end
+
+    style Before fill:#fef2f2,stroke:#ef4444,stroke-width:3px,rx:10
+    style After fill:#f0fdf4,stroke:#22c55e,stroke-width:3px,rx:10
+  </div>
+
+  <h3>Phase 2: Visual Consistency (Pulse)</h3>
+  <p><strong>Objective</strong>: Make the "Live" indicator consistent. We extracted the pulsing green dot logic.</p>
+  <div class="mermaid">
+    graph LR
+    subgraph DesignSystem [Shared Component]
+    Dot((PulsingDot))
+    end
+
+    subgraph Usage [Consumers]
+    RTB[RunningTasksBar]
+    ATI[ActiveTimersIndicator]
+    TP[TaskPane Header]
+    end
+
+    RTB & ATI & TP --"Imports"--> Dot
+
+    style Dot fill:#10b981,stroke:#059669,color:white,stroke-width:4px
+  </div>
+
+  <h3>Phase 3: The Great Split (Logic vs Presentation)</h3>
+  <p><strong>Objective</strong>: Decouple "Data Fetching" from "Time Formatting".</p>
+  <div class="mermaid">
+    graph LR
+    subgraph Old [Legacy Monolith]
+    direction TB
+    L[Logic: Fetch Store]
+    F[Format: Seconds]
+    R[Render: UI]
+    L --> F --> R
+    end
+
+    subgraph New [Specialized Units]
+    direction TB
+    TTD[TrackedTimeDisplay]
+    TSD[TimeStampDisplay]
+    end
+
+    Old ==>|Refactored into| New
+
+    TTD --"Smart Connection"--> Store[Board Store]
+    TTD --"Calculates"--> Net[Total Time + Live Session]
+
+    TSD -- "Pure Input" --> DateInput["Date Object / ISO String"]
+    TSD -- "Formats" --> TextOutput["Relative / Digital / Human"]
+
+    style Old fill:#f3f4f6,stroke:#9ca3af,stroke-dasharray: 5 5,stroke-width:2px,rx:10
+    style New fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px,rx:10
+  </div>
+
+  <h3>Phase 4: Smart Formatting & Logic</h3>
+  <p><strong>Objective</strong>: Enhance readability. We introduced context-aware formatting.</p>
+  <div class="mermaid">
+    flowchart LR
+    Input[TimeValue] --> Router{Context?}
+
+    Router --"Active Timer"--> Digital["01:30:05"]
+    Router --"Work Log"--> Duration["1h 30m"]
+    Router --"Timestamp"--> Relative["2 days ago"]
+
+    subgraph Formatter [formatRelativeTime.ts]
+    Router
+    end
+
+    style Digital fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,rx:5
+    style Duration fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,rx:5
+    style Relative fill:#fdf4ff,stroke:#c026d3,stroke-width:2px,rx:5
+  </div>
+
+  <h3>Phase 5: Integration & Cleanup</h3>
+  <p><strong>Objective</strong>: Remove boilerplate from consumers. We moved heavy lifting into the components.</p>
+  <div class="mermaid">
+    graph LR
+    subgraph Legacy_Implementation [Legacy Boilerplate]
+    Hook[useElapsedTimer]
+    Math[Sum = Bound + Elapsed]
+    UI["&lt;span&gt;{format(Sum)}&lt;/span&gt;"]
+
+    Hook --> Math --> UI
+    end
+
+    subgraph Modern_Implementation [Declarative Component]
+    Comp["&lt;TrackedTimeDisplay scope='all' depth='recursive' /&gt;"]
+    end
+
+    Legacy_Implementation -.->|Replaced by| Modern_Implementation
+
+    style Modern_Implementation fill:#ecfccb,stroke:#84cc16,stroke-width:2px,rx:5
+  </div>
+
+  <h2>3. Current Architecture</h2>
+  <div class="mermaid">
+    classDiagram
+    direction LR
+
+    class TrackedTimeDisplay {
+    +taskId string
+    +scope User_All
+    +depth Task_Subtasks_Recursive
+    +format Human_Digital
+    +showStatusIndicator boolean
+    +activeRefreshInterval number
+    +refreshInterval() void
+    +calculateTotal() number
+    +render() JSX_Element
+    -useElapsedTimer() number
+    }
+
+    class TimeStampDisplay {
+    +date Date
+    +format Human_Digital
+    +activeRefreshInterval number
+    +className string
+    +showStatusIndicator boolean
+    +render() JSX_Element
+    -formatDuration() string
+    -formatRelative() string
+    }
+
+    class useTaskTimeTracking {
+    &lt;&lt;Hook&gt;&gt;
+    +sumBoundEntries BoundEntriesSum
+    +sumBoundEntriesForUser BoundEntriesSum
+    +sumBoundEntriesSubtask BoundEntriesSum
+    +sumBoundEntriesSubtasksForUser BoundEntriesSum
+    +runningEntryForUser Entry_null
+    +isRunning boolean
+    +canLogTime boolean
+    +startTimer() Promise
+    +stopTimer() Promise
+    +checkConflicts() Conflict_Array
+    +assignSelf() Promise
+    }
+
+    class BoardStore {
+    &lt;&lt;Store&gt;&gt;
+    +timeEntries Entry_Array
+    +tasks Task_Array
+    +users User_Array
+    +addTimeEntry()
+    +updateTimeEntry()
+    +removeTimeEntry()
+    }
+
+    TrackedTimeDisplay ..> useTaskTimeTracking : Consumes
+    TrackedTimeDisplay ..> TimeStampDisplay : Conceptually sibling
+    useTaskTimeTracking --|> BoardStore : Selects Data
+  </div>
+
+  <h2>4. Key Components Summary</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Type</th>
+        <th>Responsibility</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong><code>TrackedTimeDisplay</code></strong></td>
+        <td>Smart</td>
+        <td><strong>The Brain</strong>. Connects to store, calculates historic + live totals.</td>
+      </tr>
+      <tr>
+        <td><strong><code>TimeStampDisplay</code></strong></td>
+        <td>UI</td>
+        <td><strong>The Face</strong>. Displays dates in "Human" or "Digital" formats.</td>
+      </tr>
+      <tr>
+        <td><strong><code>PulsingDot</code></strong></td>
+        <td>Visual</td>
+        <td><strong>The Heartbeat</strong>. Standardized green pulsing indicator.</td>
+      </tr>
+      <tr>
+        <td><strong><code>useTaskTimeTracking</code></strong></td>
+        <td>Hook</td>
+        <td><strong>The Engine</strong>. Centralizes store connections & aggregations.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>5. Feature Development Timeline</h2>
+  <div class="mermaid">
+    gantt
+    title Dev Timeline (Detailed)
+    dateFormat YYYY-MM-DD
+    axisFormat %m-%d
+
+    section Foundation
+    Refactor ActiveTimers :done, A1, 2026-01-20, 1d
+    Fix Enum Mismatch :done, A2, 2026-01-21, 1d
+
+    section Refactoring
+    Navigation Bus Migration :done, B1, 2026-01-22, 1d
+    Centralize Timer Logic :done, B2, 2026-01-22, 1d
+    Standardize Time Display :done, B3, 2026-01-23, 1d
+
+    section The Split
+    Split TTD & TSD :done, C1, 2026-01-24, 1d
+    Smart Relative Formatting :done, C2, 2026-01-24, 1d
+
+    section Integration
+    TaskPaneSummary Refactor :done, D1, 2026-01-25, 1d
+    TaskTimeLog Cleanup :done, D2, 2026-01-25, 1d
+    Recursive Scope Logic :done, D3, 2026-01-25, 1d
+
+    section Polish
+    Subtasks View Fix :done, E1, 2026-01-26, 1d
+    Inline Due Date :active, E2, 2026-01-26, 1d
+  </div>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral', logLevel: 'debug', });
+  </script>
+</body>
+
+</html>

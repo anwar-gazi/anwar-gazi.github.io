@@ -1,0 +1,156 @@
+# TimeScale Performance Audit
+
+## Executive Summary
+
+The [TimeScale](file:///home/resgef/works/notion-clone/src/components/TimeScale.tsx#64-664) component has solid performance foundations but contains several areas that could cause frame drops under heavy load (500+ tasks or rapid scrolling).
+
+---
+
+## ✅ Optimizations Already in Place
+
+| Technique | Location | Impact |
+|-----------|----------|--------|
+| `useMemo` for data transforms | `visibleTasks`, `timeMarkers`, `unifiedCardPositions` | Prevents recalculation on unrelated state changes |
+| `useCallback` for handlers | `handleScroll`, `getAllTaskTimes` | Stable function references |
+| `React.memo` on [TimelineCard](file:///home/resgef/works/notion-clone/src/components/TimelineCard.tsx#30-179) | [TimelineCard.tsx:182](file:///home/resgef/works/notion-clone/src/components/TimelineCard.tsx#L182) | Prevents re-render of unchanged cards |
+| Manual Virtualization | `visibleSegments`, `visibleTaskPositions` | Only renders cards in viewport + buffer |
+| Ghost early-exit | [TimeScale.tsx:230](file:///home/resgef/works/notion-clone/src/components/TimeScale.tsx#L230) | `filters.hideGhosts` skips ghost card processing |
+| Serialized dependency keys | `timeModesKey`, `parentFilterKey` | Avoids `Set` comparison issues in React deps |
+
+---
+
+## ⚠️ Potential Issues
+
+### 1. **O(n²) Collision Detection**
+**Location**: [TimeScale.tsx:281-298](file:///home/resgef/works/notion-clone/src/components/TimeScale.tsx#L281-L298)
+
+```typescript
+const findFreeSlot = (y: number, height: number): number => {
+  // Loops through ALL occupiedSlots for EACH card
+  for (const occupied of occupiedSlots) { ... }
+}
+```
+
+**Problem**: With 500 cards, this becomes 500×500 = 250,000 comparisons.
+
+**Recommendation**: 
+- Pre-sort `occupiedSlots` by Y and use binary search.
+- Or use an interval tree data structure.
+
+---
+
+### 2. **Scroll Handler Triggers State on Every Frame**
+**Location**: [TimeScale.tsx:428-451](file:///home/resgef/works/notion-clone/src/components/TimeScale.tsx#L428-L451)
+
+```typescript
+const handleScroll = useCallback(() => {
+  setVisibleRange({ start: ..., end: ... }); // ← Every scroll event
+  setVisibleDate(newVisibleDate);
+}, [...]);
+```
+
+**Problem**: On 60fps scroll, this fires 60 times/second, each causing a state update.
+
+**Recommendations**:
+- Throttle using `requestAnimationFrame` or `lodash.throttle(16ms)`.
+- Check if new range differs significantly before calling `setVisibleRange`.
+
+```typescript
+// Example fix
+const handleScroll = useCallback(() => {
+  if (rafRef.current) return;
+  rafRef.current = requestAnimationFrame(() => {
+    // ... existing logic
+    rafRef.current = null;
+  });
+}, [...]);
+```
+
+---
+
+### 3. **timeMarkers Not Virtualized**
+**Location**: [TimeScale.tsx:591-619](file:///home/resgef/works/notion-clone/src/components/TimeScale.tsx#L591-L619)
+
+```typescript
+{timeMarkers.map(({ time, y }, i) => ( ... ))}
+```
+
+**Problem**: With 30-day view (720 hours / 2 = 360 markers), all 360 DOM nodes are rendered.
+
+**Recommendation**: Apply same virtualization filter:
+```typescript
+const visibleMarkers = timeMarkers.filter(m => 
+  m.y >= visibleRange.start && m.y <= visibleRange.end
+);
+```
+
+---
+
+### 4. **Date Object Creation in Hot Path**
+**Location**: [TimeScale.tsx:160-168](file:///home/resgef/works/notion-clone/src/components/TimeScale.tsx#L160-L168)
+
+```typescript
+if (filters.timeModes.has("logged") && task.startAt) {
+  results.push({ time: new Date(task.startAt), mode: "logged" });
+}
+```
+
+**Problem**: Creates new [Date](file:///home/resgef/works/notion-clone/src/components/TimeScalePanel.tsx#53-58) for every task on every filter change.
+
+**Recommendation**: Cache parsed dates in `tasksMap` at hydration time, or memoize per-task.
+
+---
+
+### 5. **Missing Dependency in `unifiedCardPositions`**
+**Location**: [TimeScale.tsx:400](file:///home/resgef/works/notion-clone/src/components/TimeScale.tsx#L400)
+
+```typescript
+}, [visibleTasks, timeEntriesMap, tasksMap, baseTime, rangeStart, rangeEnd, scrollDirection, HOUR_HEIGHT]);
+```
+
+**Problem**: Uses `filters.showImmediateParent`, `filters.showTopmostParent` in [getEstimatedHeight](file:///home/resgef/works/notion-clone/src/components/TimeScale.tsx#265-274) but these are not in deps.
+
+**Impact**: Card heights may be stale after filter toggle until another dep changes.
+
+**Fix**: Add `filters.showImmediateParent`, `filters.showTopmostParent`, `isMobile` to deps.
+
+---
+
+### 6. **Task Count Effect Runs on Every visibleTasks Change**
+**Location**: [TimeScale.tsx:497-511](file:///home/resgef/works/notion-clone/src/components/TimeScale.tsx#L497-L511)
+
+```typescript
+useEffect(() => {
+  const dayCount = visibleTasks.filter(...).length;
+  onTaskCountsChange(dayCount, ...);
+}, [visibleTasks, ...]);
+```
+
+**Problem**: `visibleTasks.filter()` iterates all tasks on every scroll (since `visibleDate` changes).
+
+**Recommendation**: Debounce or only recalc when `visibleDate` day changes.
+
+---
+
+## 📊 Performance Budget
+
+| Metric | Current | Target |
+|--------|---------|--------|
+| Cards rendered | ~50-100 (virtualized) | ✅ Good |
+| Markers rendered | ~360 (not virtualized) | <50 |
+| Collision check ops | O(n²) | O(n log n) |
+| State updates/scroll | ~60/sec | <4/sec |
+
+---
+
+## 🚀 Quick Wins (Low Effort, High Impact)
+
+1. **Throttle `handleScroll`** — Add RAF wrapper (~10 min)
+2. **Virtualize `timeMarkers`** — Copy existing pattern (~5 min)
+3. **Add missing deps** to `unifiedCardPositions` (~2 min)
+
+## 📈 Future Optimizations
+
+1. Implement interval tree for collision detection
+2. Cache parsed dates at data layer
+3. Web Worker for heavy layout calculations

@@ -3,7 +3,7 @@
 
   async function fetchCv() {
     try {
-      const res = await fetch('/cv.json', { cache: 'no-store', credentials: 'same-origin' });
+      const res = await fetch('cv.json', { cache: 'no-store', credentials: 'same-origin' });
       if (!res.ok) return null;
       return await res.json();
     } catch (err) {
@@ -40,7 +40,7 @@
     domains.forEach(([name, detail], idx) => {
       const card = document.createElement('div');
       card.className = 'service-card';
-      const icon = ['💻','🧭','🛠️','📈','🔒','⚡','📦','☎️','🩺'][idx % 9];
+      const icon = ['💻', '🧭', '🛠️', '📈', '🔒', '⚡', '📦', '☎️', '🩺'][idx % 9];
       const url = detail?.url || '#';
       const summary = detail?.summary || 'Hands-on delivery across this domain.';
       card.innerHTML = `
@@ -70,13 +70,13 @@
         <h5>${group.replace(/([A-Z])/g, ' $1').trim()}</h5>
         <div class="skill-tags">
           ${tags.map(([name, info]) => {
-            const href = info?.url || '#';
-            const title = info?.summary ? ` title="${info.summary.replace(/"/g, '&quot;')}"` : '';
-            const isLink = info?.url;
-            return isLink
-              ? `<a class="tag" href="${href}" target="_blank" rel="noreferrer"${title}>${name} ↗</a>`
-              : `<span class="tag"${title}>${name}</span>`;
-          }).join('')}
+        const href = info?.url || '#';
+        const title = info?.summary ? ` title="${info.summary.replace(/"/g, '&quot;')}"` : '';
+        const isLink = info?.url;
+        return isLink
+          ? `<a class="tag" href="${href}" target="_blank" rel="noreferrer"${title}>${name} ↗</a>`
+          : `<span class="tag"${title}>${name}</span>`;
+      }).join('')}
         </div>
       `;
       container.appendChild(card);
@@ -148,7 +148,7 @@
   async function hydrate() {
     const cv = await fetchCv();
     if (!cv) {
-      window.location.href = '/index.static.html';
+      window.location.href = 'index.static.html';
       return;
     }
     setContact(cv);

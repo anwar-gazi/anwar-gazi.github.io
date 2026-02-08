@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Migration Report: Task Event Bus</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js"></script>
+  <link rel="stylesheet" href="../cta-bot.css" />
+  <script src="../cta-bot.js" defer></script>
+  <script src="case-data.js" defer></script>
+  <script src="mega-header.js" defer></script>
+  <link rel="stylesheet" href="narrative.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+
+    pre,
+    code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .chapter-number {
+      font-size: 5rem;
+      line-height: 1;
+      font-weight: 800;
+      color: #cbd5e1;
+      position: absolute;
+      left: -1rem;
+      opacity: 0.3;
+      z-index: 0;
+      user-select: none;
+    }
+
+    .section-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .metric-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 1px solid #bae6fd;
+      border-radius: 8px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0284c7;
+    }
+
+    .metric-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #0369a1;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.5rem;
+    }
+
+    code.inline {
+      background: #f1f5f9;
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      color: #ef4444;
+    }
+
+    /* Mermaid styling override */
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      background: #f8fafc;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+  <div class="container">
+
+    <!-- Hero -->
+    <header class="bg-white border-b py-16 px-4 mb-12">
+      <div class="max-w-4xl mx-auto text-center">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold mb-4 border border-emerald-100">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          MIGRATION COMPLETE
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6">
+          Event Bus Architecture
+          <span class="block text-slate-400 font-normal mt-2 text-3xl">Decoupling State from Navigation</span>
+        </h1>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          A technical analysis of the architectural shift from prop-drilling to a singleton Event Bus pattern for task
+          navigation, improving modularity and maintenance.
+        </p>
+        <div class="mt-8 flex gap-4 justify-center text-sm font-medium text-slate-500">
+          <span>Use Case: Task Management</span>
+          <span>•</span>
+          <span>Pattern: Publish-Subscribe</span>
+          <span>•</span>
+          <span>Language: TypeScript</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 pb-24">
+
+      <!-- Abstract / Metrics -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+        <div class="metric-card">
+          <span class="metric-value">11</span>
+          <span class="metric-label">Components Refactored</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">100%</span>
+          <span class="metric-label">Prop Drilling Removed</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">O(1)</span>
+          <span class="metric-label">Access Complexity</span>
+        </div>
+      </div>
+
+      <!-- 1. Problem Statement -->
+      <section class="section-card">
+        <span class="chapter-number">01</span>
+        <div class="relative z-10 pl-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-4">The Coupling Problem</h2>
+          <div class="prose prose-slate max-w-none text-slate-600">
+            <p class="mb-4">
+              Prior to this migration, the application relied on a pattern of <strong>Prop Drilling</strong> to handle
+              task navigation. The functionality to "Open a Task" was passed down from the root layout through multiple
+              intermediate layers (`Board` → `Column` → `TaskCard`).
+            </p>
+            <p class="mb-6">
+              This created rigid coupling: leaf components like `TaskCard` could not function without being explicitly
+              wired by their parents, making refactoring difficult and new features (like global command palettes) hard
+              to
+              integrate.
+            </p>
+
+            <div class="bg-rose-50 border border-rose-100 rounded-lg p-6 mb-4">
+              <h3 class="text-rose-900 font-semibold mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Legacy Architecture: High Coupling
+              </h3>
+              <div class="mermaid">
+                graph TD
+                Root["Page Root"] -->|onOpenTask| Board
+                Board -->|onOpenTask| Column
+                Column -->|onOpenTask| TaskCard
+                Search["Global Search"] -.->|"Direct Store Access?"| Store
+                TaskCard -->|onClick| Store["Zustand Store"]
+
+                style Root fill:#fecdd3,stroke:#e11d48
+                style Board fill:#fecdd3,stroke:#e11d48
+                style Column fill:#fecdd3,stroke:#e11d48
+                style TaskCard fill:#fecdd3,stroke:#e11d48
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. The Solution -->
+      <section class="section-card">
+        <span class="chapter-number">02</span>
+        <div class="relative z-10 pl-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-4">The Solution: Event Bus</h2>
+          <div class="prose prose-slate max-w-none text-slate-600">
+            <p class="mb-4">
+              We implemented a lightweight, type-safe <strong>Event Bus (Singleton)</strong> services. This decoupled
+              the
+              <em>producers</em> (components that want to open a task) from the <em>consumers</em> (components that need
+              to react, like the URL router or the Task Pane UI).
+            </p>
+
+            <div class="bg-slate-900 text-slate-50 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-6">
+              <pre>// src/services/client/TaskEventBus.ts
+type TaskEvents = {
+  "open": (taskId: string) => void;
+  "close": () => void;
+};
+
+export const taskEventBus = new TaskEventBus();</pre>
+            </div>
+
+            <div class="bg-emerald-50 border border-emerald-100 rounded-lg p-6">
+              <h3 class="text-emerald-900 font-semibold mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                New Architecture: Decoupled Events
+              </h3>
+              <div class="mermaid">
+                graph LR
+                subgraph Producers
+                TC["TaskCard"]
+                SB["SearchBar"]
+                CP["CommandPalette"]
+                end
+
+                subgraph Bus["Singleton Service"]
+                EB(("TaskEventBus"))
+                end
+
+                subgraph Consumers
+                Router["URL Router"]
+                Shell["TaskPane UI"]
+                end
+
+                TC -->|emit 'open'| EB
+                SB -->|emit 'open'| EB
+                CP -->|emit 'open'| EB
+
+                EB -.->|notify| Router
+                EB -.->|notify| Shell
+
+                Router -->|pushState| URL["/board?task=123"]
+                Shell -->|render| UI["Slide-over Panel"]
+
+                style EB fill:#34d399,stroke:#065f46,color:white
+                style Producers fill:transparent,stroke-dasharray: 5,5
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Orchestration Flow -->
+      <section class="section-card">
+        <span class="chapter-number">03</span>
+        <div class="relative z-10 pl-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-4">Orchestration & Data Flow</h2>
+          <div class="prose prose-slate max-w-none text-slate-600">
+            <p class="mb-6">
+              A critical requirement was maintaining <strong>URL Synchronization</strong> (Deep Linking). The Event Bus
+              acts as the central hub, notifying the routing hook (`useBoardRouting`) to update the URL as a side
+              effect,
+              while simultaneously telling the UI to render the pane.
+            </p>
+
+            <h3 class="text-lg font-semibold text-slate-800 mb-2">Sequence Diagram: User Interaction</h3>
+            <div class="mermaid">
+              sequenceDiagram
+              participant User
+              participant TaskCard
+              participant TaskEventBus
+              participant TaskPaneShell
+              participant useBoardRouting
+              participant BrowserURL
+
+              User->>TaskCard: Click Task #123
+              TaskCard->>TaskEventBus: emit("open", "123")
+
+              par Handle UI
+              TaskEventBus->>TaskPaneShell: listener("123")
+              TaskPaneShell->>TaskPaneShell: setActiveTaskId("123")
+              TaskPaneShell->>User: Render Slide-over
+              and Handle URL
+              TaskEventBus->>useBoardRouting: listener("123")
+              useBoardRouting->>BrowserURL: setTaskUrl("123")
+              end
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Implementation Details -->
+      <section class="section-card">
+        <span class="chapter-number">04</span>
+        <div class="relative z-10 pl-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-4">Refactoring Impact</h2>
+          <div class="prose prose-slate max-w-none text-slate-600">
+            <p class="mb-4">
+              The refactoring touched <code class="inline">GlobalTaskSearch</code>, <code
+                class="inline">CommandPalette</code>, and <code class="inline">RunningTasksBar</code>, removing
+              redundant
+              logic and unifying behavior.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <div class="bg-slate-50 p-4 rounded-lg border">
+                <h4 class="font-bold text-slate-700 mb-2 border-b pb-2">Before: Prop Drilling</h4>
+                <ul class="list-disc list-inside text-sm space-y-2 text-slate-600">
+                  <li>Parent must pass callbacks</li>
+                  <li>Nested components depend on props</li>
+                  <li>Refactoring requires touching entire tree</li>
+                  <li>Hard to trigger from outside components</li>
+                </ul>
+              </div>
+              <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+                <h4 class="font-bold text-emerald-800 mb-2 border-b border-emerald-200 pb-2">After: Event Bus</h4>
+                <ul class="list-disc list-inside text-sm space-y-2 text-emerald-700">
+                  <li><strong>Zero</strong> dependencies on parent</li>
+                  <li>Import and emit anywhere</li>
+                  <li>Type-safe event payloads</li>
+                  <li>Single source of truth for navigation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="text-center pb-12 text-slate-400 text-sm">
+      Generated by Antigravity Agent &bull; 2026 Resgef Systems
+    </footer>
+
+    <script>
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'neutral',
+        fontFamily: 'Inter',
+        securityLevel: 'loose',
+        flowchart: { curve: 'basis' }
+      });
+    </script>
+</body>
+
+</html><cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com"
+  phone="+8801716734974" audio-play="true"></cta-bot>

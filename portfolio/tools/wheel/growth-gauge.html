@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Growth Gauge Wheel</title>
@@ -23,8 +24,10 @@
       background: #0f172a;
       color: #e5e7eb;
       padding: 16px;
-      overflow-x: hidden;          /* 🔹 stop horizontal scrollbar */
-      overscroll-behavior: contain; /* 🔹 reduce bounce/scroll wiggle on mobile */
+      overflow-x: hidden;
+      /* 🔹 stop horizontal scrollbar */
+      overscroll-behavior: contain;
+      /* 🔹 reduce bounce/scroll wiggle on mobile */
     }
 
     .page {
@@ -87,7 +90,8 @@
       justify-content: center;
       touch-action: none;
       position: relative;
-      overflow: hidden;  /* 🔹 clip any visual overflow from rotation */
+      overflow: hidden;
+      /* 🔹 clip any visual overflow from rotation */
     }
 
     .wheel {
@@ -161,8 +165,10 @@
       height: 4px;
       background: #f97316;
       border-radius: 999px;
-      transform-origin: 0% 50%; /* start at center */
-      transform: rotate(180deg); /* point left */
+      transform-origin: 0% 50%;
+      /* start at center */
+      transform: rotate(180deg);
+      /* point left */
       z-index: 3;
       pointer-events: none;
       box-shadow: 0 0 8px rgba(249, 115, 22, 0.7);
@@ -259,6 +265,7 @@
         opacity: 0;
         transform: translateY(4px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -278,7 +285,9 @@
     }
 
     @keyframes cursorBlink {
-      50% { opacity: 0; }
+      50% {
+        opacity: 0;
+      }
     }
 
     /* Mobile-friendly layout */
@@ -314,6 +323,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="page">
     <div class="hint">Drag the wheel to rotate levels. Choose a deck to see tailored growth advice.</div>
@@ -1193,11 +1203,13 @@
 
       /* ---------------- Initial render ---------------- */
 
-      loadState(); 
+      loadState();
       updateSelectedLevelFromRotation(); // sets level 1 and monitor initially
     })();
   </script>
 
-  <cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com" phone="+8801716734974" audio-play="true"></cta-bot>
+  <cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com"
+    phone="+8801716734974" audio-play="true"></cta-bot>
 </body>
+
 </html>

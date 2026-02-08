@@ -1,0 +1,158 @@
+# Architecture Plan: Full Data Access Migration (Retire Direct Prisma)
+
+## 0. Executive Summary
+**Goal**: Fully eliminate direct `prisma.*` calls from the application layer (API Routes, Actions, Components).
+**Pattern**: Specialized Ports & Adapters (Hybrid).
+**Outcome**: A modular, testable, and database-agnostic core application.
+
+---
+
+## 1. Domain Analysis & Repository Scope
+Based on codebase analysis, we identified 7 distinct domains requiring repositories.
+
+| Domain | Scope | Entities Managed | Status |
+| :--- | :--- | :--- | :--- |
+| **Tasks** | Core Task Management | [Task](file:///home/resgef/works/notion-clone/src/types/domain/task.ts#1-14), `TaskAssignee`, `TaskActionLog`, `Subtasks` | 🟡 Partial |
+| **Users** | Identity & Auth | `User`, `Account`, `Session` | 🔴 Missing |
+| **Boards** | Project Structure | [Board](file:///home/resgef/works/notion-clone/src/repositories/ITaskRepository.ts#4-8), `Column`, `Membership`, `Sprint` | 🔴 Missing |
+| **Organizations** | Tenants | `Organization`, `OrganizationMember` | 🔴 Missing |
+| **Comments** | Collaboration | `TaskComment` | 🔴 Missing |
+| **Time** | Work Logs | `TaskTimeEntry` | 🔴 Missing (Mixed in Task) |
+| **Tags** | Metadata | `Tag`, `TaskTag` | 🔴 Missing |
+
+---
+
+## 2. Architecture Visualizations
+
+### A. The Target Architecture
+The application layer (API Routes) talks **only** to Interfaces.
+
+```mermaid
+graph TD
+    subgraph "Application Layer"
+        API["API Routes / Server Actions"]
+    end
+
+    subgraph "Domain Layer (Interfaces)"
+        ITask["ITaskRepository"]
+        IUser["IUserRepository"]
+        IBoard["IBoardRepository"]
+    end
+
+    subgraph "Infrastructure Layer (Implementations)"
+        PrismaTask["PrismaTaskRepository"]
+        PrismaUser["PrismaUserRepository"]
+        PrismaBoard["PrismaBoardRepository"]
+        PrismaClient[("Prisma Client (Global)")]
+    end
+
+    API --> ITask
+    API --> IUser
+    API --> IBoard
+
+    ITask -.-> PrismaTask
+    IUser -.-> PrismaUser
+    IBoard -.-> PrismaBoard
+
+    PrismaTask --> PrismaClient
+    PrismaUser --> PrismaClient
+    PrismaBoard --> PrismaClient
+
+    classDef interface fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef impl fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
+    class ITask,IUser,IBoard interface;
+    class PrismaTask,PrismaUser,PrismaBoard impl;
+```
+
+### B. Request Flow (Example: Assign User to Task)
+
+```mermaid
+sequenceDiagram
+    participant Ctrl as API Route (POST /assign)
+    participant Repo as TaskRepository
+    participant DB as Prisma Client
+    participant Log as Logger (ActionLog)
+
+    Ctrl->>Repo: assignUser(taskId, userId)
+    
+    rect rgb(240, 240, 255)
+        Note right of Repo: Transaction Boundary
+        Repo->>DB: create(TaskAssignee)
+        Repo->>DB: create(TaskActionLog)
+    end
+    
+    DB-->>Repo: Success
+    Repo-->>Ctrl: Updated Task
+    Ctrl-->>Client: 200 OK
+```
+
+---
+
+## 3. Detailed Implementation Plan
+
+### Phase 1: Foundation (Completed)
+- [x] Define [ITaskRepository](file:///home/resgef/works/notion-clone/src/repositories/ITaskRepository.ts#3-29)
+- [x] Implement [PrismaTaskRepository](file:///home/resgef/works/notion-clone/src/repositories/prisma/PrismaTaskRepository.ts#5-63) base
+- [x] Verify connectivity
+
+### Phase 2: Domain Boundary Definition & Implementation
+We will implement strictly typed interfaces for each domain.
+
+#### 2.1 User Domain
+**Interface**: `IUserRepository`
+- [findById(id)](file:///home/resgef/works/notion-clone/src/repositories/prisma/PrismaTaskRepository.ts#24-36)
+- `findByEmail(email)`
+- [create(data)](file:///home/resgef/works/notion-clone/src/repositories/prisma/PrismaTaskRepository.ts#37-48)
+- [update(id, data)](file:///home/resgef/works/notion-clone/src/repositories/ITaskRepository.ts#19-23)
+
+#### 2.2 Board Domain
+**Interface**: `IBoardRepository`
+- [findById(id)](file:///home/resgef/works/notion-clone/src/repositories/prisma/PrismaTaskRepository.ts#24-36)
+- `getWorkspaceBoards(workspaceId)`
+- `getColumns(boardId)`
+- `createColumn(boardId, data)`
+- `getMembers(boardId)`
+
+#### 2.3 Organization Domain
+**Interface**: `IOrganizationRepository`
+- [findById(id)](file:///home/resgef/works/notion-clone/src/repositories/prisma/PrismaTaskRepository.ts#24-36)
+- `getMembers(orgId)`
+- `addMember(orgId, userId, role)`
+
+#### 2.4 Time & Comments (Support Domains)
+**Interface**: `ITimeEntryRepository`, `ICommentRepository`
+- Decouple these from the massive Controller logic.
+
+---
+
+### Phase 3: The "Big Migration" (Route by Route)
+We will retire Prisma calls by refactoring API routes to use the new repositories.
+
+#### Strategy:
+1.  **Instantiate**: Initialize repositories at the top of the route.
+2.  **Replace**: Swap `prisma.model.method` with `repo.method`.
+3.  **Verify**: Test the route.
+4.  **Cleanup**: Remove unused prisma imports.
+
+#### Priority Order:
+1.  **User/Auth** (`/api/register`, `/api/users`): Low complexity, high reuse.
+2.  **Boards** (`/api/boards`): Medium complexity.
+3.  **Tasks** (`/api/tasks`): High complexity (Transactional logic).
+
+---
+
+## 4. Addressing Transactions
+Many API routes use `prisma.$transaction`.
+**Solution**: The Repository pattern must support transactional consistency without leaking Prisma details.
+
+**Approach**:
+We will group transactional operations into semantic Repository methods.
+*   *Old*: Controller calls `$transaction([createAssignee, createLog])`
+*   *New*: Controller calls `repo.assignUser(taskId, userId)` -> Repository manages the transaction internally.
+
+---
+
+## 5. Verification & Testing
+For each migrated domain:
+1.  **Unit Test**: Verify Repository methods (via script).
+2.  **Integration Test**: Verify API Route returns 200 OK and correct data.

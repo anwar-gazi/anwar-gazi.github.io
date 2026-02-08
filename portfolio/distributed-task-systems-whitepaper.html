@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture of Distributed Task Systems - Technical Whitepaper</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../cta-bot.css" />
+    <script src="../cta-bot.js" defer></script>
+    <script src="case-data.js" defer></script>
+    <script src="mega-header.js" defer></script>
+    <link rel="stylesheet" href="narrative.css" />
+    <style>
+        :root {
+            --bg-primary: #fafaf9;
+            --bg-secondary: #f5f5f4;
+            --bg-code: #1c1917;
+            --text-primary: #1c1917;
+            --text-secondary: #57534e;
+            --text-tertiary: #78716c;
+            --accent-primary: #dc2626;
+            --accent-secondary: #ea580c;
+            --border-color: #e7e5e4;
+            --sidebar-bg: #ffffff;
+            --code-keyword: #f97316;
+            --code-string: #22c55e;
+            --code-comment: #94a3b8;
+            --code-function: #3b82f6;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #171717;
+            --bg-code: #0f0f0f;
+            --text-primary: #fafafa;
+            --text-secondary: #a8a29e;
+            --text-tertiary: #78716c;
+            --accent-primary: #ef4444;
+            --accent-secondary: #f97316;
+            --border-color: #292524;
+            --sidebar-bg: #141414;
+            --code-keyword: #fb923c;
+            --code-string: #4ade80;
+            --code-comment: #64748b;
+            --code-function: #60a5fa;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 19px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: 0;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 48px 32px;
+            overflow-y: auto;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: -0.02em;
+            color: var(--accent-primary);
+            margin-bottom: 48px;
+            text-transform: uppercase;
+        }
+
+        .toc {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 8px;
+        }
+
+        .toc-link {
+            display: block;
+            font-size: 15px;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-family: 'Crimson Pro', serif;
+            font-weight: 400;
+        }
+
+        .toc-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .toc-link.active {
+            color: var(--accent-primary);
+            background: var(--bg-secondary);
+            font-weight: 600;
+        }
+
+        .toc-subsection {
+            list-style: none;
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .toc-subsection .toc-link {
+            font-size: 14px;
+            padding: 6px 12px;
+        }
+
+        .main-content {
+            padding: 80px 80px 120px 80px;
+            max-width: 900px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 32px;
+            right: 32px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .header {
+            margin-bottom: 80px;
+            border-bottom: 2px solid var(--accent-primary);
+            padding-bottom: 48px;
+        }
+
+        .title {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            font-style: italic;
+            margin-bottom: 32px;
+        }
+
+        .metadata {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            color: var(--text-tertiary);
+            display: flex;
+            gap: 24px;
+        }
+
+        .section {
+            margin-bottom: 96px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .section:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .section:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            margin-top: 0;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .section-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            color: var(--accent-primary);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        h3 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 48px 0 20px 0;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        h4 {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 32px 0 16px 0;
+            color: var(--text-secondary);
+        }
+
+        p {
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            background: var(--bg-secondary);
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: var(--accent-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        pre {
+            background: var(--bg-code);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+            overflow-x: auto;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        pre code {
+            background: transparent;
+            border: none;
+            padding: 0;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #e2e8f0;
+            display: block;
+        }
+
+        .code-label {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.1em;
+        }
+
+        .diagram-container {
+            margin: 48px 0;
+            padding: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .diagram-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 24px;
+        }
+
+        ul,
+        ol {
+            margin: 24px 0;
+            padding-left: 32px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .callout {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-primary);
+            padding: 24px 32px;
+            margin: 32px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: var(--accent-primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 32px 0;
+            font-size: 17px;
+        }
+
+        th,
+        td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .footer {
+            margin-top: 120px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-tertiary);
+            font-size: 15px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                padding: 48px 32px;
+            }
+
+            .title {
+                font-size: 40px;
+            }
+        }
+
+        /* Syntax highlighting */
+        .keyword {
+            color: var(--code-keyword);
+            font-weight: 500;
+        }
+
+        .string {
+            color: var(--code-string);
+        }
+
+        .comment {
+            color: var(--code-comment);
+            font-style: italic;
+        }
+
+        .function {
+            color: var(--code-function);
+        }
+
+        .number {
+            color: #a78bfa;
+        }
+
+        .operator {
+            color: #cbd5e1;
+        }
+
+        /* Mermaid diagram styling */
+        .mermaid {
+            background: transparent;
+        }
+
+        [data-theme="dark"] .mermaid {
+            filter: invert(0.9) hue-rotate(180deg);
+        }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <span id="theme-icon">☀️</span> Toggle Theme
+    </button>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">DTS/WhitePaper</div>
+            <nav>
+                <ul class="toc">
+                    <li class="toc-item">
+                        <a href="#section1" class="toc-link">Section 1: Laravel Queue Internals</a>
+                        <ul class="toc-subsection">
+                            <li class="toc-item"><a href="#lifecycle" class="toc-link">Worker Lifecycle</a></li>
+                            <li class="toc-item"><a href="#signal-handling" class="toc-link">Signal Handling</a></li>
+                            <li class="toc-item"><a href="#memory-management" class="toc-link">Memory Management</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#section2" class="toc-link">Section 2: Go vs. Rust Orchestration</a>
+                        <ul class="toc-subsection">
+                            <li class="toc-item"><a href="#go-architecture" class="toc-link">Go GMP Scheduler</a></li>
+                            <li class="toc-item"><a href="#rust-architecture" class="toc-link">Rust Work-Stealing</a>
+                            </li>
+                            <li class="toc-item"><a href="#performance-comparison" class="toc-link">Performance
+                                    Analysis</a></li>
+                        </ul>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#section3" class="toc-link">Section 3: Production Scenarios</a>
+                        <ul class="toc-subsection">
+                            <li class="toc-item"><a href="#dead-letter" class="toc-link">Dead Letter Queues</a></li>
+                            <li class="toc-item"><a href="#poison-pill" class="toc-link">Poison Pill Jobs</a></li>
+                            <li class="toc-item"><a href="#backoff" class="toc-link">Exponential Backoff</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <main class="main-content">
+                <mega-header>
+                    <div slot="brand-content">
+                        <div class="brand-text-main">Distributed Task Systems</div>
+                        <div class="brand-text-sub">System Design Whitepaper</div>
+                    </div>
+                    <div slot="right-content" class="header-actions">
+                        <div class="pill">Architecture • 2024</div>
+                        <button class="btn-primary" id="openSummaryBtn">
+                            <span>☰</span> One-Page Summary
+                        </button>
+                    </div>
+                </mega-header>
+
+                <!-- SECTION 1 -->
+                <section id="section1" class="section">
+                    <span class="section-number">Section 01</span>
+                    <h2>Laravel Queue Worker Lifecycle: Deep Internals</h2>
+
+                    <p>Laravel's queue system represents a sophisticated abstraction layer over various queue backends
+                        (Redis, Beanstalkd, SQS, Database). At its core, the queue worker is a long-running PHP process
+                        that continuously polls for jobs and executes them. Understanding its lifecycle, particularly
+                        around signal handling and memory management, is critical for production deployments.</p>
+
+                    <h3 id="lifecycle">The Worker Lifecycle</h3>
+
+                    <p>The Laravel queue worker operates as a daemon process managed by the
+                        <code>Illuminate\Queue\Worker</code> class. The lifecycle begins with initialization and enters
+                        an infinite loop that continues until explicitly terminated or a failure condition occurs.
+                    </p>
+
+                    <div class="diagram-container">
+                        <div class="diagram-title">Figure 1.1: Laravel Job Lifecycle - Dispatch to Completion</div>
+                        <div class="mermaid">
+                            sequenceDiagram
+                            participant App as Application
+                            participant Dispatcher as Queue Dispatcher
+                            participant Queue as Queue Backend
+                            participant Worker as Queue Worker
+                            participant Job as Job Handler
+                            participant DB as Database
+
+                            App->>Dispatcher: dispatch(new ProcessOrder($order))
+                            Dispatcher->>Dispatcher: serialize($job)
+                            Dispatcher->>Queue: push($serializedJob)
+                            Note over Queue: Job stored in queue<br />(Redis/SQS/DB)
+
+                            Worker->>Worker: daemon() loop
+                            Worker->>Queue: pop() - blocking read
+                            Queue-->>Worker: $serializedJob
+                            Worker->>Worker: unserialize($job)
+                            Worker->>Worker: registerTimeoutHandler()
+                            Worker->>Worker: markJobAsStarted()
+
+                            Worker->>Job: handle()
+                            Job->>DB: process order logic
+                            DB-->>Job: success
+                            Job-->>Worker: return
+
+                            Worker->>Worker: markJobAsFinished()
+                            Worker->>Queue: delete($job)
+
+                            alt Memory threshold exceeded
+                            Worker->>Worker: stopWorkerIfLostConnection()
+                            Worker->>Worker: exit(0)
+                            end
+
+                            Worker->>Worker: Continue daemon() loop
+                        </div>
+                    </div>
+
+                    <h3 id="signal-handling">POSIX Signal Handling and Graceful Shutdown</h3>
+
+                    <p>Production queue workers must handle process signals elegantly to prevent job loss during
+                        deployments or server maintenance. Laravel utilizes PHP's <code>pcntl</code> extension for POSIX
+                        signal handling, specifically monitoring <strong>SIGTERM</strong>, <strong>SIGINT</strong>, and
+                        <strong>SIGQUIT</strong>.
+                    </p>
+
+                    <pre><code><span class="comment">// Illuminate\Queue\Worker::listenForSignals()</span>
+<span class="keyword">protected function</span> <span class="function">listenForSignals</span>()
+{
+    <span class="function">pcntl_async_signals</span>(<span class="keyword">true</span>);
+
+    <span class="function">pcntl_signal</span>(<span class="constant">SIGTERM</span>, <span class="keyword">function</span> () {
+        <span class="variable">$this</span>-><span class="property">shouldQuit</span> = <span class="keyword">true</span>;
+    });
+
+    <span class="function">pcntl_signal</span>(<span class="constant">SIGINT</span>, <span class="keyword">function</span> () {
+        <span class="variable">$this</span>-><span class="property">shouldQuit</span> = <span class="keyword">true</span>;
+    });
+
+    <span class="function">pcntl_signal</span>(<span class="constant">SIGALRM</span>, <span class="keyword">function</span> () {
+        <span class="variable">$this</span>-><span class="property">killed</span> = <span class="keyword">true</span>;
+    });
+}
+
+<span class="comment">// Main daemon loop checks the shouldQuit flag</span>
+<span class="keyword">public function</span> <span class="function">daemon</span>(<span class="variable">$connectionName</span>, <span class="variable">$queue</span>, WorkerOptions <span class="variable">$options</span>)
+{
+    <span class="variable">$this</span>-><span class="function">listenForSignals</span>();
+
+    <span class="variable">$lastRestart</span> = <span class="variable">$this</span>-><span class="function">getTimestampOfLastQueueRestart</span>();
+
+    <span class="keyword">while</span> (<span class="keyword">true</span>) {
+        <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="property">shouldQuit</span> || <span class="variable">$this</span>-><span class="function">queueShouldRestart</span>(<span class="variable">$lastRestart</span>)) {
+            <span class="variable">$this</span>-><span class="function">stop</span>(<span class="variable">$options</span>->stopWhenEmpty ? <span class="number">0</span> : <span class="number">12</span>);
+        }
+
+        <span class="variable">$this</span>-><span class="function">runNextJob</span>(<span class="variable">$connectionName</span>, <span class="variable">$queue</span>, <span class="variable">$options</span>);
+    }
+}</code></pre>
+
+                    <div class="callout">
+                        <div class="callout-title">Critical Implementation Detail</div>
+                        <p>The <code>pcntl_async_signals(true)</code> call enables asynchronous signal handling,
+                            allowing signals to interrupt the PHP process at any point. Without this, signals would only
+                            be handled at specific "tick" points in the PHP code, potentially causing delays in graceful
+                            shutdown.</p>
+                    </div>
+
+                    <h4>Signal Processing Flow</h4>
+
+                    <ol>
+                        <li><strong>SIGTERM Reception:</strong> When the system sends SIGTERM (typical during
+                            deployments), the signal handler sets <code>$shouldQuit = true</code></li>
+                        <li><strong>Current Job Completion:</strong> The worker completes the currently executing job to
+                            prevent partial processing</li>
+                        <li><strong>Clean Exit:</strong> After job completion, the loop condition evaluates to false,
+                            triggering <code>stop()</code> which performs cleanup and exits with code 0</li>
+                        <li><strong>Supervisor Restart:</strong> Process supervisors like systemd or Supervisor detect
+                            the exit and spawn a new worker instance</li>
+                    </ol>
+
+                    <h3 id="memory-management">Memory Leak Prevention and Worker Restart Strategies</h3>
+
+                    <p>Long-running PHP processes are particularly susceptible to memory leaks due to PHP's design as a
+                        request-response language. Laravel implements multiple strategies to mitigate this issue.</p>
+
+                    <h4>Memory Limit Enforcement</h4>
+
+                    <pre><code><span class="comment">// Worker options configuration</span>
+<span class="keyword">protected function</span> <span class="function">memoryExceeded</span>(<span class="variable">$memoryLimit</span>)
+{
+    <span class="keyword">return</span> (<span class="function">memory_get_usage</span>(<span class="keyword">true</span>) / <span class="number">1024</span> / <span class="number">1024</span>) >= <span class="variable">$memoryLimit</span>;
+}
+
+<span class="comment">// Checked after each job execution</span>
+<span class="keyword">public function</span> <span class="function">runNextJob</span>(<span class="variable">$connectionName</span>, <span class="variable">$queue</span>, WorkerOptions <span class="variable">$options</span>)
+{
+    <span class="variable">$job</span> = <span class="variable">$this</span>-><span class="function">getNextJob</span>(<span class="variable">$connectionName</span>, <span class="variable">$queue</span>);
+
+    <span class="keyword">if</span> (<span class="variable">$job</span>) {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="function">process</span>(<span class="variable">$connectionName</span>, <span class="variable">$job</span>, <span class="variable">$options</span>);
+    }
+
+    <span class="variable">$this</span>-><span class="function">sleep</span>(<span class="variable">$options</span>->sleep);
+
+    <span class="comment">// Critical: Check memory after each iteration</span>
+    <span class="keyword">if</span> (<span class="variable">$this</span>-><span class="function">memoryExceeded</span>(<span class="variable">$options</span>->memory)) {
+        <span class="variable">$this</span>-><span class="function">stop</span>(<span class="number">12</span>);
+    }
+}</code></pre>
+
+                    <h4>Connection Reset Strategy</h4>
+
+                    <p>Database and Redis connections can accumulate stale resources. Laravel automatically reconnects
+                        before processing each job:</p>
+
+                    <pre><code><span class="keyword">protected function</span> <span class="function">process</span>(<span class="variable">$connectionName</span>, <span class="variable">$job</span>, WorkerOptions <span class="variable">$options</span>)
+{
+    <span class="keyword">try</span> {
+        <span class="comment">// Reconnect to database and cache before each job</span>
+        <span class="variable">$this</span>-><span class="function">raiseBeforeJobEvent</span>(<span class="variable">$connectionName</span>, <span class="variable">$job</span>);
+
+        <span class="variable">$this</span>-><span class="function">markJobAsFailedIfAlreadyExceedsMaxAttempts</span>(
+            <span class="variable">$connectionName</span>, <span class="variable">$job</span>, <span class="variable">$options</span>->maxTries
+        );
+
+        <span class="variable">$job</span>-><span class="function">fire</span>();
+
+        <span class="variable">$this</span>-><span class="function">raiseAfterJobEvent</span>(<span class="variable">$connectionName</span>, <span class="variable">$job</span>);
+    } <span class="keyword">catch</span> (Exception <span class="variable">$e</span>) {
+        <span class="variable">$this</span>-><span class="function">handleJobException</span>(<span class="variable">$connectionName</span>, <span class="variable">$job</span>, <span class="variable">$options</span>, <span class="variable">$e</span>);
+    }
+}</code></pre>
+
+                    <h4>Cache and ORM Reset</h4>
+
+                    <p>Laravel's service container can accumulate resolved instances. The framework clears certain
+                        bindings between jobs to prevent memory bloat:</p>
+
+                    <ul>
+                        <li><strong>Database Connection Pool:</strong> Cleared and re-established</li>
+                        <li><strong>Event Listeners:</strong> Flushed to prevent duplicate registrations</li>
+                        <li><strong>Model Instance Cache:</strong> Eloquent model instances are cleared from memory</li>
+                        <li><strong>View Cache:</strong> Compiled view instances are released</li>
+                    </ul>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Memory Management Strategy</th>
+                                <th>Implementation</th>
+                                <th>Overhead</th>
+                                <th>Effectiveness</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Hard Memory Limit</td>
+                                <td>Exit when threshold exceeded</td>
+                                <td>Low</td>
+                                <td>High - Guaranteed protection</td>
+                            </tr>
+                            <tr>
+                                <td>Connection Reset</td>
+                                <td>Disconnect/reconnect per job</td>
+                                <td>Medium</td>
+                                <td>High - Prevents connection leaks</td>
+                            </tr>
+                            <tr>
+                                <td>Service Container Flush</td>
+                                <td>Clear resolved instances</td>
+                                <td>Low</td>
+                                <td>Medium - Reduces accumulation</td>
+                            </tr>
+                            <tr>
+                                <td>Job Count Restart</td>
+                                <td>Exit after N jobs processed</td>
+                                <td>Low</td>
+                                <td>Medium - Periodic cleanup</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout">
+                        <div class="callout-title">Production Recommendation</div>
+                        <p>In high-throughput production environments, set memory limits to 75-80% of available
+                            container memory with a maximum job count of 1000-2000 jobs before restart. This provides a
+                            safety margin while minimizing unnecessary restarts. Monitor actual memory usage patterns
+                            over 24-48 hours before finalizing these thresholds.</p>
+                    </div>
+                </section>
+
+                <!-- SECTION 2 -->
+                <section id="section2" class="section">
+                    <span class="section-number">Section 02</span>
+                    <h2>Comparative Analysis: Go vs. Rust for Job Orchestration</h2>
+
+                    <p>Building a high-throughput job orchestrator requires careful selection of runtime
+                        characteristics. Go and Rust represent two dominant paradigms: Go's runtime-managed concurrency
+                        with garbage collection versus Rust's compile-time guaranteed memory safety with zero-cost
+                        abstractions. This section provides an engineering-focused comparison.</p>
+
+                    <h3 id="go-architecture">Go's GMP Scheduler Architecture</h3>
+
+                    <p>Go's concurrency model centers on goroutines—lightweight threads multiplexed onto OS threads by
+                        the Go runtime scheduler. The scheduler implements an M:N threading model known as the
+                        <strong>GMP model</strong>: Goroutines (G) are scheduled onto Machine threads (M) via Processors
+                        (P).
+                    </p>
+
+                    <h4>GMP Component Breakdown</h4>
+
+                    <ul>
+                        <li><strong>G (Goroutine):</strong> A lightweight execution context with ~2KB initial stack. The
+                            stack grows dynamically via segmented stacks, allowing millions of concurrent goroutines.
+                        </li>
+                        <li><strong>M (Machine):</strong> An OS thread managed by the Go runtime. The number of M
+                            threads is typically bounded by GOMAXPROCS but can grow for blocking syscalls.</li>
+                        <li><strong>P (Processor):</strong> A scheduling context that holds a local run queue of
+                            goroutines. P count equals GOMAXPROCS (typically CPU count).</li>
+                    </ul>
+
+                    <pre><code><span class="comment">// High-throughput job processor in Go</span>
+<span class="keyword">package</span> main
+
+<span class="keyword">import</span> (
+    <span class="string">"context"</span>
+    <span class="string">"fmt"</span>
+    <span class="string">"runtime"</span>
+    <span class="string">"sync"</span>
+    <span class="string">"time"</span>
+)
+
+<span class="keyword">type</span> Job <span class="keyword">struct</span> {
+    ID      <span class="keyword">string</span>
+    Payload <span class="keyword">interface{}</span>
+    Retries <span class="keyword">int</span>
+}
+
+<span class="keyword">type</span> Orchestrator <span class="keyword">struct</span> {
+    workers   <span class="keyword">int</span>
+    jobQueue  <span class="keyword">chan</span> Job
+    wg        sync.WaitGroup
+    ctx       context.Context
+    cancel    context.CancelFunc
+}
+
+<span class="keyword">func</span> <span class="function">NewOrchestrator</span>(workers <span class="keyword">int</span>, queueSize <span class="keyword">int</span>) *Orchestrator {
+    ctx, cancel := context.<span class="function">WithCancel</span>(context.<span class="function">Background</span>())
+    <span class="keyword">return</span> &Orchestrator{
+        workers:  workers,
+        jobQueue: <span class="function">make</span>(<span class="keyword">chan</span> Job, queueSize),
+        ctx:      ctx,
+        cancel:   cancel,
+    }
+}
+
+<span class="keyword">func</span> (o *Orchestrator) <span class="function">Start</span>() {
+    <span class="comment">// Spawn worker goroutines</span>
+    <span class="keyword">for</span> i := <span class="number">0</span>; i < o.workers; i++ {
+        o.wg.<span class="function">Add</span>(<span class="number">1</span>)
+        <span class="keyword">go</span> o.<span class="function">worker</span>(i)
+    }
+}
+
+<span class="keyword">func</span> (o *Orchestrator) <span class="function">worker</span>(id <span class="keyword">int</span>) {
+    <span class="keyword">defer</span> o.wg.<span class="function">Done</span>()
+    
+    <span class="keyword">for</span> {
+        <span class="keyword">select</span> {
+        <span class="keyword">case</span> job := <-o.jobQueue:
+            o.<span class="function">processJob</span>(job)
+        <span class="keyword">case</span> <-o.ctx.<span class="function">Done</span>():
+            fmt.<span class="function">Printf</span>(<span class="string">"Worker %d shutting down\n"</span>, id)
+            <span class="keyword">return</span>
+        }
+    }
+}
+
+<span class="keyword">func</span> (o *Orchestrator) <span class="function">processJob</span>(job Job) {
+    <span class="comment">// Simulate work with potential blocking I/O</span>
+    time.<span class="function">Sleep</span>(<span class="number">10</span> * time.Millisecond)
+    
+    <span class="comment">// Runtime scheduler automatically handles blocking</span>
+    <span class="comment">// M thread is parked, goroutine migrates to another M</span>
+}
+
+<span class="keyword">func</span> (o *Orchestrator) <span class="function">Shutdown</span>() {
+    o.<span class="function">cancel</span>()
+    <span class="function">close</span>(o.jobQueue)
+    o.wg.<span class="function">Wait</span>()
+}</code></pre>
+
+                    <div class="diagram-container">
+                        <div class="diagram-title">Figure 2.1: Go Goroutine Lifecycle vs. Rust Thread Safety</div>
+                        <div class="mermaid">
+                            flowchart TD
+                            subgraph Go["Go GMP Scheduler"]
+                            G1[Goroutine 1] -->|Scheduled| P1[Processor 1]
+                            G2[Goroutine 2] -->|Scheduled| P1
+                            G3[Goroutine 3] -->|Scheduled| P2[Processor 2]
+                            P1 -->|Executes on| M1[OS Thread M1]
+                            P2 -->|Executes on| M2[OS Thread M2]
+
+                            G1 -.->|Blocks on I/O| Park[Parked]
+                            Park -.->|I/O Complete| G1
+                            Park -->|New M spawned| M3[OS Thread M3]
+
+                            RunQ[Global Run Queue] -->|Work Stealing| P1
+                            RunQ -->|Work Stealing| P2
+                            end
+
+                            subgraph Rust["Rust Work-Stealing Executor"]
+                            T1[Task 1] -->|Submit| WQ[Work Queue]
+                            T2[Task 2] -->|Submit| WQ
+                            T3[Task 3] -->|Submit| WQ
+
+                            WQ -->|Dispatch| Worker1[Worker Thread 1]
+                            WQ -->|Dispatch| Worker2[Worker Thread 2]
+
+                            Worker1 -->|Idle, Steals| Worker2Q[Worker 2 Queue]
+                            Worker2 -->|Idle, Steals| Worker1Q[Worker 1 Queue]
+
+                            Worker1 -->|Ownership Check| Borrow[Borrow Checker]
+                            Worker2 -->|Ownership Check| Borrow
+                            Borrow -->|Compile-Time| Safe[Memory Safe]
+                            end
+
+                            style Go fill:#00ADD8,stroke:#00728E,color:#fff
+                            style Rust fill:#CE422B,stroke:#8B1F1A,color:#fff
+                            style Safe fill:#4ade80,stroke:#22c55e,color:#000
+                        </div>
+                    </div>
+
+                    <h4>Work Stealing and Load Balancing</h4>
+
+                    <p>Each P maintains a local run queue of goroutines. When a P's local queue is empty, it attempts to
+                        steal goroutines from other P's queues (work stealing) or from the global run queue. This
+                        provides automatic load balancing without explicit programmer intervention.</p>
+
+                    <div class="callout">
+                        <div class="callout-title">GMP Scheduler Advantage</div>
+                        <p>The Go scheduler's work-stealing algorithm achieves excellent CPU utilization in
+                            heterogeneous workloads. When some goroutines block on I/O, the scheduler automatically
+                            redistributes work to other threads, maintaining high throughput without manual thread pool
+                            management.</p>
+                    </div>
+
+                    <h3 id="rust-architecture">Rust's Work-Stealing Executors (Tokio)</h3>
+
+                    <p>Rust's async ecosystem centers on the Tokio runtime, which implements a work-stealing executor
+                        based on the Crossbeam work-stealing deque. Unlike Go's runtime-managed approach, Rust requires
+                        explicit async/await syntax and provides zero-cost abstractions—the runtime overhead is minimal
+                        and predictable.</p>
+
+                    <h4>Tokio Runtime Architecture</h4>
+
+                    <pre><code><span class="comment">// High-throughput job processor in Rust with Tokio</span>
+<span class="keyword">use</span> tokio::sync::mpsc;
+<span class="keyword">use</span> tokio::task::JoinHandle;
+<span class="keyword">use</span> std::sync::Arc;
+<span class="keyword">use</span> std::time::Duration;
+
+<span class="keyword">struct</span> Job {
+    id: String,
+    payload: Vec<<span class="keyword">u8</span>>,
+    retries: <span class="keyword">u32</span>,
+}
+
+<span class="keyword">struct</span> Orchestrator {
+    workers: <span class="keyword">usize</span>,
+    job_tx: mpsc::Sender<Job>,
+    job_rx: Arc<tokio::sync::Mutex<mpsc::Receiver<Job>>>,
+}
+
+<span class="keyword">impl</span> Orchestrator {
+    <span class="keyword">fn</span> <span class="function">new</span>(workers: <span class="keyword">usize</span>, queue_size: <span class="keyword">usize</span>) -> <span class="keyword">Self</span> {
+        <span class="keyword">let</span> (tx, rx) = mpsc::channel(queue_size);
+        Orchestrator {
+            workers,
+            job_tx: tx,
+            job_rx: Arc::<span class="function">new</span>(tokio::sync::Mutex::<span class="function">new</span>(rx)),
+        }
+    }
+
+    <span class="keyword">async fn</span> <span class="function">start</span>(&<span class="keyword">self</span>) -> Vec<JoinHandle<()>> {
+        <span class="keyword">let mut</span> handles = Vec::<span class="function">new</span>();
+        
+        <span class="comment">// Spawn worker tasks</span>
+        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..<span class="keyword">self</span>.workers {
+            <span class="keyword">let</span> rx = Arc::<span class="function">clone</span>(&<span class="keyword">self</span>.job_rx);
+            
+            <span class="keyword">let</span> handle = tokio::<span class="function">spawn</span>(<span class="keyword">async move</span> {
+                <span class="keyword">loop</span> {
+                    <span class="comment">// Lock is held only during dequeue</span>
+                    <span class="keyword">let</span> job = {
+                        <span class="keyword">let mut</span> rx_guard = rx.<span class="function">lock</span>().<span class="keyword">await</span>;
+                        rx_guard.<span class="function">recv</span>().<span class="keyword">await</span>
+                    };
+
+                    <span class="keyword">match</span> job {
+                        Some(job) => <span class="keyword">Self</span>::<span class="function">process_job</span>(job).<span class="keyword">await</span>,
+                        None => {
+                            <span class="function">println!</span>(<span class="string">"Worker {} shutting down"</span>, i);
+                            <span class="keyword">break</span>;
+                        }
+                    }
+                }
+            });
+            
+            handles.<span class="function">push</span>(handle);
+        }
+        
+        handles
+    }
+
+    <span class="keyword">async fn</span> <span class="function">process_job</span>(job: Job) {
+        <span class="comment">// Async I/O without blocking OS thread</span>
+        tokio::time::<span class="function">sleep</span>(Duration::<span class="function">from_millis</span>(<span class="number">10</span>)).<span class="keyword">await</span>;
+        
+        <span class="comment">// Ownership ensures no data races at compile time</span>
+        <span class="comment">// Borrow checker prevents use-after-free</span>
+    }
+}</code></pre>
+
+                    <h4>Ownership and Zero-Cost Abstractions</h4>
+
+                    <p>Rust's ownership system guarantees memory safety and data race freedom at compile time. This
+                        eliminates entire classes of bugs common in concurrent systems:</p>
+
+                    <ul>
+                        <li><strong>No Data Races:</strong> The borrow checker prevents simultaneous mutable access to
+                            shared data</li>
+                        <li><strong>No Use-After-Free:</strong> Lifetimes ensure references never outlive their
+                            referents</li>
+                        <li><strong>No Null Pointer Derefs:</strong> Option and Result types make absence explicit</li>
+                        <li><strong>Zero Runtime Overhead:</strong> All safety checks occur at compile time; no runtime
+                            GC pauses</li>
+                    </ul>
+
+                    <h3 id="performance-comparison">Performance Analysis: Throughput and Latency</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Go (GMP)</th>
+                                <th>Rust (Tokio)</th>
+                                <th>Context</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Goroutine/Task Creation</td>
+                                <td>~200 ns</td>
+                                <td>~50 ns</td>
+                                <td>Rust tasks are cheaper due to no runtime overhead</td>
+                            </tr>
+                            <tr>
+                                <td>Context Switch</td>
+                                <td>~170 ns</td>
+                                <td>~120 ns</td>
+                                <td>Both significantly faster than OS thread switches (~1-2 μs)</td>
+                            </tr>
+                            <tr>
+                                <td>Memory per Unit</td>
+                                <td>~2 KB (goroutine)</td>
+                                <td>~300 bytes (task)</td>
+                                <td>Rust's zero-cost abstraction shows clear advantage</td>
+                            </tr>
+                            <tr>
+                                <td>GC Pause (P99)</td>
+                                <td>~1-5 ms</td>
+                                <td>N/A (no GC)</td>
+                                <td>Critical for latency-sensitive workloads</td>
+                            </tr>
+                            <tr>
+                                <td>Throughput (jobs/sec)</td>
+                                <td>~800K</td>
+                                <td>~950K</td>
+                                <td>16-core benchmark, I/O-bound jobs</td>
+                            </tr>
+                            <tr>
+                                <td>Tail Latency (P99.9)</td>
+                                <td>~8 ms</td>
+                                <td>~2 ms</td>
+                                <td>Rust's lack of GC provides more consistent latency</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>When to Choose Go</h4>
+
+                    <ul>
+                        <li><strong>Rapid Development:</strong> Go's simplicity and built-in concurrency primitives
+                            enable faster iteration</li>
+                        <li><strong>Dynamic Workloads:</strong> The runtime scheduler excels at adapting to varying job
+                            characteristics</li>
+                        <li><strong>Team Expertise:</strong> Go's gentler learning curve and extensive ecosystem (Redis
+                            clients, HTTP libraries) reduce onboarding time</li>
+                        <li><strong>Acceptable GC Pauses:</strong> For workloads where 1-5ms pauses are tolerable, Go's
+                            development velocity wins</li>
+                    </ul>
+
+                    <h4>When to Choose Rust</h4>
+
+                    <ul>
+                        <li><strong>Latency Requirements:</strong> Sub-millisecond P99.9 latency demands or strict SLA
+                            requirements favor Rust's predictability</li>
+                        <li><strong>Memory Constraints:</strong> Embedded systems or high-density deployments benefit
+                            from Rust's minimal overhead</li>
+                        <li><strong>Long-Running Services:</strong> Systems that cannot tolerate GC pauses (trading
+                            systems, real-time processing)</li>
+                        <li><strong>Memory Safety Guarantees:</strong> When correctness is paramount and runtime errors
+                            are unacceptable</li>
+                    </ul>
+
+                    <div class="callout">
+                        <div class="callout-title">Engineering Decision Framework</div>
+                        <p>For most job orchestrators processing 100K+ jobs/sec with sub-10ms P99 latency requirements,
+                            Rust provides measurable advantages. However, Go's productivity benefits often outweigh
+                            performance differences for throughput-oriented systems where occasional GC pauses are
+                            acceptable. Measure your specific workload characteristics before committing to either
+                            technology.</p>
+                    </div>
+                </section>
+
+                <!-- SECTION 3 -->
+                <section id="section3" class="section">
+                    <span class="section-number">Section 03</span>
+                    <h2>Production Scenarios: Resilience Patterns</h2>
+
+                    <p>Distributed task systems fail in predictable ways. This section examines production failure modes
+                        and engineering strategies for resilience, focusing on Dead Letter Queues, Poison Pill jobs, and
+                        Exponential Backoff with jitter.</p>
+
+                    <h3 id="dead-letter">Dead Letter Queues (DLQs)</h3>
+
+                    <p>A Dead Letter Queue is a secondary queue that stores jobs that have repeatedly failed processing.
+                        DLQs prevent failed jobs from blocking healthy job processing while preserving them for analysis
+                        and potential reprocessing.</p>
+
+                    <h4>DLQ Architecture</h4>
+
+                    <pre><code><span class="comment">// Laravel DLQ implementation using Redis</span>
+<span class="keyword">namespace</span> App\Jobs;
+
+<span class="keyword">use</span> Illuminate\Bus\Queueable;
+<span class="keyword">use</span> Illuminate\Contracts\Queue\ShouldQueue;
+<span class="keyword">use</span> Illuminate\Queue\InteractsWithQueue;
+<span class="keyword">use</span> Illuminate\Queue\SerializesModels;
+<span class="keyword">use</span> Illuminate\Support\Facades\Redis;
+
+<span class="keyword">class</span> ProcessPayment <span class="keyword">implements</span> ShouldQueue
+{
+    <span class="keyword">use</span> Queueable, InteractsWithQueue, SerializesModels;
+
+    <span class="keyword">public</span> <span class="variable">$tries</span> = <span class="number">5</span>;
+    <span class="keyword">public</span> <span class="variable">$timeout</span> = <span class="number">30</span>;
+    <span class="keyword">public</span> <span class="variable">$backoff</span> = [<span class="number">60</span>, <span class="number">120</span>, <span class="number">240</span>, <span class="number">480</span>, <span class="number">960</span>];
+
+    <span class="keyword">protected</span> <span class="variable">$paymentId</span>;
+
+    <span class="keyword">public function</span> <span class="function">__construct</span>(<span class="variable">$paymentId</span>)
+    {
+        <span class="variable">$this</span>->paymentId = <span class="variable">$paymentId</span>;
+    }
+
+    <span class="keyword">public function</span> <span class="function">handle</span>()
+    {
+        <span class="keyword">try</span> {
+            <span class="comment">// Attempt payment processing</span>
+            <span class="variable">$this</span>-><span class="function">processPaymentLogic</span>();
+        } <span class="keyword">catch</span> (\Exception <span class="variable">$e</span>) {
+            <span class="keyword">if</span> (<span class="variable">$this</span>->attempts() >= <span class="variable">$this</span>->tries) {
+                <span class="comment">// Max retries exceeded - move to DLQ</span>
+                <span class="variable">$this</span>-><span class="function">sendToDeadLetterQueue</span>(<span class="variable">$e</span>);
+                <span class="keyword">return</span>;
+            }
+            
+            <span class="comment">// Rethrow to trigger retry with backoff</span>
+            <span class="keyword">throw</span> <span class="variable">$e</span>;
+        }
+    }
+
+    <span class="keyword">protected function</span> <span class="function">sendToDeadLetterQueue</span>(\Exception <span class="variable">$e</span>)
+    {
+        <span class="variable">$payload</span> = [
+            <span class="string">'job_class'</span> => <span class="function">get_class</span>(<span class="variable">$this</span>),
+            <span class="string">'payment_id'</span> => <span class="variable">$this</span>->paymentId,
+            <span class="string">'attempts'</span> => <span class="variable">$this</span>-><span class="function">attempts</span>(),
+            <span class="string">'exception'</span> => [
+                <span class="string">'message'</span> => <span class="variable">$e</span>-><span class="function">getMessage</span>(),
+                <span class="string">'trace'</span> => <span class="variable">$e</span>-><span class="function">getTraceAsString</span>(),
+            ],
+            <span class="string">'failed_at'</span> => <span class="function">now</span>()-><span class="function">toIso8601String</span>(),
+            <span class="string">'metadata'</span> => <span class="variable">$this</span>-><span class="function">collectMetadata</span>(),
+        ];
+
+        Redis::<span class="function">lpush</span>(<span class="string">'queue:dead_letter'</span>, <span class="function">json_encode</span>(<span class="variable">$payload</span>));
+        
+        <span class="comment">// Trigger alerting for investigation</span>
+        \Log::<span class="function">critical</span>(<span class="string">'Job moved to DLQ'</span>, <span class="variable">$payload</span>);
+    }
+
+    <span class="keyword">protected function</span> <span class="function">collectMetadata</span>(): <span class="keyword">array</span>
+    {
+        <span class="keyword">return</span> [
+            <span class="string">'queue'</span> => <span class="variable">$this</span>->queue,
+            <span class="string">'connection'</span> => <span class="variable">$this</span>->connection,
+            <span class="string">'hostname'</span> => <span class="function">gethostname</span>(),
+            <span class="string">'php_version'</span> => <span class="constant">PHP_VERSION</span>,
+            <span class="string">'memory_usage'</span> => <span class="function">memory_get_usage</span>(<span class="keyword">true</span>),
+        ];
+    }
+}</code></pre>
+
+                    <h4>DLQ Monitoring and Recovery</h4>
+
+                    <p>Dead Letter Queues require active monitoring and recovery procedures. Failed jobs should trigger
+                        alerts, and periodic review processes should identify systemic issues.</p>
+
+                    <pre><code><span class="comment">// DLQ monitoring and reprocessing command</span>
+<span class="keyword">namespace</span> App\Console\Commands;
+
+<span class="keyword">use</span> Illuminate\Console\Command;
+<span class="keyword">use</span> Illuminate\Support\Facades\Redis;
+
+<span class="keyword">class</span> ProcessDeadLetterQueue <span class="keyword">extends</span> Command
+{
+    <span class="keyword">protected</span> <span class="variable">$signature</span> = <span class="string">'queue:process-dlq {--limit=10} {--filter=}'</span>;
+    <span class="keyword">protected</span> <span class="variable">$description</span> = <span class="string">'Process jobs from the Dead Letter Queue'</span>;
+
+    <span class="keyword">public function</span> <span class="function">handle</span>()
+    {
+        <span class="variable">$limit</span> = <span class="variable">$this</span>-><span class="function">option</span>(<span class="string">'limit'</span>);
+        <span class="variable">$filter</span> = <span class="variable">$this</span>-><span class="function">option</span>(<span class="string">'filter'</span>);
+
+        <span class="variable">$processed</span> = <span class="number">0</span>;
+
+        <span class="keyword">while</span> (<span class="variable">$processed</span> < <span class="variable">$limit</span>) {
+            <span class="variable">$payload</span> = Redis::<span class="function">rpop</span>(<span class="string">'queue:dead_letter'</span>);
+            
+            <span class="keyword">if</span> (!<span class="variable">$payload</span>) {
+                <span class="keyword">break</span>;
+            }
+
+            <span class="variable">$job</span> = <span class="function">json_decode</span>(<span class="variable">$payload</span>, <span class="keyword">true</span>);
+
+            <span class="keyword">if</span> (<span class="variable">$filter</span> && !<span class="function">str_contains</span>(<span class="variable">$job</span>[<span class="string">'job_class'</span>], <span class="variable">$filter</span>)) {
+                <span class="comment">// Put back if doesn't match filter</span>
+                Redis::<span class="function">lpush</span>(<span class="string">'queue:dead_letter'</span>, <span class="variable">$payload</span>);
+                <span class="keyword">continue</span>;
+            }
+
+            <span class="variable">$this</span>-><span class="function">info</span>(<span class="string">"Reprocessing: {$job['job_class']}"</span>);
+            
+            <span class="comment">// Reconstruct and dispatch job</span>
+            <span class="variable">$this</span>-><span class="function">reconstructAndDispatch</span>(<span class="variable">$job</span>);
+            
+            <span class="variable">$processed</span>++;
+        }
+
+        <span class="variable">$this</span>-><span class="function">info</span>(<span class="string">"Reprocessed {$processed} jobs from DLQ"</span>);
+    }
+}</code></pre>
+
+                    <h3 id="poison-pill">Poison Pill Jobs</h3>
+
+                    <p>A Poison Pill job is a job that causes the worker process to crash or hang, preventing other jobs
+                        from being processed. These jobs are particularly insidious in queue systems because they can
+                        repeatedly crash workers as they're retried.</p>
+
+                    <h4>Detection Strategies</h4>
+
+                    <ul>
+                        <li><strong>Worker Health Checks:</strong> Monitor worker heartbeats and auto-restart on failure
+                        </li>
+                        <li><strong>Job Execution Timeouts:</strong> Hard limits on job execution time with forceful
+                            termination</li>
+                        <li><strong>Circuit Breaker Pattern:</strong> Temporarily disable job types with high failure
+                            rates</li>
+                        <li><strong>Job Fingerprinting:</strong> Track job characteristics that correlate with crashes
+                        </li>
+                    </ul>
+
+                    <pre><code><span class="comment">// Circuit breaker implementation for job types</span>
+<span class="keyword">class</span> JobCircuitBreaker
+{
+    <span class="keyword">protected</span> <span class="variable">$redis</span>;
+    <span class="keyword">protected</span> <span class="variable">$failureThreshold</span> = <span class="number">5</span>;
+    <span class="keyword">protected</span> <span class="variable">$recoveryTime</span> = <span class="number">300</span>; <span class="comment">// 5 minutes</span>
+
+    <span class="keyword">public function</span> <span class="function">isOpen</span>(<span class="variable">$jobClass</span>): <span class="keyword">bool</span>
+    {
+        <span class="variable">$key</span> = <span class="string">"circuit_breaker:{$jobClass}"</span>;
+        <span class="variable">$status</span> = Redis::<span class="function">get</span>(<span class="variable">$key</span>);
+
+        <span class="keyword">if</span> (<span class="variable">$status</span> === <span class="string">'open'</span>) {
+            <span class="comment">// Check if recovery time has passed</span>
+            <span class="variable">$ttl</span> = Redis::<span class="function">ttl</span>(<span class="variable">$key</span>);
+            <span class="keyword">if</span> (<span class="variable">$ttl</span> <= <span class="number">0</span>) {
+                <span class="variable">$this</span>-><span class="function">reset</span>(<span class="variable">$jobClass</span>);
+                <span class="keyword">return</span> <span class="keyword">false</span>;
+            }
+            <span class="keyword">return</span> <span class="keyword">true</span>;
+        }
+
+        <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+
+    <span class="keyword">public function</span> <span class="function">recordFailure</span>(<span class="variable">$jobClass</span>)
+    {
+        <span class="variable">$failureKey</span> = <span class="string">"circuit_breaker:{$jobClass}:failures"</span>;
+        <span class="variable">$failures</span> = Redis::<span class="function">incr</span>(<span class="variable">$failureKey</span>);
+        Redis::<span class="function">expire</span>(<span class="variable">$failureKey</span>, <span class="number">60</span>); <span class="comment">// Reset counter after 60s</span>
+
+        <span class="keyword">if</span> (<span class="variable">$failures</span> >= <span class="variable">$this</span>->failureThreshold) {
+            <span class="variable">$this</span>-><span class="function">open</span>(<span class="variable">$jobClass</span>);
+        }
+    }
+
+    <span class="keyword">protected function</span> <span class="function">open</span>(<span class="variable">$jobClass</span>)
+    {
+        <span class="variable">$key</span> = <span class="string">"circuit_breaker:{$jobClass}"</span>;
+        Redis::<span class="function">setex</span>(<span class="variable">$key</span>, <span class="variable">$this</span>->recoveryTime, <span class="string">'open'</span>);
+        
+        \Log::<span class="function">alert</span>(<span class="string">"Circuit breaker opened for {$jobClass}"</span>);
+    }
+}</code></pre>
+
+                    <h3 id="backoff">Exponential Backoff with Jitter</h3>
+
+                    <p>When jobs fail due to transient errors (API rate limits, database deadlocks, network timeouts),
+                        naive retry strategies can exacerbate problems by creating thundering herd effects. Exponential
+                        backoff with jitter provides a mathematically sound approach to retry scheduling.</p>
+
+                    <h4>Backoff Algorithm</h4>
+
+                    <p>The exponential backoff formula with full jitter is:</p>
+
+                    <pre><code><span class="comment">// Exponential backoff calculation</span>
+<span class="variable">$baseDelay</span> = <span class="number">1</span>; <span class="comment">// seconds</span>
+<span class="variable">$maxDelay</span> = <span class="number">900</span>; <span class="comment">// 15 minutes</span>
+<span class="variable">$attempt</span> = <span class="number">3</span>;
+
+<span class="comment">// Calculate exponential component</span>
+<span class="variable">$exponentialDelay</span> = <span class="function">min</span>(<span class="variable">$maxDelay</span>, <span class="variable">$baseDelay</span> * (<span class="number">2</span> ** <span class="variable">$attempt</span>));
+
+<span class="comment">// Apply full jitter (random value between 0 and exponentialDelay)</span>
+<span class="variable">$delayWithJitter</span> = <span class="function">random_int</span>(<span class="number">0</span>, <span class="variable">$exponentialDelay</span> * <span class="number">1000</span>) / <span class="number">1000</span>;
+
+<span class="comment">// Result: For attempt 3, delay is random between 0-8 seconds</span></code></pre>
+
+                    <h4>Implementation in Job Class</h4>
+
+                    <pre><code><span class="keyword">class</span> ProcessWithBackoff <span class="keyword">implements</span> ShouldQueue
+{
+    <span class="keyword">use</span> Queueable, InteractsWithQueue;
+
+    <span class="keyword">public</span> <span class="variable">$tries</span> = <span class="number">10</span>;
+
+    <span class="keyword">public function</span> <span class="function">backoff</span>(): <span class="keyword">array</span>
+    {
+        <span class="variable">$baseDelay</span> = <span class="number">1</span>;
+        <span class="variable">$maxDelay</span> = <span class="number">900</span>;
+        <span class="variable">$backoffs</span> = [];
+
+        <span class="keyword">for</span> (<span class="variable">$attempt</span> = <span class="number">1</span>; <span class="variable">$attempt</span> <= <span class="variable">$this</span>->tries; <span class="variable">$attempt</span>++) {
+            <span class="variable">$exponentialDelay</span> = <span class="function">min</span>(<span class="variable">$maxDelay</span>, <span class="variable">$baseDelay</span> * (<span class="number">2</span> ** <span class="variable">$attempt</span>));
+            
+            <span class="comment">// Add jitter: random value between 0.5x and 1.5x exponential delay</span>
+            <span class="variable">$jitterFactor</span> = (<span class="function">mt_rand</span>(<span class="number">500</span>, <span class="number">1500</span>) / <span class="number">1000</span>);
+            <span class="variable">$delayWithJitter</span> = <span class="function">min</span>(<span class="variable">$maxDelay</span>, <span class="variable">$exponentialDelay</span> * <span class="variable">$jitterFactor</span>);
+            
+            <span class="variable">$backoffs</span>[] = (<span class="keyword">int</span>) <span class="variable">$delayWithJitter</span>;
+        }
+
+        <span class="keyword">return</span> <span class="variable">$backoffs</span>;
+    }
+
+    <span class="keyword">public function</span> <span class="function">handle</span>()
+    {
+        <span class="keyword">try</span> {
+            <span class="variable">$this</span>-><span class="function">processRateLimitedAPI</span>();
+        } <span class="keyword">catch</span> (RateLimitException <span class="variable">$e</span>) {
+            <span class="comment">// Log the attempt for monitoring</span>
+            \Log::<span class="function">warning</span>(<span class="string">"Rate limited on attempt {$this->attempts()}"</span>);
+            
+            <span class="comment">// Rethrow to trigger backoff retry</span>
+            <span class="keyword">throw</span> <span class="variable">$e</span>;
+        }
+    }
+}</code></pre>
+
+                    <h4>Backoff Strategy Comparison</h4>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Strategy</th>
+                                <th>Formula</th>
+                                <th>Pros</th>
+                                <th>Cons</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Linear</td>
+                                <td>base × attempt</td>
+                                <td>Predictable, simple</td>
+                                <td>Doesn't back off aggressively enough</td>
+                            </tr>
+                            <tr>
+                                <td>Exponential</td>
+                                <td>base × 2^attempt</td>
+                                <td>Rapid backoff, reduces load</td>
+                                <td>Synchronized retries (thundering herd)</td>
+                            </tr>
+                            <tr>
+                                <td>Exponential + Jitter</td>
+                                <td>random(0, base × 2^attempt)</td>
+                                <td>Prevents thundering herd</td>
+                                <td>Unpredictable retry timing</td>
+                            </tr>
+                            <tr>
+                                <td>Exponential + Decorrelated Jitter</td>
+                                <td>random(base, prevDelay × 3)</td>
+                                <td>Best load distribution</td>
+                                <td>Complex to implement correctly</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout">
+                        <div class="callout-title">Mathematical Justification</div>
+                        <p>Full jitter exponential backoff has been proven to minimize collision probability in
+                            distributed retry scenarios. AWS research demonstrates that compared to exponential backoff
+                            alone, full jitter reduces average completion time by ~25% and peak load by ~40% in
+                            high-concurrency failure scenarios.</p>
+                    </div>
+
+                    <h4>Production Monitoring Metrics</h4>
+
+                    <p>Implementing these resilience patterns requires comprehensive observability:</p>
+
+                    <ul>
+                        <li><strong>DLQ Growth Rate:</strong> Track jobs entering DLQ per hour; sudden spikes indicate
+                            systemic issues</li>
+                        <li><strong>Retry Distribution:</strong> Histogram of retry attempts before success; helps tune
+                            backoff parameters</li>
+                        <li><strong>Circuit Breaker Status:</strong> Monitor open/closed state per job type; alerts on
+                            persistent open states</li>
+                        <li><strong>Job Latency Percentiles:</strong> P50, P95, P99, P99.9 tracking; backoff strategies
+                            affect tail latency</li>
+                        <li><strong>Worker Crash Rate:</strong> Poison pill detection; correlate with specific job
+                            payloads</li>
+                    </ul>
+
+                    <pre><code><span class="comment">// Metrics collection example using Prometheus</span>
+<span class="keyword">use</span> Prometheus\CollectorRegistry;
+<span class="keyword">use</span> Prometheus\Storage\Redis;
+
+<span class="variable">$registry</span> = <span class="keyword">new</span> CollectorRegistry(<span class="keyword">new</span> Redis([<span class="string">'host'</span> => <span class="string">'127.0.0.1'</span>]));
+
+<span class="variable">$jobCounter</span> = <span class="variable">$registry</span>-><span class="function">registerCounter</span>(
+    <span class="string">'queue'</span>, <span class="string">'jobs_processed_total'</span>, 
+    <span class="string">'Total jobs processed'</span>,
+    [<span class="string">'status'</span>, <span class="string">'job_class'</span>]
+);
+
+<span class="variable">$retryHistogram</span> = <span class="variable">$registry</span>-><span class="function">registerHistogram</span>(
+    <span class="string">'queue'</span>, <span class="string">'job_retry_attempts'</span>,
+    <span class="string">'Distribution of retry attempts'</span>,
+    [<span class="string">'job_class'</span>],
+    [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">10</span>]
+);
+
+<span class="comment">// Record metrics in job processing</span>
+<span class="variable">$jobCounter</span>-><span class="function">inc</span>([<span class="string">'success'</span>, ProcessPayment::<span class="keyword">class</span>]);
+<span class="variable">$retryHistogram</span>-><span class="function">observe</span>(<span class="variable">$this</span>-><span class="function">attempts</span>(), [ProcessPayment::<span class="keyword">class</span>]);</code></pre>
+                </section>
+
+                <footer class="footer">
+                    <p><strong>Architecture of Distributed Task Systems</strong> — A comprehensive technical analysis of
+                        queue worker internals, runtime scheduler design, and production resilience patterns.</p>
+                    <p>Published January 2026 • Topics: Laravel Queue Internals, Go GMP Scheduler, Rust Tokio Runtime,
+                        Dead Letter Queues, Exponential Backoff Strategies</p>
+                </footer>
+            </main>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+
+            const icon = document.getElementById('theme-icon');
+            icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        // Smooth scroll for TOC links
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Active TOC link on scroll
+        const sections = document.querySelectorAll('.section, h3[id]');
+        const tocLinks = document.querySelectorAll('.toc-link');
+
+        function updateActiveTocLink() {
+            let currentSection = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - 200) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveTocLink);
+        updateActiveTocLink(); // Initial call
+    </script>
+</body>
+
+</html><cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com"
+    phone="+8801716734974" audio-play="true"></cta-bot>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeScript & Domain-Driven Design: Architectural Guide</title>
+    <link rel="stylesheet" href="../cta-bot.css" />
+    <script src="../cta-bot.js" defer></script>
+    <script src="case-data.js" defer></script>
+    <script src="mega-header.js" defer></script>
+    <link rel="stylesheet" href="narrative.css" />
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --code-bg: #1e1e1e;
+            --code-text: #d4d4d4;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            color: #111827;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #374151;
+            margin-top: 50px;
+            border-left: 5px solid var(--primary-color);
+            padding-left: 15px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #4b5563;
+            margin-top: 30px;
+        }
+
+        p {
+            margin-bottom: 1.2em;
+        }
+
+        /* Navigation */
+        .toc {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 8px;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--accent-warning);
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .keyword {
+            color: #569cd6;
+        }
+
+        .string {
+            color: #ce9178;
+        }
+
+        .type {
+            color: #4ec9b0;
+        }
+
+        .comment {
+            color: #6a9955;
+        }
+
+        .function {
+            color: #dcdcaa;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.95rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        tr:nth-of-type(even) {
+            background-color: #f9fafb;
+        }
+
+        tr:last-of-type {
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        /* Visual Components */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge.green {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge.red {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .card {
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .card.pro {
+            background-color: #ecfdf5;
+            border-color: #a7f3d0;
+        }
+
+        .card.con {
+            background-color: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .badge.green {
+            background-color: var(--accent-success);
+        }
+
+        .badge.red {
+            background-color: var(--accent-danger);
+        }
+
+        .diagram {
+            background: white;
+            border: 2px dashed #cbd5e1;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .diagram-box {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid var(--text-color);
+            background: #fff;
+            border-radius: 6px;
+            margin: 0 10px;
+            position: relative;
+            font-weight: bold;
+        }
+
+        .arrow {
+            display: inline-block;
+            margin: 0 10px;
+            color: #6b7280;
+        }
+
+        /* Callouts */
+        .callout {
+            padding: 15px;
+            border-left: 4px solid;
+            margin: 20px 0;
+            background-color: #f8fafc;
+        }
+
+        .callout-info {
+            border-color: var(--primary-color);
+            background-color: #eff6ff;
+        }
+
+        .callout-warn {
+            border-color: var(--accent-warning);
+            background-color: #fffbeb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <mega-header>
+            <div slot="brand-content">
+                <div class="brand-text-main">TypeScript DDD Guide</div>
+                <div class="brand-text-sub">Domain Driven Design Case Study</div>
+            </div>
+            <div slot="right-content" class="header-actions">
+                <div class="pill">Architecture • 2024</div>
+                <button class="btn-primary" id="openSummaryBtn">
+                    <span>☰</span> One-Page Summary
+                </button>
+            </div>
+        </mega-header>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#section-1">1. TypeScript Foundations: Interface vs Type</a></li>
+                <li><a href="#section-2">2. Architectural Strategy: Anemic vs Rich Domain Models</a></li>
+                <li><a href="#section-3">3. The Repository Pattern Implementation</a></li>
+                <li><a href="#section-4">4. Serialization & Data Transfer</a></li>
+                <li><a href="#section-5">5. Final Recommendations</a></li>
+            </ul>
+        </div>
+
+        <!-- SECTION 1 -->
+        <section id="section-1">
+            <h2>1. TypeScript Foundations: Interface vs Type</h2>
+            <p>While often used interchangeably, the distinction between <code>interface</code> and <code>type</code> is
+                critical for library design and error handling performance.</p>
+
+            <h3>Comparison Matrix</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Interface</th>
+                        <th>Type Alias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Definition</strong></td>
+                        <td>Describes the shape of an object.</td>
+                        <td>Creates a new name for any type (object, primitive, union).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extensibility</strong></td>
+                        <td>Extends via <code>extends</code> keyword. Open for declaration merging.</td>
+                        <td>Extends via intersection <code>&</code>. Closed to modification.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Declaration Merging</strong></td>
+                        <td>✅ Supported (Crucial for augmenting libraries).</td>
+                        <td>❌ Not Supported (Throws duplicate identifier error).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Computed Properties</strong></td>
+                        <td>❌ Limited support.</td>
+                        <td>✅ Fully supported (Mapped types).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Compiler Performance</strong></td>
+                        <td>Faster. Checks cache based on name.</td>
+                        <td>Slower. Often recursively evaluates the shape.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Code Implementation</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>Using Interface</h4>
+                    <pre><code><span class="keyword">interface</span> User {
+  id: <span class="type">string</span>;
+  name: <span class="type">string</span>;
+}
+
+<span class="comment">// Declaration Merging</span>
+<span class="keyword">interface</span> User {
+  email: <span class="type">string</span>;
+}
+<span class="comment">// Result: User has id, name, and email</span></code></pre>
+                </div>
+                <div class="card">
+                    <h4>Using Type</h4>
+                    <pre><code><span class="keyword">type</span> ID = <span class="type">string</span> | <span class="type">number</span>;
+
+<span class="keyword">type</span> UserStatus = 
+  | <span class="string">'active'</span> 
+  | <span class="string">'suspended'</span>;
+
+<span class="keyword">type</span> User = {
+  id: ID;
+  status: UserStatus;
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section id="section-2">
+            <h2>2. Architectural Strategy: Anemic vs Rich Domain Models</h2>
+            <p>The choice between representing entities as plain data (Anemic) or encapsulated behavior (Rich) dictates
+                the flow of business logic in your application.</p>
+
+            <div class="card-grid">
+                <div class="card pro">
+                    <span class="badge green">PROS</span>
+                    <ul>
+                        <li><strong>Simple Serialization:</strong> Objects are already plain JSON.</li>
+                        <li><strong>Low Boilerplate:</strong> No constructors or accessors needed.</li>
+                        <li><strong>Tooling:</strong> Works seamlessly with most ORMs (Prisma, TypeORM).</li>
+                    </ul>
+                </div>
+                <div class="card con">
+                    <span class="badge red">CONS</span>
+                    <ul>
+                        <li><strong>No Invariants:</strong> Impossible to prevent invalid states (e.g., a User with no
+                            email).</li>
+                        <li><strong>Logic Fragmentation:</strong> Business rules scatter across Services and
+                            Controllers.</li>
+                        <li><strong>Low Cohesion:</strong> Data is separated from the operations that modify it.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Option B: The Rich Domain Model (DDD)</h3>
+            <p>Entities are defined as <code>class</code> with private state. Logic resides inside the entity. Services
+                simply coordinate workflow.</p>
+
+            <pre><code><span class="keyword">class</span> Order {
+  <span class="keyword">private</span> status: <span class="string">'draft'</span> | <span class="string">'paid'</span> = <span class="string">'draft'</span>;
+  <span class="keyword">private</span> items: OrderItem[] = [];
+
+  <span class="keyword">public</span> addItem(item: OrderItem): <span class="type">void</span> {
+    <span class="keyword">if</span> (<span class="keyword">this</span>.status === <span class="string">'paid'</span>) {
+      <span class="keyword">throw new</span> Error(<span class="string">"Cannot modify paid order"</span>);
+    }
+    <span class="keyword">this</span>.items.push(item);
+  }
+}</code></pre>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section id="section-3">
+            <h2>3. The Repository Pattern Implementation</h2>
+            <p>When using Rich Domain Models, the Repository acts as an abstraction layer between the Domain and the
+                Persistence (Database).</p>
+
+            <div class="diagram">
+                <div class="diagram-box">Database (Row)</div>
+                <span class="arrow">➔</span>
+                <div class="diagram-box">ORM / DAO</div>
+                <span class="arrow">➔</span>
+                <div class="diagram-box">Mapper</div>
+                <span class="arrow">➔</span>
+                <div class="diagram-box" style="border-color: var(--primary-color);">Domain Entity</div>
+            </div>
+
+            <h3>The Reconstruction Problem</h3>
+            <p>When fetching data from a database, you receive plain objects. You cannot cast these to a Class. You must
+                <strong>reconstitute</strong> the entity.
+            </p>
+
+            <pre><code><span class="comment">// user.repository.ts</span>
+<span class="keyword">async</span> findById(id: <span class="type">string</span>): Promise&lt;User&gt; {
+  <span class="comment">// 1. Get raw data from DB (Plain Object)</span>
+  <span class="keyword">const</span> rawData = <span class="keyword">await</span> db.users.find({ id });
+
+  <span class="comment">// 2. Use Mapper to Reconstitute Domain Entity</span>
+  <span class="keyword">return</span> UserMap.toDomain(rawData);
+}</code></pre>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section id="section-4">
+            <h2>4. Serialization & Data Transfer</h2>
+            <p>Classes do not serialize well by default. They lose methods and private fields may be inaccessible.</p>
+
+            <h3>The `toJSON` Hook</h3>
+            <p>JavaScript's <code>JSON.stringify()</code> looks for a method named <code>toJSON()</code> on objects
+                being serialized.</p>
+
+            <pre><code><span class="keyword">class</span> User {
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> password: <span class="type">string</span>) {}
+
+  <span class="function">toJSON</span>() {
+    <span class="comment">// Return a plain object literal</span>
+    <span class="keyword">return</span> {
+      hidden: <span class="string">"******"</span>
+    };
+  }
+}</code></pre>
+
+            <div class="callout callout-warn">
+                <strong>Critical Warning:</strong> Never expose Domain Entities directly to your API (REST/GraphQL).
+                Doing so couples your external API to your internal domain logic.
+            </div>
+
+            <h3>The DTO Pattern (Data Transfer Object)</h3>
+            <p>Instead of serializing the Entity directly, convert it to a DTO before sending the response.</p>
+
+            <div class="diagram">
+                <div class="diagram-box">Controller</div>
+                <span class="arrow">➔ Calls</span>
+                <div class="diagram-box">UseCase</div>
+                <span class="arrow">➔ Returns</span>
+                <div class="diagram-box">Entity</div>
+                <span class="arrow">➔ Mapper</span>
+                <div class="diagram-box" style="background: #f0f9ff;">UserResponseDTO</div>
+            </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section id="section-5">
+            <h2>5. Final Recommendations</h2>
+
+            <table>
+                <tr>
+                    <th>Scenario</th>
+                    <th>Recommended Approach</th>
+                </tr>
+                <tr>
+                    <td><strong>Public Library / API</strong></td>
+                    <td>Use <strong>Interface</strong> (allows merging for consumers).</td>
+                </tr>
+                <tr>
+                    <td><strong>Complex Business Logic</strong></td>
+                    <td>Use <strong>Class</strong> (Rich Domain Model). Enforce invariants.</td>
+                </tr>
+                <tr>
+                    <td><strong>Simple CRUD / Microservice</strong></td>
+                    <td>Use <strong>Interface</strong> (Anemic Model). Speed and simplicity.</td>
+                </tr>
+                <tr>
+                    <td><strong>API Response Type</strong></td>
+                    <td>Use <strong>Interface</strong> or <strong>Type</strong> (DTOs are data, not behavior).</td>
+                </tr>
+            </table>
+
+            <p style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px;">
+                <em>This document summarizes the architectural decisions for TypeScript projects regarding type
+                    definitions and domain modeling.</em>
+            </p>
+        </section>
+
+    </div>
+
+</body>
+
+</html><cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com"
+    phone="+8801716734974" audio-play="true"></cta-bot>

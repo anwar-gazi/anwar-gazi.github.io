@@ -1,25 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minhajul Anwar – Portfolio</title>
-  <link rel="icon" href="/icon.png" type="image/png">
-  <link rel="icon" sizes="192x192" href="/shortcut.png" type="image/png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="icon" sizes="192x192" href="shortcut.png" type="image/png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { color-scheme: dark; }
-    * { box-sizing: border-box; }
+    :root {
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #0d0f14;
       color: #e5e7eb;
     }
-    a { color: inherit; text-decoration: none; }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
     .page {
       max-width: 1200px;
       margin: 0 auto;
@@ -28,40 +40,188 @@
       grid-template-columns: 320px 1fr;
       gap: 20px;
     }
-    @media (max-width: 960px) { .page { grid-template-columns: 1fr; } }
+
+    @media (max-width: 960px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .card {
       background: linear-gradient(145deg, #161922, #12141c);
       border: 1px solid rgba(255, 255, 255, 0.04);
       border-radius: 18px;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
     }
-    .sidebar { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-    .avatar-box {
-      width: 110px; height: 110px; border-radius: 50%; overflow: hidden;
-      position: relative; border: 3px solid rgba(245, 184, 74, 0.35); margin: 0 auto;
+
+    .sidebar {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
-    .sidebar h1 { text-align: center; margin: 10px 0 4px; font-size: 20px; font-weight: 600; color: #fff; }
-    .sidebar .role { text-align: center; font-size: 13px; color: #cbd5e1; }
-    .divider { border: none; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 12px 0; }
-    .contact-item { display: flex; gap: 12px; align-items: center; padding: 10px 0; }
-    .contact-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin-bottom: 2px; }
-    .contact-value { font-size: 13px; color: #e5e7eb; word-break: break-word; }
-    .socials { display: flex; justify-content: center; gap: 10px; font-size: 13px; color: #cbd5e1; }
-    .main-card { padding: 20px; }
-    .tabs { display: flex; gap: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 16px; }
-    .tab-btn { background: none; border: none; padding: 10px 6px; color: #cbd5e1; font-size: 14px; border-bottom: 2px solid transparent; cursor: pointer; }
-    .tab-btn.active { color: #f5b84a; border-color: #f5b84a; }
-    .section-title { font-size: 22px; font-weight: 600; color: #fff; margin: 0 0 10px; }
-    .about-text { color: #d1d5db; line-height: 1.6; font-size: 14px; margin: 0 0 14px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-    .service-card { border-radius: 14px; padding: 14px; background: linear-gradient(145deg, #1a1d26, #161922); border: 1px solid rgba(255, 255, 255, 0.04); }
-    .service-card h4 { margin: 0 0 6px; color: #fff; font-size: 15px; font-weight: 600; }
-    .service-card p { margin: 0; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
-    .skills-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-    .skill-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 12px; padding: 12px; }
-    .skill-card h5 { margin: 0 0 8px; color: #fff; font-size: 14px; font-weight: 600; }
-    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .tag { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #e5e7eb; padding: 4px 8px; border-radius: 999px; font-size: 12px; }
+
+    .avatar-box {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+      border: 3px solid rgba(245, 184, 74, 0.35);
+      margin: 0 auto;
+    }
+
+    .sidebar h1 {
+      text-align: center;
+      margin: 10px 0 4px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .sidebar .role {
+      text-align: center;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      margin: 12px 0;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .contact-label {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 2px;
+    }
+
+    .contact-value {
+      font-size: 13px;
+      color: #e5e7eb;
+      word-break: break-word;
+    }
+
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    .main-card {
+      padding: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 10px 6px;
+      color: #cbd5e1;
+      font-size: 14px;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      color: #f5b84a;
+      border-color: #f5b84a;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      margin: 0 0 10px;
+    }
+
+    .about-text {
+      color: #d1d5db;
+      line-height: 1.6;
+      font-size: 14px;
+      margin: 0 0 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .service-card {
+      border-radius: 14px;
+      padding: 14px;
+      background: linear-gradient(145deg, #1a1d26, #161922);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .service-card h4 {
+      margin: 0 0 6px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .service-card p {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .skills-wrap {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .skill-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .skill-card h5 {
+      margin: 0 0 8px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e5e7eb;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
     .timeline {
       position: relative;
       display: flex;
@@ -71,6 +231,7 @@
       margin: 0;
       list-style: none;
     }
+
     .timeline::before {
       content: '';
       position: absolute;
@@ -80,6 +241,7 @@
       width: 2px;
       background: linear-gradient(180deg, #f5b84a, rgba(245, 184, 74, 0.2));
     }
+
     .timeline-item {
       position: relative;
       display: grid;
@@ -88,6 +250,7 @@
       align-items: flex-start;
       padding: 0 0 2px 0;
     }
+
     .timeline-item::before {
       content: '';
       width: 10px;
@@ -98,14 +261,48 @@
       grid-column: 1;
       margin-top: 6px;
     }
-    .timeline-item > * {
+
+    .timeline-item>* {
       grid-column: 2;
     }
-    .timeline-header { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
-    .timeline-title { margin: 0; color: #fff; font-size: 15px; font-weight: 600; }
-    .timeline-sub { margin: 2px 0 0; color: #cbd5e1; font-size: 12px; }
-    .timeline-period { background: rgba(255, 255, 255, 0.05); color: #e5e7eb; font-size: 11px; padding: 4px 8px; border-radius: 8px; flex-shrink: 0; }
-    .timeline-bullets { margin: 10px 0 0; padding-left: 14px; color: #d1d5db; font-size: 13px; line-height: 1.5; }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .timeline-title {
+      margin: 0;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .timeline-sub {
+      margin: 2px 0 0;
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+
+    .timeline-period {
+      background: rgba(255, 255, 255, 0.05);
+      color: #e5e7eb;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .timeline-bullets {
+      margin: 10px 0 0;
+      padding-left: 14px;
+      color: #d1d5db;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -116,6 +313,7 @@
       padding: 16px;
       z-index: 50;
     }
+
     .modal-card {
       background: #0f1118;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -126,19 +324,53 @@
       color: #e5e7eb;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
     }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #fff; }
-    .modal-close { background: none; border: none; color: #cbd5e1; font-size: 16px; cursor: pointer; padding: 4px; line-height: 1; }
-    .modal-list { margin: 0; padding-left: 18px; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
-    .hidden { display: none !important; }
-    .outbound-icon { font-size: 11px; opacity: 0.8; margin-left: 4px; }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: #cbd5e1;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+    }
+
+    .modal-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #cbd5e1;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .outbound-icon {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-left: 4px;
+    }
   </style>
 </head>
+
 <body>
   <div class="page">
     <!-- Sidebar -->
     <aside class="card sidebar">
       <div class="avatar-box">
-        <img src="../minhaj.jpg" alt="Minhajul Anwar" style="width: 100%; height: 100%; object-fit: cover;">
+        <img src="minhaj.jpg" alt="Minhajul Anwar" style="width: 100%; height: 100%; object-fit: cover;">
         <span class="status-dot"></span>
       </div>
       <h1 id="side-name"></h1>
@@ -167,8 +399,10 @@
       </div>
       <hr class="divider">
       <div class="socials">
-        <a id="side-github" href="#" target="_blank" rel="noreferrer">GitHub<span class="outbound-icon" aria-hidden="true">↗</span></a>
-        <a id="side-portfolio" href="#" target="_blank" rel="noreferrer">Portfolio<span class="outbound-icon" aria-hidden="true">↗</span></a>
+        <a id="side-github" href="#" target="_blank" rel="noreferrer">GitHub<span class="outbound-icon"
+            aria-hidden="true">↗</span></a>
+        <a id="side-portfolio" href="#" target="_blank" rel="noreferrer">Portfolio<span class="outbound-icon"
+            aria-hidden="true">↗</span></a>
       </div>
     </aside>
 
@@ -202,7 +436,8 @@
       <section data-page="portfolio" class="space-y-6 hidden">
         <div>
           <h3 class="section-title" style="font-size: 18px;">
-            <a href="/portfolio/index.html" target="_blank" rel="noreferrer" style="color: inherit; text-decoration: none;">Portfolio ↗</a>
+            <a href="portfolio/index.html" target="_blank" rel="noreferrer"
+              style="color: inherit; text-decoration: none;">Portfolio ↗</a>
           </h3>
           <div id="portfolio-list" class="timeline"></div>
         </div>
@@ -223,22 +458,26 @@
   </div>
 
   <footer style="text-align:center; font-size:10px; opacity:0.25; margin:12px 0;">
-    <button id="version-info-trigger" type="button" style="background:none; border:none; color:inherit; cursor:pointer; padding:0; font:inherit;">This page: Hydrated</button> · Other versions:
-    <a href="/index.static.html" style="color:inherit;">Static snapshot</a> ·
-    <a href="/index.react.html" style="color:inherit;">React (Babel)</a> ·
-    <a href="/index.react.bundled.html" style="color:inherit;">React (bundled)</a> ·
-    <a href="/index.vue.html" style="color:inherit;">Vue</a> ·
-    <a href="/index.svelte.html" style="color:inherit;">Svelte</a>
+    <button id="version-info-trigger" type="button"
+      style="background:none; border:none; color:inherit; cursor:pointer; padding:0; font:inherit;">This page:
+      Hydrated</button> · Other versions:
+    <a href="index.static.html" style="color:inherit;">Static snapshot</a> ·
+    <a href="index.react.html" style="color:inherit;">React (Babel)</a> ·
+    <a href="index.react.bundled.html" style="color:inherit;">React (bundled)</a> ·
+    <a href="index.vue.html" style="color:inherit;">Vue</a> ·
+    <a href="index.svelte.html" style="color:inherit;">Svelte</a>
   </footer>
 
-  <div id="version-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="version-modal-title">
+  <div id="version-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true"
+    aria-labelledby="version-modal-title">
     <div class="modal-card">
       <div class="modal-header">
         <span id="version-modal-title">Hydrated version</span>
         <button class="modal-close" type="button" aria-label="Close version info">x</button>
       </div>
       <ul class="modal-list">
-        <li>Data-driven page populated from the data source for contact, domains, skills, experience, and portfolio.</li>
+        <li>Data-driven page populated from the data source for contact, domains, skills, experience, and portfolio.
+        </li>
         <li>Uses the modern pipeline by default and falls back to transpile when needed.</li>
         <li>Graceful redirect to the static snapshot if loading fails.</li>
       </ul>
@@ -259,7 +498,7 @@
 
       const runModern = () => {
         const s = document.createElement('script');
-        s.src = '/hydrate.js';
+        s.src = 'hydrate.js';
         s.defer = true;
         document.head.appendChild(s);
       };
@@ -272,18 +511,18 @@
       const babelScript = document.createElement('script');
       babelScript.src = 'https://unpkg.com/@babel/standalone/babel.min.js';
       babelScript.onload = () => {
-        fetch('/hydrate.js')
+        fetch('hydrate.js')
           .then(res => res.text())
           .then(src => {
             const out = window.Babel.transform(src, { presets: ['env'] }).code;
             (0, eval)(out);
           })
           .catch(() => {
-            window.location.href = '/index.static.html';
+            window.location.href = 'index.static.html';
           });
       };
       babelScript.onerror = () => {
-        window.location.href = '/index.static.html';
+        window.location.href = 'index.static.html';
       };
       document.head.appendChild(babelScript);
     })();
@@ -310,4 +549,5 @@
     })();
   </script>
 </body>
+
 </html>

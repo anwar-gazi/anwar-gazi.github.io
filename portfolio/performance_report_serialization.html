@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance Research: Serialization & Rendering Optimization</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../cta-bot.css" />
+  <script src="../cta-bot.js" defer></script>
+  <script src="case-data.js" defer></script>
+  <script src="mega-header.js" defer></script>
+  <link rel="stylesheet" href="narrative.css" />
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #1d4ed8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-highlight: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --code-bg: #0f172a;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 5rem;
+      position: relative;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--success));
+      border-radius: 2px;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 3rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease;
+    }
+
+    .section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .grid-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .compare-card {
+      background: var(--bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .compare-card.before {
+      border-top: 4px solid var(--danger);
+    }
+
+    .compare-card.after {
+      border-top: 4px solid var(--success);
+    }
+
+    .compare-header {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .before .compare-header {
+      color: var(--danger);
+    }
+
+    .after .compare-header {
+      color: var(--success);
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(59, 130, 246, 0.1);
+      color: #60a5fa;
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    .visualization {
+      width: 100%;
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      border: 1px solid var(--border);
+    }
+
+    /* SVG Styles */
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .flow-arrow {
+      stroke: var(--text-muted);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .flow-node {
+      fill: var(--surface-highlight);
+      stroke: var(--border);
+      stroke-width: 2;
+      rx: 8;
+    }
+
+    .flow-text {
+      fill: var(--text);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .flow-label {
+      fill: var(--text-muted);
+      font-size: 12px;
+      text-anchor: middle;
+    }
+
+    .node-process {
+      fill: var(--surface);
+      stroke: var(--primary);
+      stroke-dasharray: 4;
+    }
+
+    .node-optimize {
+      fill: rgba(16, 185, 129, 0.1);
+      stroke: var(--success);
+    }
+
+    .node-bad {
+      fill: rgba(239, 68, 68, 0.1);
+      stroke: var(--danger);
+    }
+
+    .highlight-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-left: auto;
+    }
+
+    .bg-red {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+
+    .bg-green {
+      background: rgba(16, 185, 129, 0.2);
+      color: #86efac;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Performance Architecture</h1>
+      <div class="subtitle">Technical analysis of Elimination of Double Serialization and Reference Equality
+        optimizations.</div>
+    </header>
+
+    <!-- SECTION 1: DOUBLE SERIALIZATION -->
+    <div class="section">
+      <h2>
+        1. Eliminated "Double Serialization"
+        <span class="highlight-badge bg-green">Impact: Critical</span>
+      </h2>
+      <p>
+        The most significant performance bottleneck identified was a redundant data transformation pipeline. The API
+        routes performed an expensive, redundant loop over the data set, essentially processing every entity twice
+        before response generation.
+      </p>
+
+      <div class="visualization">
+        <svg width="800" height="250" viewBox="0 0 800 250">
+          <!-- BEFORE -->
+          <g transform="translate(0, 20)">
+            <text x="400" y="0" text-anchor="middle" fill="#94a3b8" font-size="12">BEFORE: Redundant Processing
+              Pipeline</text>
+
+            <!-- DB -->
+            <rect x="50" y="30" width="100" height="60" class="flow-node" />
+            <text x="100" y="60" class="flow-text">Database</text>
+
+            <!-- Repo -->
+            <rect x="250" y="30" width="140" height="60" class="flow-node node-bad" />
+            <text x="320" y="60" class="flow-text">Repo.getAll()</text>
+            <text x="320" y="80" class="flow-label" fill="#ef4444">Loop 1: Convert to Domain</text>
+
+            <!-- API -->
+            <rect x="450" y="30" width="140" height="60" class="flow-node node-bad" />
+            <text x="520" y="60" class="flow-text">API Route</text>
+            <text x="520" y="80" class="flow-label" fill="#ef4444">Loop 2: Re-run toTask()</text>
+
+            <!-- JSON -->
+            <rect x="650" y="30" width="100" height="60" class="flow-node" />
+            <text x="700" y="60" class="flow-text">JSON</text>
+            <text x="700" y="80" class="flow-label">Loop 3: Stringify</text>
+
+            <!-- Arrows -->
+            <path d="M150 60 H250" class="flow-arrow" marker-end="url(#arrow)" />
+            <path d="M390 60 H450" class="flow-arrow" marker-end="url(#arrow)" />
+            <path d="M590 60 H650" class="flow-arrow" marker-end="url(#arrow)" />
+          </g>
+
+          <!-- AFTER -->
+          <g transform="translate(0, 150)">
+            <text x="400" y="0" text-anchor="middle" fill="#94a3b8" font-size="12">AFTER: Streamlined Pipeline</text>
+
+            <!-- DB -->
+            <rect x="50" y="30" width="100" height="60" class="flow-node" />
+            <text x="100" y="60" class="flow-text">Database</text>
+
+            <!-- Unified -->
+            <rect x="300" y="30" width="200" height="60" class="flow-node node-optimize" />
+            <text x="400" y="60" class="flow-text">Repository (Optimized)</text>
+            <text x="400" y="80" class="flow-label" fill="#10b981">Single Transform Pass</text>
+
+            <!-- JSON -->
+            <rect x="650" y="30" width="100" height="60" class="flow-node" />
+            <text x="700" y="60" class="flow-text">JSON</text>
+
+            <!-- Arrows -->
+            <path d="M150 60 H300" class="flow-arrow" marker-end="url(#arrow)" />
+            <path d="M500 60 H650" class="flow-arrow" marker-end="url(#arrow)" />
+          </g>
+
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L9,3 z" fill="#94a3b8" />
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="grid-compare">
+        <div class="compare-card before">
+          <div class="compare-header">Before</div>
+          <p>For a board with 100 tasks, the server iterated over hundreds of objects multiple times, allocating new
+            memory and deeply copying values just to produce the exact same result structure twice.</p>
+        </div>
+        <div class="compare-card after">
+          <div class="compare-header">After</div>
+          <p>We deleted the entire middle layer of processing. Data is fetched, transformed <strong>once</strong> in the
+            Repository, and streamed directly to the response.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: DATES VS STRINGS -->
+    <div class="section">
+      <h2>
+        2. JSON Serialization Speed
+        <span class="highlight-badge bg-green">Impact: Latency (TTFB)</span>
+      </h2>
+      <p>
+        Replacing native <code>Date</code> objects with ISO Strings fundamentally changes how the V8 engine and Next.js
+        handle serialization, resulting in reduced CPU overhead on the server.
+      </p>
+
+      <div class="grid-compare">
+        <div class="compare-card before">
+          <div class="compare-header">Using Date Objects</div>
+          <p><code>JSON.stringify</code> must invoke <code>.toJSON()</code> on every Date instance. This function call
+            overhead scales linearly with the number of date fields (created, updated, due, closed) across thousands of
+            entities.</p>
+          <div
+            style="background:#2d1b1b; color:#fca5a5; padding:0.5rem; border-radius:4px; margin-top:0.5rem; font-family:monospace;">
+            [Object].toJSON() call × 5000 fields
+          </div>
+        </div>
+        <div class="compare-card after">
+          <div class="compare-header">Using ISO Strings</div>
+          <p>Strings are primitives. <code>JSON.stringify</code> handles them natively by simply copying memory buffers.
+            This is one of the fastest operations in V8.</p>
+          <div
+            style="background:#132822; color:#86efac; padding:0.5rem; border-radius:4px; margin-top:0.5rem; font-family:monospace;">
+            Direct Memory Copy
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: REACT RE-RENDERS -->
+    <div class="section">
+      <h2>
+        3. Cheaper React Re-renders
+        <span class="highlight-badge bg-green">Impact: Client FPS</span>
+      </h2>
+      <p>
+        The shift to primitive strings corrects a fundamental issue with Reference Equality in JavaScript, which was
+        causing React to over-render.
+      </p>
+
+      <div class="visualization"
+        style="background:#1e293b url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMWUyOTNiIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz4KPC9zdmc+');">
+        <svg width="700" height="200" viewBox="0 0 700 200">
+          <!-- Object Equality -->
+          <text x="150" y="30" fill="#94a3b8" text-anchor="middle" font-size="14">Object Reference</text>
+          <g transform="translate(50, 50)">
+            <rect x="0" y="0" width="200" height="100" fill="#2d1b1b" stroke="#ef4444" stroke-width="2" rx="8" />
+            <text x="100" y="40" fill="#ef4444" text-anchor="middle" font-family="monospace">new Date("...")</text>
+            <text x="100" y="60" fill="#ef4444" text-anchor="middle" font-weight="bold">!==</text>
+            <text x="100" y="80" fill="#ef4444" text-anchor="middle" font-family="monospace">new Date("...")</text>
+            <text x="100" y="130" fill="#fca5a5" text-anchor="middle" font-size="12">Triggers Re-render</text>
+          </g>
+
+          <!-- String Equality -->
+          <text x="550" y="30" fill="#94a3b8" text-anchor="middle" font-size="14">Primitive Equality</text>
+          <g transform="translate(450, 50)">
+            <rect x="0" y="0" width="200" height="100" fill="#132822" stroke="#10b981" stroke-width="2" rx="8" />
+            <text x="100" y="40" fill="#10b981" text-anchor="middle" font-family="monospace">"2023-01-01"</text>
+            <text x="100" y="60" fill="#10b981" text-anchor="middle" font-weight="bold">===</text>
+            <text x="100" y="80" fill="#10b981" text-anchor="middle" font-family="monospace">"2023-01-01"</text>
+            <text x="100" y="130" fill="#86efac" text-anchor="middle" font-size="12">Skips Re-render</text>
+          </g>
+        </svg>
+      </div>
+
+      <p style="margin-top: 1.5rem">
+        By storing dates as strings in the Redux/Zustand store, we leverage JavaScript's value equality for primitives.
+        React's shallow comparison now correctly identifies that data hasn't changed, preventing expensive re-renders of
+        the Task Board and Timeline components.
+      </p>
+    </div>
+
+  </div>
+
+</body>
+
+</html><cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com"
+  phone="+8801716734974" audio-play="true"></cta-bot>

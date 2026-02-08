@@ -1,0 +1,799 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Dive Study Guide: React Performance Optimization</title>
+    <link rel="stylesheet" href="../cta-bot.css" />
+    <script src="../cta-bot.js" defer></script>
+    <script src="case-data.js" defer></script>
+    <script src="mega-header.js" defer></script>
+    <link rel="stylesheet" href="narrative.css" />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Merriweather', serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        button,
+        .sans {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+        }
+
+        .flashcard {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .diagram-container {
+            background: #f9fafb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .sticky-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 2px solid #e5e7eb;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+
+    <!-- Article Section -->
+    <div id="articleSection" class="max-w-4xl mx-auto px-6 py-12 mb-20">
+        <header class="mb-12 text-center">
+            <h1 class="text-5xl font-bold text-gray-900 mb-4">Deep Dive Study Guide</h1>
+            <p class="text-2xl text-gray-600">React Performance Optimization Case Study</p>
+        </header>
+
+        <!-- Section 1 -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Section 1: Executive Summary & Core Diagnosis</h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">The Real Performance Bottleneck</h3>
+
+            <p class="text-lg leading-relaxed mb-4">
+                <strong>Core Concept: The performance issue is NOT caused by React Aria Components (RAC). The real
+                    culprit is the useTaskTimeTracking hook performing O(N²) recursive searches, which executes before
+                    any UI component renders.</strong>
+            </p>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Details:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li><strong>Recommendation:</strong> Do not remove RAC from the codebase</li>
+                <li><strong>Primary bottleneck:</strong> useTaskTimeTracking hook performs expensive recursive
+                    operations</li>
+                <li><strong>Scale of the problem:</strong> 50 displayed tasks × 1000 board tasks = 50,000 synchronous
+                    iterations</li>
+                <li><strong>RAC's actual impact:</strong> Zero on RunningTasksBar, minor on TaskPane</li>
+                <li><strong>Key insight:</strong> The computational cost occurs in the data layer, not the presentation
+                    layer</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Historical Context:</h4>
+            <p class="text-lg leading-relaxed mb-2">Two possible explanations for previous 120FPS performance:</p>
+            <ol class="list-decimal list-inside space-y-2 text-lg leading-relaxed mb-6">
+                <li><strong>Usage Change:</strong> RunningTasksBar didn't display dynamic timers for every task before
+                    refactor</li>
+                <li><strong>Dataset Change:</strong> Number of recursive subtasks grew, hitting O(N²) algorithm tipping
+                    point</li>
+            </ol>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                    A[Performance Issue] --> B{Root Cause Analysis}
+                    B --> C[Hypothesis: RAC Components]
+                    B --> D[Actual Cause: useTaskTimeTracking Hook]
+                    C --> E[RAC Impact: Zero/Minor]
+                    D --> F[O N² Recursive Search]
+                    F --> G[50 tasks × 1000 board tasks]
+                    G --> H[50,000 iterations BEFORE render]
+                    H --> I[UI Freeze]
+
+                    style D fill:#ff6b6b
+                    style E fill:#51cf66
+                    style I fill:#ff6b6b
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Section 2: RunningTasksBar Performance Analysis</h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Critical Performance Issue in Task List Display</h3>
+
+            <p class="text-lg leading-relaxed mb-6">
+                <strong>Core Concept: Clicking "Expand" in RunningTasksBar freezes the UI because each displayed task
+                    triggers a full recursive search through all board tasks, creating an O(N²) computational
+                    complexity.</strong>
+            </p>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Symptom:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>UI freezes when clicking "Expand" button</li>
+                <li>Affects lists with 50+ tasks</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Root Cause Chain:</h4>
+            <ol class="list-decimal list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>RunningTasksBar renders a list of tasks</li>
+                <li>Each task renders TrackedTimeDisplay component</li>
+                <li>TrackedTimeDisplay calls useTaskTimeTracking hook</li>
+                <li>Hook performs recursive search over ALL board tasks for EVERY instance</li>
+            </ol>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Mathematical Impact:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>Formula: <code
+                        class="bg-gray-200 px-2 py-1 rounded">displayed_tasks × total_board_tasks = total_iterations</code>
+                </li>
+                <li>Example: 50 tasks × 1000 tasks = 50,000 iterations</li>
+                <li>All iterations happen synchronously on main thread</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">RAC Involvement:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>RunningTasksBar does NOT use React Aria Components</li>
+                <li>Removing RAC will have zero effect on this issue</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Key Takeaway:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-6">
+                <li>The problem occurs before any React rendering happens</li>
+                <li>This is a data processing bottleneck, not a UI rendering bottleneck</li>
+            </ul>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    sequenceDiagram
+                    participant User
+                    participant RunningTasksBar
+                    participant TrackedTimeDisplay
+                    participant useTaskTimeTracking
+                    participant TasksData
+
+                    User->>RunningTasksBar: Click "Expand"
+                    RunningTasksBar->>TrackedTimeDisplay: Render Task 1
+                    TrackedTimeDisplay->>useTaskTimeTracking: Initialize hook
+                    useTaskTimeTracking->>TasksData: Recursive search (1000 tasks)
+                    TasksData-->>useTaskTimeTracking: Return results
+
+                    RunningTasksBar->>TrackedTimeDisplay: Render Task 2
+                    TrackedTimeDisplay->>useTaskTimeTracking: Initialize hook
+                    useTaskTimeTracking->>TasksData: Recursive search (1000 tasks)
+                    TasksData-->>useTaskTimeTracking: Return results
+
+                    Note over useTaskTimeTracking,TasksData: Repeats 50 times = 50,000 iterations
+
+                    RunningTasksBar-->>User: UI Frozen
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Section 3: TaskPane Performance Analysis</h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Secondary Performance Impact on Task Detail View</h3>
+
+            <p class="text-lg leading-relaxed mb-6">
+                <strong>Core Concept: TaskPane experiences slow mount times primarily due to the same
+                    useTaskTimeTracking bottleneck, with minor additional overhead from RAC components that is
+                    negligible compared to the data processing lag.</strong>
+            </p>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Symptom:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>Slow mount time when opening task details</li>
+                <li>Noticeable delay before content appears</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Root Cause:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>TaskPaneHeader calls useTaskTimeTracking hook</li>
+                <li>Same recursive search problem as RunningTasksBar</li>
+                <li>Single instance (vs. 50 in RunningTasksBar) = less severe but still noticeable</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">RAC Impact Assessment:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>EditableTitle component uses React Aria Components</li>
+                <li>Has slight overhead from accessibility features</li>
+                <li>This overhead is <strong>overshadowed</strong> by data processing lag</li>
+                <li>Removing RAC would provide minimal improvement</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Optimization Priority:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-6">
+                <li>Optimizing useTaskTimeTracking hook = significant speed improvement</li>
+                <li>Removing RAC = minor speed improvement</li>
+                <li>Hook optimization provides better ROI (Return on Investment)</li>
+            </ul>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    mindmap
+                    root((TaskPane Performance))
+                    Primary Bottleneck
+                    useTaskTimeTracking Hook
+                    Recursive Search
+                    Called by TaskPaneHeader
+                    Single Instance Impact
+                    Secondary Factors
+                    RAC Components
+                    EditableTitle
+                    Accessibility Overhead
+                    Minor Impact
+                    Optimization Strategy
+                    Fix Hook: High Impact
+                    Remove RAC: Low Impact
+                    Hook Fix = Better ROI
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Section 4: Performance Benchmarking & Decision Matrix</h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Comparative Analysis of Optimization Approaches</h3>
+
+            <p class="text-lg leading-relaxed mb-6">
+                <strong>Core Concept: Optimizing the useTaskTimeTracking hook (Option A) delivers superior performance
+                    improvements across all metrics with lower implementation effort compared to removing RAC (Option
+                    B).</strong>
+            </p>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Option A: Optimize Hook (Recommended)</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>RunningTasksBar: Instant response (120FPS)</li>
+                <li>TaskPane Mount: Fast</li>
+                <li>TaskPane Editing: Responsive</li>
+                <li>Implementation Effort: Low</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Option B: Remove RAC (Not Recommended)</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>RunningTasksBar: Still freezes (no improvement)</li>
+                <li>TaskPane Mount: Slight gain only</li>
+                <li>TaskPane Editing: Responsive</li>
+                <li>Implementation Effort: High (refactoring all RAC components)</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Key Decision Factors:</h4>
+            <ol class="list-decimal list-inside space-y-2 text-lg leading-relaxed mb-6">
+                <li><strong>Effectiveness:</strong> Option A fixes root cause; Option B addresses symptom</li>
+                <li><strong>Effort:</strong> Option A requires targeted changes; Option B requires widespread
+                    refactoring</li>
+                <li><strong>Risk:</strong> Option A is surgical; Option B could introduce regressions</li>
+                <li><strong>Future-proofing:</strong> Option A scales; Option B doesn't solve core problem</li>
+            </ol>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                    A[Performance Optimization Options] --> B[Option A: Optimize Hook]
+                    A --> C[Option B: Remove RAC]
+
+                    B --> D[Low Effort]
+                    B --> E[Fixes Root Cause]
+                    B --> F[120FPS RunningTasksBar]
+                    B --> G[Fast TaskPane]
+
+                    C --> H[High Effort]
+                    C --> I[Treats Symptom]
+                    C --> J[RunningTasksBar Still Freezes]
+                    C --> K[Slight TaskPane Gain]
+
+                    D --> L[Recommended: Option A]
+                    E --> L
+                    F --> L
+                    G --> L
+
+                    style L fill:#51cf66
+                    style J fill:#ff6b6b
+                    style F fill:#51cf66
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5 -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Section 5: Implementation Plan - Hook Optimization</h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Targeted Fix for useTaskTimeTracking Performance</h3>
+
+            <p class="text-lg leading-relaxed mb-6">
+                <strong>Core Concept: Add a depth parameter to useTaskTimeTracking that controls recursion level,
+                    allowing components to skip expensive subtask calculations when only task-level data is
+                    needed.</strong>
+            </p>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Hook Modification (useTaskTimeTracking.ts):</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>Add <code class="bg-gray-200 px-2 py-1 rounded">depth</code> parameter to hook options (default:
+                    <code class="bg-gray-200 px-2 py-1 rounded">'task'</code>)</li>
+                <li>Conditional logic: Only calculate <code class="bg-gray-200 px-2 py-1 rounded">allSubtaskIds</code>
+                    and subtask sums if <code class="bg-gray-200 px-2 py-1 rounded">depth !== 'task'</code></li>
+                <li>Prevents O(N²) behavior in list contexts</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Why This Works:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>RunningTasksBar only needs task-level time data, not subtask aggregates</li>
+                <li>Skipping recursion eliminates 50,000 unnecessary iterations</li>
+                <li>Components that need subtask data can still request it explicitly</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Implementation Complexity:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>Low: Single parameter addition</li>
+                <li>Backward compatible: Default behavior preserved</li>
+                <li>Localized changes: Only hook and its consumers affected</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">User Review Required:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-6">
+                <li>Verify all consumers of useTaskTimeTracking (TaskPane, RunningTasksBar)</li>
+                <li>Ensure no other components depend on automatic subtask calculation</li>
+            </ul>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                    A[useTaskTimeTracking Hook] --> B{depth Parameter}
+                    B -->|depth = 'task'| C[Task-Level Only]
+                    B -->|depth = 'subtree'| D[Full Recursive Calculation]
+
+                    C --> E[Skip allSubtaskIds]
+                    C --> F[Skip Subtask Sums]
+                    C --> G[O 1 Complexity]
+
+                    D --> H[Calculate allSubtaskIds]
+                    D --> I[Calculate Subtask Sums]
+                    D --> J[O N² Complexity]
+
+                    G --> K[Fast: Used by RunningTasksBar]
+                    J --> L[Slow: Used Only When Needed]
+
+                    style G fill:#51cf66
+                    style K fill:#51cf66
+                    style J fill:#ffd43b
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6 -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Section 6: Implementation Plan - Component Memoization
+            </h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Preventing Unnecessary Re-renders Through React
+                Optimization</h3>
+
+            <p class="text-lg leading-relaxed mb-6">
+                <strong>Core Concept: Wrap components with React.memo and stabilize callback props with useCallback to
+                    prevent cascade re-renders when parent state changes but child props remain unchanged.</strong>
+            </p>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Components to Memoize:</h4>
+            <ol class="list-decimal list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li><strong>TaskPaneHeader:</strong> Prevents re-render when TaskPane updates</li>
+                <li><strong>EditableTitle:</strong> Prevents re-render during title editing</li>
+                <li><strong>TaskHeaderStateSwitcher:</strong> Prevents re-render during state changes</li>
+                <li><strong>TrackedTimeDisplay:</strong> Will receive depth prop</li>
+            </ol>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Callback Stabilization (TaskPane.tsx):</h4>
+            <p class="text-lg leading-relaxed mb-2">Need to wrap with useCallback:</p>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>onSaveTitle</li>
+                <li>onToggleEditMode</li>
+                <li>onOpenReopenModal</li>
+                <li>onStartTimer</li>
+                <li>onStopTimer</li>
+                <li>onOpenManualEntry</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Why This Matters:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>React.memo prevents child re-renders when props are shallow-equal</li>
+                <li>Unstable callbacks (recreated each render) break memo optimization</li>
+                <li>useCallback creates stable function references</li>
+                <li>Combined: Eliminates wasted render cycles</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Additional Optimization:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-6">
+                <li>Verify breadcrumbs prop stability (already uses useMemo)</li>
+                <li>Check if tasksMap dependency can be optimized</li>
+            </ul>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                    A[TaskPane State Change] --> B{Props Changed?}
+                    B -->|Yes| C[Re-render Child]
+                    B -->|No + memo| D[Skip Re-render]
+
+                    E[Unstable Callbacks] --> F[Props Always Different]
+                    F --> G[memo Ineffective]
+
+                    H[useCallback] --> I[Stable Callbacks]
+                    I --> J[Props Can Match]
+                    J --> K[memo Works]
+
+                    K --> L[Fewer Renders]
+                    L --> M[Better Performance]
+
+                    style D fill:#51cf66
+                    style K fill:#51cf66
+                    style M fill:#51cf66
+                    style G fill:#ff6b6b
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7 -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Section 7: Verification & Testing Strategy</h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Manual Performance Validation Plan</h3>
+
+            <p class="text-lg leading-relaxed mb-6">
+                <strong>Core Concept: Since no automated performance tests exist, use systematic manual testing across
+                    three critical user flows to verify optimization success.</strong>
+            </p>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Test Scenario 1: RunningTasksBar Expansion</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li><strong>Setup:</strong> Open app with 50+ tasks</li>
+                <li><strong>Action:</strong> Click "Expand" on RunningTasksBar</li>
+                <li><strong>Success Criteria:</strong> UI does not freeze, smooth animation, instant response</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Test Scenario 2: TaskPane Interaction</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li><strong>Setup:</strong> Open a task from list</li>
+                <li><strong>Actions:</strong>
+                    <ul class="list-circle list-inside ml-6 mt-2 space-y-1">
+                        <li>Click "Edit" title</li>
+                        <li>Type characters</li>
+                        <li>Observe timer ticking (every second)</li>
+                    </ul>
+                </li>
+                <li><strong>Success Criteria:</strong>
+                    <ul class="list-circle list-inside ml-6 mt-2 space-y-1">
+                        <li>Typing is responsive (no input lag)</li>
+                        <li>Timer updates smoothly</li>
+                        <li>No lag during timer ticks</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Test Scenario 3: Mounting/Unmounting</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li><strong>Actions:</strong>
+                    <ul class="list-circle list-inside ml-6 mt-2 space-y-1">
+                        <li>Click a task in RunningTasksBar</li>
+                        <li>Close TaskPane</li>
+                    </ul>
+                </li>
+                <li><strong>Success Criteria:</strong>
+                    <ul class="list-circle list-inside ml-6 mt-2 space-y-1">
+                        <li>TaskPane opens instantly (&lt; 100ms perceived)</li>
+                        <li>TaskPane closes smoothly</li>
+                        <li>No visual artifacts or flickering</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Testing Environment:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-4">
+                <li>Use realistic dataset size (1000+ tasks)</li>
+                <li>Test on lower-end hardware for worst-case performance</li>
+                <li>Monitor Chrome DevTools Performance tab during tests</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Success Metrics:</h4>
+            <ul class="list-disc list-inside space-y-2 text-lg leading-relaxed mb-6">
+                <li>120FPS maintained during animations</li>
+                <li>&lt; 16ms frame time (60 FPS minimum)</li>
+                <li>No jank or stuttering during interactions</li>
+            </ul>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TD
+                    A[Verification Plan] --> B[Test 1: Expansion]
+                    A --> C[Test 2: Interaction]
+                    A --> D[Test 3: Mount/Unmount]
+
+                    B --> E[50+ Tasks]
+                    E --> F[Click Expand]
+                    F --> G{UI Freezes?}
+                    G -->|No| H[✓ Pass]
+                    G -->|Yes| I[✗ Fail]
+
+                    C --> J[Open Task]
+                    J --> K[Edit Title + Timer]
+                    K --> L{Responsive?}
+                    L -->|Yes| M[✓ Pass]
+                    L -->|No| N[✗ Fail]
+
+                    D --> O[Click Task]
+                    O --> P[Close Pane]
+                    P --> Q{Instant?}
+                    Q -->|Yes| R[✓ Pass]
+                    Q -->|No| S[✗ Fail]
+
+                    H --> T[Deploy]
+                    M --> T
+                    R --> T
+
+                    style H fill:#51cf66
+                    style M fill:#51cf66
+                    style R fill:#51cf66
+                    style I fill:#ff6b6b
+                    style N fill:#ff6b6b
+                    style S fill:#ff6b6b
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Flashcard Section -->
+    <div id="flashcardSection"
+        class="hidden min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
+        <div class="max-w-3xl w-full">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-bold text-white mb-2">Flashcard Study Mode</h2>
+                <p class="text-white text-lg sans" id="cardCounter">Card 1 of 15</p>
+            </div>
+
+            <div class="flashcard-container mb-8">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-front">
+                        <div class="text-center">
+                            <p class="text-2xl font-semibold mb-4 sans">Question</p>
+                            <p class="text-xl" id="questionText"></p>
+                        </div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="text-center">
+                            <p class="text-2xl font-semibold mb-4 sans">Answer</p>
+                            <p class="text-xl" id="answerText"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4 mb-6">
+                <button onclick="flipCard()"
+                    class="sans bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold text-lg shadow-lg hover:bg-gray-100 transition">
+                    Flip Card
+                </button>
+            </div>
+
+            <div class="flex justify-between gap-4">
+                <button onclick="previousCard()"
+                    class="sans bg-white bg-opacity-20 text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-30 transition">
+                    ← Previous
+                </button>
+                <button onclick="nextCard()"
+                    class="sans bg-white bg-opacity-20 text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-30 transition">
+                    Next →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Navigation Bar -->
+    <div class="sticky-nav">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex justify-center">
+            <button onclick="toggleMode()" id="modeToggle"
+                class="sans bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold text-lg shadow-lg hover:bg-indigo-700 transition">
+                Switch to Flashcards
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#667eea',
+                primaryTextColor: '#1f2937',
+                primaryBorderColor: '#4f46e5',
+                lineColor: '#6366f1',
+                secondaryColor: '#f093fb',
+                tertiaryColor: '#ffd43b'
+            }
+        });
+
+        // Flashcard data
+        const flashcards = [
+            {
+                q: "What is the primary cause of the performance regression in the TaskPane and RunningTasksBar?",
+                a: "The useTaskTimeTracking hook performing O(N²) recursive searches over all board tasks, not React Aria Components (RAC)."
+            },
+            {
+                q: "How many iterations occur when RunningTasksBar displays 50 tasks with 1000 total board tasks?",
+                a: "50,000 synchronous iterations (50 displayed tasks × 1000 board tasks)."
+            },
+            {
+                q: "What is the impact of removing RAC on RunningTasksBar performance?",
+                a: "Zero impact. RunningTasksBar does not use RAC components, so removing them won't fix the freeze."
+            },
+            {
+                q: "What are the two possible explanations for why the app was 120FPS before the refactor?",
+                a: "(1) RunningTasksBar didn't display dynamic timers for every task before, or (2) the number of recursive subtasks grew, hitting the O(N²) algorithm's tipping point."
+            },
+            {
+                q: "What is the recommended optimization approach and why?",
+                a: "Option A: Optimize the useTaskTimeTracking hook. It fixes the root cause with low effort and delivers instant performance (120FPS) while removing RAC still leaves the freeze unresolved."
+            },
+            {
+                q: "What parameter should be added to useTaskTimeTracking to fix the performance issue?",
+                a: "A depth parameter (default: 'task') that controls whether to calculate subtask recursion. Setting depth='task' skips expensive recursive calculations."
+            },
+            {
+                q: "Why does the depth parameter solve the O(N²) problem?",
+                a: "RunningTasksBar only needs task-level data, not subtask aggregates. Skipping recursion eliminates 50,000 unnecessary iterations."
+            },
+            {
+                q: "What three components should be wrapped with React.memo?",
+                a: "TaskPaneHeader, EditableTitle, and TaskHeaderStateSwitcher."
+            },
+            {
+                q: "Why is useCallback needed when implementing React.memo?",
+                a: "React.memo prevents re-renders when props are unchanged, but unstable callbacks (recreated each render) make props always different, breaking the optimization."
+            },
+            {
+                q: "What are the six callbacks in TaskPane.tsx that need useCallback wrapping?",
+                a: "onSaveTitle, onToggleEditMode, onOpenReopenModal, onStartTimer, onStopTimer, and onOpenManualEntry."
+            },
+            {
+                q: "What is the first manual test for verifying the optimization?",
+                a: "Open the app with 50+ tasks, click 'Expand' on RunningTasksBar, and verify the UI does not freeze."
+            },
+            {
+                q: "What should happen during the TaskPane interaction test?",
+                a: "When editing a title and watching the timer tick every second, typing should be responsive with no lag during timer updates."
+            },
+            {
+                q: "What is the success criteria for the mounting/unmounting test?",
+                a: "TaskPane should open instantly (< 100ms perceived) and close smoothly without visual artifacts or flickering."
+            },
+            {
+                q: "Why is the computational bottleneck described as happening 'before any UI component renders'?",
+                a: "The useTaskTimeTracking hook performs its recursive search during hook initialization, which occurs before React renders any components to the DOM."
+            },
+            {
+                q: "What is the estimated effort level for Option A vs Option B, and what are the expected RunningTasksBar results?",
+                a: "Option A (Optimize Hook): Low effort, instant 120FPS. Option B (Remove RAC): High effort, still freezes with no improvement."
+            }
+        ];
+
+        let currentCardIndex = 0;
+        let isArticleMode = true;
+
+        function updateCard() {
+            const card = flashcards[currentCardIndex];
+            document.getElementById('questionText').textContent = card.q;
+            document.getElementById('answerText').textContent = card.a;
+            document.getElementById('cardCounter').textContent = `Card ${currentCardIndex + 1} of ${flashcards.length}`;
+
+            // Reset flip state
+            document.getElementById('flashcard').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            currentCardIndex = (currentCardIndex + 1) % flashcards.length;
+            updateCard();
+        }
+
+        function previousCard() {
+            currentCardIndex = (currentCardIndex - 1 + flashcards.length) % flashcards.length;
+            updateCard();
+        }
+
+        function toggleMode() {
+            isArticleMode = !isArticleMode;
+
+            if (isArticleMode) {
+                document.getElementById('articleSection').classList.remove('hidden');
+                document.getElementById('flashcardSection').classList.add('hidden');
+                document.getElementById('modeToggle').textContent = 'Switch to Flashcards';
+            } else {
+                document.getElementById('articleSection').classList.add('hidden');
+                document.getElementById('flashcardSection').classList.remove('hidden');
+                document.getElementById('modeToggle').textContent = 'Back to Article';
+                updateCard();
+            }
+        }
+
+        // Initialize first card
+        updateCard();
+
+        // Keyboard navigation for flashcards
+        document.addEventListener('keydown', function (e) {
+            if (!isArticleMode) {
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    flipCard();
+                } else if (e.key === 'ArrowRight') {
+                    nextCard();
+                } else if (e.key === 'ArrowLeft') {
+                    previousCard();
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
+```

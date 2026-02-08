@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Report: Scroll Focus Issue Resolution</title>
+    <link rel="stylesheet" href="../cta-bot.css" />
+    <script src="../cta-bot.js" defer></script>
+    <script src="case-data.js" defer></script>
+    <script src="mega-header.js" defer></script>
+    <link rel="stylesheet" href="narrative.css" />
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-yellow: #eab308;
+            --accent-purple: #a855f7;
+            --border-color: #475569;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin: 1.5rem 0 1rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-failed {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .badge-partial {
+            background: rgba(234, 179, 8, 0.2);
+            color: var(--accent-yellow);
+            border: 1px solid var(--accent-yellow);
+        }
+
+        code {
+            background: var(--bg-tertiary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9em;
+            color: var(--accent-purple);
+        }
+
+        pre {
+            background: var(--bg-tertiary);
+            padding: 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .comment {
+            color: #6b7280;
+        }
+
+        .keyword {
+            color: #c084fc;
+        }
+
+        .string {
+            color: #34d399;
+        }
+
+        .property {
+            color: #60a5fa;
+        }
+
+        .function {
+            color: #fbbf24;
+        }
+
+        ul,
+        ol {
+            margin: 1rem 0 1rem 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        td {
+            color: var(--text-secondary);
+        }
+
+        .highlight-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-box.success {
+            background: rgba(34, 197, 94, 0.1);
+            border-left-color: var(--accent-green);
+        }
+
+        .highlight-box.warning {
+            background: rgba(234, 179, 8, 0.1);
+            border-left-color: var(--accent-yellow);
+        }
+
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .flow-arrow {
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .files-affected {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .file-card {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .file-path {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-changes {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .checkmark {
+            color: var(--accent-green);
+        }
+
+        .crossmark {
+            color: var(--accent-red);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <mega-header>
+        <div slot="brand-content">
+            <div class="brand-text-main">Scroll Focus RCA</div>
+            <div class="brand-text-sub">UX / Root Cause Analysis Report</div>
+        </div>
+        <div slot="right-content" class="header-actions">
+            <div class="pill">RCA • 2024</div>
+            <button class="btn-primary" id="openSummaryBtn">
+                <span>☰</span> One-Page Summary
+            </button>
+        </div>
+    </mega-header>
+    <div class="container">
+        <header>
+            <h1>Scroll Focus Issue Resolution</h1>
+            <p class="subtitle">Technical Report: Preventing Scroll Bleed-Through in Overlay Components</p>
+            <div class="meta">
+                <div class="meta-item">
+                    📅 <span>January 10, 2026</span>
+                </div>
+                <div class="meta-item">
+                    📁 <span>notion-clone</span>
+                </div>
+                <div class="meta-item">
+                    🏷️ <span>React / Next.js / CSS</span>
+                </div>
+            </div>
+        </header>
+
+        <section>
+            <h2>📋 Executive Summary</h2>
+            <p>
+                This report documents the investigation and resolution of a scroll focus issue in the Kanban board
+                application
+                where touchpad/mouse scroll events intended for overlay components (TaskPane and RunningTasksBar) were
+                incorrectly propagating to the underlying board, causing unintended background scrolling.
+            </p>
+            <div class="highlight-box success">
+                <strong>Resolution Status:</strong> Successfully resolved using scroll event containment via
+                <code>onWheel</code> event handlers and <code>overscrollBehavior: contain</code> CSS property.
+            </div>
+        </section>
+
+        <section>
+            <h2>🔍 Problem Analysis</h2>
+
+            <h3>Symptoms Observed</h3>
+            <ul>
+                <li>When TaskPane (modal) was open, scrolling with touchpad would scroll the board behind it</li>
+                <li>When RunningTasksBar (dock) was expanded, scroll events leaked to the board</li>
+                <li>Board's scrollbar remained visible behind overlay components</li>
+                <li>Scroll targeting was inconsistent — users expected overlays to capture scroll events</li>
+            </ul>
+
+            <h3>Root Cause Identification</h3>
+            <div class="card">
+                <p>The issue stemmed from <strong>scroll event bubbling</strong> in the DOM. When a scrollable container
+                    reaches its scroll boundary (top or bottom), the browser propagates remaining scroll delta to
+                    ancestor elements.
+                    This behavior is called <strong>scroll chaining</strong>.</p>
+            </div>
+
+            <h3>Scroll Chain Visualization</h3>
+            <div class="flow-diagram">
+                <div class="flow-step"><span class="flow-arrow">→</span> User scrolls with touchpad over TaskPane</div>
+                <div class="flow-step"><span class="flow-arrow">→</span> TaskPane body scrolls (overflow-y-auto)</div>
+                <div class="flow-step"><span class="flow-arrow">→</span> TaskPane reaches scroll boundary</div>
+                <div class="flow-step"><span class="flow-arrow">→</span> Remaining scroll delta bubbles to parent</div>
+                <div class="flow-step"><span class="flow-arrow">→</span> Board/body scrolls (unintended behavior)</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>🧪 Approaches Attempted</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Approach 1: Body Scroll Lock</h3>
+                    <span class="badge badge-failed">Failed</span>
+                </div>
+                <p><strong>Strategy:</strong> Set <code>document.body.style.overflow = "hidden"</code> when overlay
+                    opens,
+                    restore original value on close.</p>
+
+                <pre><code><span class="comment">// Initial implementation</span>
+<span class="keyword">useEffect</span>(() => {
+    <span class="keyword">if</span> (!taskId) <span class="keyword">return</span>;
+    <span class="keyword">const</span> originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = <span class="string">"hidden"</span>;
+    <span class="keyword">return</span> () => {
+        document.body.style.overflow = originalOverflow;
+    };
+}, [taskId]);</code></pre>
+
+                <p><strong>Problem:</strong> When component closed, the original overflow value was sometimes captured
+                    as "hidden" (if another component had already set it), causing the board to become permanently
+                    non-scrollable.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Approach 2: Reference-Counted Scroll Lock</h3>
+                    <span class="badge badge-partial">Partial Success</span>
+                </div>
+                <p><strong>Strategy:</strong> Create a shared utility with lock counter to properly handle nested
+                    lock/unlock scenarios.</p>
+
+                <pre><code><span class="comment">// src/lib/scrollLock.ts</span>
+<span class="keyword">let</span> lockCount = 0;
+<span class="keyword">let</span> originalOverflow = <span class="string">""</span>;
+
+<span class="keyword">export function</span> <span class="function">lockBodyScroll</span>() {
+    <span class="keyword">if</span> (lockCount === 0) {
+        originalOverflow = document.body.style.overflow;
+        document.body.style.overflow = <span class="string">"hidden"</span>;
+    }
+    lockCount++;
+}
+
+<span class="keyword">export function</span> <span class="function">unlockBodyScroll</span>() {
+    lockCount--;
+    <span class="keyword">if</span> (lockCount <= 0) {
+        lockCount = 0;
+        document.body.style.overflow = originalOverflow;
+    }
+}</code></pre>
+
+                <p><strong>Problem:</strong> While this fixed the nested lock issue, it still prevented the board from
+                    scrolling when the mouse was outside the overlay but the overlay was still open. User requirement
+                    was
+                    that board should scroll when mouse is over the board, regardless of overlay state.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Approach 3: Event Containment (Final Solution)</h3>
+                    <span class="badge badge-success">Implemented</span>
+                </div>
+                <p><strong>Strategy:</strong> Use <code>onWheel</code> event handlers to stop scroll event propagation
+                    combined with <code>overscrollBehavior: contain</code> CSS property.</p>
+
+                <pre><code><span class="comment">// TaskPane.tsx - Final implementation</span>
+&lt;aside
+    style={{ <span class="property">overscrollBehavior</span>: <span class="string">"contain"</span> }}
+    <span class="property">onWheel</span>={(e) => e.<span class="function">stopPropagation</span>()}
+&gt;
+    ...
+&lt;/aside&gt;</code></pre>
+
+                <p><strong>Advantages:</strong></p>
+                <ul>
+                    <li>No body scroll lock complexity</li>
+                    <li>Board remains scrollable when mouse is over it</li>
+                    <li>Overlays capture scroll only when mouse is inside them</li>
+                    <li>Works correctly on fresh page load</li>
+                    <li>No cleanup issues when components unmount</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>✅ Final Solution Details</h2>
+
+            <h3>Technical Implementation</h3>
+            <p>The solution combines two complementary techniques:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Technique</th>
+                        <th>Purpose</th>
+                        <th>Browser Support</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>onWheel={(e) => e.stopPropagation()}</code></td>
+                        <td>Prevents wheel events from bubbling to parent elements</td>
+                        <td>All modern browsers</td>
+                    </tr>
+                    <tr>
+                        <td><code>overscrollBehavior: contain</code></td>
+                        <td>Prevents scroll chaining at scroll boundaries</td>
+                        <td>Chrome 63+, Firefox 59+, Safari 16+</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Behavior Matrix</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mouse Position</th>
+                        <th>Scroll Behavior</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Over the Board</td>
+                        <td><span class="checkmark">✓</span> Board scrolls normally</td>
+                    </tr>
+                    <tr>
+                        <td>Over TaskPane</td>
+                        <td><span class="checkmark">✓</span> TaskPane scrolls, board doesn't</td>
+                    </tr>
+                    <tr>
+                        <td>Over RunningTasksBar</td>
+                        <td><span class="checkmark">✓</span> Dock scrolls, board doesn't</td>
+                    </tr>
+                    <tr>
+                        <td>Components closed</td>
+                        <td><span class="checkmark">✓</span> Board scrolls normally</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Files Modified</h3>
+            <div class="files-affected">
+                <div class="file-card">
+                    <div class="file-path">src/components/TaskPane/TaskPane.tsx</div>
+                    <div class="file-changes">
+                        + Added <code>style={{ overscrollBehavior: "contain" }}</code><br>
+                        + Added <code>onWheel</code> event handler
+                    </div>
+                </div>
+                <div class="file-card">
+                    <div class="file-path">src/components/RunningTasksBar.tsx</div>
+                    <div class="file-changes">
+                        + Added <code>style={{ overscrollBehavior: "contain" }}</code><br>
+                        + Added <code>onWheel</code> event handler
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>📊 Comparison Summary</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Approach</th>
+                        <th>Board Scrollable</th>
+                        <th>Overlay Captures Scroll</th>
+                        <th>No Side Effects</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Body Scroll Lock</td>
+                        <td><span class="crossmark">✗</span></td>
+                        <td><span class="checkmark">✓</span></td>
+                        <td><span class="crossmark">✗</span></td>
+                        <td><span class="badge badge-failed">Rejected</span></td>
+                    </tr>
+                    <tr>
+                        <td>Reference-Counted Lock</td>
+                        <td><span class="crossmark">✗</span></td>
+                        <td><span class="checkmark">✓</span></td>
+                        <td><span class="checkmark">✓</span></td>
+                        <td><span class="badge badge-partial">Rejected</span></td>
+                    </tr>
+                    <tr>
+                        <td>Event Containment</td>
+                        <td><span class="checkmark">✓</span></td>
+                        <td><span class="checkmark">✓</span></td>
+                        <td><span class="checkmark">✓</span></td>
+                        <td><span class="badge badge-success">Implemented</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>💡 Key Learnings</h2>
+            <div class="highlight-box">
+                <ul>
+                    <li><strong>Event propagation control</strong> is often more precise than global state changes like
+                        body overflow</li>
+                    <li><strong>overscrollBehavior</strong> is a powerful CSS property specifically designed for scroll
+                        containment</li>
+                    <li><strong>User intent matters:</strong> Users expected scroll to work based on mouse position, not
+                        overlay state</li>
+                    <li>Avoid global DOM modifications when local event handling can achieve the same result</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p>Generated by Antigravity AI Assistant • Technical Report v1.0</p>
+        </footer>
+    </div>
+</body>
+
+</html><cta-bot idle-timeout="15000" photo-src="/minhaj.jpg" audio-src="/cta-chime.wav" email="minhaj.me.bd@gmail.com"
+    phone="+8801716734974" audio-play="true"></cta-bot>

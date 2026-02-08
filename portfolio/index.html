@@ -115,13 +115,13 @@
     .hero::before {
       content: "";
       position: absolute;
-      top: -150px;
+      top: -200px;
       right: -100px;
-      width: 550px;
-      height: 550px;
-      background: radial-gradient(circle, rgba(3, 155, 229, 0.25) 0%, rgba(3, 155, 229, 0) 70%);
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(3, 155, 229, 0.3) 0%, rgba(3, 155, 229, 0) 70%);
       border-radius: 50%;
-      filter: blur(50px);
+      filter: blur(80px);
       z-index: 0;
       pointer-events: none;
     }
@@ -129,13 +129,27 @@
     .hero::after {
       content: "";
       position: absolute;
-      bottom: -150px;
+      bottom: -200px;
       left: -100px;
-      width: 550px;
-      height: 550px;
-      background: radial-gradient(circle, rgba(0, 137, 123, 0.2) 0%, rgba(0, 137, 123, 0) 70%);
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(0, 137, 123, 0.25) 0%, rgba(0, 137, 123, 0) 70%);
       border-radius: 50%;
-      filter: blur(50px);
+      filter: blur(80px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Third mesh point for Purple */
+    .hero-glow-3 {
+      position: absolute;
+      top: 10%;
+      left: 20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(103, 58, 183, 0.2) 0%, rgba(103, 58, 183, 0) 70%);
+      border-radius: 50%;
+      filter: blur(70px);
       z-index: 0;
       pointer-events: none;
     }
@@ -819,6 +833,7 @@
   <main>
     <!-- Hero -->
     <section class="hero">
+      <div class="hero-glow-3"></div>
       <div>
         <div class="hero-kicker">Case Study Portfolio</div>
         <h1 class="hero-title">

@@ -31,36 +31,39 @@
 
   <style>
     :root {
-      /* Firebase / Google Material Theme */
+      /* Electric Tech Palette */
       --bg: #FFFFFF;
-      /* Pure White */
-      --bg-alt: #F8F9FA;
-      /* Google Grey 50 */
-      /* Google Brand Colors */
-      --primary: #1A73E8;
-      /* Google Blue 600 */
-      --primary-hover: #174EA6;
-      /* Google Blue 800 */
-      --secondary: #FFCA28;
-      /* Firebase Amber */
-      --accent: #F57C00;
-      /* Firebase Orange 700 */
+      --bg-alt: #F8FAFC;
+      /* Slate 50 */
+
+      --primary: #4F46E5;
+      /* Indigo 600 */
+      --primary-hover: #4338CA;
+      /* Indigo 700 */
+      --secondary: #10B981;
+      /* Emerald 500 */
+      --secondary-dark: #059669;
+      /* Emerald 600 */
+      --accent: #8B5CF6;
+      /* Violet 500 */
+
       /* Typography */
-      --text-main: #202124;
-      /* Google Grey 900 */
-      --text-muted: #5F6368;
-      /* Google Grey 700 */
-      --text-light: #80868B;
-      /* Google Grey 500 */
-      --border-subtle: #DADCE0;
-      /* Google Grey 300 */
-      --radius-lg: 8px;
-      /* Material standard is smaller */
-      --radius-md: 4px;
-      /* Material Elevation Shadows */
-      --shadow-card: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
-      --shadow-hover: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
-      --shadow-soft: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+      --text-main: #0F172A;
+      /* Slate 900 */
+      --text-muted: #475569;
+      /* Slate 600 */
+      --text-light: #64748B;
+      /* Slate 500 */
+
+      --border-subtle: #E2E8F0;
+      /* Slate 200 */
+      --radius-lg: 12px;
+      --radius-md: 8px;
+
+      /* Modern Shadows */
+      --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     }
 
     * {
@@ -100,12 +103,10 @@
     .hero {
       margin-top: 10px;
       margin-bottom: 40px;
-      padding: 48px 40px;
-      border-radius: 12px;
-      background: #F8F9FA;
-      border: 1px solid var(--border-subtle);
-      /* Remove shadow for cleaner look or keep very subtle */
-      box-shadow: none;
+      padding: 60px 40px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+      border: 1px solid #E0E7FF;
       display: grid;
       grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
       gap: 48px;
@@ -118,11 +119,11 @@
     .hero::before {
       content: "";
       position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(255, 202, 40, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+      top: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(79, 70, 229, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
       border-radius: 50%;
       z-index: 0;
       pointer-events: none;
@@ -131,11 +132,11 @@
     .hero::after {
       content: "";
       position: absolute;
-      bottom: -50px;
-      left: -50px;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(26, 115, 232, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+      bottom: -100px;
+      left: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
       border-radius: 50%;
       z-index: 0;
       pointer-events: none;
@@ -209,13 +210,13 @@
 
     .hero-meta-pill {
       font-size: 12px;
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      background-color: #f1f5f9;
-      /* Slate 100 */
-      color: var(--text-muted);
-      font-weight: 500;
+      border: 1px solid #E0E7FF;
+      background-color: #FFFFFF;
+      color: var(--primary);
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     .hero-side {
@@ -280,13 +281,12 @@
     .legend-chip {
       font-size: 12px;
       padding: 6px 12px;
-      border-radius: 4px;
-      /* Material logic */
-      background-color: #E8F0FE;
-      /* Light Blue */
-      color: #174EA6;
-      /* Dark Blue */
-      font-weight: 500;
+      border-radius: 6px;
+      background-color: #F0FDF4;
+      /* Emerald 50 */
+      color: var(--secondary-dark);
+      border: 1px solid #DCFCE7;
+      font-weight: 600;
     }
 
     /* Filter row */
@@ -334,12 +334,10 @@
     }
 
     .filter-chip.active {
-      background-color: #E8F0FE;
-      /* Google light blue selection */
-      color: #1967D2;
-      /* Google blue text */
-      border-color: transparent;
-      font-weight: 500;
+      background-color: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
     }
 
     /* Cards grid - Bento Layout */
@@ -377,10 +375,10 @@
     .card-industry {
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.11em;
-      color: var(--accent);
+      letter-spacing: 0.12em;
+      color: var(--secondary-dark);
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .card-title {
@@ -435,13 +433,17 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      color: var(--accent);
-      font-weight: 600;
+      color: var(--primary);
+      font-weight: 700;
     }
 
     .card-link-text span {
       font-size: 16px;
       transition: transform 0.2s;
+    }
+
+    .card:hover .card-link-text {
+      color: var(--accent);
     }
 
     .card:hover .card-link-text span {
@@ -461,8 +463,17 @@
       grid-auto-flow: dense;
     }
 
-    .col-span-2 {
-      grid-column: span 2;
+    .col-span-2.row-span-2 .card {
+      background: linear-gradient(to bottom right, #FFFFFF, #F8FAFC);
+      border-width: 2px;
+      border-color: #E0E7FF;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .col-span-2.row-span-2 .card-meta-row {
+      justify-content: center;
     }
 
     .row-span-2 {

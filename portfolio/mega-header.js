@@ -147,16 +147,18 @@ class MegaHeader extends HTMLElement {
           position: sticky;
           top: 0;
           z-index: 1000;
-          /* Firebase / Google Material Theme */
+          --primary: #4F46E5;
+          --primary-hover: #4338CA;
+          --accent: #10B981;
+          --accent-light: #F0FDF4;
+          --text-main: #0F172A;
+          --text-muted: #475569;
+          --border: #E2E8F0;
           --header-bg: rgba(255, 255, 255, 0.98);
           --menu-bg: #FFFFFF;
-          --accent: #1A73E8; /* Google Blue */
-          --accent-light: #E8F0FE;
-          --text-main: #202124;
-          --text-muted: #5F6368;
-          --border: #DADCE0;
-          --shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
-          --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          --radius: 8px;
+          --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+          --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
 
         header {
@@ -300,7 +302,7 @@ class MegaHeader extends HTMLElement {
 
         .menu-card.span-col-2 {
            grid-column: span 2;
-           background: #FAFBFC;
+           background: #F8FAFC;
         }
 
         .menu-card.span-row-2 {
@@ -310,7 +312,8 @@ class MegaHeader extends HTMLElement {
         .menu-card.span-both {
            grid-column: span 2;
            grid-row: span 2;
-           background: #F8FAFC;
+           background: linear-gradient(135deg, #FFFFFF 0%, #F5F3FF 100%);
+           border-color: #E0E7FF;
         }
 
         .menu-card.span-both .tech-stack-mini {
@@ -335,11 +338,11 @@ class MegaHeader extends HTMLElement {
         .menu-tag {
            font-size: 10px;
            text-transform: uppercase;
-           background: var(--accent-light);
-           color: var(--accent);
+           background: #F0FDF4; /* Emerald 50 */
+           color: #059669; /* Emerald 600 */
            padding: 2px 8px;
            border-radius: 4px;
-           font-weight: 600;
+           font-weight: 700;
            letter-spacing: 0.05em;
         }
 

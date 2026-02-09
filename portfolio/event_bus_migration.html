@@ -183,7 +183,7 @@
                   </svg>
                   Legacy Architecture: High Coupling
                 </h3>
-                <div class="mermaid">
+                <div class="mermaid" v-pre>
                   graph TD
                   Root["Page Root"] -->|onOpenTask| Board
                   Board -->|onOpenTask| Column
@@ -233,7 +233,7 @@ export const taskEventBus = new TaskEventBus();</pre>
                   </svg>
                   New Architecture: Decoupled Events
                 </h3>
-                <div class="mermaid">
+                <div class="mermaid" v-pre>
                   graph LR
                   subgraph Producers
                   TC["TaskCard"]
@@ -296,7 +296,7 @@ export const taskEventBus = new TaskEventBus();</pre>
               </p>
 
               <h3 class="text-lg font-semibold text-slate-800 mb-2">Sequence Diagram: User Interaction</h3>
-              <div class="mermaid">
+              <div class="mermaid" v-pre>
                 sequenceDiagram
                 participant User
                 participant TaskCard
@@ -397,15 +397,16 @@ export const taskEventBus = new TaskEventBus();</pre>
 
 
     </div>
-    <script>
-      const { createApp } = Vue;
-      createApp({
-        components: {
-          'mega-header': MegaHeader,
+  </div>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      components: {
+        'mega-header': MegaHeader,
 
-        }
-      }).mount('#app');
-    </script>
+      }
+    }).mount('#app');
+  </script>
 </body>
 
 </html>

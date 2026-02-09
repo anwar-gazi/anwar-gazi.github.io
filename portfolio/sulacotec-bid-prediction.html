@@ -572,354 +572,378 @@
       margin-bottom: 3px;
     }
   </style>
-<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-<link rel="stylesheet" href="mega-header.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <link rel="stylesheet" href="mega-header.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <div id="app">
-  <mega-header>
-    <div slot="brand-content">
-      <div class="brand-text-main">SulacoTec Bid Prediction</div>
-      <div class="brand-text-sub">AdTech / Big Data Case Study</div>
-    </div>
-    <div slot="right-content" class="header-actions">
-      <div class="pill">AdTech • 2024</div>
-      <button class="btn-primary" id="openSummaryBtn">
-        <span>☰</span> One-Page Summary
-      </button>
-    </div>
-  </mega-header>
-
-  <main>
-    <!-- Hero -->
-    <section class="hero" aria-labelledby="hero-title">
-      <div>
-        <div class="hero-tagline">
-          <span>●</span> AdTech • Click Processing • Predictive Bidding
-        </div>
-        <h1 id="hero-title" class="hero-title">
-          Using 100M+ Historical Clicks to Predict CPC/CPA/CPM for Volume Buying
-        </h1>
-        <p class="hero-subtitle">
-          Analysed a historical click-processing database (~100M records of bids, outcomes, and
-          revenue) and built a Laravel-based system to predict CPC/CPA/CPM when purchasing large
-          batches of clicks for downstream customers, improving pricing accuracy and stabilising
-          SulacoTec’s revenue stream.
-        </p>
-
-        <div class="hero-meta">
-          <div class="hero-meta-item">
-            <strong>Role</strong> Senior Software Engineer
-          </div>
-          <div class="hero-meta-item">
-            <strong>Org</strong> SulacoTec, Dhaka, Bangladesh
-          </div>
-          <div class="hero-meta-item">
-            <strong>Industry</strong> AdTech • Click Processing
-          </div>
-        </div>
-
-        <p class="hero-summary">
-          SulacoTec buys and routes large volumes of ad clicks on behalf of customers. Profitability
-          depends on bidding at the right CPC/CPA/CPM levels given uncertain downstream conversion
-          performance. I led the design and implementation of a predictive system that turned
-          100M+ rows of historical click data into practical bid guidance for new campaigns.
-        </p>
+    <mega-header>
+      <div slot="brand-content">
+        <div class="brand-text-main">SulacoTec Bid Prediction</div>
+        <div class="brand-text-sub">AdTech / Big Data Case Study</div>
       </div>
-
-      <aside class="hero-side" aria-label="Snapshot">
-        <div class="hero-side-label">Snapshot</div>
-        <div class="metric-grid">
-          <div class="metric-card">
-            <div class="metric-label">Data Scale</div>
-            <div class="metric-value">≈ 100M</div>
-            <div class="metric-footnote">
-              Historical records of bids, impressions, clicks, and final outcomes.
-            </div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Prediction Targets</div>
-            <div class="metric-value">CPC / CPA / CPM</div>
-            <div class="metric-footnote">
-              Used to price bulk click purchases for a key customer.
-            </div>
-          </div>
-        </div>
-        <div class="metric-card" style="margin-top:8px;">
-          <div class="metric-label">Impact Focus</div>
-          <div class="metric-footnote">
-            • More accurate bidding on new traffic sources.<br />
-            • Better margin control on volume deals.<br />
-            • Smoother, more predictable revenue stream.
-          </div>
-        </div>
-
-        <div style="margin-top:10px;">
-          <div class="hero-side-label">Core Stack</div>
-          <div class="stack-list">
-            <span class="stack-pill">PHP</span>
-            <span class="stack-pill">Laravel</span>
-            <span class="stack-pill">MySQL</span>
-            <span class="stack-pill">Click Logs</span>
-            <span class="stack-pill">Prediction Models</span>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <section class="value-rail" aria-label="Problem to solution to impact">
-      <div class="eyebrow">Problem → Solution → Impact</div>
-      <div class="value-grid">
-        <div class="value-card">
-          <div class="value-icon warning" aria-hidden="true">!</div>
-          <h3 class="value-title">Problem</h3>
-          <ul>
-            <li>Bidding large click volumes with little guidance on expected outcomes.</li>
-            <li>Margins at risk when entering new sources without benchmarks.</li>
-            <li>Heuristic pricing couldn’t scale to 100M+ rows of history.</li>
-          </ul>
-        </div>
-        <div class="value-card">
-          <div class="value-icon action" aria-hidden="true">⧉</div>
-          <h3 class="value-title">Solution</h3>
-          <ul>
-            <li>Built a predictive layer on CPC/CPA/CPM using historical click data.</li>
-            <li>Feature engineered traffic/source attributes into Laravel/MySQL pipelines.</li>
-            <li>Fed bid guidance into pricing workflows for new campaigns.</li>
-          </ul>
-        </div>
-        <div class="value-card">
-          <div class="value-icon impact" aria-hidden="true">✓</div>
-          <h3 class="value-title">Impact</h3>
-          <ul>
-            <li>More accurate bids on unfamiliar traffic sources.</li>
-            <li>Lower margin volatility on bulk deals.</li>
-            <li>Faster, more confident quoting for customers.</li>
-          </ul>
-        </div>
+      <div slot="right-content" class="header-actions">
+        <div class="pill">AdTech • 2024</div>
+        <button class="btn-primary" id="openSummaryBtn">
+          <span>☰</span> One-Page Summary
+        </button>
       </div>
+    </mega-header>
 
-      <div class="delta-metrics" aria-label="Directional before/after indicators">
-        <div class="delta-card">
-          <div class="delta-label">Bid accuracy</div>
-          <div class="delta-values">
-            <span class="delta-pill">Before: heuristic ranges</span>
-            <span class="delta-pill after">After: data-backed guidance</span>
-          </div>
-        </div>
-        <div class="delta-card">
-          <div class="delta-label">Margin stability</div>
-          <div class="delta-values">
-            <span class="delta-pill">Before: volatile per source</span>
-            <span class="delta-pill after">After: tighter guardrails</span>
-          </div>
-        </div>
-        <div class="delta-card">
-          <div class="delta-label">Quote speed</div>
-          <div class="delta-values">
-            <span class="delta-pill">Before: manual analysis</span>
-            <span class="delta-pill after">After: automated signals</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="flow-ribbon" aria-label="Condensed improvement flow">
-        <div class="flow-step">
-          <div class="flow-icon" aria-hidden="true">1</div>
-          <div class="flow-title">Audit &amp; label</div>
-          <p class="flow-body">Clean historic click data; define outcome labels for bidding targets.</p>
-        </div>
-        <div class="flow-step">
-          <div class="flow-icon" aria-hidden="true">2</div>
-          <div class="flow-title">Model &amp; pipeline</div>
-          <p class="flow-body">Engineer source features and build predictive guidance in Laravel/MySQL.</p>
-        </div>
-        <div class="flow-step">
-          <div class="flow-icon" aria-hidden="true">3</div>
-          <div class="flow-title">Operationalize</div>
-          <p class="flow-body">Feed bid suggestions into pricing flows to improve deal quality.</p>
-        </div>
-      </div>
-
-      <div class="impact-spotlight">
-        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+    <main>
+      <!-- Hero -->
+      <section class="hero" aria-labelledby="hero-title">
         <div>
-          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
-          <ul>
-            <li>Pricing grounded in data, not guesswork.</li>
-            <li>Revenue stream steadier on high-volume traffic buys.</li>
-            <li>Sales/ops teams can quote faster with clearer guardrails.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="layout" aria-label="Case study content layout">
-      <!-- Main column -->
-      <div>
-        <article class="section-card" id="introduction">
-          <div class="eyebrow">Overview</div>
-          <h2>Introduction</h2>
-          <p>
-            SulacoTec operates in the click-brokering layer of the ad stack: ingesting bid
-            requests, buying traffic in bulk, and reselling performance to downstream customers.
-            Historically, bid prices were tuned using heuristics and small samples of performance
-            data, which made it hard to price large-volume deals with confidence.
-          </p>
-          <p>
-            As a Senior Software Engineer, I was tasked with turning a large historical
-            click-processing database into a decision engine. The goal was to predict reasonable
-            CPC, CPA, and CPM ranges for given traffic segments so the business could negotiate
-            and execute bulk click purchases with more predictable margins.
-          </p>
-        </article>
-
-        <article class="section-card" id="context">
-          <div class="eyebrow">Background</div>
-          <h2>Context</h2>
-          <p>
-            Over time, SulacoTec accumulated ~100 million rows of historical data across:
-          </p>
-          <ul>
-            <li>Bid requests and clearing prices.</li>
-            <li>Clicks, conversions, and post-click outcomes.</li>
-            <li>Traffic sources, geos, devices, and creative metadata.</li>
-          </ul>
-          <p>
-            However, this data mostly sat in operational tables used for reporting, not as an
-            input to predictive decisions. There was a clear opportunity: use the historical
-            record to estimate expected performance for new campaigns and traffic types.
-          </p>
-        </article>
-
-        <article class="section-card" id="problem">
-          <div class="eyebrow">Challenge</div>
-          <h2>Problem</h2>
-          <p>
-            The business needed to answer a seemingly simple question:
-          </p>
-          <p>
-            <strong>
-              “If we buy N clicks from this traffic source and geo, what CPC/CPA/CPM should we
-              target to stay profitable for a given customer?”
-            </strong>
-          </p>
-          <p>
-            In practice, this meant:
-          </p>
-          <ul>
-            <li>Dealing with noisy, sparse, and sometimes inconsistent historical data.</li>
-            <li>Capturing non-obvious relationships (e.g., device × geo × time-of-day).</li>
-            <li>Delivering answers quickly enough to be useful in negotiations and campaign setup.</li>
-          </ul>
-        </article>
-
-        <article class="section-card" id="constraints">
-          <div class="eyebrow">Operating Environment</div>
-          <h2>Constraints &amp; Requirements</h2>
-          <ul>
-            <li>
-              <strong>Large dataset</strong>: ~100M historical rows had to be processed efficiently
-              without blocking operational systems.
-            </li>
-            <li>
-              <strong>Laravel-first</strong>: the prediction system needed to integrate with an
-              existing Laravel control panel used by account managers.
-            </li>
-            <li>
-              <strong>Explainability</strong>: outputs had to be understandable; account teams
-              needed to see how predictions were derived.
-            </li>
-            <li>
-              <strong>Pragmatic, not academic</strong>: performance and stability were more
-              important than using the “fanciest” machine learning model.
-            </li>
-          </ul>
-        </article>
-
-        <article class="section-card" id="implementation">
-          <div class="eyebrow">Execution</div>
-          <h2>Implementation Highlights</h2>
-
-          <h3>1) Data modelling &amp; feature engineering</h3>
-          <ul>
-            <li>
-              Consolidated historical logs into an analysis-ready schema grouped by key segments:
-              traffic source, geo, device type, and placement category.
-            </li>
-            <li>
-              Computed aggregated metrics such as historical CPC, CPA, CTR, and conversion rate
-              for each segment and time window.
-            </li>
-            <li>
-              Cleaned and normalised inconsistent records (e.g., missing conversions, duplicate
-              clicks) to reduce noise in the predictions.
-            </li>
-          </ul>
-
-          <h3>2) Prediction logic</h3>
-          <ul>
-            <li>
-              Implemented segment-level models that estimated expected value per click and per
-              impression, then derived suggested CPC/CPM ranges.
-            </li>
-            <li>
-              Incorporated configurable safety margins so pricing could be conservative for new or
-              volatile segments.
-            </li>
-            <li>
-              Exposed both point estimates and confidence bands, allowing account managers to see
-              “aggressive”, “balanced”, and “conservative” bids.
-            </li>
-          </ul>
-
-          <h3>3) Laravel integration</h3>
-          <ul>
-            <li>
-              Built a Laravel module where users could select a customer, traffic segment, and
-              volume, then request bid guidance.
-            </li>
-            <li>
-              Implemented background jobs to run heavier aggregations asynchronously so the UI
-              stayed responsive.
-            </li>
-            <li>
-              Added simple visualisations (spark lines, trend chips) to show how current
-              predictions compared to historical performance.
-            </li>
-          </ul>
-
-          <div class="callout">
-            The system turned a “gut-feel” pricing conversation into a data-backed one: account
-            teams could quote CPC/CPA/CPM targets grounded in the behaviour of hundreds of millions
-            of historical events.
+          <div class="hero-tagline">
+            <span>●</span> AdTech • Click Processing • Predictive Bidding
           </div>
-        </article>
-
-        <article class="section-card" id="impact">
-          <div class="eyebrow">Outcomes</div>
-          <h2>Impact &amp; Outcomes</h2>
-          <p>
-            While exact financials are confidential, the new system improved both decision quality
-            and confidence for bulk click purchases:
+          <h1 id="hero-title" class="hero-title">
+            Using 100M+ Historical Clicks to Predict CPC/CPA/CPM for Volume Buying
+          </h1>
+          <p class="hero-subtitle">
+            Analysed a historical click-processing database (~100M records of bids, outcomes, and
+            revenue) and built a Laravel-based system to predict CPC/CPA/CPM when purchasing large
+            batches of clicks for downstream customers, improving pricing accuracy and stabilising
+            SulacoTec’s revenue stream.
           </p>
-          <ul>
-            <li>
-              More accurate bid proposals for a key customer, reducing the risk of underpricing or
-              overpaying for traffic.
-            </li>
-            <li>
-              Clearer understanding of which traffic segments were historically profitable versus
-              fragile.
-            </li>
-            <li>
-              A more stable revenue stream as pricing for volume deals became less ad hoc and more
-              model-driven.
-            </li>
-          </ul>
 
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <strong>Role</strong> Senior Software Engineer
+            </div>
+            <div class="hero-meta-item">
+              <strong>Org</strong> SulacoTec, Dhaka, Bangladesh
+            </div>
+            <div class="hero-meta-item">
+              <strong>Industry</strong> AdTech • Click Processing
+            </div>
+          </div>
+
+          <p class="hero-summary">
+            SulacoTec buys and routes large volumes of ad clicks on behalf of customers. Profitability
+            depends on bidding at the right CPC/CPA/CPM levels given uncertain downstream conversion
+            performance. I led the design and implementation of a predictive system that turned
+            100M+ rows of historical click data into practical bid guidance for new campaigns.
+          </p>
+        </div>
+
+        <aside class="hero-side" aria-label="Snapshot">
+          <div class="hero-side-label">Snapshot</div>
+          <div class="metric-grid">
+            <div class="metric-card">
+              <div class="metric-label">Data Scale</div>
+              <div class="metric-value">≈ 100M</div>
+              <div class="metric-footnote">
+                Historical records of bids, impressions, clicks, and final outcomes.
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Prediction Targets</div>
+              <div class="metric-value">CPC / CPA / CPM</div>
+              <div class="metric-footnote">
+                Used to price bulk click purchases for a key customer.
+              </div>
+            </div>
+          </div>
+          <div class="metric-card" style="margin-top:8px;">
+            <div class="metric-label">Impact Focus</div>
+            <div class="metric-footnote">
+              • More accurate bidding on new traffic sources.<br />
+              • Better margin control on volume deals.<br />
+              • Smoother, more predictable revenue stream.
+            </div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <div class="hero-side-label">Core Stack</div>
+            <div class="stack-list">
+              <span class="stack-pill">PHP</span>
+              <span class="stack-pill">Laravel</span>
+              <span class="stack-pill">MySQL</span>
+              <span class="stack-pill">Click Logs</span>
+              <span class="stack-pill">Prediction Models</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="value-rail" aria-label="Problem to solution to impact">
+        <div class="eyebrow">Problem → Solution → Impact</div>
+        <div class="value-grid">
+          <div class="value-card">
+            <div class="value-icon warning" aria-hidden="true">!</div>
+            <h3 class="value-title">Problem</h3>
+            <ul>
+              <li>Bidding large click volumes with little guidance on expected outcomes.</li>
+              <li>Margins at risk when entering new sources without benchmarks.</li>
+              <li>Heuristic pricing couldn’t scale to 100M+ rows of history.</li>
+            </ul>
+          </div>
+          <div class="value-card">
+            <div class="value-icon action" aria-hidden="true">⧉</div>
+            <h3 class="value-title">Solution</h3>
+            <ul>
+              <li>Built a predictive layer on CPC/CPA/CPM using historical click data.</li>
+              <li>Feature engineered traffic/source attributes into Laravel/MySQL pipelines.</li>
+              <li>Fed bid guidance into pricing workflows for new campaigns.</li>
+            </ul>
+          </div>
+          <div class="value-card">
+            <div class="value-icon impact" aria-hidden="true">✓</div>
+            <h3 class="value-title">Impact</h3>
+            <ul>
+              <li>More accurate bids on unfamiliar traffic sources.</li>
+              <li>Lower margin volatility on bulk deals.</li>
+              <li>Faster, more confident quoting for customers.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="delta-metrics" aria-label="Directional before/after indicators">
+          <div class="delta-card">
+            <div class="delta-label">Bid accuracy</div>
+            <div class="delta-values">
+              <span class="delta-pill">Before: heuristic ranges</span>
+              <span class="delta-pill after">After: data-backed guidance</span>
+            </div>
+          </div>
+          <div class="delta-card">
+            <div class="delta-label">Margin stability</div>
+            <div class="delta-values">
+              <span class="delta-pill">Before: volatile per source</span>
+              <span class="delta-pill after">After: tighter guardrails</span>
+            </div>
+          </div>
+          <div class="delta-card">
+            <div class="delta-label">Quote speed</div>
+            <div class="delta-values">
+              <span class="delta-pill">Before: manual analysis</span>
+              <span class="delta-pill after">After: automated signals</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-ribbon" aria-label="Condensed improvement flow">
+          <div class="flow-step">
+            <div class="flow-icon" aria-hidden="true">1</div>
+            <div class="flow-title">Audit &amp; label</div>
+            <p class="flow-body">Clean historic click data; define outcome labels for bidding targets.</p>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" aria-hidden="true">2</div>
+            <div class="flow-title">Model &amp; pipeline</div>
+            <p class="flow-body">Engineer source features and build predictive guidance in Laravel/MySQL.</p>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" aria-hidden="true">3</div>
+            <div class="flow-title">Operationalize</div>
+            <p class="flow-body">Feed bid suggestions into pricing flows to improve deal quality.</p>
+          </div>
+        </div>
+
+        <div class="impact-spotlight">
+          <div class="spotlight-icon" aria-hidden="true">🛡</div>
+          <div>
+            <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+            <ul>
+              <li>Pricing grounded in data, not guesswork.</li>
+              <li>Revenue stream steadier on high-volume traffic buys.</li>
+              <li>Sales/ops teams can quote faster with clearer guardrails.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="layout" aria-label="Case study content layout">
+        <!-- Main column -->
+        <div>
+          <article class="section-card" id="introduction">
+            <div class="eyebrow">Overview</div>
+            <h2>Introduction</h2>
+            <p>
+              SulacoTec operates in the click-brokering layer of the ad stack: ingesting bid
+              requests, buying traffic in bulk, and reselling performance to downstream customers.
+              Historically, bid prices were tuned using heuristics and small samples of performance
+              data, which made it hard to price large-volume deals with confidence.
+            </p>
+            <p>
+              As a Senior Software Engineer, I was tasked with turning a large historical
+              click-processing database into a decision engine. The goal was to predict reasonable
+              CPC, CPA, and CPM ranges for given traffic segments so the business could negotiate
+              and execute bulk click purchases with more predictable margins.
+            </p>
+          </article>
+
+          <article class="section-card" id="context">
+            <div class="eyebrow">Background</div>
+            <h2>Context</h2>
+            <p>
+              Over time, SulacoTec accumulated ~100 million rows of historical data across:
+            </p>
+            <ul>
+              <li>Bid requests and clearing prices.</li>
+              <li>Clicks, conversions, and post-click outcomes.</li>
+              <li>Traffic sources, geos, devices, and creative metadata.</li>
+            </ul>
+            <p>
+              However, this data mostly sat in operational tables used for reporting, not as an
+              input to predictive decisions. There was a clear opportunity: use the historical
+              record to estimate expected performance for new campaigns and traffic types.
+            </p>
+          </article>
+
+          <article class="section-card" id="problem">
+            <div class="eyebrow">Challenge</div>
+            <h2>Problem</h2>
+            <p>
+              The business needed to answer a seemingly simple question:
+            </p>
+            <p>
+              <strong>
+                “If we buy N clicks from this traffic source and geo, what CPC/CPA/CPM should we
+                target to stay profitable for a given customer?”
+              </strong>
+            </p>
+            <p>
+              In practice, this meant:
+            </p>
+            <ul>
+              <li>Dealing with noisy, sparse, and sometimes inconsistent historical data.</li>
+              <li>Capturing non-obvious relationships (e.g., device × geo × time-of-day).</li>
+              <li>Delivering answers quickly enough to be useful in negotiations and campaign setup.</li>
+            </ul>
+          </article>
+
+          <article class="section-card" id="constraints">
+            <div class="eyebrow">Operating Environment</div>
+            <h2>Constraints &amp; Requirements</h2>
+            <ul>
+              <li>
+                <strong>Large dataset</strong>: ~100M historical rows had to be processed efficiently
+                without blocking operational systems.
+              </li>
+              <li>
+                <strong>Laravel-first</strong>: the prediction system needed to integrate with an
+                existing Laravel control panel used by account managers.
+              </li>
+              <li>
+                <strong>Explainability</strong>: outputs had to be understandable; account teams
+                needed to see how predictions were derived.
+              </li>
+              <li>
+                <strong>Pragmatic, not academic</strong>: performance and stability were more
+                important than using the “fanciest” machine learning model.
+              </li>
+            </ul>
+          </article>
+
+          <article class="section-card" id="implementation">
+            <div class="eyebrow">Execution</div>
+            <h2>Implementation Highlights</h2>
+
+            <h3>1) Data modelling &amp; feature engineering</h3>
+            <ul>
+              <li>
+                Consolidated historical logs into an analysis-ready schema grouped by key segments:
+                traffic source, geo, device type, and placement category.
+              </li>
+              <li>
+                Computed aggregated metrics such as historical CPC, CPA, CTR, and conversion rate
+                for each segment and time window.
+              </li>
+              <li>
+                Cleaned and normalised inconsistent records (e.g., missing conversions, duplicate
+                clicks) to reduce noise in the predictions.
+              </li>
+            </ul>
+
+            <h3>2) Prediction logic</h3>
+            <ul>
+              <li>
+                Implemented segment-level models that estimated expected value per click and per
+                impression, then derived suggested CPC/CPM ranges.
+              </li>
+              <li>
+                Incorporated configurable safety margins so pricing could be conservative for new or
+                volatile segments.
+              </li>
+              <li>
+                Exposed both point estimates and confidence bands, allowing account managers to see
+                “aggressive”, “balanced”, and “conservative” bids.
+              </li>
+            </ul>
+
+            <h3>3) Laravel integration</h3>
+            <ul>
+              <li>
+                Built a Laravel module where users could select a customer, traffic segment, and
+                volume, then request bid guidance.
+              </li>
+              <li>
+                Implemented background jobs to run heavier aggregations asynchronously so the UI
+                stayed responsive.
+              </li>
+              <li>
+                Added simple visualisations (spark lines, trend chips) to show how current
+                predictions compared to historical performance.
+              </li>
+            </ul>
+
+            <div class="callout">
+              The system turned a “gut-feel” pricing conversation into a data-backed one: account
+              teams could quote CPC/CPA/CPM targets grounded in the behaviour of hundreds of millions
+              of historical events.
+            </div>
+          </article>
+
+          <div class="cta-insight-card" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);">
+            <div class="cta-insight-icon">📈</div>
+            <div class="cta-insight-content">
+              <h4>Data-Driven Bidding</h4>
+              <p>Processing millions of clicks? I help AdTech teams turn historical logs into predictive bid signals
+                that stabilize margins.</p>
+            </div>
+            <a href="mailto:minhaj.me.bd@gmail.com" class="cta-insight-btn" style="color: #8b5cf6;">Predict My Bids</a>
+          </div>
+
+          <article class="section-card" id="impact">
+            <div class="eyebrow">Outcomes</div>
+            <h2>Impact &amp; Outcomes</h2>
+            <p>
+              While exact financials are confidential, the new system improved both decision quality
+              and confidence for bulk click purchases:
+            </p>
+            <ul>
+              <li>
+                More accurate bid proposals for a key customer, reducing the risk of underpricing or
+                overpaying for traffic.
+              </li>
+              <li>
+                Clearer understanding of which traffic segments were historically profitable versus
+                fragile.
+              </li>
+              <li>
+                A more stable revenue stream as pricing for volume deals became less ad hoc and more
+                model-driven.
+              </li>
+            </ul>
+          </article>
+
+          <div class="cta-banner">
+            <div class="cta-content">
+              <h3 class="cta-title">Predict Your Margins</h3>
+              <p class="cta-text">
+                AdTech markets are volatile. Let's harden your pricing workflows with data-backed guardrails that
+                protect your revenue in every auction.
+              </p>
+            </div>
+            <div class="cta-action">
+              <a href="mailto:minhaj.me.bd@gmail.com" class="cta-btn">Audit My Bidding</a>
+              <a href="/portfolio/index.html" class="cta-secondary-link">View AdTech Patterns</a>
+            </div>
+          </div>
           <!-- Charts – replace src paths with your actual PNGs -->
           <!-- <div class="chart-block">
             <img src="chart_bid_prediction_accuracy.png"
@@ -943,226 +967,236 @@
             Charts are placeholders illustrating where you can plug in real performance and revenue
             stability visuals.
           </p> -->
-        </article>
+          </article>
 
-        <article class="section-card" id="learnings">
-          <div class="eyebrow">Reflection</div>
-          <h2>Key Learnings</h2>
-          <ul>
-            <li>
-              In adtech, old data is a strategic asset; the hard part is shaping it into something
-              operations teams can actually use.
-            </li>
-            <li>
-              Segment-level, explainable models can be more valuable than opaque models that are
-              hard for account teams to trust.
-            </li>
-            <li>
-              Integrating predictions into existing tools (Laravel control panels, reports) is as
-              important as the models themselves.
-            </li>
-            <li>
-              Even simple predictive guidance can materially stabilise revenue when pricing bulk
-              click deals.
-            </li>
-          </ul>
-        </article>
-      </div>
-
-      <!-- Sidebar column -->
-      <aside aria-label="Sidebar information">
-        <section class="section-card">
-          <div class="side-section-title">Role &amp; Responsibilities</div>
-          <p>
-            As Senior Software Engineer at SulacoTec, I:
-          </p>
-          <ul>
-            <li>Led design of the data model and prediction logic for bid guidance.</li>
-            <li>Implemented the Laravel module powering the prediction UI and APIs.</li>
-            <li>
-              Worked with business stakeholders to define acceptable risk and margin thresholds.
-            </li>
-            <li>
-              Helped interpret model outputs for non-technical account managers during rollout.
-            </li>
-          </ul>
-        </section>
-
-        <section class="section-card">
-          <div class="side-section-title">Architecture Snapshot</div>
-          <ul>
-            <li><strong>Backend:</strong> Laravel services for prediction requests and background jobs.</li>
-            <li><strong>Database:</strong> MySQL tables holding aggregated segment statistics and
-              raw click logs.</li>
-            <li><strong>Prediction logic:</strong> segment-level models &amp; heuristics written in PHP.</li>
-            <li><strong>UI:</strong> Laravel views for bid configuration and result visualisation.</li>
-          </ul>
-          <div class="callout" style="margin-top:10px;">
-            The design emphasised performance and maintainability: heavy calculations ran in
-            background jobs, while the UI surfaced results in milliseconds.
-          </div>
-        </section>
-
-        <section class="section-card">
-          <div class="side-section-title">Timeline</div>
-          <div class="timeline">
-            <div class="timeline-item">
-              <div class="timeline-title">Oct 2023 – Dec 2023: Discovery</div>
-              <div class="timeline-body">
-                Explored existing click-processing database, identified key fields, and mapped data
-                quality issues.
-              </div>
-            </div>
-            <div class="timeline-item">
-              <div class="timeline-title">Jan 2024 – Apr 2024: Modelling &amp; System Build</div>
-              <div class="timeline-body">
-                Built aggregation pipelines, segment metrics, and the first version of the
-                prediction engine integrated into Laravel.
-              </div>
-            </div>
-            <div class="timeline-item">
-              <div class="timeline-title">May 2024 – Jul 2024: Rollout &amp; Tuning</div>
-              <div class="timeline-body">
-                Used the system on real deals, tuned safety margins, and iterated based on
-                feedback from account managers and finance.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section-card">
-          <div class="side-section-title">Keywords &amp; Themes</div>
-          <p>Useful tags for CVs, portfolios, and search:</p>
-          <div>
-            <span class="side-chip">AdTech</span>
-            <span class="side-chip">Click Processing</span>
-            <span class="side-chip">Predictive Bidding</span>
-            <span class="side-chip">CPC / CPA / CPM</span>
-            <span class="side-chip">Laravel Data Systems</span>
-            <span class="side-chip">Large-Scale Analytics</span>
-          </div>
-        </section>
-      </aside>
-    </section>
-
-    <footer>
-      Turning historical clicks into smarter bids — Predictive Bidding System at SulacoTec.
-    </footer>
-  </main>
-
-  <!-- One-page summary modal -->
-  <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal">
-      <div class="modal-header">
-        <div>
-          <div class="modal-title">SulacoTec – One-Page Summary</div>
-          <div class="modal-subtitle">
-            Quick snapshot of the predictive bidding case study.
-          </div>
-        </div>
-        <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="summary-grid">
-          <div>
-            <div class="summary-section-title">Context</div>
-            <ul class="summary-list">
-              <li>Click-processing and ad routing company handling large volumes of traffic.</li>
-              <li>Historical database of ~100M clicks, bids, and outcomes.</li>
-              <li>Needed better guidance when pricing bulk click deals for a key customer.</li>
-            </ul>
-
-            <div class="summary-section-title">Challenge</div>
-            <ul class="summary-list">
-              <li>Estimate sustainable CPC/CPA/CPM targets from noisy historical data.</li>
-              <li>Support large-volume negotiations without relying on gut feeling.</li>
-              <li>Integrate predictions into an existing Laravel-based control panel.</li>
-            </ul>
-          </div>
-
-          <div>
-            <div class="summary-section-title">My Role</div>
-            <ul class="summary-list">
-              <li>Senior Software Engineer leading system design and implementation.</li>
-              <li>Modelled historical data and implemented prediction logic.</li>
+          <article class="section-card" id="learnings">
+            <div class="eyebrow">Reflection</div>
+            <h2>Key Learnings</h2>
+            <ul>
               <li>
-                Built Laravel UI and background jobs for running and exposing predictions to
-                account teams.
+                In adtech, old data is a strategic asset; the hard part is shaping it into something
+                operations teams can actually use.
+              </li>
+              <li>
+                Segment-level, explainable models can be more valuable than opaque models that are
+                hard for account teams to trust.
+              </li>
+              <li>
+                Integrating predictions into existing tools (Laravel control panels, reports) is as
+                important as the models themselves.
+              </li>
+              <li>
+                Even simple predictive guidance can materially stabilise revenue when pricing bulk
+                click deals.
               </li>
             </ul>
-
-            <div class="summary-section-title">Approach</div>
-            <ul class="summary-list">
-              <li>Aggregate historical data by traffic segment and compute CPC/CPA/CPM metrics.</li>
-              <li>Derive predictive ranges with configurable safety margins.</li>
-              <li>Provide “aggressive / balanced / conservative” bid recommendations in the UI.</li>
-            </ul>
-          </div>
+          </article>
         </div>
 
-        <div class="summary-section-title">Outcomes</div>
-        <ul class="summary-list">
-          <li>More data-backed CPC/CPA/CPM bids for bulk click purchases.</li>
-          <li>Improved understanding of profitable vs risky traffic segments.</li>
-          <li>More stable revenue streams and fewer surprises on volume deals.</li>
-        </ul>
+        <!-- Sidebar column -->
+        <aside aria-label="Sidebar information">
+          <section class="section-card">
+            <div class="side-section-title">Role &amp; Responsibilities</div>
+            <p>
+              As Senior Software Engineer at SulacoTec, I:
+            </p>
+            <ul>
+              <li>Led design of the data model and prediction logic for bid guidance.</li>
+              <li>Implemented the Laravel module powering the prediction UI and APIs.</li>
+              <li>
+                Worked with business stakeholders to define acceptable risk and margin thresholds.
+              </li>
+              <li>
+                Helped interpret model outputs for non-technical account managers during rollout.
+              </li>
+            </ul>
+          </section>
 
-        <div class="summary-section-title">Key Takeaways</div>
-        <ul class="summary-list">
-          <li>Historical click data becomes powerful when shaped into decision tools.</li>
-          <li>Explainable, segment-level models build more trust than opaque black boxes.</li>
-          <li>
-            Integrating predictions directly into the tools account managers already use is
-            critical for adoption.
-          </li>
-        </ul>
+          <section class="section-card">
+            <div class="side-section-title">Architecture Snapshot</div>
+            <ul>
+              <li><strong>Backend:</strong> Laravel services for prediction requests and background jobs.</li>
+              <li><strong>Database:</strong> MySQL tables holding aggregated segment statistics and
+                raw click logs.</li>
+              <li><strong>Prediction logic:</strong> segment-level models &amp; heuristics written in PHP.</li>
+              <li><strong>UI:</strong> Laravel views for bid configuration and result visualisation.</li>
+            </ul>
+            <div class="callout" style="margin-top:10px;">
+              The system turned clicks into signals, giving the business a competitive advantage
+              in high-volume click markets.
+            </div>
+            <div class="cta-insight-card"
+              style="background: linear-gradient(135deg, #a78bfa 0%, #5b21b6 100%); margin: 20px 0;">
+              <div class="cta-insight-icon">🧠</div>
+              <div class="cta-insight-content">
+                <h4>Algorithm Review</h4>
+                <p>Concerned about outlier bias? I provide expert reviews for predictive pipelines and segment
+                  aggregation logic.</p>
+              </div>
+              <a href="mailto:minhaj.me.bd@gmail.com" class="cta-insight-btn" style="color: #a78bfa;">Review My Code</a>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="side-section-title">Timeline</div>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-title">Oct 2023 – Dec 2023: Discovery</div>
+                <div class="timeline-body">
+                  Explored existing click-processing database, identified key fields, and mapped data
+                  quality issues.
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-title">Jan 2024 – Apr 2024: Modelling &amp; System Build</div>
+                <div class="timeline-body">
+                  Built aggregation pipelines, segment metrics, and the first version of the
+                  prediction engine integrated into Laravel.
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-title">May 2024 – Jul 2024: Rollout &amp; Tuning</div>
+                <div class="timeline-body">
+                  Used the system on real deals, tuned safety margins, and iterated based on
+                  feedback from account managers and finance.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="side-section-title">Keywords &amp; Themes</div>
+            <p>Useful tags for CVs, portfolios, and search:</p>
+            <div>
+              <span class="side-chip">AdTech</span>
+              <span class="side-chip">Click Processing</span>
+              <span class="side-chip">Predictive Bidding</span>
+              <span class="side-chip">CPC / CPA / CPM</span>
+              <span class="side-chip">Laravel Data Systems</span>
+              <span class="side-chip">Large-Scale Analytics</span>
+            </div>
+          </section>
+        </aside>
+      </section>
+
+      <footer>
+        Turning historical clicks into smarter bids — Predictive Bidding System at SulacoTec.
+      </footer>
+    </main>
+
+    <!-- One-page summary modal -->
+    <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal">
+        <div class="modal-header">
+          <div>
+            <div class="modal-title">SulacoTec – One-Page Summary</div>
+            <div class="modal-subtitle">
+              Quick snapshot of the predictive bidding case study.
+            </div>
+          </div>
+          <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="summary-grid">
+            <div>
+              <div class="summary-section-title">Context</div>
+              <ul class="summary-list">
+                <li>Click-processing and ad routing company handling large volumes of traffic.</li>
+                <li>Historical database of ~100M clicks, bids, and outcomes.</li>
+                <li>Needed better guidance when pricing bulk click deals for a key customer.</li>
+              </ul>
+
+              <div class="summary-section-title">Challenge</div>
+              <ul class="summary-list">
+                <li>Estimate sustainable CPC/CPA/CPM targets from noisy historical data.</li>
+                <li>Support large-volume negotiations without relying on gut feeling.</li>
+                <li>Integrate predictions into an existing Laravel-based control panel.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="summary-section-title">My Role</div>
+              <ul class="summary-list">
+                <li>Senior Software Engineer leading system design and implementation.</li>
+                <li>Modelled historical data and implemented prediction logic.</li>
+                <li>
+                  Built Laravel UI and background jobs for running and exposing predictions to
+                  account teams.
+                </li>
+              </ul>
+
+              <div class="summary-section-title">Approach</div>
+              <ul class="summary-list">
+                <li>Aggregate historical data by traffic segment and compute CPC/CPA/CPM metrics.</li>
+                <li>Derive predictive ranges with configurable safety margins.</li>
+                <li>Provide “aggressive / balanced / conservative” bid recommendations in the UI.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-section-title">Outcomes</div>
+          <ul class="summary-list">
+            <li>More data-backed CPC/CPA/CPM bids for bulk click purchases.</li>
+            <li>Improved understanding of profitable vs risky traffic segments.</li>
+            <li>More stable revenue streams and fewer surprises on volume deals.</li>
+          </ul>
+
+          <div class="summary-section-title">Key Takeaways</div>
+          <ul class="summary-list">
+            <li>Historical click data becomes powerful when shaped into decision tools.</li>
+            <li>Explainable, segment-level models build more trust than opaque black boxes.</li>
+            <li>
+              Integrating predictions directly into the tools account managers already use is
+              critical for adoption.
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
 
-  
 
-  <script>
-    (function () {
-      const modal = document.getElementById("summaryModal");
-      const openBtn = document.getElementById("openSummaryBtn");
-      const closeBtn = document.getElementById("closeSummaryBtn");
 
-      function openModal() {
-        modal.classList.add("active");
-        modal.setAttribute("aria-hidden", "false");
-      }
+    <script>
+      (function () {
+        const modal = document.getElementById("summaryModal");
+        const openBtn = document.getElementById("openSummaryBtn");
+        const closeBtn = document.getElementById("closeSummaryBtn");
 
-      function closeModal() {
-        modal.classList.remove("active");
-        modal.setAttribute("aria-hidden", "true");
-      }
-
-      openBtn.addEventListener("click", openModal);
-      closeBtn.addEventListener("click", closeModal);
-
-      modal.addEventListener("click", function (e) {
-        if (e.target === modal) {
-          closeModal();
+        function openModal() {
+          modal.classList.add("active");
+          modal.setAttribute("aria-hidden", "false");
         }
-      });
 
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          closeModal();
+        function closeModal() {
+          modal.classList.remove("active");
+          modal.setAttribute("aria-hidden", "true");
         }
-      });
-    })();
-  </script>
 
-    
+        openBtn.addEventListener("click", openModal);
+        closeBtn.addEventListener("click", closeModal);
+
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") {
+            closeModal();
+          }
+        });
+      })();
+    </script>
+
+
   </div>
   <script>
     const { createApp } = Vue;
     createApp({
       components: {
         'mega-header': MegaHeader,
-        
+
       }
     }).mount('#app');
   </script>

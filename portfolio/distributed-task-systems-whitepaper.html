@@ -597,7 +597,7 @@
 
                     <div class="diagram-container">
                         <div class="diagram-title">Figure 1.1: Laravel Job Lifecycle - Dispatch to Completion</div>
-                        <div class="mermaid">
+                        <div class="mermaid" v-pre>
                             sequenceDiagram
                             participant App as Application
                             participant Dispatcher as Queue Dispatcher
@@ -935,7 +935,7 @@
 
                     <div class="diagram-container">
                         <div class="diagram-title">Figure 2.1: Go Goroutine Lifecycle vs. Rust Thread Safety</div>
-                        <div class="mermaid">
+                        <div class="mermaid" v-pre>
                             flowchart TD
                             subgraph Go["Go GMP Scheduler"]
                             G1[Goroutine 1] -->|Scheduled| P1[Processor 1]
@@ -1670,7 +1670,16 @@
         createApp({
             components: {
                 'mega-header': MegaHeader,
-
+            },
+            mounted() {
+                // Initialize mermaid after Vue has mounted the DOM
+                mermaid.initialize({
+                    startOnLoad: false,
+                    theme: 'neutral',
+                    fontFamily: 'Inter',
+                    securityLevel: 'loose',
+                });
+                mermaid.run();
             }
         }).mount('#app');
     </script>

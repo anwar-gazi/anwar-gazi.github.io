@@ -174,7 +174,7 @@
                     </div>
                 </div>
 
-                <div class="mermaid">
+                <div class="mermaid" v-pre>
                     graph TB
                     subgraph Traditional["Traditional Architecture: User Views 5 Pages"]
                     U1[User] -->|Page 1| S1[Server Request]
@@ -580,7 +580,16 @@
             createApp({
                 components: {
                     'mega-header': MegaHeader,
-
+                },
+                mounted() {
+                    // Initialize mermaid after Vue has mounted the DOM
+                    mermaid.initialize({
+                        startOnLoad: false,
+                        theme: 'dark',
+                        fontFamily: 'Inter',
+                        securityLevel: 'loose',
+                    });
+                    mermaid.run();
                 }
             }).mount('#app');
         </script>

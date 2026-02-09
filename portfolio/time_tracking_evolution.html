@@ -136,7 +136,7 @@
     </blockquote>
 
     <h2>1. Timeline Overview</h2>
-    <div class="mermaid">
+    <div class="mermaid" v-pre>
       flowchart LR
       P1[Phase 1: Foundation<br />Standardized TimeDisplay] --> P2[Phase 2: UX Polish<br />Green Pulsing Dot]
       P2 --> P3[Phase 3: The Split<br />Logic vs Presentation]
@@ -155,7 +155,7 @@
     <h3>Phase 1: Foundation (Standardization)</h3>
     <p><strong>Objective</strong>: Fix inconsistent timer displays across the app. We moved from disparate inline
       formatting to a single responsible component.</p>
-    <div class="mermaid">
+    <div class="mermaid" v-pre>
       graph LR
       subgraph Before [Chaos: Scattered Logic]
       A[ActiveTimers] --"Manual Math"--> S1["01:23"]
@@ -176,7 +176,7 @@
 
     <h3>Phase 2: Visual Consistency (Pulse)</h3>
     <p><strong>Objective</strong>: Make the "Live" indicator consistent. We extracted the pulsing green dot logic.</p>
-    <div class="mermaid">
+    <div class="mermaid" v-pre>
       graph LR
       subgraph DesignSystem [Shared Component]
       Dot((PulsingDot))
@@ -195,7 +195,7 @@
 
     <h3>Phase 3: The Great Split (Logic vs Presentation)</h3>
     <p><strong>Objective</strong>: Decouple "Data Fetching" from "Time Formatting".</p>
-    <div class="mermaid">
+    <div class="mermaid" v-pre>
       graph LR
       subgraph Old [Legacy Monolith]
       direction TB
@@ -225,7 +225,7 @@
 
     <h3>Phase 4: Smart Formatting & Logic</h3>
     <p><strong>Objective</strong>: Enhance readability. We introduced context-aware formatting.</p>
-    <div class="mermaid">
+    <div class="mermaid" v-pre>
       flowchart LR
       Input[TimeValue] --> Router{Context?}
 
@@ -244,7 +244,7 @@
 
     <h3>Phase 5: Integration & Cleanup</h3>
     <p><strong>Objective</strong>: Remove boilerplate from consumers. We moved heavy lifting into the components.</p>
-    <div class="mermaid">
+    <div class="mermaid" v-pre>
       graph LR
       subgraph Legacy_Implementation [Legacy Boilerplate]
       Hook[useElapsedTimer]
@@ -264,7 +264,7 @@
     </div>
 
     <h2>3. Current Architecture</h2>
-    <div class="mermaid">
+    <div class="mermaid" v-pre>
       classDiagram
       direction LR
 
@@ -399,21 +399,24 @@
       Inline Due Date :active, E2, 2026-01-26, 1d
     </div>
 
-    <script type="module">
-      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-      mermaid.initialize({ startOnLoad: true, theme: 'neutral', logLevel: 'debug', });
+    <script>
+      const { createApp } = Vue;
+      createApp({
+        components: {
+          'mega-header': MegaHeader,
+        },
+        mounted() {
+          // Initialize mermaid after Vue has mounted the DOM
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: 'neutral',
+            logLevel: 'debug',
+            fontFamily: 'Inter',
+          });
+          mermaid.run();
+        }
+      }).mount('#app');
     </script>
-
-  </div>
-  <script>
-    const { createApp } = Vue;
-    createApp({
-      components: {
-        'mega-header': MegaHeader,
-
-      }
-    }).mount('#app');
-  </script>
 </body>
 
 </html>

@@ -224,7 +224,7 @@
           orchestration and the API-first declarative model.
         </p>
 
-        <div class="mermaid mb-6">
+        <div class="mermaid mb-6" v-pre>
           graph TB
           subgraph Legacy["Procedural Architecture: Logic Embedded in Components"]
           State1[(Redux State)]
@@ -740,7 +740,8 @@
                   <p class="font-semibold">Implement Core Primitives</p>
                   <p class="text-slate-400 mt-1">Build foundational services: <span
                       class="code-inline">useTaskTimeTracking</span>, <span class="code-inline">TaskEventBus</span>,
-                    <span class="code-inline">MasterClockService</span> with comprehensive test coverage.</p>
+                    <span class="code-inline">MasterClockService</span> with comprehensive test coverage.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1000,40 +1001,38 @@
     </div>
 
     <script>
-      mermaid.initialize({
-        startOnLoad: true,
-        theme: 'dark',
-        themeVariables: {
-          darkMode: true,
-          primaryColor: '#8b5cf6',
-          primaryTextColor: '#e2e8f0',
-          primaryBorderColor: '#a78bfa',
-          lineColor: '#94a3b8',
-          secondaryColor: '#10b981',
-          tertiaryColor: '#3b82f6',
-          background: '#0f172a',
-          mainBkg: '#1e293b',
-          nodeBorder: '#475569',
-          clusterBkg: '#1e293b',
-          clusterBorder: '#475569',
-          titleColor: '#e2e8f0',
-          edgeLabelBackground: '#1e293b',
-          nodeTextColor: '#e2e8f0'
+      const { createApp } = Vue;
+      createApp({
+        components: {
+          'mega-header': MegaHeader,
+        },
+        mounted() {
+          // Initialize mermaid after Vue has mounted the DOM
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            themeVariables: {
+              darkMode: true,
+              primaryColor: '#8b5cf6',
+              primaryTextColor: '#e2e8f0',
+              primaryBorderColor: '#a78bfa',
+              lineColor: '#94a3b8',
+              secondaryColor: '#10b981',
+              tertiaryColor: '#3b82f6',
+              background: '#0f172a',
+              mainBkg: '#1e293b',
+              nodeBorder: '#475569',
+              clusterBkg: '#1e293b',
+              clusterBorder: '#475569',
+              titleColor: '#e2e8f0',
+              edgeLabelBackground: '#1e293b',
+              nodeTextColor: '#e2e8f0'
+            }
+          });
+          mermaid.run();
         }
-      });
+      }).mount('#app');
     </script>
-
-
-  </div>
-  <script>
-    const { createApp } = Vue;
-    createApp({
-      components: {
-        'mega-header': MegaHeader,
-
-      }
-    }).mount('#app');
-  </script>
 </body>
 
 </html>

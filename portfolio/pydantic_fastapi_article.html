@@ -641,7 +641,7 @@
                     </p>
 
                     <div class="mermaid-container">
-                        <div class="mermaid">
+                        <div class="mermaid" v-pre>
                             graph TD
                             A[🌐 Untrusted Client Request] -->|JSON Payload| B[⚡ FastAPI Route Handler]
                             B --> C{🔍 Pydantic Model Parsing}
@@ -759,7 +759,7 @@ class SecurityAudit(BaseModel):
                     </p>
 
                     <div class="mermaid-container">
-                        <div class="mermaid">
+                        <div class="mermaid" v-pre>
                             graph LR
                             A[📝 Unstructured Dictionary] --> B(🔎 Schema Matching)
                             B --> C(🔄 Type Coercion)
@@ -1341,7 +1341,17 @@ print(json_safe)</code></pre>
         createApp({
             components: {
                 'mega-header': MegaHeader,
-
+            },
+            mounted() {
+                // Initialize mermaid after Vue has mounted the DOM
+                mermaid.initialize({
+                    startOnLoad: false,
+                    theme: 'neutral',
+                    fontFamily: 'Inter',
+                    securityLevel: 'loose',
+                    flowchart: { curve: 'basis' }
+                });
+                mermaid.run();
             }
         }).mount('#app');
     </script>

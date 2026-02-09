@@ -377,568 +377,583 @@
       margin: 40px 0;
     }
   </style>
-<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-<link rel="stylesheet" href="mega-header.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <link rel="stylesheet" href="mega-header.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <div id="app">
-  <div class="container">
-    <header>
-      <h1>🔍 TaskPane Flicker Investigation</h1>
-      <p class="subtitle">A deep dive into debugging React + Next.js App Router re-render issues</p>
-      <p class="subtitle" style="margin-top: 8px; font-size: 0.9rem;">January 4, 2026 | notion-clone project</p>
-    </header>
+    <div class="container">
+      <header>
+        <h1>🔍 TaskPane Flicker Investigation</h1>
+        <p class="subtitle">A deep dive into debugging React + Next.js App Router re-render issues</p>
+        <p class="subtitle" style="margin-top: 8px; font-size: 0.9rem;">January 4, 2026 | notion-clone project</p>
+      </header>
 
-    <section class="value-rail" aria-label="Problem to solution to impact">
-      <div class="eyebrow" style="color: var(--text-secondary);">Problem → Solution → Impact</div>
-      <div class="value-grid">
-        <div class="value-card">
-          <div class="value-icon warning" aria-hidden="true">!</div>
-          <h3 class="value-title">Problem</h3>
-          <ul>
-            <li>TaskPane opened twice and flickered; RunningTasksBar re-rendered on close.</li>
-            <li>Issue persisted post-Zustand migration; root cause unclear.</li>
-            <li>Next.js App Router navigation side effects suspected.</li>
-          </ul>
-        </div>
-        <div class="value-card">
-          <div class="value-icon action" aria-hidden="true">⧉</div>
-          <h3 class="value-title">Solution</h3>
-          <ul>
-            <li>Hypothesis-driven investigation across race conditions, pathname sync, and basePath.</li>
-            <li>Instrumented renders/logs to trace remounts and failed fetches.</li>
-            <li>Identified router.replace() to a non-existent route; switched to history.replaceState().</li>
-          </ul>
-        </div>
-        <div class="value-card">
-          <div class="value-icon impact" aria-hidden="true">✓</div>
-          <h3 class="value-title">Impact</h3>
-          <ul>
-            <li>Eliminated double-open/close flicker; SPA feel restored.</li>
-            <li>Clear, documented root cause for future routing work.</li>
-            <li>Baseline for further perf tuning without regressions.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="delta-metrics" aria-label="Directional before/after indicators">
-        <div class="delta-card">
-          <div class="delta-label">UI stability</div>
-          <div class="delta-values">
-            <span class="delta-pill">Before: visible flicker</span>
-            <span class="delta-pill after">After: smooth open/close</span>
-          </div>
-        </div>
-        <div class="delta-card">
-          <div class="delta-label">Re-render churn</div>
-          <div class="delta-values">
-            <span class="delta-pill">Before: remounts on replace()</span>
-            <span class="delta-pill after">After: stable component tree</span>
-          </div>
-        </div>
-        <div class="delta-card">
-          <div class="delta-label">Debugging clarity</div>
-          <div class="delta-values">
-            <span class="delta-pill">Before: multiple hypotheses</span>
-            <span class="delta-pill after">After: single documented fix</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="flow-ribbon" aria-label="Condensed improvement flow">
-        <div class="flow-step">
-          <div class="flow-icon" aria-hidden="true">1</div>
-          <div class="flow-title">Reproduce &amp; instrument</div>
-          <p class="flow-body">Capture render logs and network traces to see when components remount.</p>
-        </div>
-        <div class="flow-step">
-          <div class="flow-icon" aria-hidden="true">2</div>
-          <div class="flow-title">Test hypotheses</div>
-          <p class="flow-body">Race conditions, pathname sync, Zustand isolation, basePath — ruled out systematically.
-          </p>
-        </div>
-        <div class="flow-step">
-          <div class="flow-icon" aria-hidden="true">3</div>
-          <div class="flow-title">Ship the fix</div>
-          <p class="flow-body">Replace router.replace() with history.replaceState() to keep SPA state intact.</p>
-        </div>
-      </div>
-
-      <div class="impact-spotlight">
-        <div class="spotlight-icon" aria-hidden="true">🛡</div>
-        <div>
-          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
-          <ul>
-            <li>Smoother UX in the notion-clone task board.</li>
-            <li>Actionable lesson: avoid router navigation to non-existent routes.</li>
-            <li>Reusable debugging pattern for future Next.js issues.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="phase">
-      <div class="phase-header">
-        <span class="phase-number">ISSUE</span>
-        <h2 class="phase-title">The Problem</h2>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon icon-hypothesis">🐛</div>
-          <span class="card-title">Symptoms Observed</span>
-        </div>
-        <div class="card-content">
-          <ul>
-            <li><strong>Open task:</strong> TaskPane flickers (appears to open twice)</li>
-            <li><strong>Close task:</strong> RunningTasksBar flickers/re-renders</li>
-            <li><strong>Visual effect:</strong> Noticeable UI flashing during open/close</li>
-            <li><strong>Context:</strong> Issue persisted after Zustand migration</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <div class="section-divider"></div>
-
-    <div class="tabs">
-      <button class="tab active" onclick="showTab('tab1', this)">Hypothesis 1: Race Condition</button>
-      <button class="tab" onclick="showTab('tab2', this)">Hypothesis 2: usePathname</button>
-      <button class="tab" onclick="showTab('tab3', this)">Hypothesis 3: Zustand Isolation</button>
-      <button class="tab" onclick="showTab('tab4', this)">Hypothesis 4: basePath</button>
-      <button class="tab"
-        style="background: linear-gradient(135deg, #1a1a2e, #16213e); border-color: var(--accent-gold);"
-        onclick="showTab('tabFinal', this)">🏆 THE BOSS</button>
-    </div>
-
-    <div id="tab1" class="tab-content active">
-      <div class="phase">
-        <div class="phase-header">
-          <span class="phase-number">HYPOTHESIS 1</span>
-          <h2 class="phase-title">Race Condition Between State and URL</h2>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-hypothesis">🤔</div>
-            <span class="card-title">Probable Cause</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-cause">Initial Theory</span>
-            <p>When user clicks a task, both setActiveTaskId and router.replace run. The URL sync effect then re-sets
-              activeTaskId, causing a double update.</p>
-            <div class="code-block">// The problematic flow:
-              handleOpenTask(id) {
-              setActiveTaskId(id); // First state update
-              router.replace('/task/' + id); // Triggers URL change
-              }
-
-              useEffect(() => {
-              if (pathname.includes('/task/')) {
-              setActiveTaskId(urlTaskId); // Second state update!
-              }
-              }, [pathname]);</div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-solution">💡</div>
-            <span class="card-title">Proposed Solution: Guard with intentRef</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-solution">Option B</span>
-            <p>Add an intentRef to track user-initiated actions and skip URL sync during active transitions.</p>
-            <div class="code-block">const intentRef = useRef(null);
-
-              handleOpenTask(id) {
-              intentRef.current = "opening";
-              setActiveTaskId(id);
-              router.replace(taskHrefFor(id));
-              }
-
-              useEffect(() => {
-              if (intentRef.current) {
-              // Skip sync while intent is active
-              if (intentRef.current === "opening" && urlHasTask) {
-              intentRef.current = null;
-              }
-              return;
-              }
-              // ... normal sync logic
-              }, [pathname]);</div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-result">❌</div>
-            <span class="card-title">Result</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-rejected">Did Not Fix</span>
-            <p>Close worked. <strong>Open still flickered.</strong> RunningTasksBar still flickered on both. This
-              indicated the race condition was a symptom, not the root cause.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="tab2" class="tab-content">
-      <div class="phase">
-        <div class="phase-header">
-          <span class="phase-number">HYPOTHESIS 2</span>
-          <h2 class="phase-title">usePathname Causes Re-renders</h2>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-hypothesis">🤔</div>
-            <span class="card-title">Probable Cause</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-cause">Deep Investigation</span>
-            <p>usePathname() triggers re-renders when URL changes. 7+ components use it via useTaskHref:</p>
+      <section class="value-rail" aria-label="Problem to solution to impact">
+        <div class="eyebrow" style="color: var(--text-secondary);">Problem → Solution → Impact</div>
+        <div class="value-grid">
+          <div class="value-card">
+            <div class="value-icon warning" aria-hidden="true">!</div>
+            <h3 class="value-title">Problem</h3>
             <ul>
-              <li>Board.tsx, RunningTasksBar.tsx, Column.tsx, TaskPane.tsx</li>
-              <li>GlobalTaskSearch.tsx, CommandPalette.tsx, SubtaskItem.tsx</li>
+              <li>TaskPane opened twice and flickered; RunningTasksBar re-rendered on close.</li>
+              <li>Issue persisted post-Zustand migration; root cause unclear.</li>
+              <li>Next.js App Router navigation side effects suspected.</li>
+            </ul>
+          </div>
+          <div class="value-card">
+            <div class="value-icon action" aria-hidden="true">⧉</div>
+            <h3 class="value-title">Solution</h3>
+            <ul>
+              <li>Hypothesis-driven investigation across race conditions, pathname sync, and basePath.</li>
+              <li>Instrumented renders/logs to trace remounts and failed fetches.</li>
+              <li>Identified router.replace() to a non-existent route; switched to history.replaceState().</li>
+            </ul>
+          </div>
+          <div class="value-card">
+            <div class="value-icon impact" aria-hidden="true">✓</div>
+            <h3 class="value-title">Impact</h3>
+            <ul>
+              <li>Eliminated double-open/close flicker; SPA feel restored.</li>
+              <li>Clear, documented root cause for future routing work.</li>
+              <li>Baseline for further perf tuning without regressions.</li>
             </ul>
           </div>
         </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-solution">💡</div>
-            <span class="card-title">Proposed Solution: Isolate URL Sync</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-solution">Architecture Change</span>
-            <p>Create TaskUrlSync component outside Board tree to handle URL sync, move activeTaskId to Zustand.</p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-result">❌</div>
-            <span class="card-title">Result</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-rejected">Did Not Fix</span>
-            <p>Isolation didn't help because something else was causing Board to completely <strong>remount</strong>.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div id="tab3" class="tab-content">
-      <div class="phase">
-        <div class="phase-header">
-          <span class="phase-number">HYPOTHESIS 3</span>
-          <h2 class="phase-title">Zustand Store Isolation</h2>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-hypothesis">🤔</div>
-            <span class="card-title">Probable Cause</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-cause">Architecture Theory</span>
-            <p>Maybe Zustand state updates were still cascading re-renders through the component tree.</p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-solution">💡</div>
-            <span class="card-title">Proposed Solution: Full Zustand Migration</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-solution">Full Migration</span>
-            <p>Move activeTaskId entirely to Zustand, Board reads only from store, no usePathname anywhere.</p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-result">❌</div>
-            <span class="card-title">Result</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-rejected">Did Not Fix</span>
-            <p>Still flickered! Time to add debug logging to trace actual render sequence.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="tab4" class="tab-content">
-      <div class="phase">
-        <div class="phase-header">
-          <span class="phase-number">HYPOTHESIS 4</span>
-          <h2 class="phase-title">Move basePath to Zustand</h2>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-hypothesis">🤔</div>
-            <span class="card-title">Probable Cause</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-cause">useTaskHref Issue</span>
-            <p>Child components use useTaskHref which internally uses usePathname. Store basePath in Zustand once.</p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon icon-result">❌</div>
-            <span class="card-title">Result</span>
-          </div>
-          <div class="card-content">
-            <span class="tag tag-rejected">Did Not Fix</span>
-            <p>STILL FLICKERED! We were treating symptoms, not the disease. Debug logs revealed the truth...</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="tabFinal" class="tab-content">
-      <div class="phase final">
-        <div class="phase-header">
-          <span class="phase-number" style="background: var(--accent-gold); color: black;">🏆 FINAL BOSS</span>
-          <h2 class="phase-title boss-title">The Actual Root Cause & Solution</h2>
-        </div>
-
-        <div class="card boss-card">
-          <div class="card-header">
-            <div class="card-icon icon-success">🔥</div>
-            <span class="card-title" style="font-size: 1.3rem;">Debug Log Analysis</span>
-          </div>
-          <div class="card-content">
-            <p>Adding console.log to track render counts revealed the smoking gun:</p>
-            <div class="log-output">
-              <div class="log-line log-board">[Board] handleOpenTask called {id: 'cmjxvq...'}</div>
-              <div class="log-line log-board">[Board] render #3 {activeTaskId: 'cmjxvq...', pathname: '/'}</div>
-              <div class="log-line log-taskpane">[TaskPane] render #5 {taskId: 'cmjxvq...'}</div>
-              <div class="log-line log-error">[Board] render #1 {activeTaskId: null, pathname: '/task/...'} ← REMOUNT!
-              </div>
-              <div class="log-line log-running">[RunningTasksBar] render #1 ← REMOUNT!</div>
-              <div class="log-line log-taskpane">[TaskPane] render #1 {taskId: null} ← REMOUNT!</div>
+        <div class="delta-metrics" aria-label="Directional before/after indicators">
+          <div class="delta-card">
+            <div class="delta-label">UI stability</div>
+            <div class="delta-values">
+              <span class="delta-pill">Before: visible flicker</span>
+              <span class="delta-pill after">After: smooth open/close</span>
             </div>
-            <p style="margin-top: 20px; font-size: 1.2rem; color: var(--accent-red);">
-              <strong>The render counts reset to #1!</strong> Components were UNMOUNTED and REMOUNTED.
-            </p>
           </div>
-        </div>
-
-        <div class="card boss-card">
-          <div class="card-header">
-            <div class="card-icon icon-success">🎯</div>
-            <span class="card-title" style="font-size: 1.3rem;">THE ACTUAL ROOT CAUSE</span>
+          <div class="delta-card">
+            <div class="delta-label">Re-render churn</div>
+            <div class="delta-values">
+              <span class="delta-pill">Before: remounts on replace()</span>
+              <span class="delta-pill after">After: stable component tree</span>
+            </div>
           </div>
-          <div class="card-content">
-            <p style="font-size: 1.1rem; margin-bottom: 20px;">
-              <span class="highlight">router.replace('/task/:id')</span> causes Next.js to attempt navigation to a route
-              that <strong>doesn't exist</strong>.
-            </p>
-            <ul>
-              <li>router.replace triggers Next.js to fetch server component at /task/[id]</li>
-              <li>Route doesn't exist → fetch fails</li>
-              <li>Next.js re-renders parent page → Server Component re-executes</li>
-              <li>React unmounts old Board, mounts fresh Board with reset state</li>
-              <li>URL sync effect then sets state again → "second open"</li>
-            </ul>
-            <div class="log-output" style="background: rgba(239, 68, 68, 0.1); border-color: var(--accent-red);">
-              <div class="log-line log-error">Fetch failed loading: GET "http://localhost:3000/task/...?_rsc=1qsp7"
-              </div>
+          <div class="delta-card">
+            <div class="delta-label">Debugging clarity</div>
+            <div class="delta-values">
+              <span class="delta-pill">Before: multiple hypotheses</span>
+              <span class="delta-pill after">After: single documented fix</span>
             </div>
           </div>
         </div>
 
-        <div class="card boss-card">
+        <div class="flow-ribbon" aria-label="Condensed improvement flow">
+          <div class="flow-step">
+            <div class="flow-icon" aria-hidden="true">1</div>
+            <div class="flow-title">Reproduce &amp; instrument</div>
+            <p class="flow-body">Capture render logs and network traces to see when components remount.</p>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" aria-hidden="true">2</div>
+            <div class="flow-title">Test hypotheses</div>
+            <p class="flow-body">Race conditions, pathname sync, Zustand isolation, basePath — ruled out systematically.
+            </p>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" aria-hidden="true">3</div>
+            <div class="flow-title">Ship the fix</div>
+            <p class="flow-body">Replace router.replace() with history.replaceState() to keep SPA state intact.</p>
+          </div>
+        </div>
+
+        <div class="impact-spotlight">
+          <div class="spotlight-icon" aria-hidden="true">🛡</div>
+          <div>
+            <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+            <ul>
+              <li>Smoother UX in the notion-clone task board.</li>
+              <li>Actionable lesson: avoid router navigation to non-existent routes.</li>
+              <li>Reusable debugging pattern for future Next.js issues.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div
+        class="cta-insight-card p-8 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 text-white flex flex-row items-center gap-6 mb-12 border border-white/20 shadow-lg"
+        style="margin: 48px auto;">
+        <div class="text-4xl">📉</div>
+        <div class="flex-grow">
+          <h4 class="text-xl font-bold mb-1">State & Render Audit</h4>
+          <p class="text-white/90">Is your React app suffering from flickering or layout shifts? I specialize in
+            auditing complex state flows to eliminate render-blocking bottlenecks.</p>
+        </div>
+        <a href="mailto:minhaj.me.bd@gmail.com"
+          class="px-6 py-2 bg-white text-red-600 font-bold rounded-full hover:bg-red-50 transition-colors whitespace-nowrap">Audit
+          My UI</a>
+      </div>
+
+      <section id="investigation" class="card">
+        <div class="phase-header">
+          <span class="phase-number">ISSUE</span>
+          <h2 class="phase-title">The Problem</h2>
+        </div>
+        <div class="card">
           <div class="card-header">
-            <div class="card-icon icon-success">⚡</div>
-            <span class="card-title" style="font-size: 1.3rem;">THE BOSS SOLUTION</span>
+            <div class="card-icon icon-hypothesis">🐛</div>
+            <span class="card-title">Symptoms Observed</span>
           </div>
           <div class="card-content">
-            <p style="font-size: 1.2rem; margin-bottom: 20px; color: var(--accent-gold);">
-              <strong>Use window.history.replaceState() instead of router.replace()</strong>
-            </p>
+            <ul>
+              <li><strong>Open task:</strong> TaskPane flickers (appears to open twice)</li>
+              <li><strong>Close task:</strong> RunningTasksBar flickers/re-renders</li>
+              <li><strong>Visual effect:</strong> Noticeable UI flashing during open/close</li>
+              <li><strong>Context:</strong> Issue persisted after Zustand migration</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('tab1', this)">Hypothesis 1: Race Condition</button>
+        <button class="tab" onclick="showTab('tab2', this)">Hypothesis 2: usePathname</button>
+        <button class="tab" onclick="showTab('tab3', this)">Hypothesis 3: Zustand Isolation</button>
+        <button class="tab" onclick="showTab('tab4', this)">Hypothesis 4: basePath</button>
+        <button class="tab"
+          style="background: linear-gradient(135deg, #1a1a2e, #16213e); border-color: var(--accent-gold);"
+          onclick="showTab('tabFinal', this)">🏆 THE BOSS</button>
+      </div>
+
+      <div id="tab1" class="tab-content active">
+        <div class="phase">
+          <div class="phase-header">
+            <span class="phase-number">HYPOTHESIS 1</span>
+            <h2 class="phase-title">Race Condition Between State and URL</h2>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-hypothesis">🤔</div>
+              <span class="card-title">Probable Cause</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-cause">Initial Theory</span>
+              <p>When user clicks a task, both setActiveTaskId and router.replace run. The URL sync effect then re-sets
+                activeTaskId, causing a double update.</p>
+              <div class="code-block">// The problematic flow:
+                handleOpenTask(id) {
+                setActiveTaskId(id); // First state update
+                router.replace('/task/' + id); // Triggers URL change
+                }
+
+                useEffect(() => {
+                if (pathname.includes('/task/')) {
+                setActiveTaskId(urlTaskId); // Second state update!
+                }
+                }, [pathname]);</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-solution">💡</div>
+              <span class="card-title">Proposed Solution: Guard with intentRef</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-solution">Option B</span>
+              <p>Add an intentRef to track user-initiated actions and skip URL sync during active transitions.</p>
+              <div class="code-block">const intentRef = useRef(null);
+
+                handleOpenTask(id) {
+                intentRef.current = "opening";
+                setActiveTaskId(id);
+                router.replace(taskHrefFor(id));
+                }
+
+                useEffect(() => {
+                if (intentRef.current) {
+                // Skip sync while intent is active
+                if (intentRef.current === "opening" && urlHasTask) {
+                intentRef.current = null;
+                }
+                return;
+                }
+                // ... normal sync logic
+                }, [pathname]);</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-result">❌</div>
+              <span class="card-title">Result</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-rejected">Did Not Fix</span>
+              <p>Close worked. <strong>Open still flickered.</strong> RunningTasksBar still flickered on both. This
+                indicated the race condition was a symptom, not the root cause.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab2" class="tab-content">
+        <div class="phase">
+          <div class="phase-header">
+            <span class="phase-number">HYPOTHESIS 2</span>
+            <h2 class="phase-title">usePathname Causes Re-renders</h2>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-hypothesis">🤔</div>
+              <span class="card-title">Probable Cause</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-cause">Deep Investigation</span>
+              <p>usePathname() triggers re-renders when URL changes. 7+ components use it via useTaskHref:</p>
+              <ul>
+                <li>Board.tsx, RunningTasksBar.tsx, Column.tsx, TaskPane.tsx</li>
+                <li>GlobalTaskSearch.tsx, CommandPalette.tsx, SubtaskItem.tsx</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-solution">💡</div>
+              <span class="card-title">Proposed Solution: Isolate URL Sync</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-solution">Architecture Change</span>
+              <p>Create TaskUrlSync component outside Board tree to handle URL sync, move activeTaskId to Zustand.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-result">❌</div>
+              <span class="card-title">Result</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-rejected">Did Not Fix</span>
+              <p>Isolation didn't help because something else was causing Board to completely <strong>remount</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab3" class="tab-content">
+        <div class="phase">
+          <div class="phase-header">
+            <span class="phase-number">HYPOTHESIS 3</span>
+            <h2 class="phase-title">Zustand Store Isolation</h2>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-hypothesis">🤔</div>
+              <span class="card-title">Probable Cause</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-cause">Architecture Theory</span>
+              <p>Maybe Zustand state updates were still cascading re-renders through the component tree.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-solution">💡</div>
+              <span class="card-title">Proposed Solution: Full Zustand Migration</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-solution">Full Migration</span>
+              <p>Move activeTaskId entirely to Zustand, Board reads only from store, no usePathname anywhere.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-result">❌</div>
+              <span class="card-title">Result</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-rejected">Did Not Fix</span>
+              <p>Still flickered! Time to add debug logging to trace actual render sequence.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab4" class="tab-content">
+        <div class="phase">
+          <div class="phase-header">
+            <span class="phase-number">HYPOTHESIS 4</span>
+            <h2 class="phase-title">Move basePath to Zustand</h2>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-hypothesis">🤔</div>
+              <span class="card-title">Probable Cause</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-cause">useTaskHref Issue</span>
+              <p>Child components use useTaskHref which internally uses usePathname. Store basePath in Zustand once.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon icon-result">❌</div>
+              <span class="card-title">Result</span>
+            </div>
+            <div class="card-content">
+              <span class="tag tag-rejected">Did Not Fix</span>
+              <p>STILL FLICKERED! We were treating symptoms, not the disease. Debug logs revealed the truth...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tabFinal" class="tab-content">
+        <div class="phase final">
+          <div class="phase-header">
+            <span class="phase-number" style="background: var(--accent-gold); color: black;">🏆 FINAL BOSS</span>
+            <h2 class="phase-title boss-title">The Actual Root Cause & Solution</h2>
+          </div>
+
+          <div class="card boss-card">
+            <div class="card-header">
+              <div class="card-icon icon-success">🔥</div>
+              <span class="card-title" style="font-size: 1.3rem;">Debug Log Analysis</span>
+            </div>
+            <div class="card-content">
+              <p>Adding console.log to track render counts revealed the smoking gun:</p>
+              <div class="log-output">
+                <div class="log-line log-board">[Board] handleOpenTask called {id: 'cmjxvq...'}</div>
+                <div class="log-line log-board">[Board] render #3 {activeTaskId: 'cmjxvq...', pathname: '/'}</div>
+                <div class="log-line log-taskpane">[TaskPane] render #5 {taskId: 'cmjxvq...'}</div>
+                <div class="log-line log-error">[Board] render #1 {activeTaskId: null, pathname: '/task/...'} ← REMOUNT!
+                </div>
+                <div class="log-line log-running">[RunningTasksBar] render #1 ← REMOUNT!</div>
+                <div class="log-line log-taskpane">[TaskPane] render #1 {taskId: null} ← REMOUNT!</div>
+              </div>
+              <p style="margin-top: 20px; font-size: 1.2rem; color: var(--accent-red);">
+                <strong>The render counts reset to #1!</strong> Components were UNMOUNTED and REMOUNTED.
+              </p>
+            </div>
+          </div>
+
+          <div class="card boss-card">
+            <div class="card-header">
+              <div class="card-icon icon-success">🎯</div>
+              <span class="card-title" style="font-size: 1.3rem;">THE ACTUAL ROOT CAUSE</span>
+            </div>
+            <div class="card-content">
+              <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                <span class="highlight">router.replace('/task/:id')</span> causes Next.js to attempt navigation to a
+                route
+                that <strong>doesn't exist</strong>.
+              </p>
+              <ul>
+                <li>router.replace triggers Next.js to fetch server component at /task/[id]</li>
+                <li>Route doesn't exist → fetch fails</li>
+                <li>Next.js re-renders parent page → Server Component re-executes</li>
+                <li>React unmounts old Board, mounts fresh Board with reset state</li>
+                <li>URL sync effect then sets state again → "second open"</li>
+              </ul>
+              <div class="log-output" style="background: rgba(239, 68, 68, 0.1); border-color: var(--accent-red);">
+                <div class="log-line log-error">Fetch failed loading: GET "http://localhost:3000/task/...?_rsc=1qsp7"
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card boss-card">
+            <div class="card-header">
+              <div class="card-icon icon-success">⚡</div>
+              <span class="card-title" style="font-size: 1.3rem;">THE BOSS SOLUTION</span>
+            </div>
+            <div class="card-content">
+              <p style="font-size: 1.2rem; margin-bottom: 20px; color: var(--accent-gold);">
+                <strong>Use window.history.replaceState() instead of router.replace()</strong>
+              </p>
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Aspect</th>
+                    <th>router.replace()</th>
+                    <th>window.history.replaceState()</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Triggers Next.js navigation</td>
+                    <td class="fail-x">✗ Yes</td>
+                    <td class="success-checkmark">✓ No</td>
+                  </tr>
+                  <tr>
+                    <td>Server fetch</td>
+                    <td class="fail-x">✗ Yes (fails)</td>
+                    <td class="success-checkmark">✓ None</td>
+                  </tr>
+                  <tr>
+                    <td>Component remount</td>
+                    <td class="fail-x">✗ Yes</td>
+                    <td class="success-checkmark">✓ None</td>
+                  </tr>
+                  <tr>
+                    <td>Updates browser URL</td>
+                    <td class="success-checkmark">✓ Yes</td>
+                    <td class="success-checkmark">✓ Yes</td>
+                  </tr>
+                  <tr>
+                    <td>Shareable/bookmarkable</td>
+                    <td class="success-checkmark">✓ Yes</td>
+                    <td class="success-checkmark">✓ Yes</td>
+                  </tr>
+                  <tr>
+                    <td>SPA experience</td>
+                    <td class="fail-x">✗ Broken</td>
+                    <td class="success-checkmark">✓ Perfect</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="code-block" style="border-color: var(--accent-gold);">// THE FIX - Board.tsx
+
+                // Before (causes remount):
+                handleOpenTask(id) {
+                setActiveTaskId(id);
+                router.replace(taskHrefFor(id), { scroll: false }); // ❌
+                }
+
+                // After (pure SPA):
+                handleOpenTask(id) {
+                setActiveTaskId(id);
+                window.history.replaceState(null, '', taskHrefFor(id)); // ✅
+                }
+
+                // Handle browser back/forward
+                useEffect(() => {
+                const handlePopState = () => {
+                const pathname = window.location.pathname;
+                // Parse and sync...
+                };
+                window.addEventListener('popstate', handlePopState);
+                return () => window.removeEventListener('popstate', handlePopState);
+                }, []);
+
+                // Handle initial deep link load (wait for tasks)
+                useEffect(() => {
+                if (initializedRef.current) return;
+                if (Object.keys(tasks).length === 0) return; // Wait for tasks
+
+                const pathname = window.location.pathname;
+                // Parse URL and set activeTaskId if present
+                initializedRef.current = true;
+                }, [tasks]);</div>
+            </div>
+          </div>
+
+          <div class="card boss-card">
+            <div class="card-header">
+              <div class="card-icon icon-success">✅</div>
+              <span class="card-title" style="font-size: 1.3rem;">Final Result</span>
+            </div>
+            <div class="card-content">
+              <ul>
+                <li><strong>Open task:</strong> Instant, no flicker ✓</li>
+                <li><strong>Close task:</strong> Instant, no flicker ✓</li>
+                <li><strong>RunningTasksBar:</strong> No unnecessary re-renders ✓</li>
+                <li><strong>Deep linking:</strong> Works (copy URL → paste in new tab) ✓</li>
+                <li><strong>Browser back/forward:</strong> Works correctly ✓</li>
+              </ul>
+              <p style="margin-top: 20px; font-size: 1.1rem; color: var(--accent-gold);">
+                <strong>True SPA behavior achieved.</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <section class="phase">
+        <div class="phase-header">
+          <span class="phase-number">SUMMARY</span>
+          <h2 class="phase-title">Key Takeaways</h2>
+        </div>
+        <div class="card">
+          <div class="card-content">
             <table class="comparison-table">
               <thead>
                 <tr>
-                  <th>Aspect</th>
-                  <th>router.replace()</th>
-                  <th>window.history.replaceState()</th>
+                  <th>#</th>
+                  <th>Hypothesis</th>
+                  <th>Solution Tried</th>
+                  <th>Result</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Triggers Next.js navigation</td>
-                  <td class="fail-x">✗ Yes</td>
-                  <td class="success-checkmark">✓ No</td>
+                  <td>1</td>
+                  <td>Race condition (state & URL)</td>
+                  <td>Guard effect with intentRef</td>
+                  <td class="fail-x">❌ Partial</td>
                 </tr>
                 <tr>
-                  <td>Server fetch</td>
-                  <td class="fail-x">✗ Yes (fails)</td>
-                  <td class="success-checkmark">✓ None</td>
+                  <td>2</td>
+                  <td>usePathname causes re-renders</td>
+                  <td>Isolate URL sync</td>
+                  <td class="fail-x">❌ Failed</td>
                 </tr>
                 <tr>
-                  <td>Component remount</td>
-                  <td class="fail-x">✗ Yes</td>
-                  <td class="success-checkmark">✓ None</td>
+                  <td>3</td>
+                  <td>Zustand updates cascade</td>
+                  <td>Move activeTaskId to Zustand</td>
+                  <td class="fail-x">❌ Failed</td>
                 </tr>
                 <tr>
-                  <td>Updates browser URL</td>
-                  <td class="success-checkmark">✓ Yes</td>
-                  <td class="success-checkmark">✓ Yes</td>
+                  <td>4</td>
+                  <td>useTaskHref uses usePathname</td>
+                  <td>Move basePath to Zustand</td>
+                  <td class="fail-x">❌ Failed</td>
                 </tr>
-                <tr>
-                  <td>Shareable/bookmarkable</td>
-                  <td class="success-checkmark">✓ Yes</td>
-                  <td class="success-checkmark">✓ Yes</td>
-                </tr>
-                <tr>
-                  <td>SPA experience</td>
-                  <td class="fail-x">✗ Broken</td>
-                  <td class="success-checkmark">✓ Perfect</td>
+                <tr style="background: rgba(251, 191, 36, 0.1);">
+                  <td>🏆</td>
+                  <td><strong>router.replace triggers remount</strong></td>
+                  <td><strong>Use window.history.replaceState</strong></td>
+                  <td class="success-checkmark">✓ Success!</td>
                 </tr>
               </tbody>
             </table>
-            <div class="code-block" style="border-color: var(--accent-gold);">// THE FIX - Board.tsx
-
-              // Before (causes remount):
-              handleOpenTask(id) {
-              setActiveTaskId(id);
-              router.replace(taskHrefFor(id), { scroll: false }); // ❌
-              }
-
-              // After (pure SPA):
-              handleOpenTask(id) {
-              setActiveTaskId(id);
-              window.history.replaceState(null, '', taskHrefFor(id)); // ✅
-              }
-
-              // Handle browser back/forward
-              useEffect(() => {
-              const handlePopState = () => {
-              const pathname = window.location.pathname;
-              // Parse and sync...
-              };
-              window.addEventListener('popstate', handlePopState);
-              return () => window.removeEventListener('popstate', handlePopState);
-              }, []);
-
-              // Handle initial deep link load (wait for tasks)
-              useEffect(() => {
-              if (initializedRef.current) return;
-              if (Object.keys(tasks).length === 0) return; // Wait for tasks
-
-              const pathname = window.location.pathname;
-              // Parse URL and set activeTaskId if present
-              initializedRef.current = true;
-              }, [tasks]);</div>
-          </div>
-        </div>
-
-        <div class="card boss-card">
-          <div class="card-header">
-            <div class="card-icon icon-success">✅</div>
-            <span class="card-title" style="font-size: 1.3rem;">Final Result</span>
-          </div>
-          <div class="card-content">
-            <ul>
-              <li><strong>Open task:</strong> Instant, no flicker ✓</li>
-              <li><strong>Close task:</strong> Instant, no flicker ✓</li>
-              <li><strong>RunningTasksBar:</strong> No unnecessary re-renders ✓</li>
-              <li><strong>Deep linking:</strong> Works (copy URL → paste in new tab) ✓</li>
-              <li><strong>Browser back/forward:</strong> Works correctly ✓</li>
-            </ul>
-            <p style="margin-top: 20px; font-size: 1.1rem; color: var(--accent-gold);">
-              <strong>True SPA behavior achieved.</strong>
+            <p style="margin-top: 24px; color: var(--text-secondary);">
+              <strong>Lesson learned:</strong> When debugging re-render issues in Next.js App Router, check if your
+              navigation method is causing server component re-execution. Adding render count logging early would have
+              revealed the remount pattern sooner.
             </p>
           </div>
         </div>
-      </div>
+      </section>
+
+      <footer>
+        <p>TaskPane Flicker Investigation Documentation</p>
+        <p style="margin-top: 8px;">Generated: January 4, 2026</p>
+      </footer>
     </div>
 
-    <div class="section-divider"></div>
+    <script>
+      function showTab(tabId, btn) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+      }
+    </script>
 
-    <section class="phase">
-      <div class="phase-header">
-        <span class="phase-number">SUMMARY</span>
-        <h2 class="phase-title">Key Takeaways</h2>
-      </div>
-      <div class="card">
-        <div class="card-content">
-          <table class="comparison-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Hypothesis</th>
-                <th>Solution Tried</th>
-                <th>Result</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Race condition (state & URL)</td>
-                <td>Guard effect with intentRef</td>
-                <td class="fail-x">❌ Partial</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>usePathname causes re-renders</td>
-                <td>Isolate URL sync</td>
-                <td class="fail-x">❌ Failed</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Zustand updates cascade</td>
-                <td>Move activeTaskId to Zustand</td>
-                <td class="fail-x">❌ Failed</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>useTaskHref uses usePathname</td>
-                <td>Move basePath to Zustand</td>
-                <td class="fail-x">❌ Failed</td>
-              </tr>
-              <tr style="background: rgba(251, 191, 36, 0.1);">
-                <td>🏆</td>
-                <td><strong>router.replace triggers remount</strong></td>
-                <td><strong>Use window.history.replaceState</strong></td>
-                <td class="success-checkmark">✓ Success!</td>
-              </tr>
-            </tbody>
-          </table>
-          <p style="margin-top: 24px; color: var(--text-secondary);">
-            <strong>Lesson learned:</strong> When debugging re-render issues in Next.js App Router, check if your
-            navigation method is causing server component re-execution. Adding render count logging early would have
-            revealed the remount pattern sooner.
-          </p>
-        </div>
-      </div>
-    </section>
 
-    <footer>
-      <p>TaskPane Flicker Investigation Documentation</p>
-      <p style="margin-top: 8px;">Generated: January 4, 2026</p>
-    </footer>
-  </div>
 
-  <script>
-    function showTab(tabId, btn) {
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      btn.classList.add('active');
-    }
-  </script>
 
-  
-
-    
   </div>
   <script>
     const { createApp } = Vue;
     createApp({
       components: {
         'mega-header': MegaHeader,
-        
+
       }
     }).mount('#app');
   </script>

@@ -306,98 +306,104 @@
             font-size: 0.9rem;
         }
     </style>
-<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-<link rel="stylesheet" href="mega-header.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link rel="stylesheet" href="mega-header.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <div id="app">
-    <mega-header>
-        <div slot="brand-content">
-            <div class="brand-text-main">Scroll Focus RCA</div>
-            <div class="brand-text-sub">UX / Root Cause Analysis Report</div>
-        </div>
-        <div slot="right-content" class="header-actions">
-            <div class="pill">RCA • 2024</div>
-            <button class="btn-primary" id="openSummaryBtn">
-                <span>☰</span> One-Page Summary
-            </button>
-        </div>
-    </mega-header>
-    <div class="container">
-        <header>
-            <h1>Scroll Focus Issue Resolution</h1>
-            <p class="subtitle">Technical Report: Preventing Scroll Bleed-Through in Overlay Components</p>
-            <div class="meta">
-                <div class="meta-item">
-                    📅 <span>January 10, 2026</span>
-                </div>
-                <div class="meta-item">
-                    📁 <span>notion-clone</span>
-                </div>
-                <div class="meta-item">
-                    🏷️ <span>React / Next.js / CSS</span>
-                </div>
+    <div id="app">
+        <mega-header>
+            <div slot="brand-content">
+                <div class="brand-text-main">Scroll Focus RCA</div>
+                <div class="brand-text-sub">UX / Root Cause Analysis Report</div>
             </div>
-        </header>
-
-        <section>
-            <h2>📋 Executive Summary</h2>
-            <p>
-                This report documents the investigation and resolution of a scroll focus issue in the Kanban board
-                application
-                where touchpad/mouse scroll events intended for overlay components (TaskPane and RunningTasksBar) were
-                incorrectly propagating to the underlying board, causing unintended background scrolling.
-            </p>
-            <div class="highlight-box success">
-                <strong>Resolution Status:</strong> Successfully resolved using scroll event containment via
-                <code>onWheel</code> event handlers and <code>overscrollBehavior: contain</code> CSS property.
+            <div slot="right-content" class="header-actions">
+                <div class="pill">RCA • 2024</div>
+                <button class="btn-primary" id="openSummaryBtn">
+                    <span>☰</span> One-Page Summary
+                </button>
             </div>
-        </section>
-
-        <section>
-            <h2>🔍 Problem Analysis</h2>
-
-            <h3>Symptoms Observed</h3>
-            <ul>
-                <li>When TaskPane (modal) was open, scrolling with touchpad would scroll the board behind it</li>
-                <li>When RunningTasksBar (dock) was expanded, scroll events leaked to the board</li>
-                <li>Board's scrollbar remained visible behind overlay components</li>
-                <li>Scroll targeting was inconsistent — users expected overlays to capture scroll events</li>
-            </ul>
-
-            <h3>Root Cause Identification</h3>
-            <div class="card">
-                <p>The issue stemmed from <strong>scroll event bubbling</strong> in the DOM. When a scrollable container
-                    reaches its scroll boundary (top or bottom), the browser propagates remaining scroll delta to
-                    ancestor elements.
-                    This behavior is called <strong>scroll chaining</strong>.</p>
-            </div>
-
-            <h3>Scroll Chain Visualization</h3>
-            <div class="flow-diagram">
-                <div class="flow-step"><span class="flow-arrow">→</span> User scrolls with touchpad over TaskPane</div>
-                <div class="flow-step"><span class="flow-arrow">→</span> TaskPane body scrolls (overflow-y-auto)</div>
-                <div class="flow-step"><span class="flow-arrow">→</span> TaskPane reaches scroll boundary</div>
-                <div class="flow-step"><span class="flow-arrow">→</span> Remaining scroll delta bubbles to parent</div>
-                <div class="flow-step"><span class="flow-arrow">→</span> Board/body scrolls (unintended behavior)</div>
-            </div>
-        </section>
-
-        <section>
-            <h2>🧪 Approaches Attempted</h2>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3>Approach 1: Body Scroll Lock</h3>
-                    <span class="badge badge-failed">Failed</span>
+        </mega-header>
+        <div class="container">
+            <header>
+                <h1>Scroll Focus Issue Resolution</h1>
+                <p class="subtitle">Technical Report: Preventing Scroll Bleed-Through in Overlay Components</p>
+                <div class="meta">
+                    <div class="meta-item">
+                        📅 <span>January 10, 2026</span>
+                    </div>
+                    <div class="meta-item">
+                        📁 <span>notion-clone</span>
+                    </div>
+                    <div class="meta-item">
+                        🏷️ <span>React / Next.js / CSS</span>
+                    </div>
                 </div>
-                <p><strong>Strategy:</strong> Set <code>document.body.style.overflow = "hidden"</code> when overlay
-                    opens,
-                    restore original value on close.</p>
+            </header>
 
-                <pre><code><span class="comment">// Initial implementation</span>
+            <section>
+                <h2>📋 Executive Summary</h2>
+                <p>
+                    This report documents the investigation and resolution of a scroll focus issue in the Kanban board
+                    application
+                    where touchpad/mouse scroll events intended for overlay components (TaskPane and RunningTasksBar)
+                    were
+                    incorrectly propagating to the underlying board, causing unintended background scrolling.
+                </p>
+                <div class="highlight-box success">
+                    <strong>Resolution Status:</strong> Successfully resolved using scroll event containment via
+                    <code>onWheel</code> event handlers and <code>overscrollBehavior: contain</code> CSS property.
+                </div>
+            </section>
+
+            <section>
+                <h2>🔍 Problem Analysis</h2>
+
+                <h3>Symptoms Observed</h3>
+                <ul>
+                    <li>When TaskPane (modal) was open, scrolling with touchpad would scroll the board behind it</li>
+                    <li>When RunningTasksBar (dock) was expanded, scroll events leaked to the board</li>
+                    <li>Board's scrollbar remained visible behind overlay components</li>
+                    <li>Scroll targeting was inconsistent — users expected overlays to capture scroll events</li>
+                </ul>
+
+                <h3>Root Cause Identification</h3>
+                <div class="card">
+                    <p>The issue stemmed from <strong>scroll event bubbling</strong> in the DOM. When a scrollable
+                        container
+                        reaches its scroll boundary (top or bottom), the browser propagates remaining scroll delta to
+                        ancestor elements.
+                        This behavior is called <strong>scroll chaining</strong>.</p>
+                </div>
+
+                <h3>Scroll Chain Visualization</h3>
+                <div class="flow-diagram">
+                    <div class="flow-step"><span class="flow-arrow">→</span> User scrolls with touchpad over TaskPane
+                    </div>
+                    <div class="flow-step"><span class="flow-arrow">→</span> TaskPane body scrolls (overflow-y-auto)
+                    </div>
+                    <div class="flow-step"><span class="flow-arrow">→</span> TaskPane reaches scroll boundary</div>
+                    <div class="flow-step"><span class="flow-arrow">→</span> Remaining scroll delta bubbles to parent
+                    </div>
+                    <div class="flow-step"><span class="flow-arrow">→</span> Board/body scrolls (unintended behavior)
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>🧪 Approaches Attempted</h2>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Approach 1: Body Scroll Lock</h3>
+                        <span class="badge badge-failed">Failed</span>
+                    </div>
+                    <p><strong>Strategy:</strong> Set <code>document.body.style.overflow = "hidden"</code> when overlay
+                        opens,
+                        restore original value on close.</p>
+
+                    <pre><code><span class="comment">// Initial implementation</span>
 <span class="keyword">useEffect</span>(() => {
     <span class="keyword">if</span> (!taskId) <span class="keyword">return</span>;
     <span class="keyword">const</span> originalOverflow = document.body.style.overflow;
@@ -407,20 +413,21 @@
     };
 }, [taskId]);</code></pre>
 
-                <p><strong>Problem:</strong> When component closed, the original overflow value was sometimes captured
-                    as "hidden" (if another component had already set it), causing the board to become permanently
-                    non-scrollable.</p>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3>Approach 2: Reference-Counted Scroll Lock</h3>
-                    <span class="badge badge-partial">Partial Success</span>
+                    <p><strong>Problem:</strong> When component closed, the original overflow value was sometimes
+                        captured
+                        as "hidden" (if another component had already set it), causing the board to become permanently
+                        non-scrollable.</p>
                 </div>
-                <p><strong>Strategy:</strong> Create a shared utility with lock counter to properly handle nested
-                    lock/unlock scenarios.</p>
 
-                <pre><code><span class="comment">// src/lib/scrollLock.ts</span>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Approach 2: Reference-Counted Scroll Lock</h3>
+                        <span class="badge badge-partial">Partial Success</span>
+                    </div>
+                    <p><strong>Strategy:</strong> Create a shared utility with lock counter to properly handle nested
+                        lock/unlock scenarios.</p>
+
+                    <pre><code><span class="comment">// src/lib/scrollLock.ts</span>
 <span class="keyword">let</span> lockCount = 0;
 <span class="keyword">let</span> originalOverflow = <span class="string">""</span>;
 
@@ -440,21 +447,24 @@
     }
 }</code></pre>
 
-                <p><strong>Problem:</strong> While this fixed the nested lock issue, it still prevented the board from
-                    scrolling when the mouse was outside the overlay but the overlay was still open. User requirement
-                    was
-                    that board should scroll when mouse is over the board, regardless of overlay state.</p>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3>Approach 3: Event Containment (Final Solution)</h3>
-                    <span class="badge badge-success">Implemented</span>
+                    <p><strong>Problem:</strong> While this fixed the nested lock issue, it still prevented the board
+                        from
+                        scrolling when the mouse was outside the overlay but the overlay was still open. User
+                        requirement
+                        was
+                        that board should scroll when mouse is over the board, regardless of overlay state.</p>
                 </div>
-                <p><strong>Strategy:</strong> Use <code>onWheel</code> event handlers to stop scroll event propagation
-                    combined with <code>overscrollBehavior: contain</code> CSS property.</p>
 
-                <pre><code><span class="comment">// TaskPane.tsx - Final implementation</span>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Approach 3: Event Containment (Final Solution)</h3>
+                        <span class="badge badge-success">Implemented</span>
+                    </div>
+                    <p><strong>Strategy:</strong> Use <code>onWheel</code> event handlers to stop scroll event
+                        propagation
+                        combined with <code>overscrollBehavior: contain</code> CSS property.</p>
+
+                    <pre><code><span class="comment">// TaskPane.tsx - Final implementation</span>
 &lt;aside
     style={{ <span class="property">overscrollBehavior</span>: <span class="string">"contain"</span> }}
     <span class="property">onWheel</span>={(e) => e.<span class="function">stopPropagation</span>()}
@@ -462,161 +472,185 @@
     ...
 &lt;/aside&gt;</code></pre>
 
-                <p><strong>Advantages:</strong></p>
-                <ul>
-                    <li>No body scroll lock complexity</li>
-                    <li>Board remains scrollable when mouse is over it</li>
-                    <li>Overlays capture scroll only when mouse is inside them</li>
-                    <li>Works correctly on fresh page load</li>
-                    <li>No cleanup issues when components unmount</li>
-                </ul>
-            </div>
-        </section>
+                    <p><strong>Advantages:</strong></p>
+                    <ul>
+                        <li>No body scroll lock complexity</li>
+                        <li>Board remains scrollable when mouse is over it</li>
+                        <li>Overlays capture scroll only when mouse is inside them</li>
+                        <li>Works correctly on fresh page load</li>
+                        <li>No cleanup issues when components unmount</li>
+                    </ul>
+                </div>
+            </section>
 
-        <section>
-            <h2>✅ Final Solution Details</h2>
+            <section>
+                <h2>✅ Final Solution Details</h2>
 
-            <h3>Technical Implementation</h3>
-            <p>The solution combines two complementary techniques:</p>
+                <h3>Technical Implementation</h3>
+                <p>The solution combines two complementary techniques:</p>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Technique</th>
-                        <th>Purpose</th>
-                        <th>Browser Support</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><code>onWheel={(e) => e.stopPropagation()}</code></td>
-                        <td>Prevents wheel events from bubbling to parent elements</td>
-                        <td>All modern browsers</td>
-                    </tr>
-                    <tr>
-                        <td><code>overscrollBehavior: contain</code></td>
-                        <td>Prevents scroll chaining at scroll boundaries</td>
-                        <td>Chrome 63+, Firefox 59+, Safari 16+</td>
-                    </tr>
-                </tbody>
-            </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Technique</th>
+                            <th>Purpose</th>
+                            <th>Browser Support</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>onWheel={(e) => e.stopPropagation()}</code></td>
+                            <td>Prevents wheel events from bubbling to parent elements</td>
+                            <td>All modern browsers</td>
+                        </tr>
+                        <tr>
+                            <td><code>overscrollBehavior: contain</code></td>
+                            <td>Prevents scroll chaining at scroll boundaries</td>
+                            <td>Chrome 63+, Firefox 59+, Safari 16+</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            <h3>Behavior Matrix</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Mouse Position</th>
-                        <th>Scroll Behavior</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Over the Board</td>
-                        <td><span class="checkmark">✓</span> Board scrolls normally</td>
-                    </tr>
-                    <tr>
-                        <td>Over TaskPane</td>
-                        <td><span class="checkmark">✓</span> TaskPane scrolls, board doesn't</td>
-                    </tr>
-                    <tr>
-                        <td>Over RunningTasksBar</td>
-                        <td><span class="checkmark">✓</span> Dock scrolls, board doesn't</td>
-                    </tr>
-                    <tr>
-                        <td>Components closed</td>
-                        <td><span class="checkmark">✓</span> Board scrolls normally</td>
-                    </tr>
-                </tbody>
-            </table>
+                <h3>Behavior Matrix</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mouse Position</th>
+                            <th>Scroll Behavior</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Over the Board</td>
+                            <td><span class="checkmark">✓</span> Board scrolls normally</td>
+                        </tr>
+                        <tr>
+                            <td>Over TaskPane</td>
+                            <td><span class="checkmark">✓</span> TaskPane scrolls, board doesn't</td>
+                        </tr>
+                        <tr>
+                            <td>Over RunningTasksBar</td>
+                            <td><span class="checkmark">✓</span> Dock scrolls, board doesn't</td>
+                        </tr>
+                        <tr>
+                            <td>Components closed</td>
+                            <td><span class="checkmark">✓</span> Board scrolls normally</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            <h3>Files Modified</h3>
-            <div class="files-affected">
-                <div class="file-card">
-                    <div class="file-path">src/components/TaskPane/TaskPane.tsx</div>
-                    <div class="file-changes">
-                        + Added <code>style={{ overscrollBehavior: "contain" }}</code><br>
-                        + Added <code>onWheel</code> event handler
+                <h3>Files Modified</h3>
+                <div class="files-affected">
+                    <div class="file-card">
+                        <div class="file-path">src/components/TaskPane/TaskPane.tsx</div>
+                        <div class="file-changes">
+                            + Added <code>style={{ overscrollBehavior: "contain" }}</code><br>
+                            + Added <code>onWheel</code> event handler
+                        </div>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-path">src/components/RunningTasksBar.tsx</div>
+                        <div class="file-changes">
+                            + Added <code>style={{ overscrollBehavior: "contain" }}</code><br>
+                            + Added <code>onWheel</code> event handler
+                        </div>
                     </div>
                 </div>
-                <div class="file-card">
-                    <div class="file-path">src/components/RunningTasksBar.tsx</div>
-                    <div class="file-changes">
-                        + Added <code>style={{ overscrollBehavior: "contain" }}</code><br>
-                        + Added <code>onWheel</code> event handler
+            </section>
+
+            <section>
+                <h2>📊 Comparison Summary</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Approach</th>
+                            <th>Board Scrollable</th>
+                            <th>Overlay Captures Scroll</th>
+                            <th>No Side Effects</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Body Scroll Lock</td>
+                            <td><span class="crossmark">✗</span></td>
+                            <td><span class="checkmark">✓</span></td>
+                            <td><span class="crossmark">✗</span></td>
+                            <td><span class="badge badge-failed">Rejected</span></td>
+                        </tr>
+                        <tr>
+                            <td>Reference-Counted Lock</td>
+                            <td><span class="crossmark">✗</span></td>
+                            <td><span class="checkmark">✓</span></td>
+                            <td><span class="checkmark">✓</span></td>
+                            <td><span class="badge badge-partial">Rejected</span></td>
+                        </tr>
+                        <tr>
+                            <td>Event Containment</td>
+                            <td><span class="checkmark">✓</span></td>
+                            <td><span class="checkmark">✓</span></td>
+                            <td><span class="checkmark">✓</span></td>
+                            <td><span class="badge badge-success">Implemented</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>💡 Key Learnings</h2>
+                <div class="highlight-box">
+                    <ul>
+                        <li><strong>Event propagation control</strong> is often more precise than global state changes
+                            like
+                            body overflow</li>
+                        <li><strong>overscrollBehavior</strong> is a powerful CSS property specifically designed for
+                            scroll
+                            containment</li>
+                        <li><strong>User intent matters:</strong> Users expected scroll to work based on mouse position,
+                            not
+                            overlay state</li>
+                        <li>Avoid global DOM modifications when local event handling can achieve the same result</li>
+                    </ul>
+                </div>
+            </section>
+
+            <footer>
+                <p>Generated by Antigravity AI Assistant • Technical Report v1.0</p>
+            </footer>
+
+            <div
+                class="cta-banner p-10 md:p-14 rounded-2xl bg-gradient-to-br from-teal-600 via-indigo-600 to-blue-700 text-white relative overflow-hidden mb-8 border border-white/20 shadow-2xl">
+                <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-grow text-center md:text-left">
+                        <h3 class="text-3xl font-extrabold mb-4">Fix Your Frontend</h3>
+                        <p class="text-lg text-white/90 leading-relaxed">
+                            Stop living with flaky UI and janky interactions. Let's perform a deep-dive diagnostic to
+                            ensure your application is as robust as it is beautiful.
+                        </p>
+                    </div>
+                    <div class="flex flex-col sm:sm:flex-row gap-4 shrink-0">
+                        <a href="mailto:minhaj.me.bd@gmail.com"
+                            class="px-8 py-3 bg-white text-teal-600 font-bold rounded-xl hover:scale-105 transition-all shadow-lg text-center">Diagnostic
+                            Deep-Dive</a>
+                        <a href="/portfolio/index.html"
+                            class="px-8 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-all border border-white/30 text-center">View
+                            Reports</a>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section>
-            <h2>📊 Comparison Summary</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Approach</th>
-                        <th>Board Scrollable</th>
-                        <th>Overlay Captures Scroll</th>
-                        <th>No Side Effects</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Body Scroll Lock</td>
-                        <td><span class="crossmark">✗</span></td>
-                        <td><span class="checkmark">✓</span></td>
-                        <td><span class="crossmark">✗</span></td>
-                        <td><span class="badge badge-failed">Rejected</span></td>
-                    </tr>
-                    <tr>
-                        <td>Reference-Counted Lock</td>
-                        <td><span class="crossmark">✗</span></td>
-                        <td><span class="checkmark">✓</span></td>
-                        <td><span class="checkmark">✓</span></td>
-                        <td><span class="badge badge-partial">Rejected</span></td>
-                    </tr>
-                    <tr>
-                        <td>Event Containment</td>
-                        <td><span class="checkmark">✓</span></td>
-                        <td><span class="checkmark">✓</span></td>
-                        <td><span class="checkmark">✓</span></td>
-                        <td><span class="badge badge-success">Implemented</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
 
-        <section>
-            <h2>💡 Key Learnings</h2>
-            <div class="highlight-box">
-                <ul>
-                    <li><strong>Event propagation control</strong> is often more precise than global state changes like
-                        body overflow</li>
-                    <li><strong>overscrollBehavior</strong> is a powerful CSS property specifically designed for scroll
-                        containment</li>
-                    <li><strong>User intent matters:</strong> Users expected scroll to work based on mouse position, not
-                        overlay state</li>
-                    <li>Avoid global DOM modifications when local event handling can achieve the same result</li>
-                </ul>
-            </div>
-        </section>
-
-        <footer>
-            <p>Generated by Antigravity AI Assistant • Technical Report v1.0</p>
-        </footer>
     </div>
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            components: {
+                'mega-header': MegaHeader,
 
-    
-  </div>
-  <script>
-    const { createApp } = Vue;
-    createApp({
-      components: {
-        'mega-header': MegaHeader,
-        
-      }
-    }).mount('#app');
-  </script>
+            }
+        }).mount('#app');
+    </script>
 </body>
 
 </html>

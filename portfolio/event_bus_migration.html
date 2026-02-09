@@ -190,12 +190,12 @@
               </h4>
               <div class="mermaid" v-pre>
                 graph TD
-                Root["Root Context (Logic)"] -- "onClickHandler" --> B["Board Layout (Proxy)"]
-                B -- "onOpenTask" --> C["Column Group (Proxy)"]
-                C -- "onOpenTask" --> Card["TaskCard (Consumer)"]
+                Root["Root Context (Logic)"] -->|onClickHandler| B["Board Layout (Proxy)"]
+                B -->|onOpenTask| C["Column Group (Proxy)"]
+                C -->|onOpenTask| Card["TaskCard (Consumer)"]
                 style Root fill:#f8fafc,stroke:#e2e8f0
-                style B fill:#fee2e2,stroke:#f87171,stroke-dasharray: 5 5
-                style C fill:#fee2e2,stroke:#f87171,stroke-dasharray: 5 5
+                style B fill:#fee2e2,stroke:#f87171,stroke-dasharray: 5,5
+                style C fill:#fee2e2,stroke:#f87171,stroke-dasharray: 5,5
                 style Card fill:#fee2e2,stroke:#ef4444
               </div>
               <p class="mt-8 text-sm text-slate-500 italic">
@@ -261,6 +261,28 @@ TaskBus.emit('task:open', {
                       are validated at compile time, preventing runtime "ghost" events.</div>
                   </li>
                 </ul>
+
+                <div class="glass-card p-6 mt-8">
+                  <h4 class="text-sm font-bold text-slate-400 uppercase mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    Architectural Flow: Decoupled Flux
+                  </h4>
+                  <div class="mermaid" v-pre>
+                    graph LR
+                    subgraph Producers
+                    TC["TaskCard"]
+                    CP["CommandPalette"]
+                    end
+                    EB(("TaskEventBus"))
+                    subgraph Consumers
+                    Router["URL Router"]
+                    Pane["TaskPane UI"]
+                    end
+                    Producers -->|emit| EB
+                    EB -.->|notify| Consumers
+                    style EB fill:#10b981,stroke:#059669,color:white
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -271,10 +293,34 @@ TaskBus.emit('task:open', {
           <div class="max-w-4xl mx-auto text-center mb-16">
             <span class="chapter-badge mb-6 inline-block">Chapter 03</span>
             <h2 class="text-4xl font-bold text-slate-900 dark:text-white mb-6">Reliability & Memory Safety</h2>
-            <p class="text-lg text-slate-500 dark:text-slate-400 font-light max-w-2xl mx-auto">
+            <p class="text-lg text-slate-500 dark:text-slate-400 font-light max-w-2xl mx-auto mb-12">
               Event-driven systems are powerful but require rigorous lifecycle management to prevent memory leaks and
               redundant listeners.
             </p>
+            <div class="glass-card p-12 mb-12">
+              <h4
+                class="text-sm font-bold text-slate-400 uppercase mb-8 text-center flex items-center justify-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                Orchestration Sequence
+              </h4>
+              <div class="mermaid" v-pre>
+                sequenceDiagram
+                participant U as User
+                participant Card as Task Card
+                participant EB as Event Bus
+                participant UI as Task Pane
+                participant Routing as useRouting
+
+                U->>Card: Click 123
+                Card->>EB: emit("open", "123")
+                par Parallel Handlers
+                EB->>UI: Show Panel(123)
+                EB->>Routing: Update URL(/task/123)
+                end
+                UI-->>U: Render View
+                Routing-->>U: URL Sync
+              </div>
+            </div>
           </div>
           <div class="grid md:grid-cols-2 gap-8">
             <div class="glass-card p-10">

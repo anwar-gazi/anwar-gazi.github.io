@@ -572,384 +572,411 @@
       margin-bottom: 3px;
     }
   </style>
-<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-<link rel="stylesheet" href="mega-header.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <link rel="stylesheet" href="mega-header.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <div id="app">
-  <!-- Header -->
-  <mega-header>
-    <div slot="brand-content">
-      <div class="brand-text-main">MS Concitus Healthcare Ops</div>
-      <div class="brand-text-sub">Healthcare / Plan Operations Case Study</div>
-    </div>
-    <div slot="right-content" class="header-actions">
-      <div class="pill">Healthcare • 2021</div>
-      <button class="btn-primary" id="openSummaryBtn">
-        <span>☰</span> One-Page Summary
-      </button>
-    </div>
-  </mega-header>
-
-  <main>
-    <!-- Hero -->
-    <section class="hero" aria-labelledby="hero-title">
-      <div>
-        <div class="hero-tagline">
-          <span>●</span> Healthcare • Plan Operations • Gov Contracts
-        </div>
-        <h1 id="hero-title" class="hero-title">
-          Stabilising a US Healthcare Plan Operations Portal for Agents &amp; Policy Workflows
-        </h1>
-        <p class="hero-subtitle">
-          Delivered critical production bug fixes for a US healthcare plan operations management
-          portal used by healthcare agents, stabilising core policy workflows and protecting a key
-          recurring revenue stream tied to US government contracts.
-        </p>
-
-        <div class="hero-meta">
-          <div class="hero-meta-item">
-            <strong>Role</strong> Senior Software Engineer
-          </div>
-          <div class="hero-meta-item">
-            <strong>Org</strong> MS Concitus, Dhaka, Bangladesh
-          </div>
-          <div class="hero-meta-item">
-            <strong>Industry</strong> Healthcare • US Health Plans
-          </div>
-        </div>
-
-        <p class="hero-summary">
-          The portal was used by healthcare agents to manage enrolments, policy changes, and
-          day-to-day plan operations under US government programs. Instability in these workflows
-          risks compliance issues, member dissatisfaction, and loss of contract revenue. My work
-          focused on diagnosing and fixing production issues so the system behaved predictably for
-          agents and stakeholders.
-        </p>
+    <!-- Header -->
+    <mega-header>
+      <div slot="brand-content">
+        <div class="brand-text-main">MS Concitus Healthcare Ops</div>
+        <div class="brand-text-sub">Healthcare / Plan Operations Case Study</div>
       </div>
-
-      <aside class="hero-side" aria-label="Snapshot">
-        <div class="hero-side-label">Snapshot</div>
-        <div class="metric-grid">
-          <div class="metric-card">
-            <div class="metric-label">Domain</div>
-            <div class="metric-value">US Health Plans</div>
-            <div class="metric-footnote">
-              Operations &amp; policy management portal for healthcare agents.
-            </div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Business Impact</div>
-            <div class="metric-value">Recurring</div>
-            <div class="metric-footnote">
-              Stability helped protect recurring revenue tied to government contracts.
-            </div>
-          </div>
-        </div>
-        <div class="metric-card" style="margin-top:8px;">
-          <div class="metric-label">Impact Focus</div>
-          <div class="metric-footnote">
-            • Fewer incidents in core policy flows.<br />
-            • Reduced agent frustration and rework.<br />
-            • Stronger reliability story in contract renewals.
-          </div>
-        </div>
-
-        <div style="margin-top:10px;">
-          <div class="hero-side-label">Core Themes</div>
-          <div class="stack-list">
-            <span class="stack-pill">Production Bug Fixes</span>
-            <span class="stack-pill">Policy Workflows</span>
-            <span class="stack-pill">US Healthcare</span>
-            <span class="stack-pill">Reliability</span>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <section class="value-rail" aria-label="Problem to solution to impact">
-      <div class="eyebrow">Problem → Solution → Impact</div>
-      <div class="value-grid">
-        <div class="value-card">
-          <div class="value-icon warning" aria-hidden="true">!</div>
-          <h3 class="value-title">Problem</h3>
-          <ul>
-            <li>Agents hit intermittent errors in enrolment, changes, and terminations.</li>
-            <li>Edge cases in policy rules created UI/back-office mismatches.</li>
-            <li>Manual, high-stakes releases risked regression in regulated flows.</li>
-          </ul>
-        </div>
-        <div class="value-card">
-          <div class="value-icon action" aria-hidden="true">⧉</div>
-          <h3 class="value-title">Solution</h3>
-          <ul>
-            <li>Shadowed real agent scenarios, instrumented logs, and reproduced failures.</li>
-            <li>Hardened validation and business-rule handling across policy workflows.</li>
-            <li>Shipped smaller, tested fixes aligned with QA and compliance teams.</li>
-          </ul>
-        </div>
-        <div class="value-card">
-          <div class="value-icon impact" aria-hidden="true">✓</div>
-          <h3 class="value-title">Impact</h3>
-          <ul>
-            <li>More predictable enrolments and mid-year changes.</li>
-            <li>Fewer user-visible errors and data correction tickets.</li>
-            <li>Lower deploy anxiety; steadier service for members and agents.</li>
-          </ul>
-        </div>
+      <div slot="right-content" class="header-actions">
+        <div class="pill">Healthcare • 2021</div>
+        <button class="btn-primary" id="openSummaryBtn">
+          <span>☰</span> One-Page Summary
+        </button>
       </div>
+    </mega-header>
 
-      <div class="delta-metrics" aria-label="Directional before/after indicators">
-        <div class="delta-card">
-          <div class="delta-label">Enrolment stability</div>
-          <div class="delta-values">
-            <span class="delta-pill">Before: session errors under load</span>
-            <span class="delta-pill after">After: guarded flows, fewer retries</span>
-          </div>
-        </div>
-        <div class="delta-card">
-          <div class="delta-label">Policy change correctness</div>
-          <div class="delta-values">
-            <span class="delta-pill">Before: edge-case regressions</span>
-            <span class="delta-pill after">After: validated rules &amp; logging</span>
-          </div>
-        </div>
-        <div class="delta-card">
-          <div class="delta-label">Release risk</div>
-          <div class="delta-values">
-            <span class="delta-pill">Before: manual, stressful deploys</span>
-            <span class="delta-pill after">After: smaller, QA-paired drops</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="flow-ribbon" aria-label="Condensed improvement flow">
-        <div class="flow-step">
-          <div class="flow-icon" aria-hidden="true">1</div>
-          <div class="flow-title">Observe &amp; triage</div>
-          <p class="flow-body">Mine logs and shadow agents to isolate the noisiest failure cases in policy workflows.
-          </p>
-        </div>
-        <div class="flow-step">
-          <div class="flow-icon" aria-hidden="true">2</div>
-          <div class="flow-title">Patch &amp; guard</div>
-          <p class="flow-body">Tighten validation, rule handling, and data sync; add checks that mirror real-world edge
-            cases.</p>
-        </div>
-        <div class="flow-step">
-          <div class="flow-icon" aria-hidden="true">3</div>
-          <div class="flow-title">Release safely</div>
-          <p class="flow-body">Ship smaller changes with QA pairing and better logging to keep regulated flows calm.</p>
-        </div>
-      </div>
-
-      <div class="impact-spotlight">
-        <div class="spotlight-icon" aria-hidden="true">🛡</div>
+    <main>
+      <!-- Hero -->
+      <section class="hero" aria-labelledby="hero-title">
         <div>
-          <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
-          <ul>
-            <li>Agents complete member workflows without rework or escalations.</li>
-            <li>Members see accurate coverage updates sooner.</li>
-            <li>Compliance and revenue risk lowered through steadier operations.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="layout" aria-label="Case study content layout">
-      <!-- Main column -->
-      <div>
-        <article class="section-card" id="introduction">
-          <div class="eyebrow">Overview</div>
-          <h2>Introduction</h2>
-          <p>
-            MS Concitus provided engineering support for a US healthcare plan operations
-            management portal. The application supported a network of healthcare agents handling
-            policy enrolments, changes, terminations, and exceptions across multiple plans and
-            member populations.
-          </p>
-          <p>
-            As a Senior Software Engineer, I focused on production reliability: understanding how
-            agents actually used the system, finding the most painful bugs in live workflows, and
-            delivering fixes that kept the platform stable while respecting tight regulatory and
-            contractual constraints.
-          </p>
-        </article>
-
-        <article class="section-card" id="context">
-          <div class="eyebrow">Background</div>
-          <h2>Context</h2>
-          <p>
-            US healthcare plan operations must comply with strict rules around eligibility,
-            timelines, and documentation. The portal was at the centre of this:
-          </p>
-          <ul>
-            <li>Agents used it daily to process member applications and policy changes.</li>
-            <li>
-              Data flowed downstream to billing, claims, and regulatory reporting systems.
-            </li>
-            <li>
-              The platform’s reliability influenced satisfaction of both members and government
-              partners.
-            </li>
-          </ul>
-          <p>
-            When agents encounter portal errors in the middle of a policy workflow, they often
-            have to redo work, rely on manual workarounds, or escalate to support — all of which
-            increase cost and risk for the health plan.
-          </p>
-        </article>
-
-        <article class="section-card" id="problem">
-          <div class="eyebrow">Challenge</div>
-          <h2>Problem</h2>
-          <p>
-            The portal exhibited recurring production issues in critical flows such as:
-          </p>
-          <ul>
-            <li>New member enrolments and plan selection.</li>
-            <li>Policy changes (address, PCP, coverage level) mid-plan year.</li>
-            <li>Terminations and reinstatements triggered by life events.</li>
-          </ul>
-          <p>
-            These bugs showed up as:
-          </p>
-          <ul>
-            <li>Intermittent errors after long agent sessions.</li>
-            <li>Incorrect handling of edge cases in policy rules.</li>
-            <li>Data inconsistencies between UI and back-office records.</li>
-          </ul>
-          <p>
-            The challenge was to fix these issues without destabilising other parts of a
-            large, mature codebase and without interrupting daily operations.
-          </p>
-        </article>
-
-        <article class="section-card" id="constraints">
-          <div class="eyebrow">Operating Environment</div>
-          <h2>Constraints &amp; Requirements</h2>
-          <ul>
-            <li>
-              <strong>Regulatory sensitivity</strong>: any change had to preserve compliance with
-              US healthcare regulations and government contract requirements.
-            </li>
-            <li>
-              <strong>Limited maintenance windows</strong>: downtime directly affected agents and
-              member service levels.
-            </li>
-            <li>
-              <strong>Legacy complexity</strong>: core workflows were implemented across multiple
-              layers and had evolved over years.
-            </li>
-            <li>
-              <strong>Contractual stakes</strong>: reliability issues could impact satisfaction
-              scores used in contract renewals and bonuses.
-            </li>
-          </ul>
-        </article>
-
-        <article class="section-card" id="implementation">
-          <div class="eyebrow">Execution</div>
-          <h2>Implementation Highlights</h2>
-
-          <h3>1) Production incident triage</h3>
-          <ul>
-            <li>
-              Reviewed production logs, error reports, and support tickets to identify patterns in
-              failing workflows.
-            </li>
-            <li>
-              Worked with business analysts and QA to reconstruct real agent scenarios that
-              triggered bugs.
-            </li>
-            <li>
-              Prioritised fixes for issues that impacted core policy operations and contract KPIs.
-            </li>
-          </ul>
-
-          <h3>2) Targeted bug fixes in policy workflows</h3>
-          <ul>
-            <li>
-              Corrected edge-case logic in policy rule evaluations (e.g., special enrolment
-              periods, age cutoffs, and dependent relationships).
-            </li>
-            <li>
-              Addressed state management issues that caused stale data or duplicate submissions
-              during long agent sessions.
-            </li>
-            <li>
-              Fixed data mapping problems between UI forms and back-end records to keep member
-              data consistent.
-            </li>
-          </ul>
-
-          <h3>3) Defensive coding &amp; validation</h3>
-          <ul>
-            <li>
-              Added input validation and clearer error handling around high-risk operations to
-              prevent invalid policy states from being saved.
-            </li>
-            <li>
-              Introduced guardrails for common agent mistakes (e.g., incomplete required fields,
-              conflicting changes) with actionable error messages instead of generic failures.
-            </li>
-            <li>
-              Helped refine automated tests for critical flows so regressions could be caught
-              earlier.
-            </li>
-          </ul>
-
-          <h3>4) Safer releases in a regulated environment</h3>
-          <ul>
-            <li>
-              Collaborated with QA and release teams to bundle fixes into controlled releases with
-              clear rollback plans.
-            </li>
-            <li>
-              Ensured that each change was traceable and well-documented for audits and
-              compliance reviews.
-            </li>
-            <li>
-              Assisted in monitoring post-release behaviour to confirm incident reduction.
-            </li>
-          </ul>
-
-          <div class="callout">
-            The focus was not on rewriting the system, but on making the existing portal feel
-            “boringly reliable” to agents: fewer unexpected errors, clearer messages, and more
-            predictable behaviour in day-to-day policy work.
+          <div class="hero-tagline">
+            <span>●</span> Healthcare • Plan Operations • Gov Contracts
           </div>
-        </article>
-
-        <article class="section-card" id="impact">
-          <div class="eyebrow">Outcomes</div>
-          <h2>Impact &amp; Outcomes</h2>
-          <p>
-            While exact metrics are confidential, the reliability work translated into clear
-            operational and business benefits:
+          <h1 id="hero-title" class="hero-title">
+            Stabilising a US Healthcare Plan Operations Portal for Agents &amp; Policy Workflows
+          </h1>
+          <p class="hero-subtitle">
+            Delivered critical production bug fixes for a US healthcare plan operations management
+            portal used by healthcare agents, stabilising core policy workflows and protecting a key
+            recurring revenue stream tied to US government contracts.
           </p>
-          <ul>
-            <li>
-              Reduction in production incidents related to core policy workflows handled by
-              healthcare agents.
-            </li>
-            <li>
-              Fewer support escalations and manual workarounds during enrolment and change
-              periods.
-            </li>
-            <li>
-              More stable operations during critical windows tied to government program deadlines.
-            </li>
-            <li>
-              Protection of a key recurring revenue stream linked to US government contracts by
-              strengthening the platform’s reliability story.
-            </li>
-          </ul>
 
-          <!-- Charts – replace src paths with your actual PNGs -->
-          <!-- <div class="chart-block">
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <strong>Role</strong> Senior Software Engineer
+            </div>
+            <div class="hero-meta-item">
+              <strong>Org</strong> MS Concitus, Dhaka, Bangladesh
+            </div>
+            <div class="hero-meta-item">
+              <strong>Industry</strong> Healthcare • US Health Plans
+            </div>
+          </div>
+
+          <p class="hero-summary">
+            The portal was used by healthcare agents to manage enrolments, policy changes, and
+            day-to-day plan operations under US government programs. Instability in these workflows
+            risks compliance issues, member dissatisfaction, and loss of contract revenue. My work
+            focused on diagnosing and fixing production issues so the system behaved predictably for
+            agents and stakeholders.
+          </p>
+        </div>
+
+        <aside class="hero-side" aria-label="Snapshot">
+          <div class="hero-side-label">Snapshot</div>
+          <div class="metric-grid">
+            <div class="metric-card">
+              <div class="metric-label">Domain</div>
+              <div class="metric-value">US Health Plans</div>
+              <div class="metric-footnote">
+                Operations &amp; policy management portal for healthcare agents.
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Business Impact</div>
+              <div class="metric-value">Recurring</div>
+              <div class="metric-footnote">
+                Stability helped protect recurring revenue tied to government contracts.
+              </div>
+            </div>
+          </div>
+          <div class="metric-card" style="margin-top:8px;">
+            <div class="metric-label">Impact Focus</div>
+            <div class="metric-footnote">
+              • Fewer incidents in core policy flows.<br />
+              • Reduced agent frustration and rework.<br />
+              • Stronger reliability story in contract renewals.
+            </div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <div class="hero-side-label">Core Themes</div>
+            <div class="stack-list">
+              <span class="stack-pill">Production Bug Fixes</span>
+              <span class="stack-pill">Policy Workflows</span>
+              <span class="stack-pill">US Healthcare</span>
+              <span class="stack-pill">Reliability</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="value-rail" aria-label="Problem to solution to impact">
+        <div class="eyebrow">Problem → Solution → Impact</div>
+        <div class="value-grid">
+          <div class="value-card">
+            <div class="value-icon warning" aria-hidden="true">!</div>
+            <h3 class="value-title">Problem</h3>
+            <ul>
+              <li>Agents hit intermittent errors in enrolment, changes, and terminations.</li>
+              <li>Edge cases in policy rules created UI/back-office mismatches.</li>
+              <li>Manual, high-stakes releases risked regression in regulated flows.</li>
+            </ul>
+          </div>
+          <div class="value-card">
+            <div class="value-icon action" aria-hidden="true">⧉</div>
+            <h3 class="value-title">Solution</h3>
+            <ul>
+              <li>Shadowed real agent scenarios, instrumented logs, and reproduced failures.</li>
+              <li>Hardened validation and business-rule handling across policy workflows.</li>
+              <li>Shipped smaller, tested fixes aligned with QA and compliance teams.</li>
+            </ul>
+          </div>
+          <div class="value-card">
+            <div class="value-icon impact" aria-hidden="true">✓</div>
+            <h3 class="value-title">Impact</h3>
+            <ul>
+              <li>More predictable enrolments and mid-year changes.</li>
+              <li>Fewer user-visible errors and data correction tickets.</li>
+              <li>Lower deploy anxiety; steadier service for members and agents.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="delta-metrics" aria-label="Directional before/after indicators">
+          <div class="delta-card">
+            <div class="delta-label">Enrolment stability</div>
+            <div class="delta-values">
+              <span class="delta-pill">Before: session errors under load</span>
+              <span class="delta-pill after">After: guarded flows, fewer retries</span>
+            </div>
+          </div>
+          <div class="delta-card">
+            <div class="delta-label">Policy change correctness</div>
+            <div class="delta-values">
+              <span class="delta-pill">Before: edge-case regressions</span>
+              <span class="delta-pill after">After: validated rules &amp; logging</span>
+            </div>
+          </div>
+          <div class="delta-card">
+            <div class="delta-label">Release risk</div>
+            <div class="delta-values">
+              <span class="delta-pill">Before: manual, stressful deploys</span>
+              <span class="delta-pill after">After: smaller, QA-paired drops</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-ribbon" aria-label="Condensed improvement flow">
+          <div class="flow-step">
+            <div class="flow-icon" aria-hidden="true">1</div>
+            <div class="flow-title">Observe &amp; triage</div>
+            <p class="flow-body">Mine logs and shadow agents to isolate the noisiest failure cases in policy workflows.
+            </p>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" aria-hidden="true">2</div>
+            <div class="flow-title">Patch &amp; guard</div>
+            <p class="flow-body">Tighten validation, rule handling, and data sync; add checks that mirror real-world
+              edge
+              cases.</p>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" aria-hidden="true">3</div>
+            <div class="flow-title">Release safely</div>
+            <p class="flow-body">Ship smaller changes with QA pairing and better logging to keep regulated flows calm.
+            </p>
+          </div>
+        </div>
+
+        <div class="impact-spotlight">
+          <div class="spotlight-icon" aria-hidden="true">🛡</div>
+          <div>
+            <div class="value-title" style="margin-bottom:4px;">Impact spotlight</div>
+            <ul>
+              <li>Agents complete member workflows without rework or escalations.</li>
+              <li>Members see accurate coverage updates sooner.</li>
+              <li>Compliance and revenue risk lowered through steadier operations.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="layout" aria-label="Case study content layout">
+        <!-- Main column -->
+        <div>
+          <article class="section-card" id="introduction">
+            <div class="eyebrow">Overview</div>
+            <h2>Introduction</h2>
+            <p>
+              MS Concitus provided engineering support for a US healthcare plan operations
+              management portal. The application supported a network of healthcare agents handling
+              policy enrolments, changes, terminations, and exceptions across multiple plans and
+              member populations.
+            </p>
+            <p>
+              As a Senior Software Engineer, I focused on production reliability: understanding how
+              agents actually used the system, finding the most painful bugs in live workflows, and
+              delivering fixes that kept the platform stable while respecting tight regulatory and
+              contractual constraints.
+            </p>
+          </article>
+
+          <article class="section-card" id="context">
+            <div class="eyebrow">Background</div>
+            <h2>Context</h2>
+            <p>
+              US healthcare plan operations must comply with strict rules around eligibility,
+              timelines, and documentation. The portal was at the centre of this:
+            </p>
+            <ul>
+              <li>Agents used it daily to process member applications and policy changes.</li>
+              <li>
+                Data flowed downstream to billing, claims, and regulatory reporting systems.
+              </li>
+              <li>
+                The platform’s reliability influenced satisfaction of both members and government
+                partners.
+              </li>
+            </ul>
+            <p>
+              When agents encounter portal errors in the middle of a policy workflow, they often
+              have to redo work, rely on manual workarounds, or escalate to support — all of which
+              increase cost and risk for the health plan.
+            </p>
+          </article>
+
+          <article class="section-card" id="problem">
+            <div class="eyebrow">Challenge</div>
+            <h2>Problem</h2>
+            <p>
+              The portal exhibited recurring production issues in critical flows such as:
+            </p>
+            <ul>
+              <li>New member enrolments and plan selection.</li>
+              <li>Policy changes (address, PCP, coverage level) mid-plan year.</li>
+              <li>Terminations and reinstatements triggered by life events.</li>
+            </ul>
+            <p>
+              These bugs showed up as:
+            </p>
+            <ul>
+              <li>Intermittent errors after long agent sessions.</li>
+              <li>Incorrect handling of edge cases in policy rules.</li>
+              <li>Data inconsistencies between UI and back-office records.</li>
+            </ul>
+            <p>
+              The challenge was to fix these issues without destabilising other parts of a
+              large, mature codebase and without interrupting daily operations.
+            </p>
+          </article>
+
+          <article class="section-card" id="constraints">
+            <div class="eyebrow">Operating Environment</div>
+            <h2>Constraints &amp; Requirements</h2>
+            <ul>
+              <li>
+                <strong>Regulatory sensitivity</strong>: any change had to preserve compliance with
+                US healthcare regulations and government contract requirements.
+              </li>
+              <li>
+                <strong>Limited maintenance windows</strong>: downtime directly affected agents and
+                member service levels.
+              </li>
+              <li>
+                <strong>Legacy complexity</strong>: core workflows were implemented across multiple
+                layers and had evolved over years.
+              </li>
+              <li>
+                <strong>Contractual stakes</strong>: reliability issues could impact satisfaction
+                scores used in contract renewals and bonuses.
+              </li>
+            </ul>
+          </article>
+
+          <article class="section-card" id="implementation">
+            <div class="eyebrow">Execution</div>
+            <h2>Implementation Highlights</h2>
+
+            <h3>1) Production incident triage</h3>
+            <ul>
+              <li>
+                Reviewed production logs, error reports, and support tickets to identify patterns in
+                failing workflows.
+              </li>
+              <li>
+                Worked with business analysts and QA to reconstruct real agent scenarios that
+                triggered bugs.
+              </li>
+              <li>
+                Prioritised fixes for issues that impacted core policy operations and contract KPIs.
+              </li>
+            </ul>
+
+            <h3>2) Targeted bug fixes in policy workflows</h3>
+            <ul>
+              <li>
+                Corrected edge-case logic in policy rule evaluations (e.g., special enrolment
+                periods, age cutoffs, and dependent relationships).
+              </li>
+              <li>
+                Addressed state management issues that caused stale data or duplicate submissions
+                during long agent sessions.
+              </li>
+              <li>
+                Fixed data mapping problems between UI forms and back-end records to keep member
+                data consistent.
+              </li>
+            </ul>
+
+            <h3>3) Defensive coding &amp; validation</h3>
+            <ul>
+              <li>
+                Added input validation and clearer error handling around high-risk operations to
+                prevent invalid policy states from being saved.
+              </li>
+              <li>
+                Introduced guardrails for common agent mistakes (e.g., incomplete required fields,
+                conflicting changes) with actionable error messages instead of generic failures.
+              </li>
+              <li>
+                Helped refine automated tests for critical flows so regressions could be caught
+                earlier.
+              </li>
+            </ul>
+
+            <h3>4) Safer releases in a regulated environment</h3>
+            <ul>
+              <li>
+                Collaborated with QA and release teams to bundle fixes into controlled releases with
+                clear rollback plans.
+              </li>
+              <li>
+                Ensured that each change was traceable and well-documented for audits and
+                compliance reviews.
+              </li>
+              <li>
+                Assisted in monitoring post-release behaviour to confirm incident reduction.
+              </li>
+            </ul>
+
+            <div class="callout">
+              The focus was not on rewriting the system, but on making the existing portal feel
+              “boringly reliable” to agents: fewer unexpected errors, clearer messages, and more
+              predictable behaviour in day-to-day policy work.
+            </div>
+          </article>
+
+          <div class="cta-insight-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <div class="cta-insight-icon">🏥</div>
+            <div class="cta-insight-content">
+              <h4>Enterprise Stability</h4>
+              <p>Operating in regulated markets? I specialize in hardening core business workflows and eliminating
+                production regressions.</p>
+            </div>
+            <a href="mailto:minhaj.me.bd@gmail.com" class="cta-insight-btn" style="color: #10b981;">Stabilize My
+              Platform</a>
+          </div>
+
+          <article class="section-card" id="impact">
+            <div class="eyebrow">Outcomes</div>
+            <h2>Impact &amp; Outcomes</h2>
+            <p>
+              While exact metrics are confidential, the reliability work translated into clear
+              operational and business benefits:
+            </p>
+            <ul>
+              <li>
+                Reduction in production incidents related to core policy workflows handled by
+                healthcare agents.
+              </li>
+              <li>
+                Fewer support escalations and manual workarounds during enrolment and change
+                periods.
+              </li>
+              <li>
+                More stable operations during critical windows tied to government program deadlines.
+              </li>
+              <li>
+                Protection of a key recurring revenue stream linked to US government contracts by
+                strengthening the platform’s reliability story.
+              </li>
+            </ul>
+
+            <div class="cta-banner">
+              <div class="cta-content">
+                <h3 class="cta-title">Secure Your Revenue</h3>
+                <p class="cta-text">
+                  Fragile workflows shouldn't risk your enterprise contracts. Let's harden your production environment
+                  for mission-critical reliability.
+                </p>
+              </div>
+              <div class="cta-action">
+                <a href="mailto:minhaj.me.bd@gmail.com" class="cta-btn">Audit My Reliability</a>
+                <a href="/portfolio/index.html" class="cta-secondary-link">View Stability Patterns</a>
+              </div>
+            </div>
+
+            <!-- Charts – replace src paths with your actual PNGs -->
+            <!-- <div class="chart-block">
             <img src="chart_incident_rate.png"
                  alt="Chart showing a drop in incident rate for policy workflows over time." />
             <div class="chart-caption">
@@ -971,251 +998,262 @@
             Charts are placeholders; replace with real operational metrics (incidents, support
             tickets, policy throughput) where appropriate.
           </p> -->
-        </article>
+          </article>
 
-        <article class="section-card" id="learnings">
-          <div class="eyebrow">Reflection</div>
-          <h2>Key Learnings</h2>
-          <ul>
-            <li>
-              In healthcare, reliability and compliance are core product features — not “nice to
-              have” technical qualities.
-            </li>
-            <li>
-              Small, well-targeted fixes to critical workflows can deliver outsized value when
-              those workflows sit under government contracts.
-            </li>
-            <li>
-              Partnering closely with support and business teams is essential to understand how
-              bugs affect real agents and members.
-            </li>
-            <li>
-              Investing in defensive coding, validation, and safer releases pays off in fewer
-              incidents and smoother contract renewals.
-            </li>
-          </ul>
-        </article>
-      </div>
-
-      <!-- Sidebar column -->
-      <aside aria-label="Sidebar information">
-        <section class="section-card">
-          <div class="side-section-title">Role &amp; Responsibilities</div>
-          <p>
-            As Senior Software Engineer at MS Concitus, I:
-          </p>
-          <ul>
-            <li>Owned investigation and resolution of high-impact production issues.</li>
-            <li>
-              Worked across application layers to stabilise enrolment and policy change flows.
-            </li>
-            <li>
-              Collaborated with QA, business analysts, and onshore teams to validate fixes against
-              regulatory and contract needs.
-            </li>
-            <li>
-              Helped strengthen testing and release practices in a sensitive healthcare context.
-            </li>
-          </ul>
-        </section>
-
-        <section class="section-card">
-          <div class="side-section-title">Portal Snapshot</div>
-          <ul>
-            <li><strong>Users:</strong> Healthcare agents and operations staff.</li>
-            <li><strong>Workflows:</strong> Enrolments, policy changes, terminations, exceptions.</li>
-            <li><strong>Downstream:</strong> Billing, claims, reporting, and compliance systems.</li>
-            <li><strong>Contracts:</strong> US government-backed healthcare plan agreements.</li>
-          </ul>
-          <div class="callout" style="margin-top:10px;">
-            Bugs in the portal were not just UX issues — they could ripple into claims, billing,
-            and compliance metrics used in government evaluations.
-          </div>
-        </section>
-
-        <section class="section-card">
-          <div class="side-section-title">Timeline</div>
-          <div class="timeline">
-            <div class="timeline-item">
-              <div class="timeline-title">2016 – 2017: Onboarding &amp; Domain Learning</div>
-              <div class="timeline-body">
-                Learned US healthcare plan operations domain and began contributing to smaller
-                fixes and enhancements.
-              </div>
-            </div>
-            <div class="timeline-item">
-              <div class="timeline-title">2018 – 2019: Core Workflow Stabilisation</div>
-              <div class="timeline-body">
-                Focused on resolving recurring bugs in enrolment and policy change flows, improved
-                validation and error handling.
-              </div>
-            </div>
-            <div class="timeline-item">
-              <div class="timeline-title">2020 – 2021: Reliability &amp; Release Discipline</div>
-              <div class="timeline-body">
-                Continued reliability work, supported safer releases, and helped preserve key
-                government-linked revenue streams as the system evolved.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section-card">
-          <div class="side-section-title">Keywords &amp; Themes</div>
-          <p>Useful tags for CVs, portfolios, and search:</p>
-          <div>
-            <span class="side-chip">Healthcare</span>
-            <span class="side-chip">US Health Plans</span>
-            <span class="side-chip">Production Reliability</span>
-            <span class="side-chip">Policy Workflows</span>
-            <span class="side-chip">Government Contracts</span>
-            <span class="side-chip">Incident Reduction</span>
-          </div>
-        </section>
-      </aside>
-    </section>
-
-    <footer>
-      Making healthcare plan operations calm and predictable — Reliability Work at MS Concitus.
-    </footer>
-  </main>
-
-  <!-- One-page summary modal -->
-  <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal">
-      <div class="modal-header">
-        <div>
-          <div class="modal-title">MS Concitus – One-Page Summary</div>
-          <div class="modal-subtitle">
-            Quick snapshot of the healthcare plan operations reliability case study.
-          </div>
-        </div>
-        <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="summary-grid">
-          <div>
-            <div class="summary-section-title">Context</div>
-            <ul class="summary-list">
+          <article class="section-card" id="learnings">
+            <div class="eyebrow">Reflection</div>
+            <h2>Key Learnings</h2>
+            <ul>
               <li>
-                US healthcare plan operations portal used daily by healthcare agents.
+                In healthcare, reliability and compliance are core product features — not “nice to
+                have” technical qualities.
               </li>
               <li>
-                Core workflows: enrolments, policy changes, terminations, and exceptions.
+                Small, well-targeted fixes to critical workflows can deliver outsized value when
+                those workflows sit under government contracts.
               </li>
               <li>
-                Platform connected to revenue from US government healthcare contracts.
+                Partnering closely with support and business teams is essential to understand how
+                bugs affect real agents and members.
+              </li>
+              <li>
+                Investing in defensive coding, validation, and safer releases pays off in fewer
+                incidents and smoother contract renewals.
               </li>
             </ul>
-
-            <div class="summary-section-title">Challenge</div>
-            <ul class="summary-list">
-              <li>Recurring production bugs in critical policy workflows.</li>
-              <li>Agent frustration, rework, and support overhead.</li>
-              <li>
-                Reliability issues that could impact contract satisfaction metrics and renewals.
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <div class="summary-section-title">My Role</div>
-            <ul class="summary-list">
-              <li>Senior Software Engineer focused on production reliability.</li>
-              <li>
-                Investigated, prioritised, and fixed high-impact issues in policy workflows.
-              </li>
-              <li>
-                Worked with QA and business teams to ensure changes met regulatory expectations.
-              </li>
-            </ul>
-
-            <div class="summary-section-title">Approach</div>
-            <ul class="summary-list">
-              <li>
-                Analysed logs, tickets, and real agent scenarios to identify root causes.
-              </li>
-              <li>
-                Implemented targeted bug fixes, validation, and improved error handling.
-              </li>
-              <li>
-                Supported safer releases with clear rollback plans and post-release monitoring.
-              </li>
-            </ul>
-          </div>
+          </article>
         </div>
 
-        <div class="summary-section-title">Outcomes</div>
-        <ul class="summary-list">
-          <li>Fewer incidents in core policy workflows and smoother agent experience.</li>
-          <li>Reduced reliance on manual workarounds and support escalation.</li>
-          <li>
-            Protected and strengthened a key recurring revenue stream tied to US government
-            contracts.
-          </li>
-        </ul>
+        <!-- Sidebar column -->
+        <aside aria-label="Sidebar information">
+          <section class="section-card">
+            <div class="side-section-title">Role &amp; Responsibilities</div>
+            <p>
+              As Senior Software Engineer at MS Concitus, I:
+            </p>
+            <ul>
+              <li>Owned investigation and resolution of high-impact production issues.</li>
+              <li>
+                Worked across application layers to stabilise enrolment and policy change flows.
+              </li>
+              <li>
+                Collaborated with QA, business analysts, and onshore teams to validate fixes against
+                regulatory and contract needs.
+              </li>
+              <li>
+                Helped strengthen testing and release practices in a sensitive healthcare context.
+              </li>
+            </ul>
+          </section>
 
-        <div class="summary-section-title">Key Takeaways</div>
-        <ul class="summary-list">
-          <li>
-            Reliability and compliance are central to healthcare software, especially when
-            government contracts are involved.
-          </li>
-          <li>
-            Incremental, well-targeted fixes can deliver major value without risky rewrites.
-          </li>
-          <li>
-            Working closely with agents, support, and business stakeholders is essential to
-            prioritise the right reliability work.
-          </li>
-        </ul>
+          <section class="section-card">
+            <div class="side-section-title">Portal Snapshot</div>
+            <ul>
+              <li><strong>Users:</strong> Healthcare agents and operations staff.</li>
+              <li><strong>Workflows:</strong> Enrolments, policy changes, terminations, exceptions.</li>
+              <li><strong>Downstream:</strong> Billing, claims, reporting, and compliance systems.</li>
+              <li><strong>Contracts:</strong> US government-backed healthcare plan agreements.</li>
+            </ul>
+            <div class="callout" style="margin-top:10px;">
+              Bugs in the portal were not just UX issues — they could ripple into claims, billing,
+              and compliance metrics used in government evaluations.
+            </div>
+            <div class="cta-insight-card"
+              style="background: linear-gradient(135deg, #34d399 0%, #065f46 100%); margin: 20px 0;">
+              <div class="cta-insight-icon">📑</div>
+              <div class="cta-insight-content">
+                <h4>Policy Workflow Audit</h4>
+                <p>Concerned about data consistency? I conduct deep-dive audits of policy state machines and regulatory
+                  verification flows.</p>
+              </div>
+              <a href="mailto:minhaj.me.bd@gmail.com" class="cta-insight-btn" style="color: #34d399;">Audit My
+                Workflows</a>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="side-section-title">Timeline</div>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-title">2016 – 2017: Onboarding &amp; Domain Learning</div>
+                <div class="timeline-body">
+                  Learned US healthcare plan operations domain and began contributing to smaller
+                  fixes and enhancements.
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-title">2018 – 2019: Core Workflow Stabilisation</div>
+                <div class="timeline-body">
+                  Focused on resolving recurring bugs in enrolment and policy change flows, improved
+                  validation and error handling.
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-title">2020 – 2021: Reliability &amp; Release Discipline</div>
+                <div class="timeline-body">
+                  Continued reliability work, supported safer releases, and helped preserve key
+                  government-linked revenue streams as the system evolved.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="side-section-title">Keywords &amp; Themes</div>
+            <p>Useful tags for CVs, portfolios, and search:</p>
+            <div>
+              <span class="side-chip">Healthcare</span>
+              <span class="side-chip">US Health Plans</span>
+              <span class="side-chip">Production Reliability</span>
+              <span class="side-chip">Policy Workflows</span>
+              <span class="side-chip">Government Contracts</span>
+              <span class="side-chip">Incident Reduction</span>
+            </div>
+          </section>
+        </aside>
+      </section>
+
+      <footer>
+        Making healthcare plan operations calm and predictable — Reliability Work at MS Concitus.
+      </footer>
+    </main>
+
+    <!-- One-page summary modal -->
+    <div class="modal-backdrop" id="summaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal">
+        <div class="modal-header">
+          <div>
+            <div class="modal-title">MS Concitus – One-Page Summary</div>
+            <div class="modal-subtitle">
+              Quick snapshot of the healthcare plan operations reliability case study.
+            </div>
+          </div>
+          <button class="btn-icon" id="closeSummaryBtn" aria-label="Close summary modal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="summary-grid">
+            <div>
+              <div class="summary-section-title">Context</div>
+              <ul class="summary-list">
+                <li>
+                  US healthcare plan operations portal used daily by healthcare agents.
+                </li>
+                <li>
+                  Core workflows: enrolments, policy changes, terminations, and exceptions.
+                </li>
+                <li>
+                  Platform connected to revenue from US government healthcare contracts.
+                </li>
+              </ul>
+
+              <div class="summary-section-title">Challenge</div>
+              <ul class="summary-list">
+                <li>Recurring production bugs in critical policy workflows.</li>
+                <li>Agent frustration, rework, and support overhead.</li>
+                <li>
+                  Reliability issues that could impact contract satisfaction metrics and renewals.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="summary-section-title">My Role</div>
+              <ul class="summary-list">
+                <li>Senior Software Engineer focused on production reliability.</li>
+                <li>
+                  Investigated, prioritised, and fixed high-impact issues in policy workflows.
+                </li>
+                <li>
+                  Worked with QA and business teams to ensure changes met regulatory expectations.
+                </li>
+              </ul>
+
+              <div class="summary-section-title">Approach</div>
+              <ul class="summary-list">
+                <li>
+                  Analysed logs, tickets, and real agent scenarios to identify root causes.
+                </li>
+                <li>
+                  Implemented targeted bug fixes, validation, and improved error handling.
+                </li>
+                <li>
+                  Supported safer releases with clear rollback plans and post-release monitoring.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-section-title">Outcomes</div>
+          <ul class="summary-list">
+            <li>Fewer incidents in core policy workflows and smoother agent experience.</li>
+            <li>Reduced reliance on manual workarounds and support escalation.</li>
+            <li>
+              Protected and strengthened a key recurring revenue stream tied to US government
+              contracts.
+            </li>
+          </ul>
+
+          <div class="summary-section-title">Key Takeaways</div>
+          <ul class="summary-list">
+            <li>
+              Reliability and compliance are central to healthcare software, especially when
+              government contracts are involved.
+            </li>
+            <li>
+              Incremental, well-targeted fixes can deliver major value without risky rewrites.
+            </li>
+            <li>
+              Working closely with agents, support, and business stakeholders is essential to
+              prioritise the right reliability work.
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
 
-  
 
-  <script>
-    (function () {
-      const modal = document.getElementById("summaryModal");
-      const openBtn = document.getElementById("openSummaryBtn");
-      const closeBtn = document.getElementById("closeSummaryBtn");
 
-      function openModal() {
-        modal.classList.add("active");
-        modal.setAttribute("aria-hidden", "false");
-      }
+    <script>
+      (function () {
+        const modal = document.getElementById("summaryModal");
+        const openBtn = document.getElementById("openSummaryBtn");
+        const closeBtn = document.getElementById("closeSummaryBtn");
 
-      function closeModal() {
-        modal.classList.remove("active");
-        modal.setAttribute("aria-hidden", "true");
-      }
-
-      openBtn.addEventListener("click", openModal);
-      closeBtn.addEventListener("click", closeModal);
-
-      modal.addEventListener("click", function (e) {
-        if (e.target === modal) {
-          closeModal();
+        function openModal() {
+          modal.classList.add("active");
+          modal.setAttribute("aria-hidden", "false");
         }
-      });
 
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          closeModal();
+        function closeModal() {
+          modal.classList.remove("active");
+          modal.setAttribute("aria-hidden", "true");
         }
-      });
-    })();
-  </script>
 
-    
+        openBtn.addEventListener("click", openModal);
+        closeBtn.addEventListener("click", closeModal);
+
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") {
+            closeModal();
+          }
+        });
+      })();
+    </script>
+
+
   </div>
   <script>
     const { createApp } = Vue;
     createApp({
       components: {
         'mega-header': MegaHeader,
-        
+
       }
     }).mount('#app');
   </script>

@@ -153,6 +153,19 @@
 
 <body class="p-8">
   <div id="app">
+    <mega-header>
+      <div slot="brand-content">
+        <div class="brand-text-main">React Performance</div>
+        <div class="brand-text-sub">Hook Optimization</div>
+      </div>
+      <div slot="right-content" class="header-actions">
+        <div class="pill">Case Study • 2024</div>
+        <button class="theme-toggle" onclick="toggleTheme?.() || document.documentElement.classList.toggle('dark')">
+          <span id="theme-icon">☀️</span> Theme
+        </button>
+      </div>
+    </mega-header>
+
     <div class="max-w-6xl mx-auto px-4 py-12">
       <!-- Header -->
       <header class="mb-12 text-center">

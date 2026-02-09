@@ -328,19 +328,19 @@
 
 <body>
   <div id="app">
-
     <mega-header>
       <div slot="brand-content">
         <div class="brand-text-main">Notion-Clone Login RCA</div>
         <div class="brand-text-sub">Root Cause Analysis Case Study</div>
       </div>
       <div slot="right-content" class="header-actions">
-        <div class="pill">RCA • 2025</div>
-        <button class="btn-primary" id="openSummaryBtn">
-          <span>☰</span> One-Page Summary
+        <div class="pill">RCA • 2024</div>
+        <button class="theme-toggle" onclick="toggleTheme?.() || document.documentElement.classList.toggle('dark')">
+          <span id="theme-icon">☀️</span> Theme
         </button>
       </div>
     </mega-header>
+
     <div class="page" role="main" aria-labelledby="title">
 
       <main class="content">

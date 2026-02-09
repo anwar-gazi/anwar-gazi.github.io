@@ -97,6 +97,19 @@
 
 <body class="antialiased">
   <div id="app">
+    <mega-header>
+      <div slot="brand-content">
+        <div class="brand-text-main">Event Bus Architecture</div>
+        <div class="brand-text-sub">Decoupling State from Navigation</div>
+      </div>
+      <div slot="right-content" class="header-actions">
+        <div class="pill">Migration • 2024</div>
+        <button class="theme-toggle" onclick="toggleTheme?.() || document.documentElement.classList.toggle('dark')">
+          <span id="theme-icon">☀️</span> Theme
+        </button>
+      </div>
+    </mega-header>
+
     <div class="container">
 
       <header class="bg-white border-b mb-12">

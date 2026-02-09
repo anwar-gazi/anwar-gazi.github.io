@@ -551,6 +551,20 @@
 
 <body>
     <div id="app">
+        <mega-header>
+            <div slot="brand-content">
+                <div class="brand-text-main">Pydantic & FastAPI</div>
+                <div class="brand-text-sub">Type-Safe Orchestration</div>
+            </div>
+            <div slot="right-content" class="header-actions">
+                <div class="pill">Guide • 2024</div>
+                <button class="theme-toggle"
+                    onclick="toggleTheme?.() || document.documentElement.classList.toggle('dark')">
+                    <span id="theme-icon">☀️</span> Theme
+                </button>
+            </div>
+        </mega-header>
+
         <div class="article-container">
             <!-- Header -->
             <header class="article-header">

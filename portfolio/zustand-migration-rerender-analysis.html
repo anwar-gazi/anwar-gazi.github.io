@@ -560,22 +560,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="p-8">
     <div id="app">
-
-
         <mega-header>
             <div slot="brand-content">
-                <div class="brand-text-main">Zustand Re-render Analysis</div>
-                <div class="brand-text-sub">Performance RCA Case Study</div>
+                <div class="brand-text-main">Zustand Migration</div>
+                <div class="brand-text-sub">Performance Analysis</div>
             </div>
             <div slot="right-content" class="header-actions">
-                <div class="pill">RCA • 2024</div>
-                <button class="btn-primary" id="openSummaryBtn">
-                    <span>☰</span> One-Page Summary
+                <div class="pill">Report • 2024</div>
+                <button class="theme-toggle"
+                    onclick="toggleTheme?.() || document.documentElement.classList.toggle('dark')">
+                    <span id="theme-icon">☀️</span> Theme
                 </button>
             </div>
         </mega-header>
+
         <div class="container">
 
             <section class="value-rail" aria-label="Problem to solution to impact">

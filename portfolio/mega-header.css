@@ -1,6 +1,5 @@
 :root {
-  --header-bg: rgba(255, 255, 255, 0.98);
-  --menu-bg: rgba(255, 255, 255, 0.95);
+  /* --header-bg and --menu-bg removed to allow fallback to --bg */
   --shadow-lg: 0 10px 15px -3px rgba(255, 202, 40, 0.2), 0 4px 6px -4px rgba(255, 202, 40, 0.1);
 }
 
@@ -12,8 +11,8 @@
   font-family: 'Inter', sans-serif;
 }
 
-.mega-header-root header {
-  background: var(--header-bg);
+:where(.mega-header-root) header {
+  background: var(--header-bg, var(--bg, rgba(255, 255, 255, 0.98)));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
@@ -134,9 +133,9 @@
   width: 100%;
   height: 100vh;
   height: 100dvh;
-  background: #1e1e1e;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  background: var(--menu-bg, var(--bg, rgba(255, 255, 255, 0.98)));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-top: none;
   opacity: 0;
   visibility: hidden;

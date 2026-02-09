@@ -11,84 +11,119 @@
   <script src="mega-header.js"></script>
   <link rel="stylesheet" href="narrative.css" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8fafc;
-      color: #0f172a;
+    :root {
+      --accent-primary: #10b981;
+      --accent-secondary: #06b6d4;
+      --bg-slate-950: #020617;
     }
 
-    pre,
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .dark body {
+      background-color: var(--bg-slate-950);
+      color: #f1f5f9;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.5);
+      border-radius: 24px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .dark .glass-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(51, 65, 85, 0.4);
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .dark .glass-card:hover {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .chapter-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+      background: rgba(100, 116, 139, 0.1);
+      padding: 4px 12px;
+      border-radius: 9999px;
+    }
+
+    .metric-bubble {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-bubble::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
     code {
       font-family: 'JetBrains Mono', monospace;
     }
 
-    .chapter-number {
-      font-size: 5rem;
-      line-height: 1;
-      font-weight: 800;
-      color: #cbd5e1;
-      position: absolute;
-      left: -1rem;
-      opacity: 0.3;
-      z-index: 0;
-      user-select: none;
-    }
-
-    .section-card {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
-
-    .metric-card {
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-      border: 1px solid #bae6fd;
-      border-radius: 8px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .metric-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #0284c7;
-    }
-
-    .metric-label {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #0369a1;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-top: 0.5rem;
-    }
-
-    code.inline {
-      background: #f1f5f9;
-      padding: 0.2em 0.4em;
-      border-radius: 4px;
-      font-size: 0.875rem;
-      color: #ef4444;
-    }
-
-    /* Mermaid styling override */
     .mermaid {
-      display: flex;
-      justify-content: center;
-      background: #f8fafc;
-      padding: 1rem;
-      border-radius: 8px;
+      background: transparent !important;
+      border-radius: 12px;
+    }
+
+    .stagger-in {
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stagger-1 {
+      animation-delay: 0.1s;
+    }
+
+    .stagger-2 {
+      animation-delay: 0.2s;
+    }
+
+    .stagger-3 {
+      animation-delay: 0.3s;
     }
   </style>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -110,283 +145,235 @@
       </div>
     </mega-header>
 
-    <div class="container">
+    <div class="max-w-6xl mx-auto px-6 pt-24 pb-32">
 
-      <header class="bg-white border-b mb-12">
-        <div class="max-w-6xl mx-auto px-4 py-16 text-center">
-          <div
-            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold mb-4 border border-emerald-100">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            MIGRATION COMPLETE
-          </div>
-          <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6">
-            Event Bus Architecture
-            <span class="block text-slate-400 font-normal mt-2 text-3xl">Decoupling State from Navigation</span>
-          </h1>
-          <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            A technical analysis of the architectural shift from prop-drilling to a singleton Event Bus pattern for task
-            navigation, improving modularity and maintenance.
-          </p>
-          <div class="mt-8 flex gap-4 justify-center text-sm font-medium text-slate-500">
-            <span>Use Case: Task Management</span>
-            <span>•</span>
-            <span>Pattern: Publish-Subscribe</span>
-            <span>•</span>
-            <span>Language: TypeScript</span>
-          </div>
+      <!-- Premium Hero Section -->
+      <header class="text-center mb-24 stagger-in">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/20 mb-8 uppercase tracking-widest">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Architectural Transformation
         </div>
+        <h1
+          class="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-8 leading-tight">
+          Event Bus <span class="gradient-text">Architecture</span>
+        </h1>
+        <p class="text-xl text-slate-500 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed font-light">
+          A definitive study on transitioning from structural prop-drilling to a type-safe Publish-Subscribe pattern,
+          eliminating component friction and enabling limitless UI scalability.
+        </p>
       </header>
 
-      <main class="max-w-6xl mx-auto px-4 pb-24">
-
-        <!-- Abstract / Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-          <div class="metric-card">
-            <span class="metric-value">11</span>
-            <span class="metric-label">Components Refactored</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-value">100%</span>
-            <span class="metric-label">Prop Drilling Removed</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-value">O(1)</span>
-            <span class="metric-label">Access Complexity</span>
-          </div>
+      <!-- Glassmorphic Metrics Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24 stagger-in stagger-1">
+        <div class="glass-card metric-bubble p-10 text-center">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-tighter mb-2">Complexity Reduction</div>
+          <div class="text-5xl font-extrabold gradient-text mb-2">100%</div>
+          <div class="text-sm font-medium text-slate-600 dark:text-slate-300">Prop Drilling Eliminated</div>
         </div>
+        <div class="glass-card metric-bubble p-10 text-center border-emerald-500/20">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-tighter mb-2">Atomic Refactoring</div>
+          <div class="text-5xl font-extrabold text-slate-900 dark:text-white mb-2">11</div>
+          <div class="text-sm font-medium text-slate-600 dark:text-slate-300">Core Components Decoupled</div>
+        </div>
+        <div class="glass-card metric-bubble p-10 text-center">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-tighter mb-2">Access Cost</div>
+          <div class="text-5xl font-extrabold text-blue-500 mb-2">O(1)</div>
+          <div class="text-sm font-medium text-slate-600 dark:text-slate-300">Global Navigation Access</div>
+        </div>
+      </div>
 
-        <!-- 1. Problem Statement -->
-        <section class="section-card">
-          <span class="chapter-number">01</span>
-          <div class="relative z-10 pl-16">
-            <h2 class="text-2xl font-bold text-slate-900 mb-4">The Coupling Problem</h2>
-            <div class="prose prose-slate max-w-none text-slate-600">
-              <p class="mb-4">
-                Prior to this migration, the application relied on a pattern of <strong>Prop Drilling</strong> to handle
-                task navigation. The functionality to "Open a Task" was passed down from the root layout through
-                multiple
-                intermediate layers (`Board` → `Column` → `TaskCard`).
-              </p>
-              <p class="mb-6">
-                This created rigid coupling: leaf components like `TaskCard` could not function without being explicitly
-                wired by their parents, making refactoring difficult and new features (like global command palettes)
-                hard
-                to
-                integrate.
-              </p>
-
-              <div class="bg-rose-50 border border-rose-100 rounded-lg p-6 mb-4">
-                <h3 class="text-rose-900 font-semibold mb-2 flex items-center gap-2">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  Legacy Architecture: High Coupling
-                </h3>
-                <div class="mermaid" v-pre>
+      <main class="space-y-32">
+        <!-- 01. The Problem -->
+        <section class="stagger-in stagger-2">
+          <div class="flex flex-col md:flex-row gap-16 items-start">
+            <div class="w-full md:w-1/2">
+              <span class="chapter-badge mb-6 inline-block">Chapter 01</span>
+              <h2 class="text-4xl font-bold text-slate-900 dark:text-white mb-8">The Coupling Bottleneck</h2>
+              <div class="space-y-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-light">
+                <p>
+                  Legacy task navigation relied on strict vertical orchestration. The instruction to "Open a Task" had
+                  to
+                  manually tunnel through a rigid hierarchy: <code
+                    class="text-emerald-500 font-bold">Root &rarr; Board &rarr; Column &rarr; Card</code>.
+                </p>
+                <p>
+                  This created <strong>architectural fragility</strong>. Intermediate components became glorified
+                  conduits for
+                  callbacks they never used, while leaf nodes were impossible to test in isolation without heavy
+                  mocking.
+                </p>
+              </div>
+            </div>
+            <div class="w-full md:w-1/2 glass-card p-4">
+              <div class="p-6">
+                <h4 class="text-sm font-bold text-slate-400 uppercase mb-6 flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                  Legacy Debt: High Coupling
+                </h4>
+                <div class="mermaid py-4" v-pre>
                   graph TD
-                  Root["Page Root"] -->|onOpenTask| Board
-                  Board -->|onOpenTask| Column
-                  Column -->|onOpenTask| TaskCard
-                  Search["Global Search"] -.->|"Direct Store Access?"| Store
-                  TaskCard -->|onClick| Store["Zustand Store"]
-
-                  style Root fill:#fecdd3,stroke:#e11d48
-                  style Board fill:#fecdd3,stroke:#e11d48
-                  style Column fill:#fecdd3,stroke:#e11d48
-                  style TaskCard fill:#fecdd3,stroke:#e11d48
+                  Root["Page Root"] -- "|onOpenTask|" --> Board
+                  Board -- "|onOpenTask|" --> Column
+                  Column -- "|onOpenTask|" --> TaskCard
+                  style Root fill:#f8fafc,stroke:#e2e8f0,color:#64748b
+                  style Board fill:#f8fafc,stroke:#e2e8f0,color:#64748b
+                  style Column fill:#f8fafc,stroke:#e2e8f0,color:#64748b
+                  style TaskCard fill:#fee2e2,stroke:#ef4444,color:#b91c1c,stroke-width:2px
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- 2. The Solution -->
-        <section class="section-card">
-          <span class="chapter-number">02</span>
-          <div class="relative z-10 pl-16">
-            <h2 class="text-2xl font-bold text-slate-900 mb-4">The Solution: Event Bus</h2>
-            <div class="prose prose-slate max-w-none text-slate-600">
-              <p class="mb-4">
-                We implemented a lightweight, type-safe <strong>Event Bus (Singleton)</strong> services. This decoupled
-                the
-                <em>producers</em> (components that want to open a task) from the <em>consumers</em> (components that
-                need
-                to react, like the URL router or the Task Pane UI).
-              </p>
-
-              <div class="bg-slate-900 text-slate-50 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-6">
-                <pre>// src/services/client/TaskEventBus.ts
+        <!-- 02. The Solution -->
+        <section class="stagger-in stagger-3">
+          <div class="flex flex-col-reverse md:flex-row gap-16 items-start">
+            <div class="w-full md:w-1/2 glass-card p-0 overflow-hidden">
+              <div class="bg-slate-900 p-8 border-b border-slate-800">
+                <div class="flex gap-2 mb-6">
+                  <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                </div>
+                <pre class="text-xs md:text-sm text-emerald-400 leading-relaxed font-medium"><code>// src/services/TaskEventBus.ts
 type TaskEvents = {
   "open": (taskId: string) => void;
   "close": () => void;
 };
 
-export const taskEventBus = new TaskEventBus();</pre>
+// Singleton instance providing 
+// global access without prop drilling
+export const taskEventBus = new TaskEventBus();</code></pre>
               </div>
-
-              <div class="bg-emerald-50 border border-emerald-100 rounded-lg p-6">
-                <h3 class="text-emerald-900 font-semibold mb-2 flex items-center gap-2">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  New Architecture: Decoupled Events
-                </h3>
-                <div class="mermaid" v-pre>
+              <div class="p-8">
+                <h4 class="text-sm font-bold text-slate-400 uppercase mb-6 flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  Modern Architecture: Decoupled Flux
+                </h4>
+                <div class="mermaid py-2" v-pre>
                   graph LR
                   subgraph Producers
                   TC["TaskCard"]
-                  SB["SearchBar"]
                   CP["CommandPalette"]
                   end
-
-                  subgraph Bus["Singleton Service"]
                   EB(("TaskEventBus"))
-                  end
-
                   subgraph Consumers
                   Router["URL Router"]
-                  Shell["TaskPane UI"]
+                  Pane["TaskPane UI"]
                   end
-
-                  TC -->|emit 'open'| EB
-                  SB -->|emit 'open'| EB
-                  CP -->|emit 'open'| EB
-
-                  EB -.->|notify| Router
-                  EB -.->|notify| Shell
-
-                  Router -->|pushState| URL["/board?task=123"]
-                  Shell -->|render| UI["Slide-over Panel"]
-
-                  style EB fill:#34d399,stroke:#065f46,color:white
-                  style Producers fill:transparent,stroke-dasharray: 5,5
+                  Producers -->|emit| EB
+                  EB -.->|notify| Consumers
+                  style EB fill:#10b981,stroke:#059669,color:white
+                </div>
+              </div>
+            </div>
+            <div class="w-full md:w-1/2">
+              <span class="chapter-badge mb-6 inline-block">Chapter 02</span>
+              <h2 class="text-4xl font-bold text-slate-900 dark:text-white mb-8">Atomic Publish-Subscribe</h2>
+              <div class="space-y-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-light">
+                <p>
+                  The introduction of a singleton <strong>TaskEventBus</strong> inverted the control flow. Components no
+                  longer
+                  depend on parents for navigation—they simply publish intent.
+                </p>
+                <div class="grid grid-cols-2 gap-4 mt-8">
+                  <div class="p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10">
+                    <p class="font-bold text-emerald-600 mb-1">Zero Boilerplate</p>
+                    <p class="text-sm opacity-80">Import and emit from any module or helper.</p>
+                  </div>
+                  <div class="p-4 bg-blue-500/5 rounded-2xl border border-blue-500/10">
+                    <p class="font-bold text-blue-600 mb-1">Strict Types</p>
+                    <p class="text-sm opacity-80">Full TS support for event payloads and handlers.</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <div
-          class="cta-insight-card p-8 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white flex flex-row items-center gap-6 mb-12 border border-white/20 shadow-lg">
-          <div class="text-4xl">🔌</div>
-          <div class="flex-grow">
-            <h4 class="text-xl font-bold mb-1">State Architecture Audit</h4>
-            <p class="text-white/90">Buried in prop-drilling hell? I help teams implement lightweight, type-safe event
-              architectures that simplify state management.</p>
+        <!-- Context Aware CTA -->
+        <div class="cta-banner p-12 md:p-20 rounded-[40px] bg-slate-900 text-white relative overflow-hidden group">
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-indigo-600/20 via-emerald-600/10 to-transparent opacity-50">
           </div>
-          <a href="mailto:minhaj.me.bd@gmail.com"
-            class="px-6 py-2 bg-white text-emerald-600 font-bold rounded-full hover:bg-emerald-50 transition-colors whitespace-nowrap">Audit
-            My State</a>
+          <div
+            class="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2 group-hover:bg-emerald-500/20 transition-all duration-700">
+          </div>
+          <div class="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto">
+            <h3 class="text-3xl md:text-5xl font-extrabold mb-8 leading-tight">
+              Is your frontend <span
+                class="text-emerald-400 underline decoration-emerald-400/30 underline-offset-8">entangled</span> in
+              props?
+            </h3>
+            <p class="text-xl text-slate-400 mb-12 font-light leading-relaxed">
+              Prop-drilling is a silent killer of frontend velocity. I help teams design resilient, event-driven
+              architectures that scale horizontally without touching every file in the tree.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-6">
+              <a href="mailto:minhaj.me.bd@gmail.com"
+                class="px-10 py-5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl transition-all hover:scale-105 shadow-[0_0_40px_rgba(16,185,129,0.3)]">
+                Audit My Architecture
+              </a>
+              <a href="portfolio/index.html"
+                class="px-10 py-5 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 transition-all">
+                View More Patterns
+              </a>
+            </div>
+          </div>
         </div>
 
-        <!-- 3. Orchestration Flow -->
-        <section class="section-card">
-          <span class="chapter-number">03</span>
-          <div class="relative z-10 pl-16">
-            <h2 class="text-2xl font-bold text-slate-900 mb-4">Orchestration & Data Flow</h2>
-            <div class="prose prose-slate max-w-none text-slate-600">
-              <p class="mb-6">
-                A critical requirement was maintaining <strong>URL Synchronization</strong> (Deep Linking). The Event
-                Bus
-                acts as the central hub, notifying the routing hook (`useBoardRouting`) to update the URL as a side
-                effect,
-                while simultaneously telling the UI to render the pane.
-              </p>
-
-              <h3 class="text-lg font-semibold text-slate-800 mb-2">Sequence Diagram: User Interaction</h3>
-              <div class="mermaid" v-pre>
-                sequenceDiagram
-                participant User
-                participant TaskCard
-                participant TaskEventBus
-                participant TaskPaneShell
-                participant useBoardRouting
-                participant BrowserURL
-
-                User->>TaskCard: Click Task #123
-                TaskCard->>TaskEventBus: emit("open", "123")
-
-                par Handle UI
-                TaskEventBus->>TaskPaneShell: listener("123")
-                TaskPaneShell->>TaskPaneShell: setActiveTaskId("123")
-                TaskPaneShell->>User: Render Slide-over
-                and Handle URL
-                TaskEventBus->>useBoardRouting: listener("123")
-                useBoardRouting->>BrowserURL: setTaskUrl("123")
-                end
-              </div>
-            </div>
+        <!-- 03. Orchestration Details -->
+        <section>
+          <div class="max-w-4xl mx-auto text-center mb-16">
+            <span class="chapter-badge mb-6 inline-block">Chapter 03</span>
+            <h2 class="text-4xl font-bold text-slate-900 dark:text-white mb-6">Side-Effect Orchestration</h2>
+            <p class="text-lg text-slate-500 dark:text-slate-400 font-light">
+              Managing the parallel execution of UI rendering and Browser URL synchronization.
+            </p>
           </div>
-        </section>
+          <div class="glass-card p-12">
+            <div class="mermaid py-4" v-pre>
+              sequenceDiagram
+              participant U as User
+              participant Card as Task Card
+              participant EB as Event Bus
+              participant UI as Task Pane
+              participant Routing as useRouting
 
-        <!-- 4. Implementation Details -->
-        <section class="section-card">
-          <span class="chapter-number">04</span>
-          <div class="relative z-10 pl-16">
-            <h2 class="text-2xl font-bold text-slate-900 mb-4">Refactoring Impact</h2>
-            <div class="prose prose-slate max-w-none text-slate-600">
-              <p class="mb-4">
-                The refactoring touched <code class="inline">GlobalTaskSearch</code>, <code
-                  class="inline">CommandPalette</code>, and <code class="inline">RunningTasksBar</code>, removing
-                redundant
-                logic and unifying behavior.
-              </p>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div class="bg-slate-50 p-4 rounded-lg border">
-                  <h4 class="font-bold text-slate-700 mb-2 border-b pb-2">Before: Prop Drilling</h4>
-                  <ul class="list-disc list-inside text-sm space-y-2 text-slate-600">
-                    <li>Parent must pass callbacks</li>
-                    <li>Nested components depend on props</li>
-                    <li>Refactoring requires touching entire tree</li>
-                    <li>Hard to trigger from outside components</li>
-                  </ul>
-                </div>
-                <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
-                  <h4 class="font-bold text-emerald-800 mb-2 border-b border-emerald-200 pb-2">After: Event Bus</h4>
-                  <ul class="list-disc list-inside text-sm space-y-2 text-emerald-700">
-                    <li><strong>Zero</strong> dependencies on parent</li>
-                    <li>Import and emit anywhere</li>
-                    <li>Type-safe event payloads</li>
-                    <li>Single source of truth for navigation</li>
-                  </ul>
-                </div>
-              </div>
+              U->>Card: Click 123
+              Card->>EB: emit("open", "123")
+              par Parallel Handlers
+              EB->>UI: Show Panel(123)
+              EB->>Routing: Update URL(/task/123)
+              end
+              UI-->>U: Render View
+              Routing-->>U: URL Sync
             </div>
           </div>
         </section>
 
       </main>
 
-      <div
-        class="cta-banner p-10 md:p-14 rounded-2xl bg-gradient-to-br from-indigo-500 via-emerald-500 to-teal-500 text-white relative overflow-hidden mb-8 border border-white/20 shadow-2xl">
-        <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
-          <div class="flex-grow text-center md:text-left">
-            <h3 class="text-3xl font-extrabold mb-4">Decouple Your Frontend</h3>
-            <p class="text-lg text-white/90 leading-relaxed">
-              Move beyond rigid component hierarchies. Let's build a flexible, event-driven frontend that handles
-              cross-component data flow with ease.
-            </p>
-          </div>
-          <div class="flex flex-col sm:sm:flex-row gap-4 shrink-0">
-            <a href="mailto:minhaj.me.bd@gmail.com"
-              class="px-8 py-3 bg-white text-emerald-600 font-bold rounded-xl hover:scale-105 transition-all shadow-lg text-center">Decouple
-              Now</a>
-            <a href="/portfolio/index.html"
-              class="px-8 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-all border border-white/30 text-center">View
-              Patterns</a>
+      <!-- Premium Footer -->
+      <footer
+        class="mt-32 pt-24 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-slate-900 dark:text-white">
+            AG</div>
+          <div class="text-sm">
+            <div class="font-bold text-slate-900 dark:text-white">Anwar Gazi</div>
+            <div class="text-slate-500">Principal Solutions Engineer</div>
           </div>
         </div>
-      </div>
-
-      <footer class="text-center pb-24 text-slate-400 text-sm">
-        Generated by Antigravity Agent &bull; 2026 Resgef Systems
+        <div class="text-slate-400 text-sm">
+          Generated by Antigravity OS &bull; 2026 Resgef Systems
+        </div>
       </footer>
 
-    </div><!-- End .container -->
-  </div><!-- End #app -->
+    </div>
+  </div>
 
   <script>
     const { createApp } = Vue;
@@ -395,15 +382,31 @@ export const taskEventBus = new TaskEventBus();</pre>
         'mega-header': MegaHeader,
       },
       mounted() {
-        // Initialize mermaid after Vue has mounted the DOM
+        // Initialize mermaid with custom theme to match premium UI
         mermaid.initialize({
           startOnLoad: false,
-          theme: 'neutral',
-          fontFamily: 'Inter',
+          theme: 'base',
+          themeVariables: {
+            primaryColor: '#10b981',
+            primaryTextColor: '#fff',
+            primaryBorderColor: '#059669',
+            lineColor: '#64748b',
+            secondaryColor: '#3b82f6',
+            tertiaryColor: '#f8fafc',
+            fontFamily: 'Plus Jakarta Sans',
+            fontSize: '14px'
+          },
           securityLevel: 'loose',
-          flowchart: { curve: 'basis' }
+          flowchart: {
+            curve: 'basis',
+            htmlLabels: true
+          }
         });
-        mermaid.run();
+
+        // Wait for specific micro-task to ensure elements are ready
+        setTimeout(() => {
+          mermaid.run();
+        }, 100);
       }
     }).mount('#app');
   </script>

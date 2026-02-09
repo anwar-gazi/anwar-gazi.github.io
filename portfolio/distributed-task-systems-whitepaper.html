@@ -504,6 +504,17 @@
         [data-theme="dark"] .mermaid {
             filter: invert(0.9) hue-rotate(180deg);
         }
+
+        @media (max-width: 640px) {
+            .cta-insight-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cta-insight-btn {
+                margin: 16px 0 0 0;
+            }
+        }
     </style>
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <link rel="stylesheet" href="mega-header.css">
@@ -795,6 +806,16 @@
                             container memory with a maximum job count of 1000-2000 jobs before restart. This provides a
                             safety margin while minimizing unnecessary restarts. Monitor actual memory usage patterns
                             over 24-48 hours before finalizing these thresholds.</p>
+                    </div>
+
+                    <div class="cta-insight-card">
+                        <div class="cta-insight-icon">🐘</div>
+                        <div class="cta-insight-content">
+                            <h4>Optimize your Laravel Backend</h4>
+                            <p>Need help tuning your queue workers for millions of jobs? I specialize in Laravel
+                                high-performance architecture.</p>
+                        </div>
+                        <a href="mailto:minhaj.me.bd@gmail.com" class="cta-insight-btn">Free Audit</a>
                     </div>
                 </section>
 
@@ -1131,6 +1152,23 @@
                             acceptable. Measure your specific workload characteristics before committing to either
                             technology.</p>
                     </div>
+
+                    <div class="cta-banner">
+                        <div class="cta-content">
+                            <h3 class="cta-title">Scale your Distributed Systems with Confidence</h3>
+                            <p class="cta-text">
+                                Architecting high-throughput, fault-tolerant task systems requires deep domain
+                                expertise.
+                                Whether you're optimizing Laravel queues or building custom Go/Rust orchestrators,
+                                I can help you achieve sub-millisecond latencies and resilient infrastructure.
+                            </p>
+                        </div>
+                        <div class="cta-action">
+                            <a href="mailto:minhaj.me.bd@gmail.com" class="cta-btn">Connect for Architecture</a>
+                            <a href="https://github.com/anwar-gazi" class="cta-secondary-link">View Orchestrator
+                                Source</a>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- SECTION 3 -->
@@ -1292,6 +1330,18 @@
                         </li>
                     </ul>
 
+                    <div class="cta-insight-card"
+                        style="background: linear-gradient(135deg, #7c3aed 0%, #4338ca 100%); box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.4);">
+                        <div class="cta-insight-icon">🔍</div>
+                        <div class="cta-insight-content">
+                            <h4>System Reliability Review</h4>
+                            <p>Struggling with mysterious worker crashes? Let's identify your poison pills and stabilize
+                                your production cluster.</p>
+                        </div>
+                        <a href="mailto:minhaj.me.bd@gmail.com" class="cta-insight-btn" style="color: #7c3aed;">Book
+                            Review</a>
+                    </div>
+
                     <pre><code><span class="comment">// Circuit breaker implementation for job types</span>
 <span class="keyword">class</span> JobCircuitBreaker
 {
@@ -1443,7 +1493,8 @@
                     <div class="callout">
                         <div class="callout-title">Mathematical Justification</div>
                         <p>Full jitter exponential backoff has been proven to minimize collision probability in
-                            distributed retry scenarios. AWS research demonstrates that compared to exponential backoff
+                            distributed retry scenarios. AWS research demonstrates that compared to exponential
+                            backoff
                             alone, full jitter reduces average completion time by ~25% and peak load by ~40% in
                             high-concurrency failure scenarios.</p>
                     </div>
@@ -1453,13 +1504,17 @@
                     <p>Implementing these resilience patterns requires comprehensive observability:</p>
 
                     <ul>
-                        <li><strong>DLQ Growth Rate:</strong> Track jobs entering DLQ per hour; sudden spikes indicate
+                        <li><strong>DLQ Growth Rate:</strong> Track jobs entering DLQ per hour; sudden spikes
+                            indicate
                             systemic issues</li>
-                        <li><strong>Retry Distribution:</strong> Histogram of retry attempts before success; helps tune
+                        <li><strong>Retry Distribution:</strong> Histogram of retry attempts before success; helps
+                            tune
                             backoff parameters</li>
-                        <li><strong>Circuit Breaker Status:</strong> Monitor open/closed state per job type; alerts on
+                        <li><strong>Circuit Breaker Status:</strong> Monitor open/closed state per job type; alerts
+                            on
                             persistent open states</li>
-                        <li><strong>Job Latency Percentiles:</strong> P50, P95, P99, P99.9 tracking; backoff strategies
+                        <li><strong>Job Latency Percentiles:</strong> P50, P95, P99, P99.9 tracking; backoff
+                            strategies
                             affect tail latency</li>
                         <li><strong>Worker Crash Rate:</strong> Poison pill detection; correlate with specific job
                             payloads</li>
@@ -1487,6 +1542,12 @@
 <span class="comment">// Record metrics in job processing</span>
 <span class="variable">$jobCounter</span>-><span class="function">inc</span>([<span class="string">'success'</span>, ProcessPayment::<span class="keyword">class</span>]);
 <span class="variable">$retryHistogram</span>-><span class="function">observe</span>(<span class="variable">$this</span>-><span class="function">attempts</span>(), [ProcessPayment::<span class="keyword">class</span>]);</code></pre>
+                    <div class="cta-mini-card">
+                        <h3>Ready to Build the Future of Task Systems?</h3>
+                        <p>From architectural whitepapers to production-grade deployments, I help engineering teams
+                            scale with confidence.</p>
+                        <a href="mailto:minhaj.me.bd@gmail.com" class="cta-btn">Start a Project</a>
+                    </div>
                 </section>
 
                 <footer class="footer">

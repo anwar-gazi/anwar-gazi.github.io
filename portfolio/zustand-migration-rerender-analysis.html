@@ -581,33 +581,55 @@
             <section class="value-rail" aria-label="Problem to solution to impact">
                 <div class="eyebrow" style="color: var(--text-secondary);">Problem → Solution → Impact</div>
                 <div class="value-grid">
-                    <div class="value-card">
-                        <div class="value-icon warning" aria-hidden="true">!</div>
-                        <h3 class="value-title">Problem</h3>
-                        <ul>
-                            <li>Context value changes cascaded re-renders across the board UI.</li>
-                            <li>Visible dock flicker on refresh; hydration felt janky.</li>
-                            <li>Hard to add features without touching shared context.</li>
-                        </ul>
+                    <div
+                        class="cta-banner p-10 md:p-14 rounded-2xl bg-gradient-to-br from-orange-600 via-red-600 to-rose-700 text-white relative overflow-hidden mb-8 border border-white/20 shadow-2xl">
+                        <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                            <div class="flex-grow text-center md:text-left">
+                                <h3 class="text-3xl font-extrabold mb-4">Secure Your Next App</h3>
+                                <p class="text-lg text-white/90 leading-relaxed">
+                                    Authentication shouldn't be a black box. Let's harden your NextAuth implementation
+                                    and ensure your application is production-ready.
+                                </p>
+                            </div>
+                            <div class="flex flex-col sm:sm:flex-row gap-4 shrink-0">
+                                <a href="mailto:minhaj.me.bd@gmail.com"
+                                    class="px-8 py-3 bg-white text-orange-600 font-bold rounded-xl hover:scale-105 transition-all shadow-lg text-center">Secure
+                                    Now</a>
+                                <a href="/portfolio/index.html"
+                                    class="px-8 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-all border border-white/30 text-center">View
+                                    RCAs</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="value-card">
-                        <div class="value-icon action" aria-hidden="true">⧉</div>
-                        <h3 class="value-title">Solution</h3>
-                        <ul>
-                            <li>Move state to Zustand with selector hooks for granular subscriptions.</li>
-                            <li>Support synchronous hydration and per-slice updates.</li>
-                            <li>Measure renders to verify reductions and eliminate flicker.</li>
-                        </ul>
-                    </div>
-                    <div class="value-card">
-                        <div class="value-icon impact" aria-hidden="true">✓</div>
-                        <h3 class="value-title">Impact</h3>
-                        <ul>
-                            <li>~70% fewer unnecessary re-renders.</li>
-                            <li>Dock flicker removed; hydration is calm.</li>
-                            <li>Clear guidance for future state work.</li>
-                        </ul>
-                    </div>
+
+                    <article class="card" id="learnings">
+                        <div class="value-card">
+                            <div class="value-icon warning" aria-hidden="true">!</div>
+                            <h3 class="value-title">Problem</h3>
+                            <ul>
+                                <li>Context value changes cascaded re-renders across the board UI.</li>
+                                <li>Visible dock flicker on refresh; hydration felt janky.</li>
+                                <li>Hard to add features without touching shared context.</li>
+                            </ul>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon action" aria-hidden="true">⧉</div>
+                            <h3 class="value-title">Solution</h3>
+                            <ul>
+                                <li>Move state to Zustand with selector hooks for granular subscriptions.</li>
+                                <li>Support synchronous hydration and per-slice updates.</li>
+                                <li>Measure renders to verify reductions and eliminate flicker.</li>
+                            </ul>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon impact" aria-hidden="true">✓</div>
+                            <h3 class="value-title">Impact</h3>
+                            <ul>
+                                <li>~70% fewer unnecessary re-renders.</li>
+                                <li>Dock flicker removed; hydration is calm.</li>
+                                <li>Clear guidance for future state work.</li>
+                            </ul>
+                        </div>
                 </div>
 
                 <div class="delta-metrics" aria-label="Directional before/after indicators">
@@ -712,6 +734,19 @@
                         management that affected the entire application.</p>
                 </div>
             </section>
+
+            <div class="cta-insight-card p-8 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 text-white flex flex-row items-center gap-6 mb-12 border border-white/20 shadow-lg"
+                style="margin: 48px auto; max-width: 900px;">
+                <div class="text-4xl">💡</div>
+                <div class="flex-grow">
+                    <h4 class="text-xl font-bold mb-1">State Architecture Audit</h4>
+                    <p class="text-white/90">Confused between Context, Redux, or Zustand? I help teams choose and
+                        implement the right state management for their specific scale.</p>
+                </div>
+                <a href="mailto:minhaj.me.bd@gmail.com"
+                    class="px-6 py-2 bg-white text-purple-600 font-bold rounded-full hover:bg-purple-50 transition-colors whitespace-nowrap">Audit
+                    My State</a>
+            </div>
 
             <section id="dock-flicker-case">
                 <h2>🔍 The Dock Flicker Case Study</h2>

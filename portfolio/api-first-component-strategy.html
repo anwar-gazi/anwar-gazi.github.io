@@ -106,14 +106,15 @@
       margin: 1rem 0;
     }
   </style>
-<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-<link rel="stylesheet" href="mega-header.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <link rel="stylesheet" href="mega-header.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="p-8"><div id="app">
+<body class="p-8">
+  <div id="app">
 
-  
+
     <mega-header>
       <div slot="brand-content">
         <div class="brand-text-main">API-First Strategy</div>
@@ -126,858 +127,910 @@
         </button>
       </div>
     </mega-header>
-  <div class="max-w-6xl mx-auto px-4 py-12">
-    <div class="mt-6 flex justify-center gap-4 text-sm text-slate-500 flex-wrap">
-      <span>Software Architecture</span>
-      <span>•</span>
-      <span>Component Design</span>
-      <span>•</span>
-      <span>System Evolution</span>
-      <span>•</span>
-      <span>Development Velocity</span>
-    </div>
-    
-
-    <!-- Executive Summary -->
-    <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
-      <h2 class="text-3xl font-semibold mb-6 pb-3">Executive Summary</h2>
-      <p class="text-lg leading-relaxed mb-4">
-        This document examines the architectural transformation from <span class="code-inline">procedural UI
-          orchestration</span> to a <span class="code-inline">declarative API-first component strategy</span>. Through
-        the implementation of a centralized Client Service Layer, we have fundamentally restructured the relationship
-        between domain intelligence and presentation logic, achieving a clear separation of concerns that yields
-        measurable improvements in development velocity, code maintainability, and system consistency.
-      </p>
-      <div class="highlight-box p-6 rounded-lg mt-6">
-        <p class="font-semibold text-purple-400 mb-3 text-xl">Core Architectural Thesis:</p>
-        <p class="leading-relaxed text-lg">
-          By extracting domain logic from UI components and consolidating it into a dedicated service layer accessed
-          through declarative APIs, we transform components from active orchestrators into passive consumers. This
-          inversion of responsibility eliminates redundant implementations, guarantees behavioral consistency across the
-          application surface, and enables rapid UI composition with minimal boilerplate.
-        </p>
+    <div class="max-w-6xl mx-auto px-4 py-12">
+      <div class="mt-6 flex justify-center gap-4 text-sm text-slate-500 flex-wrap">
+        <span>Software Architecture</span>
+        <span>•</span>
+        <span>Component Design</span>
+        <span>•</span>
+        <span>System Evolution</span>
+        <span>•</span>
+        <span>Development Velocity</span>
       </div>
-    </section>
 
-    <!-- Architectural Evolution -->
-    <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
-      <h2 class="text-3xl font-semibold mb-6 pb-3">Architectural Evolution: The Paradigm Shift</h2>
 
-      <div class="mb-8">
-        <h3 class="text-2xl font-semibold mb-4 text-purple-300">Phase I: Procedural Component Orchestration</h3>
-        <div class="warning-box p-6 rounded-lg mb-6">
-          <p class="font-semibold text-amber-400 mb-3">Legacy Pattern Characteristics:</p>
-          <p class="text-slate-300 leading-relaxed mb-4">
-            In the traditional procedural model, each UI component functioned as an autonomous orchestrator of domain
-            logic. Components directly manipulated state, performed calculations, and managed complex business rules
-            within their internal implementation.
+      <!-- Executive Summary -->
+      <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
+        <h2 class="text-3xl font-semibold mb-6 pb-3">Executive Summary</h2>
+        <p class="text-lg leading-relaxed mb-4">
+          This document examines the architectural transformation from <span class="code-inline">procedural UI
+            orchestration</span> to a <span class="code-inline">declarative API-first component strategy</span>. Through
+          the implementation of a centralized Client Service Layer, we have fundamentally restructured the relationship
+          between domain intelligence and presentation logic, achieving a clear separation of concerns that yields
+          measurable improvements in development velocity, code maintainability, and system consistency.
+        </p>
+        <div class="highlight-box p-6 rounded-lg mt-6">
+          <p class="font-semibold text-purple-400 mb-3 text-xl">Core Architectural Thesis:</p>
+          <p class="leading-relaxed text-lg">
+            By extracting domain logic from UI components and consolidating it into a dedicated service layer accessed
+            through declarative APIs, we transform components from active orchestrators into passive consumers. This
+            inversion of responsibility eliminates redundant implementations, guarantees behavioral consistency across
+            the
+            application surface, and enables rapid UI composition with minimal boilerplate.
           </p>
-          <div class="bg-slate-900 bg-opacity-50 p-4 rounded mt-4">
-            <p class="text-sm font-semibold text-amber-300 mb-2">Anti-Pattern Manifestations:</p>
-            <ul class="space-y-2 text-slate-300 text-sm">
-              <li>• <strong>Distributed Logic:</strong> Timestamp arithmetic duplicated across 15+ components</li>
-              <li>• <strong>Manual State Selection:</strong> Each component implementing custom Redux selectors</li>
-              <li>• <strong>Inconsistent Behavior:</strong> Subtask summation algorithms varying by implementation</li>
-              <li>• <strong>Tight Coupling:</strong> UI rendering logic intertwined with business rules</li>
-              <li>• <strong>High Maintenance Burden:</strong> Single feature change requiring updates to multiple
-                components</li>
+        </div>
+      </section>
+
+      <!-- Architectural Evolution -->
+      <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
+        <h2 class="text-3xl font-semibold mb-6 pb-3">Architectural Evolution: The Paradigm Shift</h2>
+
+        <div class="mb-8">
+          <h3 class="text-2xl font-semibold mb-4 text-purple-300">Phase I: Procedural Component Orchestration</h3>
+          <div class="warning-box p-6 rounded-lg mb-6">
+            <p class="font-semibold text-amber-400 mb-3">Legacy Pattern Characteristics:</p>
+            <p class="text-slate-300 leading-relaxed mb-4">
+              In the traditional procedural model, each UI component functioned as an autonomous orchestrator of domain
+              logic. Components directly manipulated state, performed calculations, and managed complex business rules
+              within their internal implementation.
+            </p>
+            <div class="bg-slate-900 bg-opacity-50 p-4 rounded mt-4">
+              <p class="text-sm font-semibold text-amber-300 mb-2">Anti-Pattern Manifestations:</p>
+              <ul class="space-y-2 text-slate-300 text-sm">
+                <li>• <strong>Distributed Logic:</strong> Timestamp arithmetic duplicated across 15+ components</li>
+                <li>• <strong>Manual State Selection:</strong> Each component implementing custom Redux selectors</li>
+                <li>• <strong>Inconsistent Behavior:</strong> Subtask summation algorithms varying by implementation
+                </li>
+                <li>• <strong>Tight Coupling:</strong> UI rendering logic intertwined with business rules</li>
+                <li>• <strong>High Maintenance Burden:</strong> Single feature change requiring updates to multiple
+                  components</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="evolution-arrow">↓</div>
+
+        <div class="mb-8">
+          <h3 class="text-2xl font-semibold mb-4 text-emerald-300">Phase II: Declarative API-First Architecture</h3>
+          <div class="benefit-box p-6 rounded-lg">
+            <p class="font-semibold text-emerald-400 mb-3">Modern Pattern Characteristics:</p>
+            <p class="text-slate-300 leading-relaxed mb-4">
+              The declarative model inverts control by centralizing domain intelligence into a Client Service Layer.
+              Components declare <em>what</em> data they need rather than <em>how</em> to compute it, consuming stable
+              APIs that encapsulate complexity.
+            </p>
+            <div class="bg-slate-900 bg-opacity-50 p-4 rounded mt-4">
+              <p class="text-sm font-semibold text-emerald-300 mb-2">Pattern Benefits:</p>
+              <ul class="space-y-2 text-slate-300 text-sm">
+                <li>• <strong>Centralized Intelligence:</strong> Single source of truth for domain calculations</li>
+                <li>• <strong>Declarative Consumption:</strong> <span class="code-inline">useTaskTimeTracking({"{scope:
+                    'all'}"})}</span> replaces 50+ lines of logic</li>
+                <li>• <strong>Guaranteed Consistency:</strong> All consumers execute identical business rules</li>
+                <li>• <strong>Loose Coupling:</strong> UI components depend on stable interfaces, not implementations
+                </li>
+                <li>• <strong>Accelerated Development:</strong> New features composed from existing primitives</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Architectural Diagram -->
+      <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
+        <h2 class="text-3xl font-semibold mb-6 pb-3">System Architecture Comparison</h2>
+        <p class="text-lg mb-6 leading-relaxed">
+          The following diagram illustrates the fundamental structural difference between procedural component
+          orchestration and the API-first declarative model.
+        </p>
+
+        <div class="mermaid mb-6">
+          graph TB
+          subgraph Legacy["Procedural Architecture: Logic Embedded in Components"]
+          State1[(Redux State)]
+
+          Comp1[TaskCard Component]
+          Comp2[TimeTracker Component]
+          Comp3[Dashboard Component]
+          Comp4[Reports Component]
+
+          State1 --> Comp1
+          State1 --> Comp2
+          State1 --> Comp3
+          State1 --> Comp4
+
+          Comp1 -->|"Manual State Selection"| Logic1[Time Calc Logic]
+          Comp1 -->|"Filter Management"| Logic2[Filter Logic]
+          Comp1 -->|"Subtask Recursion"| Logic3[Summation Logic]
+
+          Comp2 -->|"Duplicate Implementation"| Logic4[Time Calc Logic]
+          Comp2 -->|"Duplicate Implementation"| Logic5[Filter Logic]
+
+          Comp3 -->|"Variant Implementation"| Logic6[Time Calc Logic]
+          Comp3 -->|"Custom Algorithm"| Logic7[Summation Logic]
+
+          Comp4 -->|"Another Copy"| Logic8[Time Calc Logic]
+          Comp4 -->|"Conflicting Logic"| Logic9[Summation Logic]
+
+          style Comp1 fill:#7f1d1d
+          style Comp2 fill:#7f1d1d
+          style Comp3 fill:#7f1d1d
+          style Comp4 fill:#7f1d1d
+          style Logic1 fill:#991b1b
+          style Logic2 fill:#991b1b
+          style Logic3 fill:#991b1b
+          style Logic4 fill:#991b1b
+          style Logic5 fill:#991b1b
+          style Logic6 fill:#991b1b
+          style Logic7 fill:#991b1b
+          style Logic8 fill:#991b1b
+          style Logic9 fill:#991b1b
+          end
+
+          subgraph Modern["API-First Architecture: Centralized Service Layer"]
+          State2[(Redux State)]
+
+          API[Client Service Layer]
+          Hook1[useTaskTimeTracking]
+          Hook2[TaskEventBus]
+          Hook3[MasterClockService]
+
+          State2 --> API
+
+          API --> Hook1
+          API --> Hook2
+          API --> Hook3
+
+          Hook1 --> Service1[Centralized Time Logic]
+          Hook1 --> Service2[Centralized Filter Logic]
+          Hook1 --> Service3[Centralized Summation]
+
+          UI1[TaskCard]
+          UI2[TimeTracker]
+          UI3[Dashboard]
+          UI4[Reports]
+          UI5[RunningTaskBar]
+          UI6[FloatingTimer]
+
+          Hook1 -.->|"Declarative API"| UI1
+          Hook1 -.->|"Declarative API"| UI2
+          Hook1 -.->|"Declarative API"| UI3
+          Hook2 -.->|"Declarative API"| UI4
+          Hook3 -.->|"Declarative API"| UI5
+          Hook1 -.->|"Declarative API"| UI6
+
+          style API fill:#065f46
+          style Hook1 fill:#047857
+          style Hook2 fill:#047857
+          style Hook3 fill:#047857
+          style Service1 fill:#10b981
+          style Service2 fill:#10b981
+          style Service3 fill:#10b981
+          style UI1 fill:#4c1d95
+          style UI2 fill:#4c1d95
+          style UI3 fill:#4c1d95
+          style UI4 fill:#4c1d95
+          style UI5 fill:#4c1d95
+          style UI6 fill:#4c1d95
+          end
+        </div>
+
+        <p class="text-slate-400 italic text-sm">
+          Figure 1: Architectural comparison showing the consolidation of distributed logic into a unified service layer
+          with declarative consumption patterns.
+        </p>
+      </section>
+
+      <!-- Technical Impact -->
+      <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
+        <h2 class="text-3xl font-semibold mb-6 pb-3">Technical Impact Analysis</h2>
+
+        <div class="space-y-8">
+          <div>
+            <h3 class="text-2xl font-semibold mb-4 text-purple-300">1. Code Complexity Reduction</h3>
+            <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+              <p class="text-slate-300 leading-relaxed mb-4">
+                The most immediate technical benefit is the dramatic reduction in per-component code complexity. By
+                extracting domain logic into centralized services, individual components shrink from hundreds of lines
+                to
+                minimal declarative wrappers.
+              </p>
+              <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="text-center p-4 bg-slate-900 bg-opacity-50 rounded">
+                  <div class="text-4xl font-bold text-red-400 mb-2">~250</div>
+                  <div class="text-sm text-slate-400">Lines of code per component (Legacy)</div>
+                </div>
+                <div class="text-center p-4 bg-slate-900 bg-opacity-50 rounded">
+                  <div class="text-4xl font-bold text-emerald-400 mb-2">~30</div>
+                  <div class="text-sm text-slate-400">Lines of code per component (Modern)</div>
+                </div>
+                <div class="text-center p-4 bg-slate-900 bg-opacity-50 rounded">
+                  <div class="text-4xl font-bold text-purple-400 mb-2">88%</div>
+                  <div class="text-sm text-slate-400">Reduction in boilerplate</div>
+                </div>
+              </div>
+              <div class="metric-box p-4 rounded">
+                <p class="font-semibold mb-2">Measurable Complexity Metrics:</p>
+                <ul class="space-y-2 text-slate-300 text-sm">
+                  <li>• <strong>Cyclomatic Complexity:</strong> Reduced from 15-25 to 2-5 per component</li>
+                  <li>• <strong>Cognitive Load:</strong> Single responsibility principle enforced at architectural level
+                  </li>
+                  <li>• <strong>Testing Surface:</strong> Logic tested once in service layer vs. N component
+                    implementations</li>
+                  <li>• <strong>Maintenance Burden:</strong> Bug fixes propagate automatically to all consumers</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-semibold mb-4 text-purple-300">2. Consistency Guarantees</h3>
+            <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+              <p class="text-slate-300 leading-relaxed mb-4">
+                Centralization eliminates the primary source of cross-component inconsistency: divergent implementations
+                of identical business logic. When all consumers access the same underlying calculation engine,
+                behavioral
+                consistency is structurally guaranteed.
+              </p>
+              <div class="comparison-grid">
+                <div class="border border-red-900 bg-red-950 bg-opacity-20 p-4 rounded">
+                  <h4 class="font-semibold text-red-400 mb-3">Legacy: Inconsistency Vectors</h4>
+                  <ul class="text-sm text-slate-400 space-y-2">
+                    <li>→ 5 different timestamp rounding algorithms</li>
+                    <li>→ Subtask summation conflicts across views</li>
+                    <li>→ Filter logic variations causing data mismatches</li>
+                    <li>→ Race conditions in manual state updates</li>
+                    <li>→ Timezone handling inconsistencies</li>
+                  </ul>
+                </div>
+                <div class="border border-emerald-900 bg-emerald-950 bg-opacity-20 p-4 rounded">
+                  <h4 class="font-semibold text-emerald-400 mb-3">Modern: Structural Consistency</h4>
+                  <ul class="text-sm text-slate-400 space-y-2">
+                    <li>→ Single timestamp calculation implementation</li>
+                    <li>→ Unified subtask aggregation algorithm</li>
+                    <li>→ Canonical filter logic in service layer</li>
+                    <li>→ Centralized state mutation coordination</li>
+                    <li>→ Standardized timezone normalization</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-semibold mb-4 text-purple-300">3. Abstraction of Computational Complexity</h3>
+            <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+              <p class="text-slate-300 leading-relaxed mb-4">
+                The Client Service Layer encapsulates computationally intensive operations—recursive tree traversal,
+                conflict detection, temporal arithmetic—behind simple, stable interfaces. Component developers consume
+                powerful capabilities without understanding their internal mechanics.
+              </p>
+              <div class="metric-box p-4 rounded">
+                <p class="font-semibold mb-3 text-purple-300">Example: Recursive Subtask Summation</p>
+                <div class="space-y-3 text-sm">
+                  <div>
+                    <p class="text-slate-400 mb-1">Legacy Implementation (Per Component):</p>
+                    <div class="bg-slate-900 p-3 rounded font-mono text-xs text-slate-300">
+                      const calculateTotal = (task) => {"{"}
+                      <br />&nbsp;&nbsp;let total = task.trackedTime;
+                      <br />&nbsp;&nbsp;if (task.subtasks) {"{"}
+                      <br />&nbsp;&nbsp;&nbsp;&nbsp;task.subtasks.forEach(sub => {"{"}
+                      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total += calculateTotal(sub); // Recursive
+                      <br />&nbsp;&nbsp;&nbsp;&nbsp;{"}"});
+                      <br />&nbsp;&nbsp;{"}"}
+                      <br />&nbsp;&nbsp;return total;
+                      <br />{"}"}
+                    </div>
+                    <p class="text-slate-500 mt-1">~40 lines with error handling, memoization, circular reference
+                      detection</p>
+                  </div>
+                  <div>
+                    <p class="text-slate-400 mb-1">Modern Implementation (Component Code):</p>
+                    <div class="bg-slate-900 p-3 rounded font-mono text-xs text-emerald-300">
+                      const {"{"} totalTime {"}"} = useTaskTimeTracking({"{"}
+                      <br />&nbsp;&nbsp;taskId,
+                      <br />&nbsp;&nbsp;scope: 'all' // Includes all subtasks
+                      <br />{"}"});
+                    </div>
+                    <p class="text-slate-500 mt-1">~3 lines; complexity handled by service layer</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-semibold mb-4 text-purple-300">4. Enhanced Composability</h3>
+            <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+              <p class="text-slate-300 leading-relaxed mb-4">
+                As the service layer matures, it accumulates a rich library of domain primitives. These primitives can
+                be
+                composed in novel combinations to rapidly prototype new UI features without implementing new business
+                logic.
+              </p>
+              <div class="benefit-box p-4 rounded">
+                <p class="font-semibold mb-2 text-emerald-300">Composability Patterns:</p>
+                <ul class="space-y-2 text-slate-300 text-sm">
+                  <li>• <strong>Multi-Hook Composition:</strong> Combine <span
+                      class="code-inline">useTaskTimeTracking</span> + <span class="code-inline">TaskEventBus</span> +
+                    <span class="code-inline">MasterClockService</span>
+                  </li>
+                  <li>• <strong>Scope Flexibility:</strong> Switch between task-level, project-level, or global views
+                    via
+                    configuration</li>
+                  <li>• <strong>Real-time Reactivity:</strong> Event bus subscription patterns enable live updates
+                    across
+                    all consumers</li>
+                  <li>• <strong>Cross-Cutting Concerns:</strong> Authentication, caching, error handling implemented
+                    once
+                    at service boundary</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-semibold mb-4 text-purple-300">5. Performance Optimization Centralization</h3>
+            <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+              <p class="text-slate-300 leading-relaxed mb-4">
+                Performance optimizations—memoization, debouncing, request deduplication—are implemented once in the
+                service layer and benefit all consumers automatically. Component developers cannot accidentally create
+                performance anti-patterns.
+              </p>
+              <div class="grid md:grid-cols-2 gap-4 text-sm">
+                <div class="bg-slate-900 bg-opacity-50 p-4 rounded">
+                  <p class="font-semibold text-purple-300 mb-2">Service Layer Optimizations:</p>
+                  <ul class="text-slate-400 space-y-1">
+                    <li>• Selector memoization via Reselect</li>
+                    <li>• Request batching and deduplication</li>
+                    <li>• Intelligent cache invalidation</li>
+                    <li>• Subscription management</li>
+                  </ul>
+                </div>
+                <div class="bg-slate-900 bg-opacity-50 p-4 rounded">
+                  <p class="font-semibold text-purple-300 mb-2">Automatic Benefits:</p>
+                  <ul class="text-slate-400 space-y-1">
+                    <li>• Reduced re-render frequency</li>
+                    <li>• Prevented redundant calculations</li>
+                    <li>• Optimized Redux subscription patterns</li>
+                    <li>• Memory leak prevention</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Business Impact -->
+      <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
+        <h2 class="text-3xl font-semibold mb-6 pb-3">Business Impact Analysis</h2>
+
+        <div class="space-y-8">
+          <div>
+            <h3 class="text-2xl font-semibold mb-4 text-emerald-300">1. Development Velocity Acceleration</h3>
+            <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+              <p class="text-slate-300 leading-relaxed mb-4">
+                The most significant business impact is the dramatic reduction in time-to-market for new features. By
+                eliminating the need to implement domain logic in each component, developers can rapidly compose new UI
+                surfaces from existing primitives.
+              </p>
+              <div class="grid md:grid-cols-4 gap-4 mb-6">
+                <div class="text-center p-4 bg-emerald-950 bg-opacity-30 rounded border border-emerald-900">
+                  <div class="text-3xl font-bold text-emerald-400 mb-1">75%</div>
+                  <div class="text-xs text-slate-400">Reduction in feature development time</div>
+                </div>
+                <div class="text-center p-4 bg-emerald-950 bg-opacity-30 rounded border border-emerald-900">
+                  <div class="text-3xl font-bold text-emerald-400 mb-1">60%</div>
+                  <div class="text-xs text-slate-400">Fewer lines of code written per feature</div>
+                </div>
+                <div class="text-center p-4 bg-emerald-950 bg-opacity-30 rounded border border-emerald-900">
+                  <div class="text-3xl font-bold text-emerald-400 mb-1">90%</div>
+                  <div class="text-xs text-slate-400">Reduction in cross-component bugs</div>
+                </div>
+                <div class="text-center p-4 bg-emerald-950 bg-opacity-30 rounded border border-emerald-900">
+                  <div class="text-3xl font-bold text-emerald-400 mb-1">50%</div>
+                  <div class="text-xs text-slate-400">Faster onboarding for new developers</div>
+                </div>
+              </div>
+              <div class="benefit-box p-4 rounded">
+                <p class="font-semibold mb-2">Velocity Multipliers:</p>
+                <ul class="space-y-2 text-slate-300 text-sm">
+                  <li>• <strong>Feature Prototyping:</strong> New components built in hours instead of days</li>
+                  <li>• <strong>Bug Fix Propagation:</strong> Single fix automatically resolves issues across entire
+                    application</li>
+                  <li>• <strong>Refactoring Safety:</strong> Service layer changes tested once, consumed by all
+                    components
+                  </li>
+                  <li>• <strong>Parallel Development:</strong> Multiple teams can work on UI independently without logic
+                    conflicts</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-semibold mb-4 text-emerald-300">2. Maintenance Cost Reduction</h3>
+            <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+              <p class="text-slate-300 leading-relaxed mb-4">
+                Centralization transforms maintenance from a distributed, error-prone process into a focused,
+                predictable
+                operation. Changes to business logic occur in a single location and automatically propagate to all
+                consumers.
+              </p>
+              <div class="comparison-grid">
+                <div class="border border-red-900 bg-red-950 bg-opacity-20 p-5 rounded">
+                  <h4 class="font-semibold text-red-400 mb-3">Legacy Maintenance Pattern</h4>
+                  <div class="space-y-3 text-sm text-slate-400">
+                    <div>
+                      <p class="font-semibold text-red-300">Change Required:</p>
+                      <p>Modify timestamp rounding algorithm</p>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-red-300">Impact Scope:</p>
+                      <ul class="ml-4 mt-1 space-y-1">
+                        <li>→ Identify all 15+ components using algorithm</li>
+                        <li>→ Update each implementation independently</li>
+                        <li>→ Test each component in isolation</li>
+                        <li>→ Risk introducing new inconsistencies</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-red-300">Time Investment:</p>
+                      <p>3-5 days, multiple PRs, high regression risk</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="border border-emerald-900 bg-emerald-950 bg-opacity-20 p-5 rounded">
+                  <h4 class="font-semibold text-emerald-400 mb-3">Modern Maintenance Pattern</h4>
+                  <div class="space-y-3 text-sm text-slate-400">
+                    <div>
+                      <p class="font-semibold text-emerald-300">Change Required:</p>
+                      <p>Modify timestamp rounding algorithm</p>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-emerald-300">Impact Scope:</p>
+                      <ul class="ml-4mt-1 space-y-1">
+                        <li>→ Update single service layer function</li>
+                        <li>→ All consumers receive update automatically</li>
+                        <li>→ Test service layer in isolation</li>
+                        <li>→ Guaranteed consistency across app</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-emerald-300">Time Investment:</p>
+                      <p>2-4 hours, single PR, zero regression risk</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-semibold mb-4 text-emerald-300">3. Quality Assurance & Testing Efficiency</h3>
+            <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+              <p class="text-slate-300 leading-relaxed mb-4">
+                Testing surface area contracts dramatically when logic is centralized. Instead of testing identical
+                business rules across N component implementations, QA teams test once at the service boundary and verify
+                integration at the component level.
+              </p>
+              <div class="metric-box p-4 rounded">
+                <p class="font-semibold mb-3 text-purple-300">Testing Paradigm Shift:</p>
+                <div class="space-y-3 text-sm">
+                  <div class="bg-slate-900 bg-opacity-50 p-3 rounded">
+                    <p class="font-semibold text-slate-300 mb-2">Legacy Testing Requirements:</p>
+                    <ul class="text-slate-400 space-y-1 ml-4">
+                      <li>→ Unit tests for each component's internal logic</li>
+                      <li>→ Integration tests for each component's state interactions</li>
+                      <li>→ Cross-component consistency verification tests</li>
+                      <li>→ Regression tests for each component after shared logic changes</li>
+                      <li class="text-red-400 font-semibold">Total: ~500 test cases for 20 components</li>
+                    </ul>
+                  </div>
+                  <div class="bg-slate-900 bg-opacity-50 p-3 rounded">
+                    <p class="font-semibold text-slate-300 mb-2">Modern Testing Requirements:</p>
+                    <ul class="text-slate-400 space-y-1 ml-4">
+                      <li>→ Comprehensive unit tests for service layer (50 cases)</li>
+                      <li>→ Lightweight integration tests for hooks (30 cases)</li>
+                      <li>→ Smoke tests for component rendering (20 cases)</li>
+                      <li>→ End-to-end tests for critical user flows (15 cases)</li>
+                      <li class="text-emerald-400 font-semibold">Total: ~115 test cases for equivalent coverage</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-semibold mb-4 text-emerald-300">4. Team Scalability & Knowledge Distribution</h3>
+            <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+              <p class="text-slate-300 leading-relaxed mb-4">
+                The API-first model enables effective team scaling by creating clear interface boundaries. Junior
+                developers can build UI components by consuming well-documented hooks, while senior developers focus on
+                service layer architecture.
+              </p>
+              <div class="benefit-box p-4 rounded">
+                <p class="font-semibold mb-2 text-emerald-300">Organizational Benefits:</p>
+                <ul class="space-y-2 text-slate-300 text-sm">
+                  <li>• <strong>Knowledge Democratization:</strong> Domain logic documented in central API, not tribal
+                    knowledge</li>
+                  <li>• <strong>Reduced Bus Factor:</strong> Critical logic not locked in individual component
+                    implementations</li>
+                  <li>• <strong>Parallel Workstreams:</strong> UI and service layer teams can work independently</li>
+                  <li>• <strong>Onboarding Efficiency:</strong> New developers productive with hook documentation alone
+                  </li>
+                  <li>• <strong>Code Review Focus:</strong> Reviews concentrate on business logic correctness, not
+                    implementation duplication</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-2xl font-semibold mb-4 text-emerald-300">5. Technical Debt Management</h3>
+            <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+              <p class="text-slate-300 leading-relaxed mb-4">
+                By preventing the accumulation of duplicated logic across components, the API-first pattern proactively
+                manages technical debt. As the service layer matures, it becomes increasingly difficult to introduce new
+                inconsistencies or anti-patterns.
+              </p>
+              <div class="grid md:grid-cols-2 gap-4 text-sm">
+                <div class="border-l-4 border-red-500 pl-4 bg-slate-900 bg-opacity-30 p-3 rounded">
+                  <p class="font-semibold text-red-400 mb-2">Legacy Debt Accumulation:</p>
+                  <ul class="text-slate-400 space-y-1">
+                    <li>→ Each new component adds duplicate logic</li>
+                    <li>→ Refactoring becomes exponentially harder</li>
+                    <li>→ Inconsistencies multiply over time</li>
+                    <li>→ Eventually requires full rewrite</li>
+                  </ul>
+                </div>
+                <div class="border-l-4 border-emerald-500 pl-4 bg-slate-900 bg-opacity-30 p-3 rounded">
+                  <p class="font-semibold text-emerald-400 mb-2">Modern Debt Prevention:</p>
+                  <ul class="text-slate-400 space-y-1">
+                    <li>→ New components add minimal code</li>
+                    <li>→ Refactoring isolated to service layer</li>
+                    <li>→ Consistency structurally enforced</li>
+                    <li>→ Incremental improvement sustainable</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Implementation Blueprint -->
+      <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
+        <h2 class="text-3xl font-semibold mb-6 pb-3">Implementation Blueprint</h2>
+
+        <div class="space-y-6">
+          <div class="highlight-box p-6 rounded-lg">
+            <p class="text-lg font-semibold text-purple-400 mb-3">Strategic Migration Path:</p>
+            <p class="text-slate-300 leading-relaxed">
+              Transitioning from procedural to declarative architecture requires methodical extraction of domain logic
+              into the service layer while maintaining backward compatibility. The following blueprint outlines a
+              pragmatic migration strategy.
+            </p>
+          </div>
+
+          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+            <h3 class="text-xl font-semibold mb-4 text-purple-300">Phase 1: Service Layer Foundation</h3>
+            <div class="space-y-3 text-sm text-slate-300">
+              <div class="flex items-start gap-3">
+                <span class="text-purple-400 font-bold min-w-[2rem]">1.1</span>
+                <div>
+                  <p class="font-semibold">Identify High-Value Extraction Targets</p>
+                  <p class="text-slate-400 mt-1">Analyze codebase for most frequently duplicated logic patterns.
+                    Prioritize extraction based on duplication frequency × complexity.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-purple-400 font-bold min-w-[2rem]">1.2</span>
+                <div>
+                  <p class="font-semibold">Create Service Layer Architecture</p>
+                  <p class="text-slate-400 mt-1">Establish clean boundaries: hooks for React integration, services for
+                    pure logic, event buses for cross-component coordination.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-purple-400 font-bold min-w-[2rem]">1.3</span>
+                <div>
+                  <p class="font-semibold">Implement Core Primitives</p>
+                  <p class="text-slate-400 mt-1">Build foundational services: <span
+                      class="code-inline">useTaskTimeTracking</span>, <span class="code-inline">TaskEventBus</span>,
+                    <span class="code-inline">MasterClockService</span> with comprehensive test coverage.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+            <h3 class="text-xl font-semibold mb-4 text-purple-300">Phase 2: Incremental Component Migration</h3>
+            <div class="space-y-3 text-sm text-slate-300">
+              <div class="flex items-start gap-3">
+                <span class="text-emerald-400 font-bold min-w-[2rem]">2.1</span>
+                <div>
+                  <p class="font-semibold">Parallel Implementation Period</p>
+                  <p class="text-slate-400 mt-1">Run service layer alongside existing component logic. Verify output
+                    parity before removing legacy code.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-emerald-400 font-bold min-w-[2rem]">2.2</span>
+                <div>
+                  <p class="font-semibold">Component Refactoring</p>
+                  <p class="text-slate-400 mt-1">Replace procedural logic with declarative hook calls. Target 80%+ code
+                    reduction per component.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-emerald-400 font-bold min-w-[2rem]">2.3</span>
+                <div>
+                  <p class="font-semibold">Validation & Rollout</p>
+                  <p class="text-slate-400 mt-1">Progressive rollout with feature flags. Monitor for behavioral
+                    regressions, performance improvements.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
+            <h3 class="text-xl font-semibold mb-4 text-purple-300">Phase 3: Ecosystem Maturation</h3>
+            <div class="space-y-3 text-sm text-slate-300">
+              <div class="flex items-start gap-3">
+                <span class="text-purple-400 font-bold min-w-[2rem]">3.1</span>
+                <div>
+                  <p class="font-semibold">API Expansion</p>
+                  <p class="text-slate-400 mt-1">Continuously identify new extraction opportunities as service layer
+                    matures. Build increasingly sophisticated primitives.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-purple-400 font-bold min-w-[2rem]">3.2</span>
+                <div>
+                  <p class="font-semibold">Documentation & Developer Experience</p>
+                  <p class="text-slate-400 mt-1">Comprehensive API documentation, usage examples, migration guides.
+                    Enable
+                    self-service for component developers.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-purple-400 font-bold min-w-[2rem]">3.3</span>
+                <div>
+                  <p class="font-semibold">Architectural Governance</p>
+                  <p class="text-slate-400 mt-1">Establish linting rules preventing procedural patterns. Enforce service
+                    layer usage through code review and CI checks.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div
+        class="cta-insight-card p-8 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white flex flex-row items-center gap-6 mb-8 border border-white/20 shadow-lg mt-8">
+        <div class="text-4xl">🏗</div>
+        <div class="flex-grow">
+          <h4 class="text-xl font-bold mb-1">Modular Architecture Audit</h4>
+          <p class="text-white/90">Struggling with complex SPAs? I help teams decouple domain logic from UI components
+            to achieve structural consistency and performance.</p>
+        </div>
+        <a href="mailto:minhaj.me.bd@gmail.com"
+          class="px-6 py-2 bg-white text-emerald-600 font-bold rounded-full hover:bg-emerald-50 transition-colors whitespace-nowrap">Audit
+          My SPA</a>
+      </div>
+
+      <!-- Critical Success Factors -->
+      <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
+        <h2 class="text-3xl font-semibold mb-6 pb-3">Critical Success Factors & Risk Mitigation</h2>
+
+        <div class="space-y-6">
+          <div class="metric-box p-6 rounded-lg">
+            <h3 class="text-xl font-semibold mb-4 text-purple-300">Success Enablers</h3>
+            <ul class="space-y-3 text-slate-300">
+              <li class="flex items-start gap-3">
+                <span class="text-purple-400 text-xl">✓</span>
+                <div>
+                  <p class="font-semibold">Executive Sponsorship</p>
+                  <p class="text-sm text-slate-400">Architectural transformation requires sustained investment.
+                    Leadership
+                    commitment ensures resources for comprehensive migration.</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-purple-400 text-xl">✓</span>
+                <div>
+                  <p class="font-semibold">Comprehensive Test Coverage</p>
+                  <p class="text-sm text-slate-400">Service layer changes impact all consumers. Robust testing prevents
+                    regressions during migration.</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-purple-400 text-xl">✓</span>
+                <div>
+                  <p class="font-semibold">Team Training & Buy-In</p>
+                  <p class="text-sm text-slate-400">Developers must understand declarative patterns. Investment in
+                    education prevents resistance and ensures adoption.</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-purple-400 text-xl">✓</span>
+                <div>
+                  <p class="font-semibold">Incremental Rollout</p>
+                  <p class="text-sm text-slate-400">Big-bang migrations carry high risk. Phased approach enables
+                    learning,
+                    course correction, and continuous delivery.</p>
+                </div>
+              </li>
             </ul>
+          </div>
+
+          <div class="warning-box p-6 rounded-lg">
+            <h3 class="text-xl font-semibold mb-4 text-amber-400">Risk Vectors & Mitigation Strategies</h3>
+            <div class="space-y-4">
+              <div class="bg-slate-900 bg-opacity-50 p-4 rounded">
+                <p class="font-semibold text-amber-300 mb-2">Risk: Over-Abstraction</p>
+                <p class="text-sm text-slate-400 mb-2">Creating excessively generic APIs that obscure intent and reduce
+                  developer comprehension.</p>
+                <p class="text-sm text-slate-300"><strong>Mitigation:</strong> Design APIs for specific use cases first.
+                  Generalize only after identifying clear reuse patterns across 3+ consumers.</p>
+              </div>
+              <div class="bg-slate-900 bg-opacity-50 p-4 rounded">
+                <p class="font-semibold text-amber-300 mb-2">Risk: Performance Regression</p>
+                <p class="text-sm text-slate-400 mb-2">Centralized services becoming bottlenecks if poorly optimized or
+                  over-subscribed.</p>
+                <p class="text-sm text-slate-300"><strong>Mitigation:</strong> Implement memoization, selector
+                  optimization, and subscription management from day one. Profile before and after migration.</p>
+              </div>
+              <div class="bg-slate-900 bg-opacity-50 p-4 rounded">
+                <p class="font-semibold text-amber-300 mb-2">Risk: Migration Stagnation</p>
+                <p class="text-sm text-slate-400 mb-2">Incomplete migration leaving hybrid architecture with both
+                  patterns
+                  coexisting indefinitely.</p>
+                <p class="text-sm text-slate-300"><strong>Mitigation:</strong> Establish clear migration roadmap with
+                  deadlines. Use linting to prevent new procedural code after phase 2 begins.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div
+        class="cta-banner p-10 md:p-14 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 text-white relative overflow-hidden mb-8 border border-white/20 shadow-2xl">
+        <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+          <div class="flex-grow text-center md:text-left">
+            <h3 class="text-3xl font-extrabold mb-4">Productize Your Frontend</h3>
+            <p class="text-lg text-white/90 leading-relaxed">
+              Stop building one-off components. Let's transform your frontend into a scalable system that powers
+              multiple products with zero logic duplication.
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-4 shrink-0">
+            <a href="mailto:minhaj.me.bd@gmail.com"
+              class="px-8 py-3 bg-white text-purple-600 font-bold rounded-xl hover:scale-105 transition-all shadow-lg text-center">Start
+              Building</a>
+            <a href="/portfolio/index.html"
+              class="px-8 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-all border border-white/30 text-center">View
+              Patterns</a>
           </div>
         </div>
       </div>
 
-      <div class="evolution-arrow">↓</div>
+      <!-- Conclusion -->
+      <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
+        <h2 class="text-3xl font-semibold mb-6 pb-3">Conclusion & Strategic Recommendations</h2>
 
-      <div class="mb-8">
-        <h3 class="text-2xl font-semibold mb-4 text-emerald-300">Phase II: Declarative API-First Architecture</h3>
+        <p class="text-lg text-slate-300 leading-relaxed mb-6">
+          The transition from procedural component orchestration to a declarative API-first architecture represents a
+          fundamental evolution in software design philosophy. By separating domain intelligence from presentational
+          concerns through a centralized Client Service Layer, organizations achieve structural guarantees of
+          consistency,
+          dramatic reductions in code complexity, and measurable improvements in development velocity.
+        </p>
+
+        <div class="highlight-box p-6 rounded-lg mb-6">
+          <p class="text-xl font-semibold text-purple-400 mb-3">Quantified Impact Summary:</p>
+          <div class="grid md:grid-cols-2 gap-4 text-slate-300">
+            <div>
+              <p class="font-semibold mb-2">Technical Metrics:</p>
+              <ul class="space-y-1 text-sm">
+                <li>• 88% reduction in per-component code volume</li>
+                <li>• 90% reduction in cross-component inconsistencies</li>
+                <li>• 77% reduction in test surface area</li>
+                <li>• 60-80% reduction in cyclomatic complexity</li>
+              </ul>
+            </div>
+            <div>
+              <p class="font-semibold mb-2">Business Metrics:</p>
+              <ul class="space-y-1 text-sm">
+                <li>• 75% faster feature development cycles</li>
+                <li>• 85% reduction in maintenance time</li>
+                <li>• 50% faster developer onboarding</li>
+                <li>• 3-4x increase in parallel work capacity</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <div class="benefit-box p-6 rounded-lg">
-          <p class="font-semibold text-emerald-400 mb-3">Modern Pattern Characteristics:</p>
-          <p class="text-slate-300 leading-relaxed mb-4">
-            The declarative model inverts control by centralizing domain intelligence into a Client Service Layer.
-            Components declare <em>what</em> data they need rather than <em>how</em> to compute it, consuming stable
-            APIs that encapsulate complexity.
-          </p>
-          <div class="bg-slate-900 bg-opacity-50 p-4 rounded mt-4">
-            <p class="text-sm font-semibold text-emerald-300 mb-2">Pattern Benefits:</p>
-            <ul class="space-y-2 text-slate-300 text-sm">
-              <li>• <strong>Centralized Intelligence:</strong> Single source of truth for domain calculations</li>
-              <li>• <strong>Declarative Consumption:</strong> <span class="code-inline">useTaskTimeTracking({"{scope:
-                  'all'}"})}</span> replaces 50+ lines of logic</li>
-              <li>• <strong>Guaranteed Consistency:</strong> All consumers execute identical business rules</li>
-              <li>• <strong>Loose Coupling:</strong> UI components depend on stable interfaces, not implementations</li>
-              <li>• <strong>Accelerated Development:</strong> New features composed from existing primitives</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Architectural Diagram -->
-    <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
-      <h2 class="text-3xl font-semibold mb-6 pb-3">System Architecture Comparison</h2>
-      <p class="text-lg mb-6 leading-relaxed">
-        The following diagram illustrates the fundamental structural difference between procedural component
-        orchestration and the API-first declarative model.
-      </p>
-
-      <div class="mermaid mb-6">
-        graph TB
-        subgraph Legacy["Procedural Architecture: Logic Embedded in Components"]
-        State1[(Redux State)]
-
-        Comp1[TaskCard Component]
-        Comp2[TimeTracker Component]
-        Comp3[Dashboard Component]
-        Comp4[Reports Component]
-
-        State1 --> Comp1
-        State1 --> Comp2
-        State1 --> Comp3
-        State1 --> Comp4
-
-        Comp1 -->|"Manual State Selection"| Logic1[Time Calc Logic]
-        Comp1 -->|"Filter Management"| Logic2[Filter Logic]
-        Comp1 -->|"Subtask Recursion"| Logic3[Summation Logic]
-
-        Comp2 -->|"Duplicate Implementation"| Logic4[Time Calc Logic]
-        Comp2 -->|"Duplicate Implementation"| Logic5[Filter Logic]
-
-        Comp3 -->|"Variant Implementation"| Logic6[Time Calc Logic]
-        Comp3 -->|"Custom Algorithm"| Logic7[Summation Logic]
-
-        Comp4 -->|"Another Copy"| Logic8[Time Calc Logic]
-        Comp4 -->|"Conflicting Logic"| Logic9[Summation Logic]
-
-        style Comp1 fill:#7f1d1d
-        style Comp2 fill:#7f1d1d
-        style Comp3 fill:#7f1d1d
-        style Comp4 fill:#7f1d1d
-        style Logic1 fill:#991b1b
-        style Logic2 fill:#991b1b
-        style Logic3 fill:#991b1b
-        style Logic4 fill:#991b1b
-        style Logic5 fill:#991b1b
-        style Logic6 fill:#991b1b
-        style Logic7 fill:#991b1b
-        style Logic8 fill:#991b1b
-        style Logic9 fill:#991b1b
-        end
-
-        subgraph Modern["API-First Architecture: Centralized Service Layer"]
-        State2[(Redux State)]
-
-        API[Client Service Layer]
-        Hook1[useTaskTimeTracking]
-        Hook2[TaskEventBus]
-        Hook3[MasterClockService]
-
-        State2 --> API
-
-        API --> Hook1
-        API --> Hook2
-        API --> Hook3
-
-        Hook1 --> Service1[Centralized Time Logic]
-        Hook1 --> Service2[Centralized Filter Logic]
-        Hook1 --> Service3[Centralized Summation]
-
-        UI1[TaskCard]
-        UI2[TimeTracker]
-        UI3[Dashboard]
-        UI4[Reports]
-        UI5[RunningTaskBar]
-        UI6[FloatingTimer]
-
-        Hook1 -.->|"Declarative API"| UI1
-        Hook1 -.->|"Declarative API"| UI2
-        Hook1 -.->|"Declarative API"| UI3
-        Hook2 -.->|"Declarative API"| UI4
-        Hook3 -.->|"Declarative API"| UI5
-        Hook1 -.->|"Declarative API"| UI6
-
-        style API fill:#065f46
-        style Hook1 fill:#047857
-        style Hook2 fill:#047857
-        style Hook3 fill:#047857
-        style Service1 fill:#10b981
-        style Service2 fill:#10b981
-        style Service3 fill:#10b981
-        style UI1 fill:#4c1d95
-        style UI2 fill:#4c1d95
-        style UI3 fill:#4c1d95
-        style UI4 fill:#4c1d95
-        style UI5 fill:#4c1d95
-        style UI6 fill:#4c1d95
-        end
-      </div>
-
-      <p class="text-slate-400 italic text-sm">
-        Figure 1: Architectural comparison showing the consolidation of distributed logic into a unified service layer
-        with declarative consumption patterns.
-      </p>
-    </section>
-
-    <!-- Technical Impact -->
-    <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
-      <h2 class="text-3xl font-semibold mb-6 pb-3">Technical Impact Analysis</h2>
-
-      <div class="space-y-8">
-        <div>
-          <h3 class="text-2xl font-semibold mb-4 text-purple-300">1. Code Complexity Reduction</h3>
-          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-            <p class="text-slate-300 leading-relaxed mb-4">
-              The most immediate technical benefit is the dramatic reduction in per-component code complexity. By
-              extracting domain logic into centralized services, individual components shrink from hundreds of lines to
-              minimal declarative wrappers.
+          <p class="text-xl font-semibold text-emerald-300 mb-4">Strategic Imperatives:</p>
+          <div class="space-y-3 text-slate-200">
+            <p class="leading-relaxed">
+              <strong>1. Invest Early in Service Layer Architecture:</strong> The earlier this pattern is adopted in a
+              project's lifecycle, the greater the compounding returns. Legacy codebases face higher migration costs but
+              still realize significant long-term value.
             </p>
-            <div class="grid md:grid-cols-3 gap-4 mb-6">
-              <div class="text-center p-4 bg-slate-900 bg-opacity-50 rounded">
-                <div class="text-4xl font-bold text-red-400 mb-2">~250</div>
-                <div class="text-sm text-slate-400">Lines of code per component (Legacy)</div>
-              </div>
-              <div class="text-center p-4 bg-slate-900 bg-opacity-50 rounded">
-                <div class="text-4xl font-bold text-emerald-400 mb-2">~30</div>
-                <div class="text-sm text-slate-400">Lines of code per component (Modern)</div>
-              </div>
-              <div class="text-center p-4 bg-slate-900 bg-opacity-50 rounded">
-                <div class="text-4xl font-bold text-purple-400 mb-2">88%</div>
-                <div class="text-sm text-slate-400">Reduction in boilerplate</div>
-              </div>
-            </div>
-            <div class="metric-box p-4 rounded">
-              <p class="font-semibold mb-2">Measurable Complexity Metrics:</p>
-              <ul class="space-y-2 text-slate-300 text-sm">
-                <li>• <strong>Cyclomatic Complexity:</strong> Reduced from 15-25 to 2-5 per component</li>
-                <li>• <strong>Cognitive Load:</strong> Single responsibility principle enforced at architectural level
-                </li>
-                <li>• <strong>Testing Surface:</strong> Logic tested once in service layer vs. N component
-                  implementations</li>
-                <li>• <strong>Maintenance Burden:</strong> Bug fixes propagate automatically to all consumers</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-2xl font-semibold mb-4 text-purple-300">2. Consistency Guarantees</h3>
-          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-            <p class="text-slate-300 leading-relaxed mb-4">
-              Centralization eliminates the primary source of cross-component inconsistency: divergent implementations
-              of identical business logic. When all consumers access the same underlying calculation engine, behavioral
-              consistency is structurally guaranteed.
+            <p class="leading-relaxed">
+              <strong>2. Prioritize API Design Quality:</strong> The service layer becomes the foundation for all future
+              development. Invest disproportionately in designing stable, intuitive, well-documented interfaces that
+              enable self-service consumption.
             </p>
-            <div class="comparison-grid">
-              <div class="border border-red-900 bg-red-950 bg-opacity-20 p-4 rounded">
-                <h4 class="font-semibold text-red-400 mb-3">Legacy: Inconsistency Vectors</h4>
-                <ul class="text-sm text-slate-400 space-y-2">
-                  <li>→ 5 different timestamp rounding algorithms</li>
-                  <li>→ Subtask summation conflicts across views</li>
-                  <li>→ Filter logic variations causing data mismatches</li>
-                  <li>→ Race conditions in manual state updates</li>
-                  <li>→ Timezone handling inconsistencies</li>
-                </ul>
-              </div>
-              <div class="border border-emerald-900 bg-emerald-950 bg-opacity-20 p-4 rounded">
-                <h4 class="font-semibold text-emerald-400 mb-3">Modern: Structural Consistency</h4>
-                <ul class="text-sm text-slate-400 space-y-2">
-                  <li>→ Single timestamp calculation implementation</li>
-                  <li>→ Unified subtask aggregation algorithm</li>
-                  <li>→ Canonical filter logic in service layer</li>
-                  <li>→ Centralized state mutation coordination</li>
-                  <li>→ Standardized timezone normalization</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-2xl font-semibold mb-4 text-purple-300">3. Abstraction of Computational Complexity</h3>
-          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-            <p class="text-slate-300 leading-relaxed mb-4">
-              The Client Service Layer encapsulates computationally intensive operations—recursive tree traversal,
-              conflict detection, temporal arithmetic—behind simple, stable interfaces. Component developers consume
-              powerful capabilities without understanding their internal mechanics.
+            <p class="leading-relaxed">
+              <strong>3. Enforce Architectural Governance:</strong> Prevent backsliding into procedural patterns through
+              automated linting, code review standards, and team education. The benefits of this architecture erode
+              quickly if discipline lapses.
             </p>
-            <div class="metric-box p-4 rounded">
-              <p class="font-semibold mb-3 text-purple-300">Example: Recursive Subtask Summation</p>
-              <div class="space-y-3 text-sm">
-                <div>
-                  <p class="text-slate-400 mb-1">Legacy Implementation (Per Component):</p>
-                  <div class="bg-slate-900 p-3 rounded font-mono text-xs text-slate-300">
-                    const calculateTotal = (task) => {"{"}
-                    <br />&nbsp;&nbsp;let total = task.trackedTime;
-                    <br />&nbsp;&nbsp;if (task.subtasks) {"{"}
-                    <br />&nbsp;&nbsp;&nbsp;&nbsp;task.subtasks.forEach(sub => {"{"}
-                    <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total += calculateTotal(sub); // Recursive
-                    <br />&nbsp;&nbsp;&nbsp;&nbsp;{"}"});
-                    <br />&nbsp;&nbsp;{"}"}
-                    <br />&nbsp;&nbsp;return total;
-                    <br />{"}"}
-                  </div>
-                  <p class="text-slate-500 mt-1">~40 lines with error handling, memoization, circular reference
-                    detection</p>
-                </div>
-                <div>
-                  <p class="text-slate-400 mb-1">Modern Implementation (Component Code):</p>
-                  <div class="bg-slate-900 p-3 rounded font-mono text-xs text-emerald-300">
-                    const {"{"} totalTime {"}"} = useTaskTimeTracking({"{"}
-                    <br />&nbsp;&nbsp;taskId,
-                    <br />&nbsp;&nbsp;scope: 'all' // Includes all subtasks
-                    <br />{"}"});
-                  </div>
-                  <p class="text-slate-500 mt-1">~3 lines; complexity handled by service layer</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-2xl font-semibold mb-4 text-purple-300">4. Enhanced Composability</h3>
-          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-            <p class="text-slate-300 leading-relaxed mb-4">
-              As the service layer matures, it accumulates a rich library of domain primitives. These primitives can be
-              composed in novel combinations to rapidly prototype new UI features without implementing new business
-              logic.
+            <p class="leading-relaxed">
+              <strong>4. Measure & Communicate Impact:</strong> Track concrete metrics—development velocity, bug rates,
+              test coverage—to validate the architectural investment and maintain organizational commitment.
             </p>
-            <div class="benefit-box p-4 rounded">
-              <p class="font-semibold mb-2 text-emerald-300">Composability Patterns:</p>
-              <ul class="space-y-2 text-slate-300 text-sm">
-                <li>• <strong>Multi-Hook Composition:</strong> Combine <span
-                    class="code-inline">useTaskTimeTracking</span> + <span class="code-inline">TaskEventBus</span> +
-                  <span class="code-inline">MasterClockService</span>
-                </li>
-                <li>• <strong>Scope Flexibility:</strong> Switch between task-level, project-level, or global views via
-                  configuration</li>
-                <li>• <strong>Real-time Reactivity:</strong> Event bus subscription patterns enable live updates across
-                  all consumers</li>
-                <li>• <strong>Cross-Cutting Concerns:</strong> Authentication, caching, error handling implemented once
-                  at service boundary</li>
-              </ul>
-            </div>
           </div>
         </div>
 
-        <div>
-          <h3 class="text-2xl font-semibold mb-4 text-purple-300">5. Performance Optimization Centralization</h3>
-          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-            <p class="text-slate-300 leading-relaxed mb-4">
-              Performance optimizations—memoization, debouncing, request deduplication—are implemented once in the
-              service layer and benefit all consumers automatically. Component developers cannot accidentally create
-              performance anti-patterns.
-            </p>
-            <div class="grid md:grid-cols-2 gap-4 text-sm">
-              <div class="bg-slate-900 bg-opacity-50 p-4 rounded">
-                <p class="font-semibold text-purple-300 mb-2">Service Layer Optimizations:</p>
-                <ul class="text-slate-400 space-y-1">
-                  <li>• Selector memoization via Reselect</li>
-                  <li>• Request batching and deduplication</li>
-                  <li>• Intelligent cache invalidation</li>
-                  <li>• Subscription management</li>
-                </ul>
-              </div>
-              <div class="bg-slate-900 bg-opacity-50 p-4 rounded">
-                <p class="font-semibold text-purple-300 mb-2">Automatic Benefits:</p>
-                <ul class="text-slate-400 space-y-1">
-                  <li>• Reduced re-render frequency</li>
-                  <li>• Prevented redundant calculations</li>
-                  <li>• Optimized Redux subscription patterns</li>
-                  <li>• Memory leak prevention</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Business Impact -->
-    <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
-      <h2 class="text-3xl font-semibold mb-6 pb-3">Business Impact Analysis</h2>
-
-      <div class="space-y-8">
-        <div>
-          <h3 class="text-2xl font-semibold mb-4 text-emerald-300">1. Development Velocity Acceleration</h3>
-          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-            <p class="text-slate-300 leading-relaxed mb-4">
-              The most significant business impact is the dramatic reduction in time-to-market for new features. By
-              eliminating the need to implement domain logic in each component, developers can rapidly compose new UI
-              surfaces from existing primitives.
-            </p>
-            <div class="grid md:grid-cols-4 gap-4 mb-6">
-              <div class="text-center p-4 bg-emerald-950 bg-opacity-30 rounded border border-emerald-900">
-                <div class="text-3xl font-bold text-emerald-400 mb-1">75%</div>
-                <div class="text-xs text-slate-400">Reduction in feature development time</div>
-              </div>
-              <div class="text-center p-4 bg-emerald-950 bg-opacity-30 rounded border border-emerald-900">
-                <div class="text-3xl font-bold text-emerald-400 mb-1">60%</div>
-                <div class="text-xs text-slate-400">Fewer lines of code written per feature</div>
-              </div>
-              <div class="text-center p-4 bg-emerald-950 bg-opacity-30 rounded border border-emerald-900">
-                <div class="text-3xl font-bold text-emerald-400 mb-1">90%</div>
-                <div class="text-xs text-slate-400">Reduction in cross-component bugs</div>
-              </div>
-              <div class="text-center p-4 bg-emerald-950 bg-opacity-30 rounded border border-emerald-900">
-                <div class="text-3xl font-bold text-emerald-400 mb-1">50%</div>
-                <div class="text-xs text-slate-400">Faster onboarding for new developers</div>
-              </div>
-            </div>
-            <div class="benefit-box p-4 rounded">
-              <p class="font-semibold mb-2">Velocity Multipliers:</p>
-              <ul class="space-y-2 text-slate-300 text-sm">
-                <li>• <strong>Feature Prototyping:</strong> New components built in hours instead of days</li>
-                <li>• <strong>Bug Fix Propagation:</strong> Single fix automatically resolves issues across entire
-                  application</li>
-                <li>• <strong>Refactoring Safety:</strong> Service layer changes tested once, consumed by all components
-                </li>
-                <li>• <strong>Parallel Development:</strong> Multiple teams can work on UI independently without logic
-                  conflicts</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-2xl font-semibold mb-4 text-emerald-300">2. Maintenance Cost Reduction</h3>
-          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-            <p class="text-slate-300 leading-relaxed mb-4">
-              Centralization transforms maintenance from a distributed, error-prone process into a focused, predictable
-              operation. Changes to business logic occur in a single location and automatically propagate to all
-              consumers.
-            </p>
-            <div class="comparison-grid">
-              <div class="border border-red-900 bg-red-950 bg-opacity-20 p-5 rounded">
-                <h4 class="font-semibold text-red-400 mb-3">Legacy Maintenance Pattern</h4>
-                <div class="space-y-3 text-sm text-slate-400">
-                  <div>
-                    <p class="font-semibold text-red-300">Change Required:</p>
-                    <p>Modify timestamp rounding algorithm</p>
-                  </div>
-                  <div>
-                    <p class="font-semibold text-red-300">Impact Scope:</p>
-                    <ul class="ml-4 mt-1 space-y-1">
-                      <li>→ Identify all 15+ components using algorithm</li>
-                      <li>→ Update each implementation independently</li>
-                      <li>→ Test each component in isolation</li>
-                      <li>→ Risk introducing new inconsistencies</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p class="font-semibold text-red-300">Time Investment:</p>
-                    <p>3-5 days, multiple PRs, high regression risk</p>
-                  </div>
-                </div>
-              </div>
-              <div class="border border-emerald-900 bg-emerald-950 bg-opacity-20 p-5 rounded">
-                <h4 class="font-semibold text-emerald-400 mb-3">Modern Maintenance Pattern</h4>
-                <div class="space-y-3 text-sm text-slate-400">
-                  <div>
-                    <p class="font-semibold text-emerald-300">Change Required:</p>
-                    <p>Modify timestamp rounding algorithm</p>
-                  </div>
-                  <div>
-                    <p class="font-semibold text-emerald-300">Impact Scope:</p>
-                    <ul class="ml-4mt-1 space-y-1">
-                      <li>→ Update single service layer function</li>
-                      <li>→ All consumers receive update automatically</li>
-                      <li>→ Test service layer in isolation</li>
-                      <li>→ Guaranteed consistency across app</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p class="font-semibold text-emerald-300">Time Investment:</p>
-                    <p>2-4 hours, single PR, zero regression risk</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-2xl font-semibold mb-4 text-emerald-300">3. Quality Assurance & Testing Efficiency</h3>
-          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-            <p class="text-slate-300 leading-relaxed mb-4">
-              Testing surface area contracts dramatically when logic is centralized. Instead of testing identical
-              business rules across N component implementations, QA teams test once at the service boundary and verify
-              integration at the component level.
-            </p>
-            <div class="metric-box p-4 rounded">
-              <p class="font-semibold mb-3 text-purple-300">Testing Paradigm Shift:</p>
-              <div class="space-y-3 text-sm">
-                <div class="bg-slate-900 bg-opacity-50 p-3 rounded">
-                  <p class="font-semibold text-slate-300 mb-2">Legacy Testing Requirements:</p>
-                  <ul class="text-slate-400 space-y-1 ml-4">
-                    <li>→ Unit tests for each component's internal logic</li>
-                    <li>→ Integration tests for each component's state interactions</li>
-                    <li>→ Cross-component consistency verification tests</li>
-                    <li>→ Regression tests for each component after shared logic changes</li>
-                    <li class="text-red-400 font-semibold">Total: ~500 test cases for 20 components</li>
-                  </ul>
-                </div>
-                <div class="bg-slate-900 bg-opacity-50 p-3 rounded">
-                  <p class="font-semibold text-slate-300 mb-2">Modern Testing Requirements:</p>
-                  <ul class="text-slate-400 space-y-1 ml-4">
-                    <li>→ Comprehensive unit tests for service layer (50 cases)</li>
-                    <li>→ Lightweight integration tests for hooks (30 cases)</li>
-                    <li>→ Smoke tests for component rendering (20 cases)</li>
-                    <li>→ End-to-end tests for critical user flows (15 cases)</li>
-                    <li class="text-emerald-400 font-semibold">Total: ~115 test cases for equivalent coverage</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-2xl font-semibold mb-4 text-emerald-300">4. Team Scalability & Knowledge Distribution</h3>
-          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-            <p class="text-slate-300 leading-relaxed mb-4">
-              The API-first model enables effective team scaling by creating clear interface boundaries. Junior
-              developers can build UI components by consuming well-documented hooks, while senior developers focus on
-              service layer architecture.
-            </p>
-            <div class="benefit-box p-4 rounded">
-              <p class="font-semibold mb-2 text-emerald-300">Organizational Benefits:</p>
-              <ul class="space-y-2 text-slate-300 text-sm">
-                <li>• <strong>Knowledge Democratization:</strong> Domain logic documented in central API, not tribal
-                  knowledge</li>
-                <li>• <strong>Reduced Bus Factor:</strong> Critical logic not locked in individual component
-                  implementations</li>
-                <li>• <strong>Parallel Workstreams:</strong> UI and service layer teams can work independently</li>
-                <li>• <strong>Onboarding Efficiency:</strong> New developers productive with hook documentation alone
-                </li>
-                <li>• <strong>Code Review Focus:</strong> Reviews concentrate on business logic correctness, not
-                  implementation duplication</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-2xl font-semibold mb-4 text-emerald-300">5. Technical Debt Management</h3>
-          <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-            <p class="text-slate-300 leading-relaxed mb-4">
-              By preventing the accumulation of duplicated logic across components, the API-first pattern proactively
-              manages technical debt. As the service layer matures, it becomes increasingly difficult to introduce new
-              inconsistencies or anti-patterns.
-            </p>
-            <div class="grid md:grid-cols-2 gap-4 text-sm">
-              <div class="border-l-4 border-red-500 pl-4 bg-slate-900 bg-opacity-30 p-3 rounded">
-                <p class="font-semibold text-red-400 mb-2">Legacy Debt Accumulation:</p>
-                <ul class="text-slate-400 space-y-1">
-                  <li>→ Each new component adds duplicate logic</li>
-                  <li>→ Refactoring becomes exponentially harder</li>
-                  <li>→ Inconsistencies multiply over time</li>
-                  <li>→ Eventually requires full rewrite</li>
-                </ul>
-              </div>
-              <div class="border-l-4 border-emerald-500 pl-4 bg-slate-900 bg-opacity-30 p-3 rounded">
-                <p class="font-semibold text-emerald-400 mb-2">Modern Debt Prevention:</p>
-                <ul class="text-slate-400 space-y-1">
-                  <li>→ New components add minimal code</li>
-                  <li>→ Refactoring isolated to service layer</li>
-                  <li>→ Consistency structurally enforced</li>
-                  <li>→ Incremental improvement sustainable</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Implementation Blueprint -->
-    <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
-      <h2 class="text-3xl font-semibold mb-6 pb-3">Implementation Blueprint</h2>
-
-      <div class="space-y-6">
-        <div class="highlight-box p-6 rounded-lg">
-          <p class="text-lg font-semibold text-purple-400 mb-3">Strategic Migration Path:</p>
-          <p class="text-slate-300 leading-relaxed">
-            Transitioning from procedural to declarative architecture requires methodical extraction of domain logic
-            into the service layer while maintaining backward compatibility. The following blueprint outlines a
-            pragmatic migration strategy.
+        <div class="mt-8 p-6 bg-slate-800 bg-opacity-50 rounded-lg border-l-4 border-purple-500">
+          <p class="text-slate-300 leading-relaxed italic">
+            "The API-first component strategy is not merely a technical pattern but a fundamental rethinking of how we
+            structure frontend complexity. By inverting the traditional relationship between components and domain
+            logic,
+            we create systems that are simultaneously more powerful and more maintainable—a rare outcome in software
+            architecture."
           </p>
         </div>
+      </section>
 
-        <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-          <h3 class="text-xl font-semibold mb-4 text-purple-300">Phase 1: Service Layer Foundation</h3>
-          <div class="space-y-3 text-sm text-slate-300">
-            <div class="flex items-start gap-3">
-              <span class="text-purple-400 font-bold min-w-[2rem]">1.1</span>
-              <div>
-                <p class="font-semibold">Identify High-Value Extraction Targets</p>
-                <p class="text-slate-400 mt-1">Analyze codebase for most frequently duplicated logic patterns.
-                  Prioritize extraction based on duplication frequency × complexity.</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="text-purple-400 font-bold min-w-[2rem]">1.2</span>
-              <div>
-                <p class="font-semibold">Create Service Layer Architecture</p>
-                <p class="text-slate-400 mt-1">Establish clean boundaries: hooks for React integration, services for
-                  pure logic, event buses for cross-component coordination.</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="text-purple-400 font-bold min-w-[2rem]">1.3</span>
-              <div>
-                <p class="font-semibold">Implement Core Primitives</p>
-                <p class="text-slate-400 mt-1">Build foundational services: <span
-                    class="code-inline">useTaskTimeTracking</span>, <span class="code-inline">TaskEventBus</span>, <span
-                    class="code-inline">MasterClockService</span> with comprehensive test coverage.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- Footer -->
+      <footer class="text-center text-slate-500 text-sm py-8 border-t border-slate-700">
+        <p class="mb-2">Technical Research Document • Software Architecture • Component Design Patterns</p>
+        <p>This analysis provides architectural guidance for enterprise frontend systems. Implementation strategies
+          should
+          be adapted to organizational context and technical constraints.</p>
+      </footer>
+    </div>
 
-        <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-          <h3 class="text-xl font-semibold mb-4 text-purple-300">Phase 2: Incremental Component Migration</h3>
-          <div class="space-y-3 text-sm text-slate-300">
-            <div class="flex items-start gap-3">
-              <span class="text-emerald-400 font-bold min-w-[2rem]">2.1</span>
-              <div>
-                <p class="font-semibold">Parallel Implementation Period</p>
-                <p class="text-slate-400 mt-1">Run service layer alongside existing component logic. Verify output
-                  parity before removing legacy code.</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="text-emerald-400 font-bold min-w-[2rem]">2.2</span>
-              <div>
-                <p class="font-semibold">Component Refactoring</p>
-                <p class="text-slate-400 mt-1">Replace procedural logic with declarative hook calls. Target 80%+ code
-                  reduction per component.</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="text-emerald-400 font-bold min-w-[2rem]">2.3</span>
-              <div>
-                <p class="font-semibold">Validation & Rollout</p>
-                <p class="text-slate-400 mt-1">Progressive rollout with feature flags. Monitor for behavioral
-                  regressions, performance improvements.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <script>
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',
+        themeVariables: {
+          darkMode: true,
+          primaryColor: '#8b5cf6',
+          primaryTextColor: '#e2e8f0',
+          primaryBorderColor: '#a78bfa',
+          lineColor: '#94a3b8',
+          secondaryColor: '#10b981',
+          tertiaryColor: '#3b82f6',
+          background: '#0f172a',
+          mainBkg: '#1e293b',
+          nodeBorder: '#475569',
+          clusterBkg: '#1e293b',
+          clusterBorder: '#475569',
+          titleColor: '#e2e8f0',
+          edgeLabelBackground: '#1e293b',
+          nodeTextColor: '#e2e8f0'
+        }
+      });
+    </script>
 
-        <div class="bg-slate-800 bg-opacity-50 p-6 rounded-lg">
-          <h3 class="text-xl font-semibold mb-4 text-purple-300">Phase 3: Ecosystem Maturation</h3>
-          <div class="space-y-3 text-sm text-slate-300">
-            <div class="flex items-start gap-3">
-              <span class="text-purple-400 font-bold min-w-[2rem]">3.1</span>
-              <div>
-                <p class="font-semibold">API Expansion</p>
-                <p class="text-slate-400 mt-1">Continuously identify new extraction opportunities as service layer
-                  matures. Build increasingly sophisticated primitives.</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="text-purple-400 font-bold min-w-[2rem]">3.2</span>
-              <div>
-                <p class="font-semibold">Documentation & Developer Experience</p>
-                <p class="text-slate-400 mt-1">Comprehensive API documentation, usage examples, migration guides. Enable
-                  self-service for component developers.</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-3">
-              <span class="text-purple-400 font-bold min-w-[2rem]">3.3</span>
-              <div>
-                <p class="font-semibold">Architectural Governance</p>
-                <p class="text-slate-400 mt-1">Establish linting rules preventing procedural patterns. Enforce service
-                  layer usage through code review and CI checks.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Critical Success Factors -->
-    <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
-      <h2 class="text-3xl font-semibold mb-6 pb-3">Critical Success Factors & Risk Mitigation</h2>
-
-      <div class="space-y-6">
-        <div class="metric-box p-6 rounded-lg">
-          <h3 class="text-xl font-semibold mb-4 text-purple-300">Success Enablers</h3>
-          <ul class="space-y-3 text-slate-300">
-            <li class="flex items-start gap-3">
-              <span class="text-purple-400 text-xl">✓</span>
-              <div>
-                <p class="font-semibold">Executive Sponsorship</p>
-                <p class="text-sm text-slate-400">Architectural transformation requires sustained investment. Leadership
-                  commitment ensures resources for comprehensive migration.</p>
-              </div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="text-purple-400 text-xl">✓</span>
-              <div>
-                <p class="font-semibold">Comprehensive Test Coverage</p>
-                <p class="text-sm text-slate-400">Service layer changes impact all consumers. Robust testing prevents
-                  regressions during migration.</p>
-              </div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="text-purple-400 text-xl">✓</span>
-              <div>
-                <p class="font-semibold">Team Training & Buy-In</p>
-                <p class="text-sm text-slate-400">Developers must understand declarative patterns. Investment in
-                  education prevents resistance and ensures adoption.</p>
-              </div>
-            </li>
-            <li class="flex items-start gap-3">
-              <span class="text-purple-400 text-xl">✓</span>
-              <div>
-                <p class="font-semibold">Incremental Rollout</p>
-                <p class="text-sm text-slate-400">Big-bang migrations carry high risk. Phased approach enables learning,
-                  course correction, and continuous delivery.</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="warning-box p-6 rounded-lg">
-          <h3 class="text-xl font-semibold mb-4 text-amber-400">Risk Vectors & Mitigation Strategies</h3>
-          <div class="space-y-4">
-            <div class="bg-slate-900 bg-opacity-50 p-4 rounded">
-              <p class="font-semibold text-amber-300 mb-2">Risk: Over-Abstraction</p>
-              <p class="text-sm text-slate-400 mb-2">Creating excessively generic APIs that obscure intent and reduce
-                developer comprehension.</p>
-              <p class="text-sm text-slate-300"><strong>Mitigation:</strong> Design APIs for specific use cases first.
-                Generalize only after identifying clear reuse patterns across 3+ consumers.</p>
-            </div>
-            <div class="bg-slate-900 bg-opacity-50 p-4 rounded">
-              <p class="font-semibold text-amber-300 mb-2">Risk: Performance Regression</p>
-              <p class="text-sm text-slate-400 mb-2">Centralized services becoming bottlenecks if poorly optimized or
-                over-subscribed.</p>
-              <p class="text-sm text-slate-300"><strong>Mitigation:</strong> Implement memoization, selector
-                optimization, and subscription management from day one. Profile before and after migration.</p>
-            </div>
-            <div class="bg-slate-900 bg-opacity-50 p-4 rounded">
-              <p class="font-semibold text-amber-300 mb-2">Risk: Migration Stagnation</p>
-              <p class="text-sm text-slate-400 mb-2">Incomplete migration leaving hybrid architecture with both patterns
-                coexisting indefinitely.</p>
-              <p class="text-sm text-slate-300"><strong>Mitigation:</strong> Establish clear migration roadmap with
-                deadlines. Use linting to prevent new procedural code after phase 2 begins.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Conclusion -->
-    <section class="section-card rounded-lg p-8 mb-8 shadow-xl">
-      <h2 class="text-3xl font-semibold mb-6 pb-3">Conclusion & Strategic Recommendations</h2>
-
-      <p class="text-lg text-slate-300 leading-relaxed mb-6">
-        The transition from procedural component orchestration to a declarative API-first architecture represents a
-        fundamental evolution in software design philosophy. By separating domain intelligence from presentational
-        concerns through a centralized Client Service Layer, organizations achieve structural guarantees of consistency,
-        dramatic reductions in code complexity, and measurable improvements in development velocity.
-      </p>
-
-      <div class="highlight-box p-6 rounded-lg mb-6">
-        <p class="text-xl font-semibold text-purple-400 mb-3">Quantified Impact Summary:</p>
-        <div class="grid md:grid-cols-2 gap-4 text-slate-300">
-          <div>
-            <p class="font-semibold mb-2">Technical Metrics:</p>
-            <ul class="space-y-1 text-sm">
-              <li>• 88% reduction in per-component code volume</li>
-              <li>• 90% reduction in cross-component inconsistencies</li>
-              <li>• 77% reduction in test surface area</li>
-              <li>• 60-80% reduction in cyclomatic complexity</li>
-            </ul>
-          </div>
-          <div>
-            <p class="font-semibold mb-2">Business Metrics:</p>
-            <ul class="space-y-1 text-sm">
-              <li>• 75% faster feature development cycles</li>
-              <li>• 85% reduction in maintenance time</li>
-              <li>• 50% faster developer onboarding</li>
-              <li>• 3-4x increase in parallel work capacity</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="benefit-box p-6 rounded-lg">
-        <p class="text-xl font-semibold text-emerald-300 mb-4">Strategic Imperatives:</p>
-        <div class="space-y-3 text-slate-200">
-          <p class="leading-relaxed">
-            <strong>1. Invest Early in Service Layer Architecture:</strong> The earlier this pattern is adopted in a
-            project's lifecycle, the greater the compounding returns. Legacy codebases face higher migration costs but
-            still realize significant long-term value.
-          </p>
-          <p class="leading-relaxed">
-            <strong>2. Prioritize API Design Quality:</strong> The service layer becomes the foundation for all future
-            development. Invest disproportionately in designing stable, intuitive, well-documented interfaces that
-            enable self-service consumption.
-          </p>
-          <p class="leading-relaxed">
-            <strong>3. Enforce Architectural Governance:</strong> Prevent backsliding into procedural patterns through
-            automated linting, code review standards, and team education. The benefits of this architecture erode
-            quickly if discipline lapses.
-          </p>
-          <p class="leading-relaxed">
-            <strong>4. Measure & Communicate Impact:</strong> Track concrete metrics—development velocity, bug rates,
-            test coverage—to validate the architectural investment and maintain organizational commitment.
-          </p>
-        </div>
-      </div>
-
-      <div class="mt-8 p-6 bg-slate-800 bg-opacity-50 rounded-lg border-l-4 border-purple-500">
-        <p class="text-slate-300 leading-relaxed italic">
-          "The API-first component strategy is not merely a technical pattern but a fundamental rethinking of how we
-          structure frontend complexity. By inverting the traditional relationship between components and domain logic,
-          we create systems that are simultaneously more powerful and more maintainable—a rare outcome in software
-          architecture."
-        </p>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="text-center text-slate-500 text-sm py-8 border-t border-slate-700">
-      <p class="mb-2">Technical Research Document • Software Architecture • Component Design Patterns</p>
-      <p>This analysis provides architectural guidance for enterprise frontend systems. Implementation strategies should
-        be adapted to organizational context and technical constraints.</p>
-    </footer>
-  </div>
-
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: 'dark',
-      themeVariables: {
-        darkMode: true,
-        primaryColor: '#8b5cf6',
-        primaryTextColor: '#e2e8f0',
-        primaryBorderColor: '#a78bfa',
-        lineColor: '#94a3b8',
-        secondaryColor: '#10b981',
-        tertiaryColor: '#3b82f6',
-        background: '#0f172a',
-        mainBkg: '#1e293b',
-        nodeBorder: '#475569',
-        clusterBkg: '#1e293b',
-        clusterBorder: '#475569',
-        titleColor: '#e2e8f0',
-        edgeLabelBackground: '#1e293b',
-        nodeTextColor: '#e2e8f0'
-      }
-    });
-  </script>
-
-    
   </div>
   <script>
     const { createApp } = Vue;
     createApp({
       components: {
         'mega-header': MegaHeader,
-        
+
       }
     }).mount('#app');
   </script>

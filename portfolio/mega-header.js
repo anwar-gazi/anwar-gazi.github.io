@@ -56,14 +56,15 @@ const MegaHeader = {
                     </div>
                   </a>
                   <!-- CTA Filler Card -->
-                  <div v-else 
+                  <a v-else 
                        :key="'filler-' + idx"
+                       href="mailto:minhaj.me.bd@gmail.com"
                        :class="['menu-card', 'cta-card', item.flavor, item.spanClass]"
                        :style="{ transitionDelay: (idx * (isMobile ? 0.05 : 0.12) + 0.1) + 's' }">
                     <div class="menu-icon">{{ item.icon }}</div>
                     <div class="menu-title">{{ item.msg }}</div>
-                    <a href="mailto:minhaj.me.bd@gmail.com" class="cta-mini-btn">Get in Touch</a>
-                  </div>
+                    <div class="cta-mini-btn">Get in Touch</div>
+                  </a>
                 </template>
               </div>
             </div>
@@ -85,101 +86,137 @@ const MegaHeader = {
     return {
       isOpen: false,
       isDisintegrating: false,
-      currentCols: 1,
+      currentCols: 4,
       isMobile: false,
       sortedStudies: [], // Cache sorted items
       resizeTimeout: null, // For debouncing
-      fillerPool: [
-        { msg: "Staff-Level Infrastructure", flavor: "cta-indigo", icon: "🚀" },
-        { msg: "Scale Your Architecture", flavor: "cta-emerald", icon: "💎" },
-        { msg: "Backend Performance RCA", flavor: "cta-slate", icon: "🛠️" },
-        { msg: "Hire for Strategic Impact", flavor: "cta-purple", icon: "🎯" },
-        { msg: "Let's Build the Future", flavor: "cta-amber", icon: "📈" }
-      ]
     }
   },
   computed: {
     gridItems() {
-      // Use cached sorted items
-      const items = this.sortedStudies;
+      const studies = this.sortedStudies;
       const cols = this.currentCols;
-
-      const finalItems = [];
-      let currentSlots = 0;
-      let fillerIndex = 0;
-      let studyCount = 0;
+      if (!studies.length) return [];
 
       // Helper to calculate delay efficiently
       const calcDelay = (index) => {
         const rawDelay = index * (this.isMobile ? 0.03 : 0.08) + 0.05;
-        // Cap max delay to 1.2s to prevent endless staggered animations
         return Math.min(rawDelay, 1.2).toFixed(3) + 's';
       };
 
-      items.forEach((item) => {
-        const weight = parseInt(item.weight) || 0;
-        let span = (weight >= 90) ? 2 : 1;
+      // 1. Calculate total slots used by studies
+      let totalStudySlots = 0;
+      const studiesWithSlots = studies.map(s => {
+        const weight = parseInt(s.weight) || 0;
+        const slots = (weight >= 90) ? 2 : 1;
+        totalStudySlots += slots;
+        return { ...s, slots };
+      });
 
-        if (studyCount > 0 && studyCount % 4 === 0) {
-          const f = this.fillerPool[fillerIndex % this.fillerPool.length];
-          // Pre-calculate delay
-          finalItems.push({ ...f, isFiller: true, delay: calcDelay(finalItems.length) });
-          fillerIndex++;
+      // 2. Algorithm: 30% base CTAs + "fill the row" rounding
+      // We use base count of items (not slots) for the 30% rule as requested
+      const baseCTACount = Math.ceil(studies.length * 0.3);
+      const tentativeSlots = totalStudySlots + baseCTACount;
+
+      // Target capacity must be a multiplier of cols to fill all rows
+      const targetSlots = Math.ceil(tentativeSlots / cols) * cols;
+      let remainingCTASlots = targetSlots - totalStudySlots;
+
+      // 3. Distribution injection
+      // We want to spread CTAs evenly. targetInterval = studies / ctas
+      const injectionInterval = Math.max(1, Math.floor(studies.length / (remainingCTASlots || 1)));
+
+      const finalItems = [];
+      let currentSlots = 0;
+      let fillerIndex = 0;
+      let studiesInjected = 0;
+
+      const getCTA = (idx) => {
+        const flavorData = this.getCTAFlavor(idx);
+        const icons = ['🚀', '⚡', '💎', '🛠️', '💡', '✨', '🔥'];
+        const messages = [
+          'Interested in a similar system?',
+          'Need high-performance architecture?',
+          'Looking for premium software design?',
+          'Scale your operations with automation.',
+          'Have a complex problem to solve?',
+          'Modernize your technical stack.',
+          'Bring your vision to life.'
+        ];
+        return {
+          isFiller: true,
+          icon: icons[idx % icons.length],
+          msg: messages[idx % messages.length],
+          flavor: flavorData.name,
+          // Inline styles to ensure colors are exactly as defined in JS if needed
+          // but for now we rely on the class names created in CSS
+        };
+      };
+
+      studiesWithSlots.forEach((study, idx) => {
+        // Periodic injection of a CTA
+        if (remainingCTASlots > 0 && studiesInjected > 0 && studiesInjected % injectionInterval === 0) {
+          const cta = getCTA(fillerIndex);
+          finalItems.push({ ...cta, delay: calcDelay(finalItems.length) });
           currentSlots += 1;
-          studyCount = 0;
+          remainingCTASlots -= 1;
+          fillerIndex++;
         }
 
-        if ((currentSlots % cols) + span > cols && (currentSlots % cols) !== 0) {
+        // Gap check: if this study (especially 2-col) won't fit in current row
+        if ((currentSlots % cols) + study.slots > cols && (currentSlots % cols) !== 0) {
           let gapSize = cols - (currentSlots % cols);
-          while (gapSize > 0) {
-            const f = this.fillerPool[fillerIndex % this.fillerPool.length];
-            // Smart injection: Use 2-col filler if gap is large enough
+          while (gapSize > 0 && remainingCTASlots > 0) {
+            const cta = getCTA(fillerIndex);
             let spanClass = '';
             let usedSlots = 1;
 
-            if (gapSize >= 2) {
+            // Fill 2nd slot of a 2-col gap with a 2-col CTA if we have enough slots
+            if (gapSize >= 2 && remainingCTASlots >= 2) {
               spanClass = 'span-col-2';
               usedSlots = 2;
             }
 
             finalItems.push({
-              ...f,
-              isFiller: true,
+              ...cta,
               spanClass: spanClass,
               delay: calcDelay(finalItems.length)
             });
+
             fillerIndex++;
             currentSlots += usedSlots;
+            remainingCTASlots -= usedSlots;
             gapSize -= usedSlots;
           }
         }
 
-        finalItems.push({ ...item, isFiller: false, delay: calcDelay(finalItems.length) });
-        currentSlots += span;
-        studyCount++;
+        // Inject the study
+        finalItems.push({ ...study, isFiller: false, delay: calcDelay(finalItems.length) });
+        currentSlots += study.slots;
+        studiesInjected++;
       });
 
-      let remaining = (cols - (currentSlots % cols)) % cols;
-      while (remaining > 0) {
-        const f = this.fillerPool[fillerIndex % this.fillerPool.length];
-
+      // 4. Final Row Cleanup: Fill any remaining capacity
+      while (remainingCTASlots > 0) {
+        const cta = getCTA(fillerIndex);
         let spanClass = '';
         let usedSlots = 1;
 
-        if (remaining >= 2) {
+        // Use remaining slots for a 2-col card if possible for better look
+        if (remainingCTASlots >= 2 && (currentSlots % cols) <= (cols - 2)) {
           spanClass = 'span-col-2';
           usedSlots = 2;
         }
 
         finalItems.push({
-          ...f,
-          isFiller: true,
+          ...cta,
           spanClass: spanClass,
           delay: calcDelay(finalItems.length)
         });
+
         fillerIndex++;
         currentSlots += usedSlots;
-        remaining -= usedSlots;
+        remainingCTASlots -= usedSlots;
       }
 
       return finalItems;
@@ -316,6 +353,41 @@ const MegaHeader = {
       if (w >= 95) return 'span-both';
       if (w >= 90) return 'span-col-2';
       return '';
+    },
+    getCTAFlavor(index) {
+      const flavors = [
+        {
+          name: 'cta-cyber',
+          bg: 'linear-gradient(135deg, #00f2ff 0%, #7000ff 50%, #ff00ea 100%)',
+          shadow: '0 10px 30px -5px rgba(0, 242, 255, 0.6)',
+          border: 'rgba(255, 255, 255, 0.3)'
+        },
+        {
+          name: 'cta-emerald',
+          bg: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #0d9488 100%)',
+          shadow: '0 10px 30px -5px rgba(16, 185, 129, 0.6)',
+          border: 'rgba(255, 255, 255, 0.2)'
+        },
+        {
+          name: 'cta-rose',
+          bg: 'linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #9f1239 100%)',
+          shadow: '0 10px 30px -5px rgba(244, 63, 94, 0.6)',
+          border: 'rgba(255, 255, 255, 0.2)'
+        },
+        {
+          name: 'cta-purple',
+          bg: 'linear-gradient(135deg, #a855f7 0%, #db2777 50%, #c026d3 100%)',
+          shadow: '0 10px 30px -5px rgba(168, 85, 247, 0.6)',
+          border: 'rgba(255, 255, 255, 0.2)'
+        },
+        {
+          name: 'cta-amber',
+          bg: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #d97706 100%)',
+          shadow: '0 10px 30px -5px rgba(245, 158, 11, 0.6)',
+          border: 'rgba(255, 255, 255, 0.2)'
+        }
+      ];
+      return flavors[index % flavors.length];
     },
     getCategoryClass(tag) {
       if (['GovTech', 'Infrastructure'].includes(tag)) return 'cat-govtech';

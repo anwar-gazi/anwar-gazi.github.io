@@ -154,8 +154,10 @@ const MegaHeader = {
       };
 
       studiesWithSlots.forEach((study, idx) => {
-        // Periodic injection of a CTA
+        // 1. Periodic injection (only if not about to do a big study pairing)
         if (remainingCTASlots > 0 && studiesInjected > 0 && studiesInjected % injectionInterval === 0) {
+          // If next is 2-col, maybe skip periodic to let it pair? 
+          // For now, simple logic is fine.
           const cta = getCTA(fillerIndex);
           finalItems.push({ ...cta, delay: calcDelay(finalItems.length) });
           currentSlots += 1;
@@ -163,60 +165,55 @@ const MegaHeader = {
           fillerIndex++;
         }
 
-        // Gap check: if this study (especially 2-col) won't fit in current row
+        // 2. Gap check: ensure we start a row if this study doesn't fit
         if ((currentSlots % cols) + study.slots > cols && (currentSlots % cols) !== 0) {
           let gapSize = cols - (currentSlots % cols);
           while (gapSize > 0 && remainingCTASlots > 0) {
             const cta = getCTA(fillerIndex);
-            let spanClass = '';
-            let usedSlots = 1;
-
-            // Fill 2nd slot of a 2-col gap with a 2-col CTA if we have enough slots
-            if (gapSize >= 2 && remainingCTASlots >= 2) {
-              spanClass = 'span-col-2';
-              usedSlots = 2;
-            }
-
+            // All CTAs are 1-col as requested
             finalItems.push({
               ...cta,
-              spanClass: spanClass,
+              spanClass: '',
               delay: calcDelay(finalItems.length)
             });
 
             fillerIndex++;
-            currentSlots += usedSlots;
-            remainingCTASlots -= usedSlots;
-            gapSize -= usedSlots;
+            currentSlots += 1;
+            remainingCTASlots -= 1;
+            gapSize -= 1;
           }
         }
 
-        // Inject the study
+        // 3. Inject the study
         finalItems.push({ ...study, isFiller: false, delay: calcDelay(finalItems.length) });
         currentSlots += study.slots;
         studiesInjected++;
+
+        // 4. "Pairing Rule": If 2-col study left half a row empty, fill it with CTAs
+        if (cols === 4 && study.slots === 2 && (currentSlots % 4 === 2) && remainingCTASlots >= 2) {
+          for (let i = 0; i < 2; i++) {
+            const cta = getCTA(fillerIndex);
+            finalItems.push({ ...cta, delay: calcDelay(finalItems.length) });
+            currentSlots += 1;
+            remainingCTASlots -= 1;
+            fillerIndex++;
+          }
+        }
       });
 
-      // 4. Final Row Cleanup: Fill any remaining capacity
+      // 5. Final Row Cleanup: Fill any remaining capacity
       while (remainingCTASlots > 0) {
         const cta = getCTA(fillerIndex);
-        let spanClass = '';
-        let usedSlots = 1;
-
-        // Use remaining slots for a 2-col card if possible for better look
-        if (remainingCTASlots >= 2 && (currentSlots % cols) <= (cols - 2)) {
-          spanClass = 'span-col-2';
-          usedSlots = 2;
-        }
-
+        // Ensure no 2-col CTAs at the end either
         finalItems.push({
           ...cta,
-          spanClass: spanClass,
+          spanClass: '',
           delay: calcDelay(finalItems.length)
         });
 
         fillerIndex++;
-        currentSlots += usedSlots;
-        remainingCTASlots -= usedSlots;
+        currentSlots += 1;
+        remainingCTASlots -= 1;
       }
 
       return finalItems;

@@ -58,7 +58,7 @@ const MegaHeader = {
                   <!-- CTA Filler Card -->
                   <div v-else 
                        :key="'filler-' + idx"
-                       :class="['menu-card', 'cta-card', item.flavor]"
+                       :class="['menu-card', 'cta-card', item.flavor, item.spanClass]"
                        :style="{ transitionDelay: (idx * (isMobile ? 0.05 : 0.12) + 0.1) + 's' }">
                     <div class="menu-icon">{{ item.icon }}</div>
                     <div class="menu-title">{{ item.msg }}</div>
@@ -130,12 +130,27 @@ const MegaHeader = {
         }
 
         if ((currentSlots % cols) + span > cols && (currentSlots % cols) !== 0) {
-          const gapSize = cols - (currentSlots % cols);
-          for (let g = 0; g < gapSize; g++) {
+          let gapSize = cols - (currentSlots % cols);
+          while (gapSize > 0) {
             const f = this.fillerPool[fillerIndex % this.fillerPool.length];
-            finalItems.push({ ...f, isFiller: true, delay: calcDelay(finalItems.length) });
+            // Smart injection: Use 2-col filler if gap is large enough
+            let spanClass = '';
+            let usedSlots = 1;
+
+            if (gapSize >= 2) {
+              spanClass = 'span-col-2';
+              usedSlots = 2;
+            }
+
+            finalItems.push({
+              ...f,
+              isFiller: true,
+              spanClass: spanClass,
+              delay: calcDelay(finalItems.length)
+            });
             fillerIndex++;
-            currentSlots++;
+            currentSlots += usedSlots;
+            gapSize -= usedSlots;
           }
         }
 
@@ -144,12 +159,27 @@ const MegaHeader = {
         studyCount++;
       });
 
-      const remaining = (cols - (currentSlots % cols)) % cols;
-      for (let g = 0; g < remaining; g++) {
+      let remaining = (cols - (currentSlots % cols)) % cols;
+      while (remaining > 0) {
         const f = this.fillerPool[fillerIndex % this.fillerPool.length];
-        finalItems.push({ ...f, isFiller: true, delay: calcDelay(finalItems.length) });
+
+        let spanClass = '';
+        let usedSlots = 1;
+
+        if (remaining >= 2) {
+          spanClass = 'span-col-2';
+          usedSlots = 2;
+        }
+
+        finalItems.push({
+          ...f,
+          isFiller: true,
+          spanClass: spanClass,
+          delay: calcDelay(finalItems.length)
+        });
         fillerIndex++;
-        currentSlots++;
+        currentSlots += usedSlots;
+        remaining -= usedSlots;
       }
 
       return finalItems;

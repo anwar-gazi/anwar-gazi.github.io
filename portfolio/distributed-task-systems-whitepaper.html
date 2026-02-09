@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Architecture of Distributed Task Systems - Technical Whitepaper</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Mono:wght@400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script src="case-data.js"></script>
@@ -78,8 +78,8 @@
 
         .sidebar {
             position: sticky;
-            top: 0;
-            height: 100vh;
+            top: 64px;
+            height: calc(100vh - 64px);
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border-color);
             padding: 48px 32px;
@@ -158,20 +158,63 @@
         }
 
         .theme-toggle {
-            position: fixed;
-            top: 32px;
-            right: 32px;
-            background: var(--sidebar-bg);
+            background: transparent;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px 16px;
+            border-radius: 6px;
+            padding: 0 12px;
             cursor: pointer;
             font-family: 'Space Mono', monospace;
             font-size: 13px;
             color: var(--text-primary);
-            box-shadow: var(--shadow-sm);
             transition: all 0.2s ease;
-            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            height: 36px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-secondary);
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 0 16px;
+            border-radius: 6px;
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-secondary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pill {
+            background: var(--bg-secondary);
+            padding: 0 12px;
+            border-radius: 100px;
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
         }
 
         .theme-toggle:hover {
@@ -462,64 +505,68 @@
             filter: invert(0.9) hue-rotate(180deg);
         }
     </style>
-<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-<link rel="stylesheet" href="mega-header.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link rel="stylesheet" href="mega-header.css">
 </head>
 
 <body>
-  <div id="app">
-    <button class="theme-toggle" onclick="toggleTheme()">
-        <span id="theme-icon">☀️</span> Toggle Theme
-    </button>
+    <div id="app">
 
-    <div class="container">
-        <aside class="sidebar">
-            <div class="logo">DTS/WhitePaper</div>
-            <nav>
-                <ul class="toc">
-                    <li class="toc-item">
-                        <a href="#section1" class="toc-link">Section 1: Laravel Queue Internals</a>
-                        <ul class="toc-subsection">
-                            <li class="toc-item"><a href="#lifecycle" class="toc-link">Worker Lifecycle</a></li>
-                            <li class="toc-item"><a href="#signal-handling" class="toc-link">Signal Handling</a></li>
-                            <li class="toc-item"><a href="#memory-management" class="toc-link">Memory Management</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="toc-item">
-                        <a href="#section2" class="toc-link">Section 2: Go vs. Rust Orchestration</a>
-                        <ul class="toc-subsection">
-                            <li class="toc-item"><a href="#go-architecture" class="toc-link">Go GMP Scheduler</a></li>
-                            <li class="toc-item"><a href="#rust-architecture" class="toc-link">Rust Work-Stealing</a>
-                            </li>
-                            <li class="toc-item"><a href="#performance-comparison" class="toc-link">Performance
-                                    Analysis</a></li>
-                        </ul>
-                    </li>
-                    <li class="toc-item">
-                        <a href="#section3" class="toc-link">Section 3: Production Scenarios</a>
-                        <ul class="toc-subsection">
-                            <li class="toc-item"><a href="#dead-letter" class="toc-link">Dead Letter Queues</a></li>
-                            <li class="toc-item"><a href="#poison-pill" class="toc-link">Poison Pill Jobs</a></li>
-                            <li class="toc-item"><a href="#backoff" class="toc-link">Exponential Backoff</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
+        <mega-header>
+            <div slot="brand-content">
+                <div class="brand-text-main">Distributed Task Systems</div>
+                <div class="brand-text-sub">System Design Whitepaper</div>
+            </div>
+            <div slot="right-content" class="header-actions">
+                <div class="pill">Architecture • 2024</div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">☀️</span> Theme
+                </button>
+                <button class="btn-primary" id="openSummaryBtn">
+                    <span>☰</span> Summary
+                </button>
+            </div>
+        </mega-header>
+
+        <div class="container">
+            <aside class="sidebar">
+                <div class="logo">DTS/WhitePaper</div>
+                <nav>
+                    <ul class="toc">
+                        <li class="toc-item">
+                            <a href="#section1" class="toc-link">Section 1: Laravel Queue Internals</a>
+                            <ul class="toc-subsection">
+                                <li class="toc-item"><a href="#lifecycle" class="toc-link">Worker Lifecycle</a></li>
+                                <li class="toc-item"><a href="#signal-handling" class="toc-link">Signal Handling</a>
+                                </li>
+                                <li class="toc-item"><a href="#memory-management" class="toc-link">Memory Management</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#section2" class="toc-link">Section 2: Go vs. Rust Orchestration</a>
+                            <ul class="toc-subsection">
+                                <li class="toc-item"><a href="#go-architecture" class="toc-link">Go GMP Scheduler</a>
+                                </li>
+                                <li class="toc-item"><a href="#rust-architecture" class="toc-link">Rust
+                                        Work-Stealing</a>
+                                </li>
+                                <li class="toc-item"><a href="#performance-comparison" class="toc-link">Performance
+                                        Analysis</a></li>
+                            </ul>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#section3" class="toc-link">Section 3: Production Scenarios</a>
+                            <ul class="toc-subsection">
+                                <li class="toc-item"><a href="#dead-letter" class="toc-link">Dead Letter Queues</a></li>
+                                <li class="toc-item"><a href="#poison-pill" class="toc-link">Poison Pill Jobs</a></li>
+                                <li class="toc-item"><a href="#backoff" class="toc-link">Exponential Backoff</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
             <main class="main-content">
-                <mega-header>
-                    <div slot="brand-content">
-                        <div class="brand-text-main">Distributed Task Systems</div>
-                        <div class="brand-text-sub">System Design Whitepaper</div>
-                    </div>
-                    <div slot="right-content" class="header-actions">
-                        <div class="pill">Architecture • 2024</div>
-                        <button class="btn-primary" id="openSummaryBtn">
-                            <span>☰</span> One-Page Summary
-                        </button>
-                    </div>
-                </mega-header>
-
                 <!-- SECTION 1 -->
                 <section id="section1" class="section">
                     <span class="section-number">Section 01</span>
@@ -1449,90 +1496,90 @@
                         Dead Letter Queues, Exponential Backoff Strategies</p>
                 </footer>
             </main>
-    </div>
+        </div>
 
-    <script>
-        // Initialize Mermaid
-        mermaid.initialize({
-            startOnLoad: true,
-            theme: 'default',
-            securityLevel: 'loose',
-            flowchart: {
-                useMaxWidth: true,
-                htmlLabels: true,
-                curve: 'basis'
+        <script>
+            // Initialize Mermaid
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                flowchart: {
+                    useMaxWidth: true,
+                    htmlLabels: true,
+                    curve: 'basis'
+                }
+            });
+
+            // Theme toggle functionality
+            function toggleTheme() {
+                const html = document.documentElement;
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                html.setAttribute('data-theme', newTheme);
+
+                const icon = document.getElementById('theme-icon');
+                icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+
+                localStorage.setItem('theme', newTheme);
             }
-        });
 
-        // Theme toggle functionality
-        function toggleTheme() {
-            const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', newTheme);
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 
-            const icon = document.getElementById('theme-icon');
-            icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            // Smooth scroll for TOC links
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
 
-            localStorage.setItem('theme', newTheme);
-        }
-
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-
-        // Smooth scroll for TOC links
-        document.querySelectorAll('.toc-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
-        // Active TOC link on scroll
-        const sections = document.querySelectorAll('.section, h3[id]');
-        const tocLinks = document.querySelectorAll('.toc-link');
-
-        function updateActiveTocLink() {
-            let currentSection = '';
-
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (window.scrollY >= sectionTop - 200) {
-                    currentSection = section.getAttribute('id');
-                }
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
             });
 
-            tocLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${currentSection}`) {
-                    link.classList.add('active');
-                }
-            });
-        }
+            // Active TOC link on scroll
+            const sections = document.querySelectorAll('.section, h3[id]');
+            const tocLinks = document.querySelectorAll('.toc-link');
 
-        window.addEventListener('scroll', updateActiveTocLink);
-        updateActiveTocLink(); // Initial call
+            function updateActiveTocLink() {
+                let currentSection = '';
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (window.scrollY >= sectionTop - 200) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${currentSection}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveTocLink);
+            updateActiveTocLink(); // Initial call
+        </script>
+
+
+    </div>
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            components: {
+                'mega-header': MegaHeader,
+
+            }
+        }).mount('#app');
     </script>
-
-    
-  </div>
-  <script>
-    const { createApp } = Vue;
-    createApp({
-      components: {
-        'mega-header': MegaHeader,
-        
-      }
-    }).mount('#app');
-  </script>
 </body>
 
 </html>

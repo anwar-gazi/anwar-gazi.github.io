@@ -271,14 +271,15 @@
             background-color: #fffbeb;
         }
     </style>
-<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-<link rel="stylesheet" href="mega-header.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <link rel="stylesheet" href="mega-header.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body><div id="app">
+<body>
+    <div id="app">
 
-  
+
 
         <mega-header>
             <div slot="brand-content">
@@ -292,68 +293,89 @@
                 </button>
             </div>
         </mega-header>
-    <div class="container">
+        <div class="container">
 
-        <div class="toc">
-            <h3>Table of Contents</h3>
-            <ul>
-                <li><a href="#section-1">1. TypeScript Foundations: Interface vs Type</a></li>
-                <li><a href="#section-2">2. Architectural Strategy: Anemic vs Rich Domain Models</a></li>
-                <li><a href="#section-3">3. The Repository Pattern Implementation</a></li>
-                <li><a href="#section-4">4. Serialization & Data Transfer</a></li>
-                <li><a href="#section-5">5. Final Recommendations</a></li>
-            </ul>
-        </div>
+            <div class="toc">
+                <h3>Table of Contents</h3>
+                <ul>
+                    <li><a href="#section-1">1. TypeScript Foundations: Interface vs Type</a></li>
+                    <li><a href="#section-2">2. Architectural Strategy: Anemic vs Rich Domain Models</a></li>
+                    <li><a href="#section-3">3. The Repository Pattern Implementation</a></li>
+                    <li><a href="#section-4">4. Serialization & Data Transfer</a></li>
+                    <li><a href="#section-5">5. Final Recommendations</a></li>
+                </ul>
+                <div
+                    class="cta-banner p-10 md:p-14 rounded-2xl bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-800 text-white relative overflow-hidden mb-8 border border-white/20 shadow-2xl">
+                    <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                        <div class="flex-grow text-center md:text-left">
+                            <h3 class="text-3xl font-extrabold mb-4">Build Resilient Systems</h3>
+                            <p class="text-lg text-white/90 leading-relaxed">
+                                Stop fighting your framework. Let's leverage TypeScript's type system to build robust,
+                                maintainable domain models that scale with your business.
+                            </p>
+                        </div>
+                        <div class="flex flex-col sm:sm:flex-row gap-4 shrink-0">
+                            <a href="mailto:minhaj.me.bd@gmail.com"
+                                class="px-8 py-3 bg-white text-indigo-700 font-bold rounded-xl hover:scale-105 transition-all shadow-lg text-center">Refactor
+                                Now</a>
+                            <a href="/portfolio/index.html"
+                                class="px-8 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-all border border-white/30 text-center">View
+                                Guides</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- SECTION 1 -->
-        <section id="section-1">
-            <h2>1. TypeScript Foundations: Interface vs Type</h2>
-            <p>While often used interchangeably, the distinction between <code>interface</code> and <code>type</code> is
-                critical for library design and error handling performance.</p>
+            <!-- SECTION 1 -->
+            <section id="section-1">
+                <h2>1. TypeScript Foundations: Interface vs Type</h2>
+                <p>While often used interchangeably, the distinction between <code>interface</code> and
+                    <code>type</code> is
+                    critical for library design and error handling performance.</p>
 
-            <h3>Comparison Matrix</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Feature</th>
-                        <th>Interface</th>
-                        <th>Type Alias</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Definition</strong></td>
-                        <td>Describes the shape of an object.</td>
-                        <td>Creates a new name for any type (object, primitive, union).</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Extensibility</strong></td>
-                        <td>Extends via <code>extends</code> keyword. Open for declaration merging.</td>
-                        <td>Extends via intersection <code>&</code>. Closed to modification.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Declaration Merging</strong></td>
-                        <td>✅ Supported (Crucial for augmenting libraries).</td>
-                        <td>❌ Not Supported (Throws duplicate identifier error).</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Computed Properties</strong></td>
-                        <td>❌ Limited support.</td>
-                        <td>✅ Fully supported (Mapped types).</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Compiler Performance</strong></td>
-                        <td>Faster. Checks cache based on name.</td>
-                        <td>Slower. Often recursively evaluates the shape.</td>
-                    </tr>
-                </tbody>
-            </table>
+                <h3>Comparison Matrix</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Interface</th>
+                            <th>Type Alias</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Definition</strong></td>
+                            <td>Describes the shape of an object.</td>
+                            <td>Creates a new name for any type (object, primitive, union).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Extensibility</strong></td>
+                            <td>Extends via <code>extends</code> keyword. Open for declaration merging.</td>
+                            <td>Extends via intersection <code>&</code>. Closed to modification.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Declaration Merging</strong></td>
+                            <td>✅ Supported (Crucial for augmenting libraries).</td>
+                            <td>❌ Not Supported (Throws duplicate identifier error).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Computed Properties</strong></td>
+                            <td>❌ Limited support.</td>
+                            <td>✅ Fully supported (Mapped types).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Compiler Performance</strong></td>
+                            <td>Faster. Checks cache based on name.</td>
+                            <td>Slower. Often recursively evaluates the shape.</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            <h3>Code Implementation</h3>
-            <div class="card-grid">
-                <div class="card">
-                    <h4>Using Interface</h4>
-                    <pre><code><span class="keyword">interface</span> User {
+                <h3>Code Implementation</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Using Interface</h4>
+                        <pre><code><span class="keyword">interface</span> User {
   id: <span class="type">string</span>;
   name: <span class="type">string</span>;
 }
@@ -363,10 +385,10 @@
   email: <span class="type">string</span>;
 }
 <span class="comment">// Result: User has id, name, and email</span></code></pre>
-                </div>
-                <div class="card">
-                    <h4>Using Type</h4>
-                    <pre><code><span class="keyword">type</span> ID = <span class="type">string</span> | <span class="type">number</span>;
+                    </div>
+                    <div class="card">
+                        <h4>Using Type</h4>
+                        <pre><code><span class="keyword">type</span> ID = <span class="type">string</span> | <span class="type">number</span>;
 
 <span class="keyword">type</span> UserStatus = 
   | <span class="string">'active'</span> 
@@ -376,42 +398,46 @@
   id: ID;
   status: UserStatus;
 }</code></pre>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- SECTION 2 -->
-        <section id="section-2">
-            <h2>2. Architectural Strategy: Anemic vs Rich Domain Models</h2>
-            <p>The choice between representing entities as plain data (Anemic) or encapsulated behavior (Rich) dictates
-                the flow of business logic in your application.</p>
+            <!-- SECTION 2 -->
+            <section id="section-2">
+                <h2>2. Architectural Strategy: Anemic vs Rich Domain Models</h2>
+                <p>The choice between representing entities as plain data (Anemic) or encapsulated behavior (Rich)
+                    dictates
+                    the flow of business logic in your application.</p>
 
-            <div class="card-grid">
-                <div class="card pro">
-                    <span class="badge green">PROS</span>
-                    <ul>
-                        <li><strong>Simple Serialization:</strong> Objects are already plain JSON.</li>
-                        <li><strong>Low Boilerplate:</strong> No constructors or accessors needed.</li>
-                        <li><strong>Tooling:</strong> Works seamlessly with most ORMs (Prisma, TypeORM).</li>
-                    </ul>
+                <div class="card-grid">
+                    <div class="card pro">
+                        <span class="badge green">PROS</span>
+                        <ul>
+                            <li><strong>Simple Serialization:</strong> Objects are already plain JSON.</li>
+                            <li><strong>Low Boilerplate:</strong> No constructors or accessors needed.</li>
+                            <li><strong>Tooling:</strong> Works seamlessly with most ORMs (Prisma, TypeORM).</li>
+                        </ul>
+                    </div>
+                    <div class="card con">
+                        <span class="badge red">CONS</span>
+                        <ul>
+                            <li><strong>No Invariants:</strong> Impossible to prevent invalid states (e.g., a User with
+                                no
+                                email).</li>
+                            <li><strong>Logic Fragmentation:</strong> Business rules scatter across Services and
+                                Controllers.</li>
+                            <li><strong>Low Cohesion:</strong> Data is separated from the operations that modify it.
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="card con">
-                    <span class="badge red">CONS</span>
-                    <ul>
-                        <li><strong>No Invariants:</strong> Impossible to prevent invalid states (e.g., a User with no
-                            email).</li>
-                        <li><strong>Logic Fragmentation:</strong> Business rules scatter across Services and
-                            Controllers.</li>
-                        <li><strong>Low Cohesion:</strong> Data is separated from the operations that modify it.</li>
-                    </ul>
-                </div>
-            </div>
 
-            <h3>Option B: The Rich Domain Model (DDD)</h3>
-            <p>Entities are defined as <code>class</code> with private state. Logic resides inside the entity. Services
-                simply coordinate workflow.</p>
+                <h3>Option B: The Rich Domain Model (DDD)</h3>
+                <p>Entities are defined as <code>class</code> with private state. Logic resides inside the entity.
+                    Services
+                    simply coordinate workflow.</p>
 
-            <pre><code><span class="keyword">class</span> Order {
+                <pre><code><span class="keyword">class</span> Order {
   <span class="keyword">private</span> status: <span class="string">'draft'</span> | <span class="string">'paid'</span> = <span class="string">'draft'</span>;
   <span class="keyword">private</span> items: OrderItem[] = [];
 
@@ -422,30 +448,31 @@
     <span class="keyword">this</span>.items.push(item);
   }
 }</code></pre>
-        </section>
+            </section>
 
-        <!-- SECTION 3 -->
-        <section id="section-3">
-            <h2>3. The Repository Pattern Implementation</h2>
-            <p>When using Rich Domain Models, the Repository acts as an abstraction layer between the Domain and the
-                Persistence (Database).</p>
+            <!-- SECTION 3 -->
+            <section id="section-3">
+                <h2>3. The Repository Pattern Implementation</h2>
+                <p>When using Rich Domain Models, the Repository acts as an abstraction layer between the Domain and the
+                    Persistence (Database).</p>
 
-            <div class="diagram">
-                <div class="diagram-box">Database (Row)</div>
-                <span class="arrow">➔</span>
-                <div class="diagram-box">ORM / DAO</div>
-                <span class="arrow">➔</span>
-                <div class="diagram-box">Mapper</div>
-                <span class="arrow">➔</span>
-                <div class="diagram-box" style="border-color: var(--primary-color);">Domain Entity</div>
-            </div>
+                <div class="diagram">
+                    <div class="diagram-box">Database (Row)</div>
+                    <span class="arrow">➔</span>
+                    <div class="diagram-box">ORM / DAO</div>
+                    <span class="arrow">➔</span>
+                    <div class="diagram-box">Mapper</div>
+                    <span class="arrow">➔</span>
+                    <div class="diagram-box" style="border-color: var(--primary-color);">Domain Entity</div>
+                </div>
 
-            <h3>The Reconstruction Problem</h3>
-            <p>When fetching data from a database, you receive plain objects. You cannot cast these to a Class. You must
-                <strong>reconstitute</strong> the entity.
-            </p>
+                <h3>The Reconstruction Problem</h3>
+                <p>When fetching data from a database, you receive plain objects. You cannot cast these to a Class. You
+                    must
+                    <strong>reconstitute</strong> the entity.
+                </p>
 
-            <pre><code><span class="comment">// user.repository.ts</span>
+                <pre><code><span class="comment">// user.repository.ts</span>
 <span class="keyword">async</span> findById(id: <span class="type">string</span>): Promise&lt;User&gt; {
   <span class="comment">// 1. Get raw data from DB (Plain Object)</span>
   <span class="keyword">const</span> rawData = <span class="keyword">await</span> db.users.find({ id });
@@ -453,18 +480,32 @@
   <span class="comment">// 2. Use Mapper to Reconstitute Domain Entity</span>
   <span class="keyword">return</span> UserMap.toDomain(rawData);
 }</code></pre>
-        </section>
+            </section>
 
-        <!-- SECTION 4 -->
-        <section id="section-4">
-            <h2>4. Serialization & Data Transfer</h2>
-            <p>Classes do not serialize well by default. They lose methods and private fields may be inaccessible.</p>
+            <div class="cta-insight-card p-8 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white flex flex-row items-center gap-6 mb-12 border border-white/20 shadow-lg"
+                style="margin: 48px auto;">
+                <div class="text-4xl">🏗️</div>
+                <div class="flex-grow">
+                    <h4 class="text-xl font-bold mb-1">Domain Architecture Audit</h4>
+                    <p class="text-white/90">Is your business logic scattered across your codebase? I help teams
+                        implement clean, DDD-inspired architectures in TypeScript.</p>
+                </div>
+                <a href="mailto:minhaj.me.bd@gmail.com"
+                    class="px-6 py-2 bg-white text-blue-700 font-bold rounded-full hover:bg-blue-50 transition-colors whitespace-nowrap">Audit
+                    My Domain</a>
+            </div>
 
-            <h3>The `toJSON` Hook</h3>
-            <p>JavaScript's <code>JSON.stringify()</code> looks for a method named <code>toJSON()</code> on objects
-                being serialized.</p>
+            <!-- SECTION 4 -->
+            <section id="section-4">
+                <h2>4. Serialization & Data Transfer</h2>
+                <p>Classes do not serialize well by default. They lose methods and private fields may be inaccessible.
+                </p>
 
-            <pre><code><span class="keyword">class</span> User {
+                <h3>The `toJSON` Hook</h3>
+                <p>JavaScript's <code>JSON.stringify()</code> looks for a method named <code>toJSON()</code> on objects
+                    being serialized.</p>
+
+                <pre><code><span class="keyword">class</span> User {
   <span class="keyword">constructor</span>(<span class="keyword">private</span> password: <span class="type">string</span>) {}
 
   <span class="function">toJSON</span>() {
@@ -475,72 +516,72 @@
   }
 }</code></pre>
 
-            <div class="callout callout-warn">
-                <strong>Critical Warning:</strong> Never expose Domain Entities directly to your API (REST/GraphQL).
-                Doing so couples your external API to your internal domain logic.
-            </div>
+                <div class="callout callout-warn">
+                    <strong>Critical Warning:</strong> Never expose Domain Entities directly to your API (REST/GraphQL).
+                    Doing so couples your external API to your internal domain logic.
+                </div>
 
-            <h3>The DTO Pattern (Data Transfer Object)</h3>
-            <p>Instead of serializing the Entity directly, convert it to a DTO before sending the response.</p>
+                <h3>The DTO Pattern (Data Transfer Object)</h3>
+                <p>Instead of serializing the Entity directly, convert it to a DTO before sending the response.</p>
 
-            <div class="diagram">
-                <div class="diagram-box">Controller</div>
-                <span class="arrow">➔ Calls</span>
-                <div class="diagram-box">UseCase</div>
-                <span class="arrow">➔ Returns</span>
-                <div class="diagram-box">Entity</div>
-                <span class="arrow">➔ Mapper</span>
-                <div class="diagram-box" style="background: #f0f9ff;">UserResponseDTO</div>
-            </div>
-        </section>
+                <div class="diagram">
+                    <div class="diagram-box">Controller</div>
+                    <span class="arrow">➔ Calls</span>
+                    <div class="diagram-box">UseCase</div>
+                    <span class="arrow">➔ Returns</span>
+                    <div class="diagram-box">Entity</div>
+                    <span class="arrow">➔ Mapper</span>
+                    <div class="diagram-box" style="background: #f0f9ff;">UserResponseDTO</div>
+                </div>
+            </section>
 
-        <!-- SECTION 5 -->
-        <section id="section-5">
-            <h2>5. Final Recommendations</h2>
+            <!-- SECTION 5 -->
+            <section id="section-5">
+                <h2>5. Final Recommendations</h2>
 
-            <table>
-                <tr>
-                    <th>Scenario</th>
-                    <th>Recommended Approach</th>
-                </tr>
-                <tr>
-                    <td><strong>Public Library / API</strong></td>
-                    <td>Use <strong>Interface</strong> (allows merging for consumers).</td>
-                </tr>
-                <tr>
-                    <td><strong>Complex Business Logic</strong></td>
-                    <td>Use <strong>Class</strong> (Rich Domain Model). Enforce invariants.</td>
-                </tr>
-                <tr>
-                    <td><strong>Simple CRUD / Microservice</strong></td>
-                    <td>Use <strong>Interface</strong> (Anemic Model). Speed and simplicity.</td>
-                </tr>
-                <tr>
-                    <td><strong>API Response Type</strong></td>
-                    <td>Use <strong>Interface</strong> or <strong>Type</strong> (DTOs are data, not behavior).</td>
-                </tr>
-            </table>
+                <table>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Recommended Approach</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Public Library / API</strong></td>
+                        <td>Use <strong>Interface</strong> (allows merging for consumers).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Complex Business Logic</strong></td>
+                        <td>Use <strong>Class</strong> (Rich Domain Model). Enforce invariants.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Simple CRUD / Microservice</strong></td>
+                        <td>Use <strong>Interface</strong> (Anemic Model). Speed and simplicity.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>API Response Type</strong></td>
+                        <td>Use <strong>Interface</strong> or <strong>Type</strong> (DTOs are data, not behavior).</td>
+                    </tr>
+                </table>
 
-            <p style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px;">
-                <em>This document summarizes the architectural decisions for TypeScript projects regarding type
-                    definitions and domain modeling.</em>
-            </p>
-        </section>
+                <p style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px;">
+                    <em>This document summarizes the architectural decisions for TypeScript projects regarding type
+                        definitions and domain modeling.</em>
+                </p>
+            </section>
+
+        </div>
+
+
 
     </div>
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            components: {
+                'mega-header': MegaHeader,
 
-
-    
-  </div>
-  <script>
-    const { createApp } = Vue;
-    createApp({
-      components: {
-        'mega-header': MegaHeader,
-        
-      }
-    }).mount('#app');
-  </script>
+            }
+        }).mount('#app');
+    </script>
 </body>
 
 </html>

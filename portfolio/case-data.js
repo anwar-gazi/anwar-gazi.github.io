@@ -48,6 +48,20 @@ window.CASE_STUDIES = [
     "weight": "80"
   },
   {
+    "id": "auth-server-ts",
+    "href": "https://github.com/anwar-gazi/authjs",
+    "tag": "Authentication Library",
+    "icon": "🔌",
+    "industry": "Web Security",
+    "title": "authjs: authentication server for nodejs runtime",
+    "subtitle": "",
+    "tech_stack": [
+      "TypeScript",
+      "JWT"
+    ],
+    "weight": "80"
+  },
+  {
     "id": "taskpane-flicker-investigation",
     "href": "taskpane-flicker-investigation.html",
     "tag": "Engineering RCA",
